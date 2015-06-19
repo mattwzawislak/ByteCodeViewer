@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.gui.swing;
 
+import com.alee.utils.laf.WeblafBorder;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 
@@ -44,7 +45,7 @@ public class SwingManager implements FrameManager {
         // separately, since the menu bar is not a child of the content pane
         if (paths[0].equals("menubar")) {
             current = frame.getJMenuBar();
-            // Incremenet i, as we already advanced along the path
+            // Increment i, as we already advanced along the path
             // by checking equality with the menu bar
             i++;
         }
