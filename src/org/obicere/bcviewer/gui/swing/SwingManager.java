@@ -1,10 +1,13 @@
 package org.obicere.bcviewer.gui.swing;
 
 import org.obicere.bcviewer.gui.FrameManager;
+import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.MenuElement;
 import javax.swing.WindowConstants;
 import java.awt.Component;
 import java.awt.Container;
@@ -35,25 +38,45 @@ public class SwingManager implements FrameManager {
         final String[] paths = name.split("\\.");
 
         Component current = frame.getContentPane();
+        int i = 0;
 
-        for (int i = 0; i < paths.length; i++) {
+        // Check to see if this is the menu bar. This needs to be handled
+        // separately, since the menu bar is not a child of the content pane
+        if (paths[0].equals("menubar")) {
+            current = frame.getJMenuBar();
+            // Incremenet i, as we already advanced along the path
+            // by checking equality with the menu bar
+            i++;
+        }
+
+        for (; i < paths.length; i++) {
             if (paths[i].length() == 0) {
                 return null;
             }
-            if (current instanceof Container) {
-                final Component next = childWithName((Container) current, paths[i]);
-
-                // Didn't find element in path, return null
-                if (next == null) {
-                    return null;
-                } else {
-                    if (i == paths.length - 1) {
-                        return next;
-                    }
-                    current = next;
-                }
-            } else {
+            Component next = null;
+            if (current instanceof JMenuBar) {
+                next = childWithName((JMenuBar) current, paths[i]);
+            } else if (current instanceof Container) {
+                next = childWithName((Container) current, paths[i]);
+            }
+            if (next == null) {
                 return null;
+            } else {
+                if (i == paths.length - 1) {
+                    return next;
+                }
+                current = next;
+            }
+        }
+        return null;
+    }
+
+    private Component childWithName(final JMenuBar bar, final String name) {
+        final MenuElement[] elements = bar.getSubElements();
+        for (final MenuElement element : elements) {
+            final Component next = element.getComponent();
+            if (next != null && next.getName().equals(name)) {
+                return next;
             }
         }
         return null;
@@ -61,12 +84,10 @@ public class SwingManager implements FrameManager {
 
     private Component childWithName(final Container container, final String name) {
         final Component[] children = container.getComponents();
-        if (children.length != 0) {
-            for (final Component child : children) {
-                final String childName = child.getName();
-                if (childName != null && childName.equals(name)) {
-                    return child;
-                }
+        for (final Component child : children) {
+            final String childName = child.getName();
+            if (childName != null && childName.equals(name)) {
+                return child;
             }
         }
         return null;
@@ -129,6 +150,9 @@ public class SwingManager implements FrameManager {
     }
 
     private void addComponents() {
+        final MainMenuBar menuBar = new MainMenuBar();
+        frame.setJMenuBar(menuBar);
+
         final JPanel panel = new JPanel();
         panel.setName("container");
         final JButton button = new JButton();
