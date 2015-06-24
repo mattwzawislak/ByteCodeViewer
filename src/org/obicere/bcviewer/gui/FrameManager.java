@@ -26,4 +26,13 @@ public interface FrameManager {
     public void validate();
 
     public void pack();
+
+    public String getDefaultThemeName();
+
+    public String[] getAvailableThemeNames();
+
+    public void loadDefaultTheme();
+
+    public void loadTheme(final String name);
+
 }

@@ -1,18 +1,28 @@
 package org.obicere.bcviewer.gui.swing.menu;
 
+import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.gui.FrameManager;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import java.awt.Component;
+import java.awt.event.ActionListener;
 
 /**
  */
 public class MainMenuBar extends JMenuBar {
 
-    public MainMenuBar() {
+    private final Domain domain;
+
+    public MainMenuBar(final Domain domain) {
+        this.domain = domain;
+
         setName("menubar");
 
         add(createFile());
         add(createView());
+        add(createTheme());
     }
 
     private JMenu createFile() {
@@ -42,6 +52,29 @@ public class MainMenuBar extends JMenuBar {
         viewMenu.setMnemonic('V');
 
         return viewMenu;
+    }
+
+    private JMenu createTheme(){
+        final JMenu themeMenu = new JMenu("Theme");
+        themeMenu.setName("theme");
+        themeMenu.setMnemonic('T');
+
+        final FrameManager manager = domain.getGUIManager().getFrameManager();
+
+        final ActionListener changeThemeListener = e -> {
+            final Component source = (Component) e.getSource();
+
+            manager.loadTheme(source.getName());
+        };
+
+        for (final String theme : manager.getAvailableThemeNames()){
+            final JMenuItem item = new JMenuItem(theme);
+            item.setName(theme);
+            item.addActionListener(changeThemeListener);
+            themeMenu.add(item);
+        }
+
+        return themeMenu;
     }
 
 }

@@ -1,6 +1,7 @@
 package org.obicere.bcviewer;
 
 import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.utility.util.PrintFormatter;
 
@@ -34,8 +35,9 @@ public class Boot {
         // Create the GUI
         SwingUtilities.invokeLater(() -> {
             final GUIManager manager = domain.getGUIManager();
-            manager.loadDefaultLookAndFeel();
-            manager.getCurrentFrameManager().open();
+            final FrameManager frameManager = manager.getFrameManager();
+            frameManager.loadDefaultTheme();
+            frameManager.open();
         });
 
         logger.info("Boot time took (ms): " + (System.currentTimeMillis() - start));

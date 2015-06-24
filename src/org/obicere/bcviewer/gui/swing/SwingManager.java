@@ -1,27 +1,43 @@
 package org.obicere.bcviewer.gui.swing;
 
-import com.alee.utils.laf.WeblafBorder;
+import com.alee.laf.WebLookAndFeel;
+import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
+import javax.swing.LookAndFeel;
 import javax.swing.MenuElement;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import java.awt.Component;
 import java.awt.Container;
+import java.util.logging.Level;
 
 /**
  * @author Obicere
  */
 public class SwingManager implements FrameManager {
 
-    private JFrame frame;
+    private final JFrame frame;
 
-    public SwingManager(final String title) {
-        this.frame = new JFrame(title);
+    private final LookAndFeel defaultLookAndFeel;
+
+    private final Domain domain;
+
+    public SwingManager(final Domain domain) {
+        this.domain = domain;
+        this.frame = new JFrame(domain.getApplicationName());
+
+        this.defaultLookAndFeel = new WebLookAndFeel();
+
+        // Install the default look and feel. This is if the default LAF is
+        // not a pre-installed LAF.
+        UIManager.installLookAndFeel(defaultLookAndFeel.getName(), defaultLookAndFeel.getClass().getName());
     }
 
     @Override
@@ -151,16 +167,57 @@ public class SwingManager implements FrameManager {
     }
 
     private void addComponents() {
-        final MainMenuBar menuBar = new MainMenuBar();
+        final MainMenuBar menuBar = new MainMenuBar(domain);
         frame.setJMenuBar(menuBar);
 
-        final JPanel panel = new JPanel();
-        panel.setName("container");
-        final JButton button = new JButton();
-        button.setName("button");
-
-        panel.add(button);
-        frame.add(panel);
+        frame.getContentPane().add(new JButton("Test Button"));
     }
 
+    @Override
+    public String getDefaultThemeName(){
+        return defaultLookAndFeel.getName();
+    }
+
+    @Override
+    public String[] getAvailableThemeNames(){
+        final UIManager.LookAndFeelInfo themes[] = UIManager.getInstalledLookAndFeels();
+
+        final int length = themes.length;
+        final String[] names = new String[length];
+        for (int i = 0; i < length; i++) {
+            names[i] = themes[i].getName();
+        }
+        return names;
+    }
+
+    @Override
+    public void loadDefaultTheme() {
+        try {
+            UIManager.setLookAndFeel(defaultLookAndFeel);
+            SwingUtilities.updateComponentTreeUI(frame);
+            frame.pack();
+            frame.revalidate();
+            frame.repaint();
+        } catch (final UnsupportedLookAndFeelException e) {
+            domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void loadTheme(final String name){
+        try {
+            final UIManager.LookAndFeelInfo[] themes = UIManager.getInstalledLookAndFeels();
+            for (final UIManager.LookAndFeelInfo theme : themes) {
+                if (theme.getName().equals(name)) {
+                    UIManager.setLookAndFeel(theme.getClassName());
+                }
+            }
+            SwingUtilities.updateComponentTreeUI(frame);
+            frame.pack();
+            frame.revalidate();
+            frame.repaint();
+        } catch (final UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+            domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
 }
