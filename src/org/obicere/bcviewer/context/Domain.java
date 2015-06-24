@@ -1,9 +1,7 @@
 package org.obicere.bcviewer.context;
 
 import org.obicere.bcviewer.gui.GUIManager;
-import org.obicere.bcviewer.gui.swing.SwingManager;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -27,20 +25,8 @@ public class Domain {
         return guiManager;
     }
 
-    public void logInfo(final String message) {
-        logger.log(Level.INFO, message);
-    }
-
-    public void logConfig(final String message) {
-        logger.log(Level.CONFIG, message);
-    }
-
-    public void logSevere(final String message) {
-        logger.log(Level.SEVERE, message);
-    }
-
-    public void log(final Level level, final String message) {
-        logger.log(level, message);
+    public Logger getLogger(){
+        return logger;
     }
 
     public String getApplicationName() {

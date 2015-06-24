@@ -16,22 +16,43 @@ public class Boot {
 
     private static Domain domain;
 
+    private static final StartUpQueue QUEUE = new StartUpQueue();
+
     public static void main(final String[] args) {
+        // Prepare the current boot
         final long start = System.currentTimeMillis();
+        prepareBoot();
+
+        // Starting the actual boot sequence, everything needed for boot
+        // should be loaded at this point
+        final Logger logger = domain.getLogger();
+        logger.info("Starting boot.");
+
+        // Run the start up tasks
+        performStartUp(logger);
+
+        // Create the GUI
+        SwingUtilities.invokeLater(() -> {
+            final GUIManager manager = domain.getGUIManager();
+            manager.loadDefaultLookAndFeel();
+            manager.getCurrentFrameManager().open();
+        });
+
+        logger.info("Boot time took (ms): " + (System.currentTimeMillis() - start));
+    }
+
+    public static Domain getGlobalDomain(){
+        return domain;
+    }
+
+    public static StartUpQueue getStartUpQueue(){
+        return QUEUE;
+    }
+
+    private static void prepareBoot(){
 
         setUpLogger();
         domain = new Domain();
-
-        domain.logInfo("Starting boot.");
-
-        SwingUtilities.invokeLater(() -> {
-            final GUIManager manager = domain.getGUIManager();
-            manager.loadLookAndFeel();
-            manager.getCurrentFrameManager().open();
-            System.out.println(manager.getCurrentFrameManager().getComponent("menubar.file"));
-        });
-
-        domain.logInfo("Boot time took (ms): " + (System.currentTimeMillis() - start));
     }
 
     private static void setUpLogger() {
@@ -44,6 +65,16 @@ public class Boot {
         consoleHandler.setFormatter(formatter);
 
         Logger.getGlobal().addHandler(consoleHandler);
+    }
+
+    private static void performStartUp(final Logger logger){
+        final long start = System.currentTimeMillis();
+        logger.fine("Starting StartUp");
+
+        QUEUE.runTasks(logger);
+        QUEUE.cleanUp();
+
+        logger.fine("StartUp took (ms): " + (System.currentTimeMillis() - start));
     }
 
 }

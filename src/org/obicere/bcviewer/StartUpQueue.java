@@ -1,6 +1,8 @@
 package org.obicere.bcviewer;
 
 import java.util.PriorityQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Obicere
@@ -18,6 +20,20 @@ public class StartUpQueue {
     public static final int LOWEST_PRIORITY = Integer.MAX_VALUE;
 
     private final PriorityQueue<StartUpTask> queue = new PriorityQueue<>();
+
+    void runTasks(final Logger errorLogger){
+        queue.forEach(task -> {
+            try {
+                task.getTask().run();
+            } catch (final Throwable e){
+                errorLogger.log(Level.SEVERE, e.getMessage(), e);
+            }
+        });
+    }
+
+    void cleanUp(){
+        queue.clear();
+    }
 
     public void provide(final Runnable task){
         provide(task, STANDARD_PRIORITY);
