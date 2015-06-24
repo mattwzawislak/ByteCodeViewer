@@ -6,7 +6,6 @@ import org.obicere.bcviewer.gui.FrameManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import java.awt.Component;
 import java.awt.event.ActionListener;
 
 /**
@@ -39,6 +38,8 @@ public class MainMenuBar extends JMenuBar {
         open.setMnemonic('O');
         exit.setMnemonic('x');
 
+        exit.addActionListener(e -> domain.getGUIManager().getFrameManager().close());
+
         fileMenu.add(open);
         fileMenu.addSeparator();
         fileMenu.add(exit);
@@ -61,15 +62,12 @@ public class MainMenuBar extends JMenuBar {
 
         final FrameManager manager = domain.getGUIManager().getFrameManager();
 
-        final ActionListener changeThemeListener = e -> {
-            final Component source = (Component) e.getSource();
-
-            manager.loadTheme(source.getName());
-        };
+        final ActionListener changeThemeListener = e -> manager.loadTheme(e.getActionCommand());
 
         for (final String theme : manager.getAvailableThemeNames()){
             final JMenuItem item = new JMenuItem(theme);
             item.setName(theme);
+            item.setActionCommand(theme);
             item.addActionListener(changeThemeListener);
             themeMenu.add(item);
         }
