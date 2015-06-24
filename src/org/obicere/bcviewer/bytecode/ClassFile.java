@@ -6,33 +6,25 @@ package org.obicere.bcviewer.bytecode;
 public class ClassFile {
 
     private int magic;
-    private short minorVersion;
-    private short majorVersion;
 
-    private short constantPoolCount;
+    private int minorVersion;
+
+    private int majorVersion;
 
     private Object constantPool;
 
-    private short accessFlags;
+    private int accessFlags;
 
-    private short thisClass;
+    private int thisClass;
 
-    private short superClass;
+    private int superClass;
 
-    private short interfacesCount;
+    private int[] interfaces;
 
-    private short[] interfaces;
+    private Field[] fields;
 
-    private short fieldsCount;
+    private Method[] methods;
 
-    private Object[] fields;
-
-    private short methodsCount;
-
-    private Object[] methods;
-
-    private short attributesCount;
-
-    private Object[] attributes;
+    private Attribute[] attributes;
 
 }

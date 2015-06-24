@@ -3,13 +3,19 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ConstantFloat implements Constant {
+public class ConstantFloat extends Constant {
 
     private static final byte TAG = 4;
 
-    @Override
-    public byte getTag(){
-        return TAG;
+    private final float bytes;
+
+    public ConstantFloat(final float bytes) {
+        super(TAG);
+        this.bytes = bytes;
+    }
+
+    public float getBytes() {
+        return bytes;
     }
 
 }

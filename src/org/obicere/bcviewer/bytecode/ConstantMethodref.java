@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ConstantMethodref implements Constant {
+public class ConstantMethodref extends Constant {
 
     private static final byte TAG = 10;
 
@@ -12,6 +12,7 @@ public class ConstantMethodref implements Constant {
     private final int nameAndTypeIndex;
 
     public ConstantMethodref(final int classIndex, final int nameAndTypeIndex) {
+        super(TAG);
         this.classIndex = classIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
@@ -22,11 +23,6 @@ public class ConstantMethodref implements Constant {
 
     public int getNameAndTypeIndex() {
         return nameAndTypeIndex;
-    }
-
-    @Override
-    public byte getTag() {
-        return TAG;
     }
 
 }

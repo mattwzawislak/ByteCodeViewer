@@ -3,13 +3,26 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ConstantNameAndType implements Constant {
+public class ConstantNameAndType extends Constant {
 
     private static final byte TAG = 12;
 
-    @Override
-    public byte getTag(){
-        return TAG;
+    private final int nameIndex;
+
+    private final int descriptorIndex;
+
+    public ConstantNameAndType(final int nameIndex, final int descriptorIndex) {
+        super(TAG);
+        this.nameIndex = nameIndex;
+        this.descriptorIndex = descriptorIndex;
+    }
+
+    public int getNameIndex() {
+        return nameIndex;
+    }
+
+    public int getDescriptorIndex() {
+        return descriptorIndex;
     }
 
 }

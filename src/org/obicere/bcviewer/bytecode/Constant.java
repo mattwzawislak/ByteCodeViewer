@@ -3,8 +3,16 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public interface Constant {
+public class Constant {
 
-    public byte getTag();
+    private final byte tag;
+
+    public Constant(final byte tag){
+        this.tag = tag;
+    }
+
+    public final byte getTag(){
+        return tag;
+    }
 
 }
