@@ -67,7 +67,7 @@ public class Icons {
         this.domain = domain;
     }
 
-    public Icon getIcon(final String name){
+    public synchronized Icon getIcon(final String name){
         final Icon get = cache.get(name);
         if(get == null){
             // Image is cached here
