@@ -1,19 +1,26 @@
 package org.obicere.bcviewer.gui.swing;
 
 import com.alee.laf.WebLookAndFeel;
+import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
+import org.obicere.bcviewer.gui.swing.tree.AnnotationPublicBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.BytecodeTree;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.LookAndFeel;
 import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.logging.Level;
@@ -125,7 +132,31 @@ public class SwingManager implements FrameManager {
 
     private void addComponents() {
         final MainMenuBar menuBar = new MainMenuBar(domain);
+
         final JPanel content = new JPanel();
+
+        final BytecodeTree tree = new BytecodeTree(null);
+        final JScrollPane scrollPane = new JScrollPane(tree);
+
+        final DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+
+        final DefaultMutableTreeNode node = new DefaultMutableTreeNode("Root");
+
+        final Icons domain = this.domain.getIcons();
+
+        final DefaultMutableTreeNode c1 = new AnnotationPublicBytecodeNode(domain);
+        final DefaultMutableTreeNode c2 = new AnnotationPublicBytecodeNode(domain);
+
+        c1.add(new AnnotationPublicBytecodeNode(domain));
+        c1.add(new AnnotationPublicBytecodeNode(domain));
+        c2.add(new AnnotationPublicBytecodeNode(domain));
+        c2.add(new AnnotationPublicBytecodeNode(domain));
+        node.add(c1);
+        node.add(c2);
+
+        model.setRoot(node);
+
+        content.add(scrollPane, BorderLayout.WEST);
 
         frame.setJMenuBar(menuBar);
         frame.setContentPane(content);

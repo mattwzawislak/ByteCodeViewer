@@ -8,6 +8,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public abstract class BytecodeNode extends DefaultMutableTreeNode {
 
+    public BytecodeNode(){
+        super();
+    }
+
+    public BytecodeNode(final Object object){
+        super(object);
+    }
+
     public abstract Icon getIcon();
 
     public abstract Icon getDisabledIcon();
