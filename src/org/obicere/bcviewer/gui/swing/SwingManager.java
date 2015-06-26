@@ -5,8 +5,32 @@ import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
+import org.obicere.bcviewer.gui.swing.tree.AnnotationDefaultBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.AnnotationPrivateBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.AnnotationProtectedBytecodeNode;
 import org.obicere.bcviewer.gui.swing.tree.AnnotationPublicBytecodeNode;
 import org.obicere.bcviewer.gui.swing.tree.BytecodeTree;
+import org.obicere.bcviewer.gui.swing.tree.ClassDefaultBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.ClassPrivateBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.ClassProtectedBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.ClassPublicBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.EnumDefaultBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.EnumPrivateBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.EnumProtectedBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.EnumPublicBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.FieldDefaultBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.FieldPrivateBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.FieldProtectedBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.FieldPublicBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.InterfaceDefaultBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.InterfacePrivateBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.InterfaceProtectedBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.InterfacePublicBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.MethodDefaultBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.MethodPrivateBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.MethodProtectedBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.MethodPublicBytecodeNode;
+import org.obicere.bcviewer.gui.swing.tree.PackageBytecodeNode;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -20,7 +44,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.logging.Level;
@@ -142,21 +165,42 @@ public class SwingManager implements FrameManager {
 
         final DefaultMutableTreeNode node = new DefaultMutableTreeNode("Root");
 
-        final Icons domain = this.domain.getIcons();
+        final Icons icons = this.domain.getIcons();
+        node.add(new AnnotationDefaultBytecodeNode(icons));
+        node.add(new AnnotationPrivateBytecodeNode(icons));
+        node.add(new AnnotationProtectedBytecodeNode(icons));
+        node.add(new AnnotationPublicBytecodeNode(icons));
 
-        final DefaultMutableTreeNode c1 = new AnnotationPublicBytecodeNode(domain);
-        final DefaultMutableTreeNode c2 = new AnnotationPublicBytecodeNode(domain);
+        node.add(new ClassDefaultBytecodeNode(icons));
+        node.add(new ClassPrivateBytecodeNode(icons));
+        node.add(new ClassProtectedBytecodeNode(icons));
+        node.add(new ClassPublicBytecodeNode(icons));
 
-        c1.add(new AnnotationPublicBytecodeNode(domain));
-        c1.add(new AnnotationPublicBytecodeNode(domain));
-        c2.add(new AnnotationPublicBytecodeNode(domain));
-        c2.add(new AnnotationPublicBytecodeNode(domain));
-        node.add(c1);
-        node.add(c2);
+        node.add(new EnumDefaultBytecodeNode(icons));
+        node.add(new EnumPrivateBytecodeNode(icons));
+        node.add(new EnumProtectedBytecodeNode(icons));
+        node.add(new EnumPublicBytecodeNode(icons));
+
+        node.add(new FieldDefaultBytecodeNode(icons));
+        node.add(new FieldPrivateBytecodeNode(icons));
+        node.add(new FieldProtectedBytecodeNode(icons));
+        node.add(new FieldPublicBytecodeNode(icons));
+
+        node.add(new InterfaceDefaultBytecodeNode(icons));
+        node.add(new InterfacePrivateBytecodeNode(icons));
+        node.add(new InterfaceProtectedBytecodeNode(icons));
+        node.add(new InterfacePublicBytecodeNode(icons));
+
+        node.add(new MethodDefaultBytecodeNode(icons));
+        node.add(new MethodPrivateBytecodeNode(icons));
+        node.add(new MethodProtectedBytecodeNode(icons));
+        node.add(new MethodPublicBytecodeNode(icons));
+
+        node.add(new PackageBytecodeNode(icons));
 
         model.setRoot(node);
 
-        content.add(scrollPane, BorderLayout.WEST);
+        content.add(tree);
 
         frame.setJMenuBar(menuBar);
         frame.setContentPane(content);

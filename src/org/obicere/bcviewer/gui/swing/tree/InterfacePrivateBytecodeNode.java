@@ -8,7 +8,7 @@ import org.obicere.bcviewer.configuration.Icons;
 public class InterfacePrivateBytecodeNode extends BytecodeNode {
 
     public InterfacePrivateBytecodeNode(final Icons icons){
-        super(icons.getIcon(Icons.ICON_ANNOTATION_PRIVATE), icons.getIcon(Icons.ICON_INTERFACE_DISABLED));
+        super(icons.getIcon(Icons.ICON_INTERFACE_PRIVATE), icons.getIcon(Icons.ICON_INTERFACE_DISABLED));
     }
 
 }
