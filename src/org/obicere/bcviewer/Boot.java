@@ -43,18 +43,19 @@ public class Boot {
         logger.info("Boot time took (ms): " + (System.currentTimeMillis() - start));
     }
 
-    public static Domain getGlobalDomain(){
+    public static Domain getGlobalDomain() {
         return domain;
     }
 
-    public static StartUpQueue getStartUpQueue(){
+    public static StartUpQueue getStartUpQueue() {
         return QUEUE;
     }
 
-    private static void prepareBoot(){
+    private static void prepareBoot() {
 
         setUpLogger();
         domain = new Domain();
+        domain.initialize();
     }
 
     private static void setUpLogger() {
@@ -69,7 +70,7 @@ public class Boot {
         Logger.getGlobal().addHandler(consoleHandler);
     }
 
-    private static void performStartUp(final Logger logger){
+    private static void performStartUp(final Logger logger) {
         final long start = System.currentTimeMillis();
         logger.fine("Starting StartUp");
 

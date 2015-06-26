@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.context;
 
+import org.obicere.bcviewer.configuration.Icons;
+import org.obicere.bcviewer.configuration.Paths;
 import org.obicere.bcviewer.gui.GUIManager;
 
 import java.util.logging.Logger;
@@ -16,8 +18,14 @@ public class Domain {
     private final Logger logger = Logger.getGlobal();
 
     private GUIManager guiManager;
+    private Paths      paths;
+    private Icons      icons;
 
-    public Domain() {
+    public void initialize() {
+        this.paths = new Paths(this);
+
+        this.icons = new Icons(this);
+
         this.guiManager = new GUIManager(this);
     }
 
@@ -25,7 +33,15 @@ public class Domain {
         return guiManager;
     }
 
-    public Logger getLogger(){
+    public Paths getPaths() {
+        return paths;
+    }
+
+    public Icons getIcons() {
+        return icons;
+    }
+
+    public Logger getLogger() {
         return logger;
     }
 

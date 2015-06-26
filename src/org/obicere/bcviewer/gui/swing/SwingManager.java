@@ -5,9 +5,9 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.LookAndFeel;
 import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
@@ -123,6 +123,14 @@ public class SwingManager implements FrameManager {
         frame.setVisible(true);
     }
 
+    private void addComponents() {
+        final MainMenuBar menuBar = new MainMenuBar(domain);
+        final JPanel content = new JPanel();
+
+        frame.setJMenuBar(menuBar);
+        frame.setContentPane(content);
+    }
+
     @Override
     public void close() {
         if (!frame.isVisible()) {
@@ -164,13 +172,6 @@ public class SwingManager implements FrameManager {
     @Override
     public void pack() {
         frame.pack();
-    }
-
-    private void addComponents() {
-        final MainMenuBar menuBar = new MainMenuBar(domain);
-        frame.setJMenuBar(menuBar);
-
-        frame.getContentPane().add(new JButton("Test Button"));
     }
 
     @Override
