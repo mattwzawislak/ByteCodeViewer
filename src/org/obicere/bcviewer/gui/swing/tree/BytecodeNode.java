@@ -6,18 +6,29 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * @author Obicere
  */
-public abstract class BytecodeNode extends DefaultMutableTreeNode {
+public class BytecodeNode extends DefaultMutableTreeNode {
 
-    public BytecodeNode(){
+    private final Icon icon;
+    private final Icon disabledIcon;
+
+    public BytecodeNode(final Icon icon, final Icon disabledIcon) {
         super();
+        this.icon = icon;
+        this.disabledIcon = disabledIcon;
     }
 
-    public BytecodeNode(final Object object){
+    public BytecodeNode(final Icon icon, final Icon disabledIcon, final Object object) {
         super(object);
+        this.icon = icon;
+        this.disabledIcon = disabledIcon;
     }
 
-    public abstract Icon getIcon();
+    public Icon getIcon() {
+        return icon;
+    }
 
-    public abstract Icon getDisabledIcon();
+    public Icon getDisabledIcon() {
+        return disabledIcon;
+    }
 
 }
