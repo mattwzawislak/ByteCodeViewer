@@ -5,9 +5,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.Component;
 
-/**
- * @author Obicere
- */
 public class BytecodeTreeCellRenderer extends DefaultTreeCellRenderer {
 
     @Override
@@ -20,7 +17,5 @@ public class BytecodeTreeCellRenderer extends DefaultTreeCellRenderer {
             component.setDisabledIcon(node.getDisabledIcon());
         }
         return component;
-
     }
-
 }
