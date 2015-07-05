@@ -3,7 +3,7 @@ package org.obicere.bcviewer.gui.swing;
 import com.alee.laf.WebLookAndFeel;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
-import org.obicere.bcviewer.gui.swing.editor.ByteTextPane;
+import org.obicere.bcviewer.gui.swing.editor.EditorPanel;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 
 import javax.swing.JFrame;
@@ -17,6 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import java.awt.Component;
 import java.awt.Container;
+import java.io.File;
 import java.util.logging.Level;
 
 /**
@@ -128,10 +129,10 @@ public class SwingManager implements FrameManager {
         final MainMenuBar menuBar = new MainMenuBar(domain);
         final JPanel content = new JPanel();
 
-        content.add(new ByteTextPane());
+        content.add(new EditorPanel(new File("F:\\Programming\\BytecodeViewer\\BytecodeViewer.iml")));
 
         frame.setJMenuBar(menuBar);
-        frame.setContentPane(content);
+        frame.add(content);
     }
 
     @Override

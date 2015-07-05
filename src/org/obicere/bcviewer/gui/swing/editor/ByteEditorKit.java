@@ -37,6 +37,7 @@ public class ByteEditorKit extends StyledEditorKit {
         while (true) {
             read = in.read();
             if (read < 0) {
+
                 return;
             }
             read &= 0xff;
@@ -45,8 +46,11 @@ public class ByteEditorKit extends StyledEditorKit {
             final String next = new String(new char[]{upper, lower});
 
             doc.insertString(last, next, getInputAttributes());
-            doc.insertString(last + 2, " ", getInputAttributes());
-            last += 3;
+            last += 2;
+            if(in.available() > 0) {
+                doc.insertString(last, " ", getInputAttributes());
+                last++;
+            }
         }
     }
 

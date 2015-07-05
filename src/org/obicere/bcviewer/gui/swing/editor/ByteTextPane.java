@@ -1,17 +1,16 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
-import javax.swing.JEditorPane;
+import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
-import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
  * @author Obicere
  */
-public class ByteTextPane extends JEditorPane {
+public class ByteTextPane extends JTextPane {
 
     private byte[] bytes;
 
@@ -21,10 +20,10 @@ public class ByteTextPane extends JEditorPane {
         setEditable(false);
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(400, 500);
-    }
+    /*@Override
+    public Dimension getPreferredSize(){
+        return new Dimension(400, 600);
+    }*/
 
     @Override
     public void setText(final String text) {
@@ -43,17 +42,24 @@ public class ByteTextPane extends JEditorPane {
             this.bytes = bytes;
             final Document document = getDocument();
             document.remove(0, document.getLength());
-            if(bytes == null || bytes.length == 0){
+            if (bytes == null || bytes.length == 0) {
                 return;
             }
             final ByteArrayInputStream input = new ByteArrayInputStream(bytes);
             final EditorKit kit = getEditorKit();
-            if (kit != null) {
-                kit.read(input, getDocument(), 0);
-            }
+            kit.read(input, getDocument(), 0);
         } catch (final IOException | BadLocationException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public boolean getScrollableTracksViewportWidth(){
+        return getUI().getPreferredSize(this).width <= getParent().getSize().width;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight(){
+        return getUI().getPreferredSize(this).height <= getParent().getSize().height;
+    }
 }
