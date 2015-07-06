@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.File;
@@ -127,7 +128,9 @@ public class SwingManager implements FrameManager {
 
     private void addComponents() {
         final MainMenuBar menuBar = new MainMenuBar(domain);
-        final JPanel content = new JPanel();
+        final JPanel content = new JPanel(new BorderLayout());
+
+        content.setName("content");
 
         content.add(new EditorPanel(new File("F:\\Programming\\BytecodeViewer\\BytecodeViewer.iml")));
 

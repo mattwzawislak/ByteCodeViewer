@@ -16,14 +16,8 @@ public class ByteTextPane extends JTextPane {
 
     public ByteTextPane() {
         setEditorKit(new ByteEditorKit());
-        setBytes(new byte[]{1, 2, 3});
         setEditable(false);
     }
-
-    /*@Override
-    public Dimension getPreferredSize(){
-        return new Dimension(400, 600);
-    }*/
 
     @Override
     public void setText(final String text) {
@@ -51,15 +45,5 @@ public class ByteTextPane extends JTextPane {
         } catch (final IOException | BadLocationException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public boolean getScrollableTracksViewportWidth(){
-        return getUI().getPreferredSize(this).width <= getParent().getSize().width;
-    }
-
-    @Override
-    public boolean getScrollableTracksViewportHeight(){
-        return getUI().getPreferredSize(this).height <= getParent().getSize().height;
     }
 }

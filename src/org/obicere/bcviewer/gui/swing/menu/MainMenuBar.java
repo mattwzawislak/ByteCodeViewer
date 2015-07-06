@@ -3,9 +3,11 @@ package org.obicere.bcviewer.gui.swing.menu;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 
 /**
@@ -51,6 +53,22 @@ public class MainMenuBar extends JMenuBar {
         final JMenu viewMenu = new JMenu("View");
         viewMenu.setName("view");
         viewMenu.setMnemonic('V');
+
+        final JCheckBoxMenuItem showEditorBytes = new JCheckBoxMenuItem("Show Editor Bytes", true);
+
+        showEditorBytes.addActionListener(e -> {
+            final boolean show = showEditorBytes.isSelected();
+            final Object component = domain.getGUIManager().getFrameManager().getComponent("content.editor.split.bytesScroll");
+            if(component != null){
+                Component c = (Component) component;
+                c.setVisible(show);
+                c.getParent().revalidate();
+                c.getParent().repaint();
+            }
+            domain.getGUIManager().getFrameManager().paint();
+        });
+
+        viewMenu.add(showEditorBytes);
 
         return viewMenu;
     }
