@@ -11,11 +11,11 @@ public class CodeAttribute extends Attribute {
 
     private final byte[] code;
 
-    private final Object[] exceptions;
+    private final CodeException[] exceptions;
 
     private final Attribute[] attributes;
 
-    public CodeAttribute(final int attributeNameIndex, final int attributeLength, final int maxStack, final int maxLocals, final byte[] code, final Object[] exceptions, final Attribute[] attributes) {
+    public CodeAttribute(final int attributeNameIndex, final int attributeLength, final int maxStack, final int maxLocals, final byte[] code, final CodeException[] exceptions, final Attribute[] attributes) {
         super(attributeNameIndex, attributeLength);
         this.maxStack = maxStack;
         this.maxLocals = maxLocals;

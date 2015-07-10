@@ -13,4 +13,8 @@ public class ExceptionsAttribute extends Attribute {
         this.indexTable = indexTable;
     }
 
+    public int[] getIndexTable(){
+        return indexTable;
+    }
+
 }
