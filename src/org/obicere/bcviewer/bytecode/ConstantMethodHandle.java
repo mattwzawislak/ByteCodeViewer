@@ -25,4 +25,8 @@ public class ConstantMethodHandle extends Constant {
         return referenceIndex;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return constantPool.get(referenceIndex);
+    }
 }

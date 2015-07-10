@@ -18,4 +18,8 @@ public class ConstantClass extends Constant {
         return nameIndex;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return constantPool.get(nameIndex);
+    }
 }

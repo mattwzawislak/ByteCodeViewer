@@ -25,4 +25,8 @@ public class ConstantInvokeDynamic extends Constant {
         return nameAndTypeIndex;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return constantPool.get(nameAndTypeIndex);
+    }
 }

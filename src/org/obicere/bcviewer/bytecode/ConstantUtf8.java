@@ -22,4 +22,8 @@ public class ConstantUtf8 extends Constant {
         return bytes;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return bytes;
+    }
 }

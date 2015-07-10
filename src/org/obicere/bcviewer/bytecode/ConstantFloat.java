@@ -18,4 +18,8 @@ public class ConstantFloat extends Constant {
         return bytes;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return bytes;
+    }
 }

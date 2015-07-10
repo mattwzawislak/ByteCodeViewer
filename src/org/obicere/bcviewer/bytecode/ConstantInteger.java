@@ -18,4 +18,8 @@ public class ConstantInteger extends Constant {
         return bytes;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return bytes;
+    }
 }

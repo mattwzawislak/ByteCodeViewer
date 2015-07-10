@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ConstantInterfaceMethodref extends Constant {
+public class ConstantInterfaceMethodRef extends Constant {
 
     private static final byte TAG = 11;
 
@@ -11,7 +11,7 @@ public class ConstantInterfaceMethodref extends Constant {
 
     private final int nameAndTypeIndex;
 
-    public ConstantInterfaceMethodref(final int classIndex, final int nameAndTypeIndex) {
+    public ConstantInterfaceMethodRef(final int classIndex, final int nameAndTypeIndex) {
         super(TAG);
         this.classIndex = classIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
@@ -25,4 +25,9 @@ public class ConstantInterfaceMethodref extends Constant {
         return nameAndTypeIndex;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        // Double redirection to get representation of name and type
+        return constantPool.get(nameAndTypeIndex).get(constantPool);
+    }
 }

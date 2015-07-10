@@ -17,4 +17,9 @@ public class ConstantMethodType extends Constant {
     public int getDescriptorIndex() {
         return descriptorIndex;
     }
+
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return constantPool.get(descriptorIndex);
+    }
 }

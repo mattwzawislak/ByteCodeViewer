@@ -25,4 +25,8 @@ public class ConstantNameAndType extends Constant {
         return descriptorIndex;
     }
 
+    @Override
+    public Object get(final ConstantPool constantPool) {
+        return constantPool.get(descriptorIndex);
+    }
 }
