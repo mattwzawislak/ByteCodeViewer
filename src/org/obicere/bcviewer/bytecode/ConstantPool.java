@@ -16,7 +16,7 @@ public class ConstantPool {
     }
 
     public String getAsString(final int index){
-        final Constant get = get(index);
-        return String.valueOf(get);
+        final Constant constant = get(index);
+        return String.valueOf(constant.get(this));
     }
 }
