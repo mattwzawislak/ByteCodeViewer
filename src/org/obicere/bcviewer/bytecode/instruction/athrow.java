@@ -6,9 +6,9 @@ package org.obicere.bcviewer.bytecode.instruction;
 public class athrow extends Instruction {
 
     private static final String MNEMONIC = "athrow";
-    private static final int OPCODE = 0xbf;
+    private static final int    OPCODE   = 0xbf;
 
-    public athrow(){
+    public athrow() {
         super(MNEMONIC, OPCODE);
     }
 

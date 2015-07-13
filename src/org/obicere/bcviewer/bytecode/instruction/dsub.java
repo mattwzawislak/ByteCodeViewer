@@ -6,9 +6,9 @@ package org.obicere.bcviewer.bytecode.instruction;
 public class dsub extends Instruction {
 
     private static final String MNEMONIC = "dsub";
-    private static final int OPCODE = 0x67;
+    private static final int    OPCODE   = 0x67;
 
-    public dsub(){
+    public dsub() {
         super(MNEMONIC, OPCODE);
     }
 

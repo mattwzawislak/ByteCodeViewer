@@ -6,9 +6,9 @@ package org.obicere.bcviewer.bytecode.instruction;
 public class drem extends Instruction {
 
     private static final String MNEMONIC = "drem";
-    private static final int OPCODE = 0x73;
+    private static final int    OPCODE   = 0x73;
 
-    public drem(){
+    public drem() {
         super(MNEMONIC, OPCODE);
     }
 

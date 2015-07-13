@@ -6,9 +6,9 @@ package org.obicere.bcviewer.bytecode.instruction;
 public class dreturn extends Instruction {
 
     private static final String MNEMONIC = "dreturn";
-    private static final int OPCODE = 0xaf;
+    private static final int    OPCODE   = 0xaf;
 
-    public dreturn(){
+    public dreturn() {
         super(MNEMONIC, OPCODE);
     }
 

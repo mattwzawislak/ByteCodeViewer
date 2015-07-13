@@ -6,9 +6,9 @@ package org.obicere.bcviewer.bytecode.instruction;
 public class dcmpl extends Instruction {
 
     private static final String MNEMONIC = "dcmpl";
-    private static final int OPCODE = 0x97;
+    private static final int    OPCODE   = 0x97;
 
-    public dcmpl(){
+    public dcmpl() {
         super(MNEMONIC, OPCODE);
     }
 

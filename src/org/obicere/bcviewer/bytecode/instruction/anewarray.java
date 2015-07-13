@@ -17,15 +17,15 @@ public class anewarray extends Instruction {
         this.indexbyte2 = indexbyte2;
     }
 
-    public int getIndexbyte1(){
+    public int getIndexbyte1() {
         return indexbyte1;
     }
 
-    public int getIndexbyte2(){
+    public int getIndexbyte2() {
         return indexbyte2;
     }
 
-    public int getIndex(){
+    public int getIndex() {
         return (indexbyte1 << 8) | indexbyte2;
     }
 }

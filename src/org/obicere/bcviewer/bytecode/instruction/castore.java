@@ -6,9 +6,9 @@ package org.obicere.bcviewer.bytecode.instruction;
 public class castore extends Instruction {
 
     private static final String MNEMONIC = "castore";
-    private static final int OPCODE = 0x55;
+    private static final int    OPCODE   = 0x55;
 
-    public castore(){
+    public castore() {
         super(MNEMONIC, OPCODE);
     }
 
