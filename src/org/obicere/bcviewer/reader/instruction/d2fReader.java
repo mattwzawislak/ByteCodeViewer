@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class d2fReader implements Reader<d2f> {
+
+    private final d2f instance = new d2f();
+
     @Override
     public d2f read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

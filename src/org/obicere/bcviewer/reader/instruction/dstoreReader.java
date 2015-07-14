@@ -10,8 +10,9 @@ import java.io.IOException;
  * @author Obicere
  */
 public class dstoreReader implements Reader<dstore> {
+
     @Override
     public dstore read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return new dstore(input.readUnsignedByte());
     }
 }

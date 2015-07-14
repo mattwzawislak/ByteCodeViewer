@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class dstore_2Reader implements Reader<dstore_2> {
+
+    private final dstore_2 instance = new dstore_2();
+
     @Override
     public dstore_2 read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

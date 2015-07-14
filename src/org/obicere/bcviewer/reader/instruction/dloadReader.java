@@ -12,6 +12,6 @@ import java.io.IOException;
 public class dloadReader implements Reader<dload> {
     @Override
     public dload read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return new dload(input.readUnsignedByte());
     }
 }

@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class daloadReader implements Reader<daload> {
+
+    private final daload instance = new daload();
+
     @Override
     public daload read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

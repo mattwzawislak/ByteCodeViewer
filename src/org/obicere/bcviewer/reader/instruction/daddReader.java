@@ -10,8 +10,10 @@ import java.io.IOException;
  * @author Obicere
  */
 public class daddReader implements Reader<dadd> {
+
+    private final dadd instance = new dadd();
     @Override
     public dadd read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }
