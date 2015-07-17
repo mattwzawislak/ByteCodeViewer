@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class retReader implements Reader<ret> {
 
-    private final ret instance = new ret();
-
     @Override
     public ret read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ret(input.readUnsignedByte());
     }
 }

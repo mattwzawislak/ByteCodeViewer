@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class getfieldReader implements Reader<getfield> {
 
-    private final getfield instance = new getfield();
-
     @Override
     public getfield read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new getfield(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

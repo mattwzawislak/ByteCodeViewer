@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class invokedynamicReader implements Reader<invokedynamic> {
 
-    private final invokedynamic instance = new invokedynamic();
-
     @Override
     public invokedynamic read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new invokedynamic(input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

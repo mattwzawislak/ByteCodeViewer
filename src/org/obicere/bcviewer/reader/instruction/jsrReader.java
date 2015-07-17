@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class jsrReader implements Reader<jsr> {
 
-    private final jsr instance = new jsr();
-
     @Override
     public jsr read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new jsr(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class istoreReader implements Reader<istore> {
 
-    private final istore instance = new istore();
-
     @Override
     public istore read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new istore(input.readUnsignedByte());
     }
 }

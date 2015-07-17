@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class if_icmpgtReader implements Reader<if_icmpgt> {
 
-    private final if_icmpgt instance = new if_icmpgt();
-
     @Override
     public if_icmpgt read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new if_icmpgt(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

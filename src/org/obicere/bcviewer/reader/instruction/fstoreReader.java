@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fstoreReader implements Reader<fstore> {
 
-    private final fstore instance = new fstore();
-
     @Override
     public fstore read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fstore(input.readUnsignedByte());
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class invokeinterfaceReader implements Reader<invokeinterface> {
 
-    private final invokeinterface instance = new invokeinterface();
-
     @Override
     public invokeinterface read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new invokeinterface(input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

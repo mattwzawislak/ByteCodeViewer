@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class getstaticReader implements Reader<getstatic> {
 
-    private final getstatic instance = new getstatic();
-
     @Override
     public getstatic read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new getstatic(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

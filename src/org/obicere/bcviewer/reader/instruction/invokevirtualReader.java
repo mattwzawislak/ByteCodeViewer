@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class invokevirtualReader implements Reader<invokevirtual> {
 
-    private final invokevirtual instance = new invokevirtual();
-
     @Override
     public invokevirtual read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new invokevirtual(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

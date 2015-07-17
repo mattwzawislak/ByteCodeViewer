@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class putfieldReader implements Reader<putfield> {
 
-    private final putfield instance = new putfield();
-
     @Override
     public putfield read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new putfield(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

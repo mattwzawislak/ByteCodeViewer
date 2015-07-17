@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class jsr_wReader implements Reader<jsr_w> {
 
-    private final jsr_w instance = new jsr_w();
-
     @Override
     public jsr_w read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new jsr_w(input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ifgeReader implements Reader<ifge> {
 
-    private final ifge instance = new ifge();
-
     @Override
     public ifge read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ifge(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

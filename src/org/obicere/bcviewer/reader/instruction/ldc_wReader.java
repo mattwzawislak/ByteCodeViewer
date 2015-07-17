@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ldc_wReader implements Reader<ldc_w> {
 
-    private final ldc_w instance = new ldc_w();
-
     @Override
     public ldc_w read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ldc_w(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

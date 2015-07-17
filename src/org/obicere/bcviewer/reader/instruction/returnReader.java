@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * @author Obicere
  */
-public class return_Reader implements Reader<return_> {
+public class returnReader implements Reader<return_> {
 
     private final return_ instance = new return_();
 

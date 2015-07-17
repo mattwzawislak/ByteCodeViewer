@@ -9,12 +9,10 @@ import java.io.IOException;
 /**
  * @author Obicere
  */
-public class instanceof_Reader implements Reader<instanceof_> {
-
-    private final instanceof_ instance = new instanceof_();
+public class instanceofReader implements Reader<instanceof_> {
 
     @Override
     public instanceof_ read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new instanceof_(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

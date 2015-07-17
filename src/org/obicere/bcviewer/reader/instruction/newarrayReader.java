@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class newarrayReader implements Reader<newarray> {
 
-    private final newarray instance = new newarray();
-
     @Override
     public newarray read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new newarray(input.readUnsignedByte());
     }
 }

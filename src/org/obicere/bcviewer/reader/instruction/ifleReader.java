@@ -10,11 +10,8 @@ import java.io.IOException;
  * @author Obicere
  */
 public class ifleReader implements Reader<ifle> {
-
-    private final ifle instance = new ifle();
-
     @Override
     public ifle read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ifle(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

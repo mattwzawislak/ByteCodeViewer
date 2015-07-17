@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ifgtReader implements Reader<ifgt> {
 
-    private final ifgt instance = new ifgt();
-
     @Override
     public ifgt read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ifgt(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

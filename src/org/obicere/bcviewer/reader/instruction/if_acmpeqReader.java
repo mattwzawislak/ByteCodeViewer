@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class if_acmpeqReader implements Reader<if_acmpeq> {
 
-    private final if_acmpeq instance = new if_acmpeq();
-
     @Override
     public if_acmpeq read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new if_acmpeq(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

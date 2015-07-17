@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class multianewarrayReader implements Reader<multianewarray> {
 
-    private final multianewarray instance = new multianewarray();
-
     @Override
     public multianewarray read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new multianewarray(input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

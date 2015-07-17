@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class if_icmpltReader implements Reader<if_icmplt> {
 
-    private final if_icmplt instance = new if_icmplt();
-
     @Override
     public if_icmplt read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new if_icmplt(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

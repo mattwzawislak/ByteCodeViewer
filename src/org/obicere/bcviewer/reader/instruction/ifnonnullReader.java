@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ifnonnullReader implements Reader<ifnonnull> {
 
-    private final ifnonnull instance = new ifnonnull();
-
     @Override
     public ifnonnull read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ifnonnull(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class sipushReader implements Reader<sipush> {
 
-    private final sipush instance = new sipush();
-
     @Override
     public sipush read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new sipush(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ifeqReader implements Reader<ifeq> {
 
-    private final ifeq instance = new ifeq();
-
     @Override
     public ifeq read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ifeq(input.readUnsignedByte(), input.readUnsignedByte());
     }
 }

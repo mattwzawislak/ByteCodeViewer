@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ldcReader implements Reader<ldc> {
 
-    private final ldc instance = new ldc();
-
     @Override
     public ldc read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ldc(input.readUnsignedByte());
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lloadReader implements Reader<lload> {
 
-    private final lload instance = new lload();
-
     @Override
     public lload read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lload(input.readUnsignedByte());
     }
 }
