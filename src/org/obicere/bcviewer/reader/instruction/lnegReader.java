@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class lnegReader implements Reader<lneg> {
+
+    private final lneg instance = new lneg();
+
     @Override
     public lneg read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

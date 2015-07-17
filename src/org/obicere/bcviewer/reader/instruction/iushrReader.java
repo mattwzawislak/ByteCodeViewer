@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class iushrReader implements Reader<iushr> {
+
+    private final iushr instance = new iushr();
+
     @Override
     public iushr read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

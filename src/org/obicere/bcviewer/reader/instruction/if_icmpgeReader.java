@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class if_icmpgeReader implements Reader<if_icmpge> {
+
+    private final if_icmpge instance = new if_icmpge();
+
     @Override
     public if_icmpge read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

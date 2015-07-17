@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class i2cReader implements Reader<i2c> {
+
+    private final i2c instance = new i2c();
+
     @Override
     public i2c read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

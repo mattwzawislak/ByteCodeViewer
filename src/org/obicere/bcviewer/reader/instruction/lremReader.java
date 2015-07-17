@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class lremReader implements Reader<lrem> {
+
+    private final lrem instance = new lrem();
+
     @Override
     public lrem read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

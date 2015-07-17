@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class fcmpgReader implements Reader<fcmpg> {
+
+    private final fcmpg instance = new fcmpg();
+
     @Override
     public fcmpg read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

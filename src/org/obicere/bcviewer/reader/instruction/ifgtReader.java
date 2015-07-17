@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class ifgtReader implements Reader<ifgt> {
+
+    private final ifgt instance = new ifgt();
+
     @Override
     public ifgt read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

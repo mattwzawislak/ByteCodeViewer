@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class fastoreReader implements Reader<fastore> {
+
+    private final fastore instance = new fastore();
+
     @Override
     public fastore read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

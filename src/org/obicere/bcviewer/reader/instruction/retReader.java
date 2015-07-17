@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class retReader implements Reader<ret> {
+
+    private final ret instance = new ret();
+
     @Override
     public ret read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

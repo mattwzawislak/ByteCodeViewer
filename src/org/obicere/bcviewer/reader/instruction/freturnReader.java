@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class freturnReader implements Reader<freturn> {
+
+    private final freturn instance = new freturn();
+
     @Override
     public freturn read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

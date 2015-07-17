@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class iorReader implements Reader<ior> {
+
+    private final ior instance = new ior();
+
     @Override
     public ior read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

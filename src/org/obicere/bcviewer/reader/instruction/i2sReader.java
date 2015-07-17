@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class i2sReader implements Reader<i2s> {
+
+    private final i2s instance = new i2s();
+
     @Override
     public i2s read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

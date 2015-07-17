@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class ifltReader implements Reader<iflt> {
+
+    private final iflt instance = new iflt();
+
     @Override
     public iflt read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

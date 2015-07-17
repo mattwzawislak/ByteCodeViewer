@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class iincReader implements Reader<iinc> {
+
+    private final iinc instance = new iinc();
+
     @Override
     public iinc read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

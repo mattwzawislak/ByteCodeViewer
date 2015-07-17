@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class if_icmpltReader implements Reader<if_icmplt> {
+
+    private final if_icmplt instance = new if_icmplt();
+
     @Override
     public if_icmplt read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

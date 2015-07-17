@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class invokedynamicReader implements Reader<invokedynamic> {
+
+    private final invokedynamic instance = new invokedynamic();
+
     @Override
     public invokedynamic read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class instanceof_Reader implements Reader<instanceof_> {
+
+    private final instanceof_ instance = new instanceof_();
+
     @Override
     public instanceof_ read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

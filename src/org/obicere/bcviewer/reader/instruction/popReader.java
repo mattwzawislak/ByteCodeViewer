@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class popReader implements Reader<pop> {
+
+    private final pop instance = new pop();
+
     @Override
     public pop read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

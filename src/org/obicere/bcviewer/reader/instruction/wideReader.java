@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class wideReader implements Reader<wide> {
+
+    private final wide instance = new wide();
+
     @Override
     public wide read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

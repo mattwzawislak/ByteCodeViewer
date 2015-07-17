@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class if_acmpeqReader implements Reader<if_acmpeq> {
+
+    private final if_acmpeq instance = new if_acmpeq();
+
     @Override
     public if_acmpeq read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

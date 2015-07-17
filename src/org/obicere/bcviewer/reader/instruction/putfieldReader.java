@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class putfieldReader implements Reader<putfield> {
+
+    private final putfield instance = new putfield();
+
     @Override
     public putfield read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

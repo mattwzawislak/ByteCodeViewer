@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class jsr_wReader implements Reader<jsr_w> {
+
+    private final jsr_w instance = new jsr_w();
+
     @Override
     public jsr_w read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

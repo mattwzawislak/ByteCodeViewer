@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class landReader implements Reader<land> {
+
+    private final land instance = new land();
+
     @Override
     public land read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

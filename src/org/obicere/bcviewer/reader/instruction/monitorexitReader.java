@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class monitorexitReader implements Reader<monitorexit> {
+
+    private final monitorexit instance = new monitorexit();
+
     @Override
     public monitorexit read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

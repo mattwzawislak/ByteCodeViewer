@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class swapReader implements Reader<swap> {
+
+    private final swap instance = new swap();
+
     @Override
     public swap read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

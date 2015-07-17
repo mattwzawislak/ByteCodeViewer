@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class i2lReader implements Reader<i2l> {
+
+    private final i2l instance = new i2l();
+
     @Override
     public i2l read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class lshlReader implements Reader<lshl> {
+
+    private final lshl instance = new lshl();
+
     @Override
     public lshl read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

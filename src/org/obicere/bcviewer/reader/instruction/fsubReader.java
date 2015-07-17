@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class fsubReader implements Reader<fsub> {
+
+    private final fsub instance = new fsub();
+
     @Override
     public fsub read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

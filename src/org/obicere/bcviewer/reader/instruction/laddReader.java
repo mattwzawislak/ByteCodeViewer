@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class laddReader implements Reader<ladd> {
+
+    private final ladd instance = new ladd();
+
     @Override
     public ladd read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

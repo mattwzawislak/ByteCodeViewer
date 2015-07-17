@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class lastoreReader implements Reader<lastore> {
+
+    private final lastore instance = new lastore();
+
     @Override
     public lastore read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class getfieldReader implements Reader<getfield> {
+
+    private final getfield instance = new getfield();
+
     @Override
     public getfield read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

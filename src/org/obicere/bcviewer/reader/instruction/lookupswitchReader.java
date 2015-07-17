@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class lookupswitchReader implements Reader<lookupswitch> {
+
+    private final lookupswitch instance = new lookupswitch();
+
     @Override
     public lookupswitch read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

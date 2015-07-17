@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class tableswitchReader implements Reader<tableswitch> {
+
+    private final tableswitch instance = new tableswitch();
+
     @Override
     public tableswitch read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

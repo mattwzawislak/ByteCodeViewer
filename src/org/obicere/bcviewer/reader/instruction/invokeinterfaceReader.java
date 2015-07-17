@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class invokeinterfaceReader implements Reader<invokeinterface> {
+
+    private final invokeinterface instance = new invokeinterface();
+
     @Override
     public invokeinterface read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

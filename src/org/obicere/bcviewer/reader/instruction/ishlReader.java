@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class ishlReader implements Reader<ishl> {
+
+    private final ishl instance = new ishl();
+
     @Override
     public ishl read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class nopReader implements Reader<nop> {
+
+    private final nop instance = new nop();
+
     @Override
     public nop read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

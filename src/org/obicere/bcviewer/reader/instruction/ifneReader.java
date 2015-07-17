@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class ifneReader implements Reader<ifne> {
+
+    private final ifne instance = new ifne();
+
     @Override
     public ifne read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

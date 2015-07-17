@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class sastoreReader implements Reader<sastore> {
+
+    private final sastore instance = new sastore();
+
     @Override
     public sastore read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class invokespecialReader implements Reader<invokespecial> {
+
+    private final invokespecial instance = new invokespecial();
+
     @Override
     public invokespecial read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

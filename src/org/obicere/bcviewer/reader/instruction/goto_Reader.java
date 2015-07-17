@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class goto_Reader implements Reader<goto_> {
+
+    private final goto_ instance = new goto_();
+
     @Override
     public goto_ read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

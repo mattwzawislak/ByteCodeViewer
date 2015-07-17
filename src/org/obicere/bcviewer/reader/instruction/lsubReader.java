@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class lsubReader implements Reader<lsub> {
+
+    private final lsub instance = new lsub();
+
     @Override
     public lsub read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

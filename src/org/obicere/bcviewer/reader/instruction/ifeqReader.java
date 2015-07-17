@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class ifeqReader implements Reader<ifeq> {
+
+    private final ifeq instance = new ifeq();
+
     @Override
     public ifeq read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

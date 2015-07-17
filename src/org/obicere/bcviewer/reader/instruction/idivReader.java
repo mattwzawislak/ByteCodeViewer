@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class idivReader implements Reader<idiv> {
+
+    private final idiv instance = new idiv();
+
     @Override
     public idiv read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

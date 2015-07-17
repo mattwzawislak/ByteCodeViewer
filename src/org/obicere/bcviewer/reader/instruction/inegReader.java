@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class inegReader implements Reader<ineg> {
+
+    private final ineg instance = new ineg();
+
     @Override
     public ineg read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }

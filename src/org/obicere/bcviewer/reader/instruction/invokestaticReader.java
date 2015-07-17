@@ -10,8 +10,11 @@ import java.io.IOException;
  * @author Obicere
  */
 public class invokestaticReader implements Reader<invokestatic> {
+
+    private final invokestatic instance = new invokestatic();
+
     @Override
     public invokestatic read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        return instance;
     }
 }
