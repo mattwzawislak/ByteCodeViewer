@@ -15,10 +15,10 @@ public class invokeinterface extends Instruction {
     public invokeinterface(final int indexbyte1, final int indexbyte2, final int count, final int indexbyte4) {
         super(MNEMONIC, OPCODE);
         if (count == 0) {
-            throw new IllegalArgumentException("count operand must not be 0.");
+            throw new ClassFormatError("count operand must not be 0.");
         }
         if (indexbyte4 != 0) {
-            throw new IllegalArgumentException("invokeinerface byte 4 must be set to 0.");
+            throw new ClassFormatError("invokeinerface byte 4 must be set to 0.");
         }
         this.indexbyte1 = indexbyte1;
         this.indexbyte2 = indexbyte2;

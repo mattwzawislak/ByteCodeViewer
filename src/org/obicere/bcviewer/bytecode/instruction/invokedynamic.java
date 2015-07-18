@@ -14,7 +14,7 @@ public class invokedynamic extends Instruction {
     public invokedynamic(final int indexbyte1, final int indexbyte2, final int indexbyte3, final int indexbyte4) {
         super(MNEMONIC, OPCODE);
         if (indexbyte3 != 0 || indexbyte4 != 0) {
-            throw new IllegalArgumentException("invokedynamic bytes 3 and 4 must be set to 0.");
+            throw new ClassFormatError("invokedynamic bytes 3 and 4 must be set to 0.");
         }
         this.indexbyte1 = indexbyte1;
         this.indexbyte2 = indexbyte2;

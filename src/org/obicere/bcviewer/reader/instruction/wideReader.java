@@ -12,20 +12,25 @@ import java.io.IOException;
  */
 public class wideReader implements Reader<wide> {
 
-    private final Object instructionReader;
+    private final InstructionReader instructionReader;
 
-    public wideReader(final Object instructionReader) {
+    public wideReader(final InstructionReader instructionReader) {
         this.instructionReader = instructionReader;
     }
 
     @Override
     public wide read(final IndexedDataInputStream input) throws IOException {
-        final Instruction contain = null; // instructionReader.readInstruction(input.nextUnsignedByte());
-        if (contain.getOpcode() == 0x84) { // iinc opcode
+        final Instruction contain = instructionReader.read(input);
+        final int opcode = contain.getOpcode();
+        if (opcode == InstructionReader.OPCODE_IINC) { // iinc opcode
             return new wide(contain, input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
-        } else {
-            // Check to ensure this is a valid wide instruction
+        } else if (opcode == InstructionReader.OPCODE_ILOAD || opcode == InstructionReader.OPCODE_FLOAD || opcode == InstructionReader.OPCODE_LLOAD ||
+                   opcode == InstructionReader.OPCODE_DLOAD || opcode == InstructionReader.OPCODE_ISTORE || opcode == InstructionReader.OPCODE_ASTORE ||
+                   opcode == InstructionReader.OPCODE_LSTORE || opcode == InstructionReader.OPCODE_DSTORE || opcode == InstructionReader.OPCODE_RET) {
+            // Check to ensure this is a valid wide instruction for a wide instruction
             return new wide(contain, input.readUnsignedByte(), input.readUnsignedByte());
+        } else {
+            throw new ClassFormatError("invalid operation after a wide instruction listing: " + opcode);
         }
     }
 }
