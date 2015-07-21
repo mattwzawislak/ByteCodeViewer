@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author Obicere
  */
-public class InstructionReader extends MultiReader<Instruction> {
+public class InstructionReader extends MultiReader<Integer, Instruction> {
 
     public static final int OPCODE_NOP             = 0x0;
     public static final int OPCODE_ACONST_NULL     = 0x1;

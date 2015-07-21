@@ -5,26 +5,76 @@ package org.obicere.bcviewer.bytecode;
  */
 public class ClassFile {
 
-    private int magic;
+    private final int minorVersion;
 
-    private int minorVersion;
+    private final int majorVersion;
 
-    private int majorVersion;
+    private final ConstantPool constantPool;
 
-    private Object constantPool;
+    private final int accessFlags;
 
-    private int accessFlags;
+    private final int thisClass;
 
-    private int thisClass;
+    private final int superClass;
 
-    private int superClass;
+    private final int[] interfaces;
 
-    private int[] interfaces;
+    private final Field[] fields;
 
-    private Field[] fields;
+    private final Method[] methods;
 
-    private Method[] methods;
+    private final Attribute[] attributes;
 
-    private Attribute[] attributes;
+    public ClassFile(final int minorVersion, final int majorVersion, final ConstantPool constantPool, final int accessFlags, final int thisClass, final int superClass, final int[] interfaces, final Field[] fields, final Method[] methods, final Attribute[] attributes) {
+        this.minorVersion = minorVersion;
+        this.majorVersion = majorVersion;
+        this.constantPool = constantPool;
+        this.accessFlags = accessFlags;
+        this.thisClass = thisClass;
+        this.superClass = superClass;
+        this.interfaces = interfaces;
+        this.fields = fields;
+        this.methods = methods;
+        this.attributes = attributes;
+    }
 
+    public int getMinorVersion() {
+        return minorVersion;
+    }
+
+    public int getMajorVersion() {
+        return majorVersion;
+    }
+
+    public ConstantPool getConstantPool() {
+        return constantPool;
+    }
+
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    public int getSuperClass() {
+        return superClass;
+    }
+
+    public int getThisClass() {
+        return thisClass;
+    }
+
+    public int[] getInterfaces() {
+        return interfaces;
+    }
+
+    public Field[] getFields() {
+        return fields;
+    }
+
+    public Method[] getMethods() {
+        return methods;
+    }
+
+    public Attribute[] getAttributes() {
+        return attributes;
+    }
 }
