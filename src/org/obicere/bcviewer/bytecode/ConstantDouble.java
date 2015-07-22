@@ -1,16 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.reader.ConstantReader;
+
 /**
  * @author Obicere
  */
 public class ConstantDouble extends Constant {
 
-    private static final byte TAG = 6;
-
     private final double bytes;
 
     public ConstantDouble(final double bytes){
-        super(TAG);
+        super(ConstantReader.CONSTANT_DOUBLE);
         this.bytes = bytes;
     }
 

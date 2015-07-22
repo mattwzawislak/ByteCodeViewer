@@ -5,13 +5,13 @@ package org.obicere.bcviewer.bytecode;
  */
 public abstract class Constant {
 
-    private final byte tag;
+    private final int tag;
 
-    public Constant(final byte tag){
+    public Constant(final int tag){
         this.tag = tag;
     }
 
-    public final byte getTag(){
+    public final int getTag(){
         return tag;
     }
 

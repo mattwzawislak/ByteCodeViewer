@@ -1,18 +1,18 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.reader.ConstantReader;
+
 /**
  * @author Obicere
  */
 public class ConstantInvokeDynamic extends Constant {
-
-    private static final byte TAG = 18;
 
     private final int bootstrapMethodAttrIndex;
 
     private final int nameAndTypeIndex;
 
     public ConstantInvokeDynamic(final int bootstrapMethodAttrIndex, final int nameAndTypeIndex) {
-        super(TAG);
+        super(ConstantReader.CONSTANT_INVOKE_DYNAMIC);
         this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }

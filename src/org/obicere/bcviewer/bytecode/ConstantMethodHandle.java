@@ -1,18 +1,18 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.reader.ConstantReader;
+
 /**
  * @author Obicere
  */
 public class ConstantMethodHandle extends Constant {
-
-    private static final byte TAG = 15;
 
     private final byte referenceKind;
 
     private final int referenceIndex;
 
     public ConstantMethodHandle(final byte referenceKind, final int referenceIndex){
-        super(TAG);
+        super(ConstantReader.CONSTANT_METHOD_HANDLE);
         this.referenceKind = referenceKind;
         this.referenceIndex = referenceIndex;
     }

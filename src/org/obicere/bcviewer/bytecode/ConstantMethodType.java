@@ -1,16 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.reader.ConstantReader;
+
 /**
  * @author Obicere
  */
 public class ConstantMethodType extends Constant {
 
-    private static final byte TAG = 16;
-
     private final int descriptorIndex;
 
     public ConstantMethodType(final int descriptorIndex) {
-        super(TAG);
+        super(ConstantReader.CONSTANT_METHOD_TYPE);
         this.descriptorIndex = descriptorIndex;
     }
 
