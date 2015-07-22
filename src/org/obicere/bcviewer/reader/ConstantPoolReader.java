@@ -33,7 +33,7 @@ public class ConstantPoolReader implements Reader<ConstantPool> {
 
             // Why they did this still shocks me. Maybe I should do
             // something with the index, such as storing the high bytes...
-            if(tag == ConstantReader.CONSTANT_LONG || i == ConstantReader.CONSTANT_DOUBLE){
+            if (tag == ConstantReader.CONSTANT_LONG || tag == ConstantReader.CONSTANT_DOUBLE) {
                 i++;
             }
         }

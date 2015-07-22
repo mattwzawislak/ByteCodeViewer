@@ -47,7 +47,7 @@ public class ClassFileReader implements Reader<ClassFile> {
 
         final int fieldsCount = input.readUnsignedShort();
         final Field[] fields = new Field[fieldsCount];
-        for(int i = 0; i < fieldsCount; i++){
+        for (int i = 0; i < fieldsCount; i++) {
             fields[i] = fieldReader.read(input);
         }
 
@@ -56,7 +56,7 @@ public class ClassFileReader implements Reader<ClassFile> {
 
         final int methodsCount = input.readUnsignedShort();
         final Method[] methods = new Method[methodsCount];
-        for(int i = 0; i < methodsCount; i++){
+        for (int i = 0; i < methodsCount; i++) {
             methods[i] = methodReader.read(input);
         }
 
@@ -65,7 +65,7 @@ public class ClassFileReader implements Reader<ClassFile> {
 
         final int attributesCount = input.readUnsignedShort();
         final Attribute[] attributes = new Attribute[attributesCount];
-        for(int i = 0; i < attributesCount; i++){
+        for (int i = 0; i < attributesCount; i++) {
             attributes[i] = attributeReader.read(input);
         }
 

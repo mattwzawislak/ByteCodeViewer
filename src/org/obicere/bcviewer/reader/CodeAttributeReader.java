@@ -30,7 +30,7 @@ public class CodeAttributeReader implements Reader<CodeAttribute> {
             throw new ClassFormatError("reached end of file while reading instructions.");
         }
 
-        final int exceptionTableLength = input.readInt();
+        final int exceptionTableLength = input.readUnsignedShort();
         final CodeException[] exceptionTable = new CodeException[exceptionTableLength];
 
         for(int i = 0; i < exceptionTableLength; i++){
