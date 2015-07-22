@@ -54,7 +54,7 @@ public class AttributeReader extends MultiReader<String, Attribute> {
         add(ENCLOSING_METHOD_ATTRIBUTE_NAME, new EnclosingMethodAttributeReader());
         add(SIGNATURE_ATTRIBUTE_NAME, new SignatureAttributeReader());
         add(SOURCE_DEBUG_EXTENSION_ATTRIBUTE_NAME, new SourceDebugExtensionAttributeReader());
-        add(LOCAL_VARIABLE_TYPE_TABLE_ATTRIBUTE_NAME, new LocalVariableTableAttributeReader());
+        add(LOCAL_VARIABLE_TYPE_TABLE_ATTRIBUTE_NAME, new LocalVariableTypeTableAttributeReader());
         add(RUNTIME_VISIBLE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleAnnotationsAttributeReader());
         add(RUNTIME_INVISIBLE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleAnnotationsAttributeReader());
         add(RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleParameterAnnotationsAttributeReader());
