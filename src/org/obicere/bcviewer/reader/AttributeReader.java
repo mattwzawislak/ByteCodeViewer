@@ -13,29 +13,29 @@ import java.io.IOException;
  */
 public class AttributeReader extends MultiReader<String, Attribute> {
 
-    private static final String CONSTANT_VALUE_ATTRIBUTE_NAME                          = "ConstantValue";
-    private static final String CODE_ATTRIBUTE_NAME                                    = "Code";
-    private static final String EXCEPTIONS_ATTRIBUTE_NAME                              = "Exceptions";
-    private static final String SOURCE_FILE_ATTRIBUTE_NAME                             = "SourceFile";
-    private static final String LINE_NUMBER_TABLE_ATTRIBUTE_NAME                       = "LineNumberTable";
-    private static final String LOCAL_VARIABLE_TABLE_ATTRIBUTE_NAME                    = "LocalVariableTable";
-    private static final String INNER_CLASSES_ATTRIBUTE_NAME                           = "InnerClasses";
-    private static final String SYNTHETIC_ATTRIBUTE_NAME                               = "Synthetic";
-    private static final String DEPRECATED_ATTRIBUTE_NAME                              = "Deprecated";
-    private static final String ENCLOSING_METHOD_ATTRIBUTE_NAME                        = "EnclosingMethod";
-    private static final String SIGNATURE_ATTRIBUTE_NAME                               = "Signature";
-    private static final String SOURCE_DEBUG_EXTENSION_ATTRIBUTE_NAME                  = "SourceDebugExtension";
-    private static final String LOCAL_VARIABLE_TYPE_TABLE_ATTRIBUTE_NAME               = "LocalVariableTypeTable";
-    private static final String RUNTIME_VISIBLE_ANNOTATIONS_ATTRIBUTE_NAME             = "RuntimeVisibleAnnotations";
-    private static final String RUNTIME_INVISIBLE_ANNOTATIONS_ATTRIBUTE_NAME           = "RuntimeInvisibleAnnotations";
-    private static final String RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME   = "RuntimeVisibleParameterAnnotations";
-    private static final String RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME = "RuntimeInvisibleParameterAnnotations";
-    private static final String RUNTIME_VISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME        = "RuntimeVisibleTypeAnnotations";
-    private static final String RUNTIME_INVISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME      = "RuntimeInvisibleTypeAnnotations";
-    private static final String ANNOTATION_DEFAULT_ATTRIBUTE_NAME                      = "AnnotationDefault";
-    private static final String STACK_MAP_TABLE_ATTRIBUTE_NAME                         = "StackMapTable";
-    private static final String BOOTSTRAP_METHODS_ATTRIBUTE_NAME                       = "BootstrapMethods";
-    private static final String METHOD_PARAMETERS_ATTRIBUTE_NAME                       = "MethodParameters";
+    public static final String CONSTANT_VALUE_ATTRIBUTE_NAME                          = "ConstantValue";
+    public static final String CODE_ATTRIBUTE_NAME                                    = "Code";
+    public static final String EXCEPTIONS_ATTRIBUTE_NAME                              = "Exceptions";
+    public static final String SOURCE_FILE_ATTRIBUTE_NAME                             = "SourceFile";
+    public static final String LINE_NUMBER_TABLE_ATTRIBUTE_NAME                       = "LineNumberTable";
+    public static final String LOCAL_VARIABLE_TABLE_ATTRIBUTE_NAME                    = "LocalVariableTable";
+    public static final String INNER_CLASSES_ATTRIBUTE_NAME                           = "InnerClasses";
+    public static final String SYNTHETIC_ATTRIBUTE_NAME                               = "Synthetic";
+    public static final String DEPRECATED_ATTRIBUTE_NAME                              = "Deprecated";
+    public static final String ENCLOSING_METHOD_ATTRIBUTE_NAME                        = "EnclosingMethod";
+    public static final String SIGNATURE_ATTRIBUTE_NAME                               = "Signature";
+    public static final String SOURCE_DEBUG_EXTENSION_ATTRIBUTE_NAME                  = "SourceDebugExtension";
+    public static final String LOCAL_VARIABLE_TYPE_TABLE_ATTRIBUTE_NAME               = "LocalVariableTypeTable";
+    public static final String RUNTIME_VISIBLE_ANNOTATIONS_ATTRIBUTE_NAME             = "RuntimeVisibleAnnotations";
+    public static final String RUNTIME_INVISIBLE_ANNOTATIONS_ATTRIBUTE_NAME           = "RuntimeInvisibleAnnotations";
+    public static final String RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME   = "RuntimeVisibleParameterAnnotations";
+    public static final String RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME = "RuntimeInvisibleParameterAnnotations";
+    public static final String RUNTIME_VISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME        = "RuntimeVisibleTypeAnnotations";
+    public static final String RUNTIME_INVISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME      = "RuntimeInvisibleTypeAnnotations";
+    public static final String ANNOTATION_DEFAULT_ATTRIBUTE_NAME                      = "AnnotationDefault";
+    public static final String STACK_MAP_TABLE_ATTRIBUTE_NAME                         = "StackMapTable";
+    public static final String BOOTSTRAP_METHODS_ATTRIBUTE_NAME                       = "BootstrapMethods";
+    public static final String METHOD_PARAMETERS_ATTRIBUTE_NAME                       = "MethodParameters";
 
     private final ConstantPool constantPool;
 
