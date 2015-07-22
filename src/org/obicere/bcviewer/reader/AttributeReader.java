@@ -42,6 +42,10 @@ public class AttributeReader extends MultiReader<String, Attribute> {
     public AttributeReader(final ConstantPool constantPool) {
         this.constantPool = constantPool;
 
+        final AnnotationReader annotation = new AnnotationReader();
+        final ElementValueReader elementValue = new ElementValueReader(annotation);
+        final TypeAnnotationReader typeAnnotation = new TypeAnnotationReader(elementValue);
+
         add(CONSTANT_VALUE_ATTRIBUTE_NAME, new ConstantValueAttributeReader());
         add(CODE_ATTRIBUTE_NAME, new CodeAttributeReader(this));
         add(EXCEPTIONS_ATTRIBUTE_NAME, new ExceptionsAttributeReader());
@@ -55,13 +59,13 @@ public class AttributeReader extends MultiReader<String, Attribute> {
         add(SIGNATURE_ATTRIBUTE_NAME, new SignatureAttributeReader());
         add(SOURCE_DEBUG_EXTENSION_ATTRIBUTE_NAME, new SourceDebugExtensionAttributeReader());
         add(LOCAL_VARIABLE_TYPE_TABLE_ATTRIBUTE_NAME, new LocalVariableTypeTableAttributeReader());
-        add(RUNTIME_VISIBLE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleAnnotationsAttributeReader());
-        add(RUNTIME_INVISIBLE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleAnnotationsAttributeReader());
-        add(RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleParameterAnnotationsAttributeReader());
-        add(RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleParameterAnnotationsAttributeReader());
-        add(RUNTIME_VISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleTypeAnnotationsAttributeReader());
-        add(RUNTIME_INVISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleTypeAnnotationsAttributeReader());
-        add(ANNOTATION_DEFAULT_ATTRIBUTE_NAME, new AnnotationDefaultAttributeReader());
+        add(RUNTIME_VISIBLE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleAnnotationsAttributeReader(annotation));
+        add(RUNTIME_INVISIBLE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleAnnotationsAttributeReader(annotation));
+        add(RUNTIME_VISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleParameterAnnotationsAttributeReader(annotation));
+        add(RUNTIME_INVISIBLE_PARAMETER_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleParameterAnnotationsAttributeReader(annotation));
+        add(RUNTIME_VISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeVisibleTypeAnnotationsAttributeReader(typeAnnotation));
+        add(RUNTIME_INVISIBLE_TYPE_ANNOTATIONS_ATTRIBUTE_NAME, new RuntimeInvisibleTypeAnnotationsAttributeReader(typeAnnotation));
+        add(ANNOTATION_DEFAULT_ATTRIBUTE_NAME, new AnnotationDefaultAttributeReader(elementValue));
         add(STACK_MAP_TABLE_ATTRIBUTE_NAME, new StackMapTableAttributeReader());
         add(BOOTSTRAP_METHODS_ATTRIBUTE_NAME, new BootstrapMethodsAttributeReader());
         add(METHOD_PARAMETERS_ATTRIBUTE_NAME, new MethodParametersAttributeReader());
@@ -73,7 +77,7 @@ public class AttributeReader extends MultiReader<String, Attribute> {
         final int attributeNameIndex = input.readUnsignedShort();
         input.readInt(); // Read the attribute length. This is ignored generally
         final String attributeName = (String) constantPool.get(attributeNameIndex).get(constantPool);
-        final Reader<? implements Attribute> reader = get(attributeName);
+        final Reader<? extends Attribute> reader = get(attributeName);
         if (reader == null) {
             throw new ClassFormatError("unknown attribute reached and no way to handle it available.");
         }

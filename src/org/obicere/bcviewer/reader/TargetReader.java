@@ -25,6 +25,8 @@ public class TargetReader implements Reader<Target> {
     @Override
     public Target read(final IndexedDataInputStream input) throws IOException {
         final int targetType = input.readUnsignedByte();
+        // roll back a byte to expose the target type again
+        input.stepBack(1);
         switch (targetType){
 
             // type 1 values
