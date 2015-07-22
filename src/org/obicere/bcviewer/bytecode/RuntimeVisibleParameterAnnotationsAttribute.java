@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class RuntimeVisibleParameterAnnotationsAttribute extends Attribute {
+public class RuntimeVisibleParameterAnnotationsAttribute implements Attribute {
 
     private final Annotation[][] parameterAnnotations;
 
-    public RuntimeVisibleParameterAnnotationsAttribute(final int attributeNameIndex, final int attributeLength, final Annotation[][] parameterAnnotations){
-        super(attributeNameIndex, attributeLength);
+    public RuntimeVisibleParameterAnnotationsAttribute(final Annotation[][] parameterAnnotations){
 
         if(parameterAnnotations == null){
             throw new NullPointerException("parameter annotations not defined.");

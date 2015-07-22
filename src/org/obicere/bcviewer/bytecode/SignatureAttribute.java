@@ -3,13 +3,16 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class SignatureAttribute extends Attribute {
+public class SignatureAttribute implements Attribute {
 
     private final int signatureIndex;
 
-    public SignatureAttribute(final int attributeNameIndex, final int attributeLength, final int signatureIndex) {
-        super(attributeNameIndex, attributeLength);
+    public SignatureAttribute(final int signatureIndex) {
 
         this.signatureIndex = signatureIndex;
+    }
+
+    public int getSignatureIndex(){
+        return signatureIndex;
     }
 }

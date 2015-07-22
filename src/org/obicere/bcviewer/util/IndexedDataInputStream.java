@@ -17,4 +17,8 @@ public class IndexedDataInputStream extends DataInputStream {
     public int getIndex() {
         return input.getIndex();
     }
+
+    public void stepBack(final int offset) {
+        input.stepBack(offset);
+    }
 }

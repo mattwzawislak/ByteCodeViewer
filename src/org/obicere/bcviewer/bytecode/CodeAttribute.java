@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class CodeAttribute extends Attribute {
+public class CodeAttribute implements Attribute {
 
     private final int maxStack;
 
@@ -15,8 +15,7 @@ public class CodeAttribute extends Attribute {
 
     private final Attribute[] attributes;
 
-    public CodeAttribute(final int attributeNameIndex, final int attributeLength, final int maxStack, final int maxLocals, final byte[] code, final CodeException[] exceptions, final Attribute[] attributes) {
-        super(attributeNameIndex, attributeLength);
+    public CodeAttribute(final int maxStack, final int maxLocals, final byte[] code, final CodeException[] exceptions, final Attribute[] attributes) {
         this.maxStack = maxStack;
         this.maxLocals = maxLocals;
         this.code = code;

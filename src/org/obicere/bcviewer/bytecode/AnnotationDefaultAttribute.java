@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class AnnotationDefaultAttribute extends Attribute {
+public class AnnotationDefaultAttribute implements Attribute {
 
     private final ElementValue defaultValue;
 
-    public AnnotationDefaultAttribute(final int attributeNameIndex, final int attributeLength, final ElementValue defaultValue) {
-        super(attributeNameIndex, attributeLength);
+    public AnnotationDefaultAttribute(final ElementValue defaultValue) {
         this.defaultValue = defaultValue;
     }
 

@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class MethodParametersAttribute extends Attribute {
+public class MethodParametersAttribute implements Attribute {
 
     private final Parameter[] parameters;
 
-    public MethodParametersAttribute(final int attributeNameIndex, final int attributeLength, final Parameter[] parameters) {
-        super(attributeNameIndex, attributeLength);
+    public MethodParametersAttribute(final Parameter[] parameters) {
 
         if (parameters == null) {
             throw new NullPointerException("parameters not defined.");

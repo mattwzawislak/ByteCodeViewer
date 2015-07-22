@@ -3,13 +3,12 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class EnclosingMethodAttribute extends Attribute {
+public class EnclosingMethodAttribute implements Attribute {
 
     private final int classIndex;
     private final int methodIndex;
 
-    public EnclosingMethodAttribute(final int attributeNameIndex, final int attributeLength, final int classIndex, final int methodIndex) {
-        super(attributeNameIndex, attributeLength);
+    public EnclosingMethodAttribute(final int classIndex, final int methodIndex) {
         this.classIndex = classIndex;
         this.methodIndex = methodIndex;
     }

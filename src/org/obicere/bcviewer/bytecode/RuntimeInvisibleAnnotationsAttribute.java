@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class RuntimeInvisibleAnnotationsAttribute extends Attribute {
+public class RuntimeInvisibleAnnotationsAttribute implements Attribute {
 
     private final Annotation[] annotations;
 
-    public RuntimeInvisibleAnnotationsAttribute(final int attributeNameIndex, final int attributeLength, final Annotation[] annotations){
-        super(attributeNameIndex, attributeLength);
+    public RuntimeInvisibleAnnotationsAttribute(final Annotation[] annotations){
         this.annotations = annotations;
     }
 

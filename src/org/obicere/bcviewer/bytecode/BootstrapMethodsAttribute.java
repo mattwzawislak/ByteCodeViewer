@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class BootstrapMethodsAttribute extends Attribute {
+public class BootstrapMethodsAttribute implements Attribute {
 
     private final BootstrapMethod[] bootstrapMethods;
 
-    public BootstrapMethodsAttribute(final int attributeNameIndex, final int attributeLength, final BootstrapMethod[] bootstrapMethods) {
-        super(attributeNameIndex, attributeLength);
+    public BootstrapMethodsAttribute(final BootstrapMethod[] bootstrapMethods) {
 
         if (bootstrapMethods == null) {
             throw new NullPointerException("bootstrap methods not defined.");

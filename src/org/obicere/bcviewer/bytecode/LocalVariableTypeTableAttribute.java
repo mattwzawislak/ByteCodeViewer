@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class LocalVariableTypeTableAttribute extends Attribute {
+public class LocalVariableTypeTableAttribute implements Attribute {
 
     private final LocalVariableType[] localVariableTypeTable;
 
-    public LocalVariableTypeTableAttribute(final int attributeNameIndex, final int attributeLength, final LocalVariableType[] localVariableTypeTable) {
-        super(attributeNameIndex, attributeLength);
+    public LocalVariableTypeTableAttribute(final LocalVariableType[] localVariableTypeTable) {
 
         if (localVariableTypeTable == null) {
             throw new NullPointerException("local variable type table not defined.");

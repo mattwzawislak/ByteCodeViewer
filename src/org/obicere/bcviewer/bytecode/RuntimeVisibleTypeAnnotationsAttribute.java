@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class RuntimeVisibleTypeAnnotationsAttribute extends Attribute {
+public class RuntimeVisibleTypeAnnotationsAttribute implements Attribute {
 
     private final TypeAnnotation[] annotations;
 
-    public RuntimeVisibleTypeAnnotationsAttribute(final int attributeNameIndex, final int attributeLength, final TypeAnnotation[] annotations) {
-        super(attributeNameIndex, attributeLength);
+    public RuntimeVisibleTypeAnnotationsAttribute(final TypeAnnotation[] annotations) {
 
         if (annotations == null) {
             throw new NullPointerException("annotations not defined.");

@@ -3,9 +3,9 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class DeprecatedAttribute extends Attribute {
+public class DeprecatedAttribute implements Attribute {
 
-    public DeprecatedAttribute(final int attributeNameIndex, final int attributeLength) {
-        super(attributeNameIndex, attributeLength);
+    public DeprecatedAttribute() {
+        // Okay
     }
 }

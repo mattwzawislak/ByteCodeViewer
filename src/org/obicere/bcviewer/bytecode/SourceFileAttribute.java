@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class SourceFileAttribute extends Attribute {
+public class SourceFileAttribute implements Attribute {
 
     private final int sourceFileIndex;
 
-    public SourceFileAttribute(final int attributeNameIndex, final int attributeLength, final int sourceFileIndex) {
-        super(attributeNameIndex, attributeLength);
+    public SourceFileAttribute(final int sourceFileIndex) {
         this.sourceFileIndex = sourceFileIndex;
     }
 

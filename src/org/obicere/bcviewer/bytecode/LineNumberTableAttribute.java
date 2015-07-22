@@ -3,12 +3,11 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class LineNumberTableAttribute extends Attribute {
+public class LineNumberTableAttribute implements Attribute {
 
     private final LineNumber[] lineNumberTable;
 
-    public LineNumberTableAttribute(final int attributeNameIndex, final int attributeLength, final LineNumber[] lineNumberTable) {
-        super(attributeNameIndex, attributeLength);
+    public LineNumberTableAttribute(final LineNumber[] lineNumberTable) {
 
         if (lineNumberTable == null) {
             throw new NullPointerException("line number table not defined.");

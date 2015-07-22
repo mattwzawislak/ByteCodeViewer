@@ -12,6 +12,8 @@ import java.io.IOException;
 public class EnclosingMethodAttributeReader implements Reader<EnclosingMethodAttribute> {
     @Override
     public EnclosingMethodAttribute read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        final int classIndex = input.readUnsignedShort();
+        final int methodIndex = input.readUnsignedShort();
+        return new EnclosingMethodAttribute(classIndex, methodIndex);
     }
 }
