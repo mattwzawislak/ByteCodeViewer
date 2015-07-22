@@ -19,7 +19,7 @@ public class ConstantDouble extends Constant {
     }
 
     @Override
-    public Object get(final ConstantPool constantPool) {
-        return bytes;
+    public String toString(final ConstantPool constantPool) {
+        return String.valueOf(bytes);
     }
 }

@@ -13,7 +13,7 @@ public class tableswitchReader implements Reader<tableswitch> {
 
     @Override
     public tableswitch read(final IndexedDataInputStream input) throws IOException {
-        // how many bytes to skip to get to next index divisible by 4
+        // how many bytes to skip to toString to next index divisible by 4
         final int skip = (4 - (input.getIndex() % 4)) % 4;
         // let n = index % 4
         // n = 0, skip = 0

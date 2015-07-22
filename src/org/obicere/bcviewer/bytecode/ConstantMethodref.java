@@ -1,18 +1,18 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.reader.ConstantReader;
+
 /**
  * @author Obicere
  */
 public class ConstantMethodRef extends Constant {
-
-    private static final byte TAG = 10;
 
     private final int classIndex;
 
     private final int nameAndTypeIndex;
 
     public ConstantMethodRef(final int classIndex, final int nameAndTypeIndex) {
-        super(TAG);
+        super(ConstantReader.CONSTANT_METHOD_REF);
         this.classIndex = classIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
@@ -26,8 +26,8 @@ public class ConstantMethodRef extends Constant {
     }
 
     @Override
-    public Object get(final ConstantPool constantPool) {
-        // Double redirection to get representation of name and type
-        return constantPool.get(nameAndTypeIndex).get(constantPool);
+    public String toString(final ConstantPool constantPool) {
+        // Double redirection to toString representation of name and type
+        return constantPool.getAsString(nameAndTypeIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 }

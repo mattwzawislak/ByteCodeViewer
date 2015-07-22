@@ -17,6 +17,13 @@ public class ConstantPool {
 
     public String getAsString(final int index){
         final Constant constant = get(index);
-        return String.valueOf(constant.get(this));
+        if(constant == null){
+            return "null";
+        }
+        return String.valueOf(constant.toString(this));
+    }
+
+    public Constant[] getConstants(){
+        return constants;
     }
 }

@@ -7,17 +7,30 @@ import org.obicere.bcviewer.reader.ConstantReader;
  */
 public class ConstantMethodHandle extends Constant {
 
-    private final byte referenceKind;
+    private static final String[] HANDLES = new String[]{
+            "unknown",
+            "getfield",
+            "getstatic",
+            "putfield",
+            "putstatic",
+            "invokevirtual",
+            "invokestatic",
+            "invokespecial",
+            "newinvokespecial",
+            "invokeinterface"
+    };
+
+    private final int referenceKind;
 
     private final int referenceIndex;
 
-    public ConstantMethodHandle(final byte referenceKind, final int referenceIndex){
+    public ConstantMethodHandle(final int referenceKind, final int referenceIndex){
         super(ConstantReader.CONSTANT_METHOD_HANDLE);
         this.referenceKind = referenceKind;
         this.referenceIndex = referenceIndex;
     }
 
-    public byte getReferenceKind(){
+    public int getReferenceKind(){
         return referenceKind;
     }
 
@@ -26,7 +39,7 @@ public class ConstantMethodHandle extends Constant {
     }
 
     @Override
-    public Object get(final ConstantPool constantPool) {
-        return constantPool.get(referenceIndex);
+    public String toString(final ConstantPool constantPool) {
+        return HANDLES[referenceKind] + ";" + constantPool.getAsString(referenceIndex);
     }
 }

@@ -23,7 +23,7 @@ public class ConstantUtf8 extends Constant {
     }
 
     @Override
-    public Object get(final ConstantPool constantPool) {
+    public String toString(final ConstantPool constantPool) {
         return bytes;
     }
 }

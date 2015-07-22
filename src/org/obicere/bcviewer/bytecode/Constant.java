@@ -15,5 +15,5 @@ public abstract class Constant {
         return tag;
     }
 
-    public abstract Object get(final ConstantPool constantPool);
+    public abstract String toString(final ConstantPool constantPool);
 }

@@ -76,7 +76,7 @@ public class AttributeReader extends MultiReader<String, Attribute> {
     public Attribute read(final IndexedDataInputStream input) throws IOException {
         final int attributeNameIndex = input.readUnsignedShort();
         input.readInt(); // Read the attribute length. This is ignored generally
-        final String attributeName = (String) constantPool.get(attributeNameIndex).get(constantPool);
+        final String attributeName = (String) constantPool.get(attributeNameIndex).toString(constantPool);
         final Reader<? extends Attribute> reader = get(attributeName);
         if (reader == null) {
             throw new ClassFormatError("unknown attribute reached and no way to handle it available.");

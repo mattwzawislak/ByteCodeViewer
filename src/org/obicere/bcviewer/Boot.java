@@ -1,11 +1,17 @@
 package org.obicere.bcviewer;
 
+import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.bytecode.Constant;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
+import org.obicere.bcviewer.reader.ClassFileReader;
+import org.obicere.bcviewer.util.IndexedDataInputStream;
+import org.obicere.utility.io.IOUtils;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
+import java.io.File;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -38,6 +44,16 @@ public class Boot {
             final FrameManager frameManager = manager.getFrameManager();
             frameManager.loadDefaultTheme();
             frameManager.open();
+            try {
+                final ClassFile file = new ClassFileReader().read(new IndexedDataInputStream(IOUtils.readData(new File("F:\\Programming\\out\\production\\Testing\\IntStringSort.class"))));
+                for (final Constant constant : file.getConstantPool().getConstants()) {
+                    if (constant != null) {
+                        System.out.println(constant.toString(file.getConstantPool()));
+                    }
+                }
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
         });
 
         logger.info("Boot time took (ms): " + (System.currentTimeMillis() - start));

@@ -19,7 +19,8 @@ public class ConstantClass extends Constant {
     }
 
     @Override
-    public Object get(final ConstantPool constantPool) {
-        return constantPool.get(nameIndex);
+    public String toString(final ConstantPool constantPool) {
+        // nameIndex points to a ConstantUtf8
+        return constantPool.getAsString(nameIndex);
     }
 }

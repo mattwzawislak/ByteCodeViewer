@@ -19,7 +19,7 @@ public class ConstantString extends Constant {
     }
 
     @Override
-    public Object get(final ConstantPool constantPool) {
-        return constantPool.get(stringIndex);
+    public String toString(final ConstantPool constantPool) {
+        return constantPool.getAsString(stringIndex);
     }
 }

@@ -27,7 +27,7 @@ public class ConstantPoolReader implements Reader<ConstantPool> {
 
             constantPool[i] = next;
 
-            final byte tag = next.getTag();
+            final int tag = next.getTag();
             // "In retrospect, making 8-byte constants take two constant pool entries was a poor choice."
             //    ~ Someone who had a bit of sense
 
