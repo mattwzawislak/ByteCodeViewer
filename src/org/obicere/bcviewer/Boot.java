@@ -1,7 +1,9 @@
 package org.obicere.bcviewer;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
-import org.obicere.bcviewer.bytecode.Constant;
+import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.bytecode.Field;
+import org.obicere.bcviewer.bytecode.Method;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
@@ -45,10 +47,43 @@ public class Boot {
             frameManager.loadDefaultTheme();
             frameManager.open();
             try {
-                final ClassFile file = new ClassFileReader().read(new IndexedDataInputStream(IOUtils.readData(new File("F:\\Programming\\out\\production\\Testing\\IntStringSort.class"))));
-                for (final Constant constant : file.getConstantPool().getConstants()) {
-                    if (constant != null) {
-                        System.out.println(constant.toString(file.getConstantPool()));
+                final File main = new File("F:\\Programming\\BytecodeViewer\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
+                final File[] files = main.listFiles(pathname -> pathname.getName().endsWith(".class"));
+                if(files != null){
+                    for(final File file : files) {
+                        final ClassFile cls = new ClassFileReader().read(new IndexedDataInputStream(IOUtils.readData(file)));
+                        System.out.println(file);
+                        final ConstantPool pool = cls.getConstantPool();
+                        System.out.print("major: ");
+                        System.out.println(cls.getMajorVersion());
+                        System.out.print("minor: ");
+                        System.out.println(cls.getMinorVersion());
+                        System.out.print("access: ");
+                        System.out.println(Integer.toHexString(cls.getAccessFlags()));
+                        System.out.print("class: ");
+                        System.out.println(pool.getAsString(cls.getThisClass()));
+                        System.out.print("super: ");
+                        System.out.println(pool.getAsString(cls.getSuperClass()));
+                        for(final int interfaceIndex : cls.getInterfaces()){
+                            System.out.print("Interface ");
+                            System.out.print(interfaceIndex);
+                            System.out.print(": ");
+                            System.out.println(pool.getAsString(interfaceIndex));
+                        }
+                        for(final Field field : cls.getFields()){
+                            System.out.print("Field ");
+                            System.out.print(pool.getAsString(field.getNameIndex()));
+                            System.out.print("; ");
+                            System.out.println(pool.getAsString(field.getDescriptorIndex()));
+                        }
+                        for(final Method method : cls.getMethods()){
+                            System.out.print("Method ");
+                            System.out.print(pool.getAsString(method.getNameIndex()));
+                            System.out.print("; ");
+                            System.out.println(pool.getAsString(method.getDescriptorIndex()));
+                        }
+                        System.out.println();
+                        System.out.println();
                     }
                 }
             } catch (final Exception e) {
