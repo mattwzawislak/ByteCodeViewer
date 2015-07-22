@@ -5,9 +5,11 @@ package org.obicere.bcviewer.bytecode;
  */
 public class ThrowsTarget implements Target {
 
+    private final int targetType;
     private final int throwsTypeIndex;
 
-    public ThrowsTarget(final int throwsTypeIndex) {
+    public ThrowsTarget(final int targetType, final int throwsTypeIndex) {
+        this.targetType = targetType;
         this.throwsTypeIndex = throwsTypeIndex;
     }
 
@@ -15,4 +17,8 @@ public class ThrowsTarget implements Target {
         return throwsTypeIndex;
     }
 
+    @Override
+    public int getTargetType() {
+        return targetType;
+    }
 }

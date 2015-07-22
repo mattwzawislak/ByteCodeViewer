@@ -5,11 +5,13 @@ package org.obicere.bcviewer.bytecode;
  */
 public class TypeArgumentTarget implements Target {
 
+    private final int targetType;
     private final int offset;
 
     private final int typeArgumentIndex;
 
-    public TypeArgumentTarget(final int offset, final int typeArgumentIndex) {
+    public TypeArgumentTarget(final int targetType, final int offset, final int typeArgumentIndex) {
+        this.targetType = targetType;
         this.offset = offset;
         this.typeArgumentIndex = typeArgumentIndex;
     }
@@ -22,4 +24,8 @@ public class TypeArgumentTarget implements Target {
         return typeArgumentIndex;
     }
 
+    @Override
+    public int getTargetType() {
+        return targetType;
+    }
 }

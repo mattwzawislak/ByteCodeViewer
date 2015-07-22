@@ -5,9 +5,11 @@ package org.obicere.bcviewer.bytecode;
  */
 public class LocalVarTarget implements Target {
 
+    private final int targetType;
     private final LocalVar[] table;
 
-    public LocalVarTarget(final LocalVar[] table) {
+    public LocalVarTarget(final int targetType, final LocalVar[] table) {
+        this.targetType = targetType;
         this.table = table;
     }
 
@@ -15,4 +17,8 @@ public class LocalVarTarget implements Target {
         return table;
     }
 
+    @Override
+    public int getTargetType() {
+        return targetType;
+    }
 }
