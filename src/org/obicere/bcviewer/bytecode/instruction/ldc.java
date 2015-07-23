@@ -5,7 +5,7 @@ package org.obicere.bcviewer.bytecode.instruction;
  */
 public class ldc extends Instruction {
 
-    private static final String MNEMONIC = "";
+    private static final String MNEMONIC = "ldc";
     private static final int    OPCODE   = 0x12;
 
     private final int index;

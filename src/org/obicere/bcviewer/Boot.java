@@ -70,19 +70,17 @@ public class Boot {
                             System.out.print(": ");
                             System.out.println(pool.getAsString(interfaceIndex));
                         }
+                        System.out.println();
                         for(final Field field : cls.getFields()){
                             System.out.print("Field ");
                             System.out.print(pool.getAsString(field.getNameIndex()));
                             System.out.print("; ");
                             System.out.println(pool.getAsString(field.getDescriptorIndex()));
                         }
-                        for(final Method method : cls.getMethods()){
-                            System.out.print("Method ");
-                            System.out.print(pool.getAsString(method.getNameIndex()));
-                            System.out.print("; ");
-                            System.out.println(pool.getAsString(method.getDescriptorIndex()));
-                        }
                         System.out.println();
+                        for(final Method method : cls.getMethods()){
+                            System.out.println(method.toString(pool));
+                        }
                         System.out.println();
                     }
                 }
