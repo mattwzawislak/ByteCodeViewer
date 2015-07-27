@@ -47,7 +47,7 @@ public class Boot {
             frameManager.loadDefaultTheme();
             frameManager.open();
             try {
-                final File main = new File("F:\\Programming\\BytecodeViewer\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
+                final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
                 final File[] files = main.listFiles(pathname -> pathname.getName().endsWith(".class"));
                 if(files != null){
                     for(final File file : files) {

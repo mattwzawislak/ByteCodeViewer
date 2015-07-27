@@ -1,16 +1,11 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
-import org.obicere.utility.io.IOUtils;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 
 /**
  * @author Obicere
@@ -21,18 +16,10 @@ public class EditorPanel extends JPanel {
 
     private final JScrollPane bytesScroll;
 
-    public EditorPanel(final File input) {
+    public EditorPanel() {
         super(new BorderLayout(10, 10));
         setName("editor");
         try {
-            final StringBuilder builder = new StringBuilder();
-            final BufferedReader reader = new BufferedReader(new FileReader(input));
-            String next;
-            while ((next = reader.readLine()) != null) {
-                builder.append(next);
-                builder.append('\n');
-            }
-
             this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
             final JTextPane editor = new JTextPane() {
 
@@ -53,9 +40,7 @@ public class EditorPanel extends JPanel {
             editorScroll.getViewport().setName("view");
 
             editor.setName("text");
-            editor.setText(builder.toString());
             bytes.setName("bytes");
-            bytes.setBytes(IOUtils.readData(input));
 
             split.setLeftComponent(editorScroll);
             split.setRightComponent(bytesScroll);
