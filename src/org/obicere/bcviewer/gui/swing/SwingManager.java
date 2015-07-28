@@ -132,7 +132,7 @@ public class SwingManager implements FrameManager {
 
         content.setName("content");
 
-        content.add(new EditorPanel(new File("F:\\Programming\\BytecodeViewer\\BytecodeViewer.iml")));
+        content.add(new EditorPanel());
 
         frame.setJMenuBar(menuBar);
         frame.add(content);
