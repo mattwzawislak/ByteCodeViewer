@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class imulReader implements Reader<imul> {
 
-    private final imul instance = new imul();
-
     @Override
     public imul read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new imul();
     }
 }

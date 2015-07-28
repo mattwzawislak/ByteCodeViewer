@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class f2dReader implements Reader<f2d> {
 
-    private final f2d instance = new f2d();
-
     @Override
     public f2d read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new f2d();
     }
 }

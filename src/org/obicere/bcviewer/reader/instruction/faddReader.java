@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class faddReader implements Reader<fadd> {
 
-    private final fadd instance = new fadd();
-
     @Override
     public fadd read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fadd();
     }
 }

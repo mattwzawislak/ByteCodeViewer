@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lmulReader implements Reader<lmul> {
 
-    private final lmul instance = new lmul();
-
     @Override
     public lmul read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lmul();
     }
 }

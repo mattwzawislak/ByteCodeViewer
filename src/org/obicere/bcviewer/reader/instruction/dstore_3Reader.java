@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dstore_3Reader implements Reader<dstore_3> {
 
-    private final dstore_3 instance = new dstore_3();
-
     @Override
     public dstore_3 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dstore_3();
     }
 }

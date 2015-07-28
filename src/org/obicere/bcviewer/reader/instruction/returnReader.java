@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class returnReader implements Reader<return_> {
 
-    private final return_ instance = new return_();
-
     @Override
     public return_ read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new return_();
     }
 }

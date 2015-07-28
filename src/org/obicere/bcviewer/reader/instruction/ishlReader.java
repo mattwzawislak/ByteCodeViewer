@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ishlReader implements Reader<ishl> {
 
-    private final ishl instance = new ishl();
-
     @Override
     public ishl read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ishl();
     }
 }

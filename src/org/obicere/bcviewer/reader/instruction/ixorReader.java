@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ixorReader implements Reader<ixor> {
 
-    private final ixor instance = new ixor();
-
     @Override
     public ixor read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ixor();
     }
 }

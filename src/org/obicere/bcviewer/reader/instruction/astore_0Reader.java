@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class astore_0Reader implements Reader<astore_0> {
 
-    private final astore_0 instance = new astore_0();
-
     @Override
     public astore_0 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new astore_0();
     }
 }

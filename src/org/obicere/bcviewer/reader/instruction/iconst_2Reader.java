@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class iconst_2Reader implements Reader<iconst_2> {
 
-    private final iconst_2 instance = new iconst_2();
-
     @Override
     public iconst_2 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new iconst_2();
     }
 }

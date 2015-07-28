@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class castoreReader implements Reader<castore> {
 
-    private final castore instance = new castore();
-
     @Override
     public castore read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new castore();
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dup_x1Reader implements Reader<dup_x1> {
 
-    private final dup_x1 instance = new dup_x1();
-
     @Override
     public dup_x1 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dup_x1();
     }
 }

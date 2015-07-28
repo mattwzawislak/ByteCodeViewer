@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class pop2Reader implements Reader<pop2> {
 
-    private final pop2 instance = new pop2();
-
     @Override
     public pop2 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new pop2();
     }
 }

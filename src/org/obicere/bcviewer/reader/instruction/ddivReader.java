@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class ddivReader implements Reader<ddiv> {
 
-    private final ddiv instance = new ddiv();
-
     @Override
     public ddiv read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new ddiv();
     }
 }

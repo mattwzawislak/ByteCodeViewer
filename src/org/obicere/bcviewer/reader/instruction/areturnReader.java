@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class areturnReader implements Reader<areturn> {
 
-    private final areturn instance = new areturn();
-
     @Override
     public areturn read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new areturn();
     }
 }

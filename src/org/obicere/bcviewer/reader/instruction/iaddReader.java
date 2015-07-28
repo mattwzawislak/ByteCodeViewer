@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class iaddReader implements Reader<iadd> {
 
-    private final iadd instance = new iadd();
-
     @Override
     public iadd read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new iadd();
     }
 }

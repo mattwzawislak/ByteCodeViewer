@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dcmpgReader implements Reader<dcmpg> {
 
-    private final dcmpg instance = new dcmpg();
-
     @Override
     public dcmpg read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dcmpg();
     }
 }

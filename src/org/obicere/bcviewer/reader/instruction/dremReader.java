@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dremReader implements Reader<drem> {
 
-    private final drem instance = new drem();
-
     @Override
     public drem read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new drem();
     }
 }

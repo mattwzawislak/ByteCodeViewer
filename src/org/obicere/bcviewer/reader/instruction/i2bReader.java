@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class i2bReader implements Reader<i2b> {
 
-    private final i2b instance = new i2b();
-
     @Override
     public i2b read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new i2b();
     }
 }

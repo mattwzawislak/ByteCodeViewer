@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class aconst_nullReader implements Reader<aconst_null> {
 
-    private final aconst_null instance = new aconst_null();
-
     @Override
     public aconst_null read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new aconst_null();
     }
 }

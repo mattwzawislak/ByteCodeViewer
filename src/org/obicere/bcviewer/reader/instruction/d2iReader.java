@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class d2iReader implements Reader<d2i> {
 
-    private final d2i instance = new d2i();
-
     @Override
     public d2i read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new d2i();
     }
 }

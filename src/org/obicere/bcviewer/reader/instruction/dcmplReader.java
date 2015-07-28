@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dcmplReader implements Reader<dcmpl> {
 
-    private final dcmpl instance = new dcmpl();
-
     @Override
     public dcmpl read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dcmpl();
     }
 }

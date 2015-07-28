@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fmulReader implements Reader<fmul> {
 
-    private final fmul instance = new fmul();
-
     @Override
     public fmul read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fmul();
     }
 }

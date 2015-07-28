@@ -1,9 +1,11 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.BytecodeElement;
+
 /**
  * @author Obicere
  */
-public abstract class Instruction {
+public abstract class Instruction extends BytecodeElement {
 
     private final String mnemonic;
 

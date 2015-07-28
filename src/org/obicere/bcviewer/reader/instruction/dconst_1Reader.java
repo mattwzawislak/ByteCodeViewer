@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dconst_1Reader implements Reader<dconst_1> {
 
-    private final dconst_1 instance = new dconst_1();
-
     @Override
     public dconst_1 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dconst_1();
     }
 }

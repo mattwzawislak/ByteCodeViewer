@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class athrowReader implements Reader<athrow> {
 
-    private final athrow instance = new athrow();
-
     @Override
     public athrow read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new athrow();
     }
 }

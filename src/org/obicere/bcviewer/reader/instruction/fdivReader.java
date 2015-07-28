@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fdivReader implements Reader<fdiv> {
 
-    private final fdiv instance = new fdiv();
-
     @Override
     public fdiv read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fdiv();
     }
 }

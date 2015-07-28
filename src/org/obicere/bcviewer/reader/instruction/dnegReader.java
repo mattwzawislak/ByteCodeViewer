@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dnegReader implements Reader<dneg> {
 
-    private final dneg instance = new dneg();
-
     @Override
     public dneg read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dneg();
     }
 }

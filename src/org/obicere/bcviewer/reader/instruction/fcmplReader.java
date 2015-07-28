@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fcmplReader implements Reader<fcmpl> {
 
-    private final fcmpl instance = new fcmpl();
-
     @Override
     public fcmpl read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fcmpl();
     }
 }

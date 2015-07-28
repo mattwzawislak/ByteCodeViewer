@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class arraylengthReader implements Reader<arraylength> {
 
-    private final arraylength instance = new arraylength();
-
     @Override
     public arraylength read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new arraylength();
     }
 }

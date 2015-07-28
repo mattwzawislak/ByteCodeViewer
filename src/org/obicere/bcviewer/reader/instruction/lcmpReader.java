@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lcmpReader implements Reader<lcmp> {
 
-    private final lcmp instance = new lcmp();
-
     @Override
     public lcmp read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lcmp();
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class iandReader implements Reader<iand> {
 
-    private final iand instance = new iand();
-
     @Override
     public iand read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new iand();
     }
 }

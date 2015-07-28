@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dmulReader implements Reader<dmul> {
 
-    private final dmul instance = new dmul();
-
     @Override
     public dmul read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dmul();
     }
 }

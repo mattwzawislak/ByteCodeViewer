@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class bastoreReader implements Reader<bastore> {
 
-    private final bastore instance = new bastore();
-
     @Override
     public bastore read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new bastore();
     }
 }

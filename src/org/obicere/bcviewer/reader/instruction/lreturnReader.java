@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lreturnReader implements Reader<lreturn> {
 
-    private final lreturn instance = new lreturn();
-
     @Override
     public lreturn read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lreturn();
     }
 }

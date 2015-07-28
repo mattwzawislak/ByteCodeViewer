@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class l2dReader implements Reader<l2d> {
 
-    private final l2d instance = new l2d();
-
     @Override
     public l2d read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new l2d();
     }
 }

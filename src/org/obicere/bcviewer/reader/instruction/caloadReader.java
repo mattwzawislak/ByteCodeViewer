@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class caloadReader implements Reader<caload> {
 
-    private final caload instance = new caload();
-
     @Override
     public caload read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new caload();
     }
 }

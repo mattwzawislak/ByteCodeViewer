@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fload_2Reader implements Reader<fload_2> {
 
-    private final fload_2 instance = new fload_2();
-
     @Override
     public fload_2 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fload_2();
     }
 }

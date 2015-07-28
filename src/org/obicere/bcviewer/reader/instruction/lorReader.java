@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lorReader implements Reader<lor> {
 
-    private final lor instance = new lor();
-
     @Override
     public lor read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lor();
     }
 }

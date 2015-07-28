@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fremReader implements Reader<frem> {
 
-    private final frem instance = new frem();
-
     @Override
     public frem read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new frem();
     }
 }

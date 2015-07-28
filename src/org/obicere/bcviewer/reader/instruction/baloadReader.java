@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class baloadReader implements Reader<baload> {
 
-    private final baload instance = new baload();
-
     @Override
     public baload read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new baload();
     }
 }

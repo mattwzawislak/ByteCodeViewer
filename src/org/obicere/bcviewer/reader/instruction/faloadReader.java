@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class faloadReader implements Reader<faload> {
 
-    private final faload instance = new faload();
-
     @Override
     public faload read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new faload();
     }
 }

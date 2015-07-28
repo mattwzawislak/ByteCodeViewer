@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class laloadReader implements Reader<laload> {
 
-    private final laload instance = new laload();
-
     @Override
     public laload read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new laload();
     }
 }

@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class saloadReader implements Reader<saload> {
 
-    private final saload instance = new saload();
-
     @Override
     public saload read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new saload();
     }
 }

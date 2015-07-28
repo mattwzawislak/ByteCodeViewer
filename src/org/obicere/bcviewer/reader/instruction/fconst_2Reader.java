@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fconst_2Reader implements Reader<fconst_2> {
 
-    private final fconst_2 instance = new fconst_2();
-
     @Override
     public fconst_2 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fconst_2();
     }
 }

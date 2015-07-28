@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lconst_0Reader implements Reader<lconst_0> {
 
-    private final lconst_0 instance = new lconst_0();
-
     @Override
     public lconst_0 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lconst_0();
     }
 }

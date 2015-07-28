@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class iremReader implements Reader<irem> {
 
-    private final irem instance = new irem();
-
     @Override
     public irem read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new irem();
     }
 }

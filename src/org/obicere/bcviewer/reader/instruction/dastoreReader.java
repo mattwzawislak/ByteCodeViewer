@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class dastoreReader implements Reader<dastore> {
 
-    private final dastore instance = new dastore();
-
     @Override
     public dastore read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new dastore();
     }
 }

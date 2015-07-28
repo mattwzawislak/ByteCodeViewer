@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class fnegReader implements Reader<fneg> {
 
-    private final fneg instance = new fneg();
-
     @Override
     public fneg read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new fneg();
     }
 }

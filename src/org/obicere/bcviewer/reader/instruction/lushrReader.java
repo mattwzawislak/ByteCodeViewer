@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class lushrReader implements Reader<lushr> {
 
-    private final lushr instance = new lushr();
-
     @Override
     public lushr read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new lushr();
     }
 }

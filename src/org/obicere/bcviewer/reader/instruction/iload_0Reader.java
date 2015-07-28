@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class iload_0Reader implements Reader<iload_0> {
 
-    private final iload_0 instance = new iload_0();
-
     @Override
     public iload_0 read(final IndexedDataInputStream input) throws IOException {
-        return instance;
+        return new iload_0();
     }
 }
