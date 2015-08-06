@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class SourceFileAttribute implements Attribute {
+public class SourceFileAttribute extends Attribute {
 
     private final int sourceFileIndex;
 

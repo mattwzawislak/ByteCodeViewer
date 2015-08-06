@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ExceptionsAttribute implements Attribute {
+public class ExceptionsAttribute extends Attribute {
 
     private final int[] indexTable;
 

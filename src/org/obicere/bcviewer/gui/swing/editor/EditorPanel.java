@@ -19,39 +19,35 @@ public class EditorPanel extends JPanel {
     public EditorPanel() {
         super(new BorderLayout(10, 10));
         setName("editor");
-        try {
-            this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-            final JTextPane editor = new JTextPane() {
 
-                @Override
-                public boolean getScrollableTracksViewportWidth() {
-                    return getUI().getPreferredSize(this).width <= getParent().getSize().width;
-                }
+        this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        final JTextPane editor = new JTextPane() {
 
-            };
-            final ByteTextPane bytes = new ByteTextPane();
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
+                return getUI().getPreferredSize(this).width <= getParent().getSize().width;
+            }
 
-            this.bytesScroll = new JScrollPane(bytes);
-            bytesScroll.setName("bytesScroll");
-            bytesScroll.getViewport().setName("view");
+        };
+        final ByteTextPane bytes = new ByteTextPane();
 
-            final JScrollPane editorScroll = new JScrollPane(editor);
-            editorScroll.setName("editorScroll");
-            editorScroll.getViewport().setName("view");
+        this.bytesScroll = new JScrollPane(bytes);
+        bytesScroll.setName("bytesScroll");
+        bytesScroll.getViewport().setName("view");
 
-            editor.setName("text");
-            bytes.setName("bytes");
+        final JScrollPane editorScroll = new JScrollPane(editor);
+        editorScroll.setName("editorScroll");
+        editorScroll.getViewport().setName("view");
 
-            split.setLeftComponent(editorScroll);
-            split.setRightComponent(bytesScroll);
-            split.setName("split");
-            split.setResizeWeight(0.5);
+        editor.setName("text");
+        bytes.setName("bytes");
 
-            add(split);
-        } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ExceptionInInitializerError();
-        }
+        split.setLeftComponent(editorScroll);
+        split.setRightComponent(bytesScroll);
+        split.setName("split");
+        split.setResizeWeight(0.5);
+
+        add(split);
     }
 
     @Override

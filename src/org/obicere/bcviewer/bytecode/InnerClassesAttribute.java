@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class InnerClassesAttribute implements Attribute {
+public class InnerClassesAttribute extends Attribute {
 
     private final InnerClass[] classes;
 

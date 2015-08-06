@@ -11,8 +11,8 @@ public class IndexedByteArrayInputStream extends ByteArrayInputStream {
         super(bytes);
     }
 
-    public IndexedByteArrayInputStream(final byte[] bytes, final int offest, final int length) {
-        super(bytes, offest, length);
+    public IndexedByteArrayInputStream(final byte[] bytes, final int offset, final int length) {
+        super(bytes, offset, length);
     }
 
     public int getIndex() {
@@ -26,5 +26,4 @@ public class IndexedByteArrayInputStream extends ByteArrayInputStream {
             pos = 0;
         }
     }
-
 }

@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class LocalVariableTypeTableAttribute implements Attribute {
+public class LocalVariableTypeTableAttribute extends Attribute {
 
     private final LocalVariableType[] localVariableTypeTable;
 

@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class MethodParametersAttribute implements Attribute {
+public class MethodParametersAttribute extends Attribute {
 
     private final Parameter[] parameters;
 

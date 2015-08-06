@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ConstantValueAttribute implements Attribute {
+public class ConstantValueAttribute extends Attribute {
 
     private final int constantValueIndex;
 

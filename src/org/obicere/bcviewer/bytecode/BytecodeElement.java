@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class BytecodeElement {
+public abstract class BytecodeElement {
 
     private int start;
     private int end;
@@ -16,24 +16,29 @@ public class BytecodeElement {
         return end;
     }
 
-    public final void setStart(final int start) {
+    public final void setBounds(final int start, final int end) {
         if (start < 0 || start >= end) {
-            throw new IllegalArgumentException("invalid start value: " + start);
+            throw new IllegalArgumentException("invalid range: " + start + ", " + end);
         }
         this.start = start;
-    }
-
-    public final void setEnd(final int end) {
-        if (end <= start) {
-            // since start >= 0
-            // implicitly end > 0
-            throw new IllegalArgumentException("invalid end value: " + start);
-        }
         this.end = end;
     }
 
-    public final int getLength(){
+    public final int getLength() {
         return end - start;
+    }
+
+    public String toString(final ConstantPool constantPool) {
+        final StringBuilder builder = new StringBuilder();
+
+        builder.append("default print: ");
+        builder.append(getClass().getSimpleName());
+        builder.append(": start=");
+        builder.append(start);
+        builder.append(", end=");
+        builder.append(end);
+
+        return builder.toString();
     }
 
 }

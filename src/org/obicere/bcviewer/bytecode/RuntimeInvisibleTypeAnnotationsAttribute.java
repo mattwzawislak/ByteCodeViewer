@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class RuntimeInvisibleTypeAnnotationsAttribute implements Attribute {
+public class RuntimeInvisibleTypeAnnotationsAttribute extends Attribute {
 
     private final TypeAnnotation[] annotations;
 

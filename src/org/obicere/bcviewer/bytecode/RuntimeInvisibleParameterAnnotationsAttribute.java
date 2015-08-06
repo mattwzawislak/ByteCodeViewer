@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class RuntimeInvisibleParameterAnnotationsAttribute implements Attribute {
+public class RuntimeInvisibleParameterAnnotationsAttribute extends Attribute {
 
     private final Annotation[][] parameterAnnotations;
 

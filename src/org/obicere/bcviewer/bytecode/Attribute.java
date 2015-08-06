@@ -3,5 +3,5 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public interface Attribute {
+public abstract class Attribute extends BytecodeElement {
 }

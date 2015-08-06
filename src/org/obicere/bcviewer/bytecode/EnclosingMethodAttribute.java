@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class EnclosingMethodAttribute implements Attribute {
+public class EnclosingMethodAttribute extends Attribute {
 
     private final int classIndex;
     private final int methodIndex;

@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class SourceDebugExtensionAttribute implements Attribute {
+public class SourceDebugExtensionAttribute extends Attribute {
     private final String debugExtension;
 
     public SourceDebugExtensionAttribute(final String debugExtension) {

@@ -20,15 +20,22 @@ public class MethodReader implements Reader<Method> {
 
     @Override
     public Method read(final IndexedDataInputStream input) throws IOException {
+        final int startIndex = input.getOffsetIndex();
+
         final int accessFlags = input.readUnsignedShort();
         final int nameIndex = input.readUnsignedShort();
         final int descriptorIndex = input.readUnsignedShort();
 
         final int attributesCount = input.readUnsignedShort();
         final Attribute[] attributes = new Attribute[attributesCount];
-        for(int i = 0; i < attributesCount; i++){
+        for (int i = 0; i < attributesCount; i++) {
             attributes[i] = attributeReader.read(input);
         }
-        return new Method(accessFlags, nameIndex, descriptorIndex, attributes);
+        final Method method = new Method(accessFlags, nameIndex, descriptorIndex, attributes);
+        final int endIndex = input.getOffsetIndex();
+
+        method.setBounds(startIndex, endIndex);
+
+        return method;
     }
 }

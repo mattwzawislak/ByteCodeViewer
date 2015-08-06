@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class AnnotationDefaultAttribute implements Attribute {
+public class AnnotationDefaultAttribute extends Attribute {
 
     private final ElementValue defaultValue;
 

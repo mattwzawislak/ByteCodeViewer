@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class SignatureAttribute implements Attribute {
+public class SignatureAttribute extends Attribute {
 
     private final int signatureIndex;
 

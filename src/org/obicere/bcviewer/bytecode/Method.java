@@ -1,14 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.reader.instruction.InstructionReader;
-import org.obicere.bcviewer.util.IndexedDataInputStream;
-
-import java.io.IOException;
-
 /**
  * @author Obicere
  */
-public class Method {
+public class Method extends BytecodeElement {
 
     private final int accessFlags;
 
@@ -41,6 +36,7 @@ public class Method {
         return attributes;
     }
 
+    @Override
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder();
         builder.append(constantPool.getAsString(nameIndex));
@@ -51,19 +47,8 @@ public class Method {
         builder.append(Integer.toHexString(accessFlags));
         builder.append('\n');
         for (final Attribute attribute : attributes) {
-            if (attribute instanceof CodeAttribute) {
-                final InstructionReader reader = new InstructionReader();
-                final IndexedDataInputStream input = new IndexedDataInputStream(((CodeAttribute) attribute).getCode());
-                try {
-                    while (input.available() > 0) {
-                        builder.append(reader.read(input).getMnemonic());
-                        builder.append('\n');
-                    }
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                }
-                builder.append('\n');
-            }
+            builder.append(attribute.toString(constantPool));
+            builder.append('\n');
         }
         builder.deleteCharAt(builder.length() - 1);
         return builder.toString();

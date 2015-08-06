@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class StackMapTableAttribute implements Attribute {
+public class StackMapTableAttribute extends Attribute {
 
     private final StackMapFrame[] entries;
 

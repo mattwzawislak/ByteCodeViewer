@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class BootstrapMethodsAttribute implements Attribute {
+public class BootstrapMethodsAttribute extends Attribute {
 
     private final BootstrapMethod[] bootstrapMethods;
 

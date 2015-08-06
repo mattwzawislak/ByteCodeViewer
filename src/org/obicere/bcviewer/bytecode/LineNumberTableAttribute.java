@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class LineNumberTableAttribute implements Attribute {
+public class LineNumberTableAttribute extends Attribute {
 
     private final LineNumber[] lineNumberTable;
 

@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class DeprecatedAttribute implements Attribute {
+public class DeprecatedAttribute extends Attribute {
 
     public DeprecatedAttribute() {
         // Okay
