@@ -1,5 +1,8 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.reader.instruction.InstructionReader;
+
 /**
  * @author Obicere
  */
@@ -46,19 +49,33 @@ public class wide extends Instruction {
         return (indexbyte1 << 8) | indexbyte2;
     }
 
-    public int getConstbyte1(){
+    public int getConstbyte1() {
         return constbyte1;
     }
 
-    public int getConstbyte2(){
+    public int getConstbyte2() {
         return constbyte2;
     }
 
-    public int getConst(){
+    public int getConst() {
         return (constbyte1 << 8) | constbyte2;
     }
 
-    public Instruction getInstruction(){
+    public Instruction getInstruction() {
         return instruction;
+    }
+
+    @Override
+    public String toString(final ConstantPool constantPool) {
+        final StringBuilder builder = new StringBuilder(MNEMONIC);
+        builder.append(' ');
+        builder.append(instruction.toString(constantPool));
+        builder.append(' ');
+        builder.append(getIndex());
+        if (instruction.getOpcode() == InstructionReader.OPCODE_IINC) {
+            builder.append(' ');
+            builder.append(getConst());
+        }
+        return builder.toString();
     }
 }

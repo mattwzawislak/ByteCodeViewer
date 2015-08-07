@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.ConstantPool;
+
 /**
  * @author Obicere
  */
@@ -33,5 +35,15 @@ public class multianewarray extends Instruction {
 
     public int getDimensions() {
         return dimensions;
+    }
+
+    @Override
+    public String toString(final ConstantPool constantPool) {
+        final StringBuilder builder = new StringBuilder(MNEMONIC);
+        builder.append(' ');
+        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(' ');
+        builder.append(dimensions);
+        return builder.toString();
     }
 }

@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.ConstantPool;
+
 /**
  * @author Obicere
  */
@@ -17,5 +19,13 @@ public class ldc extends Instruction {
 
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public String toString(final ConstantPool constantPool) {
+        final StringBuilder builder = new StringBuilder(MNEMONIC);
+        builder.append(' ');
+        builder.append(constantPool.getAsCodeString(getIndex()));
+        return builder.toString();
     }
 }

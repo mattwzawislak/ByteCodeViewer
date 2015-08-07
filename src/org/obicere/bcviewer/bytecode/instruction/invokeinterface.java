@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.ConstantPool;
+
 /**
  * @author Obicere
  */
@@ -39,5 +41,16 @@ public class invokeinterface extends Instruction {
 
     public int getIndex() {
         return (indexbyte1 << 8) | indexbyte2;
+    }
+
+    @Override
+    public String toString(final ConstantPool constantPool) {
+        final StringBuilder builder = new StringBuilder(MNEMONIC);
+        builder.append(' ');
+        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(' ');
+        builder.append(count);
+        builder.append(" 0"); // always a 0
+        return builder.toString();
     }
 }
