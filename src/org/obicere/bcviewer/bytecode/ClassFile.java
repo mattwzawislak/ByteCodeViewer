@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class ClassFile {
+public class ClassFile extends BytecodeElement {
 
     private final int minorVersion;
 
@@ -76,5 +76,14 @@ public class ClassFile {
 
     public Attribute[] getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public String toString(final ConstantPool constantPool){
+        final StringBuilder builder = new StringBuilder();
+    }
+
+    private String toProperClassName(final String className){
+        return className.replace('/', '.');
     }
 }

@@ -20,7 +20,7 @@ public class ConstantPool {
     public String getAsString(final int index) {
         final Constant constant = get(index);
         if (constant == null) {
-            throw new NullPointerException();
+            return "<null entry>";
         }
         return String.valueOf(constant.toString(this));
     }
@@ -28,7 +28,7 @@ public class ConstantPool {
     public String getAsCodeString(final int index) {
         final Constant constant = get(index);
         if (constant == null) {
-            throw new NullPointerException();
+            return "<null entry>";
         }
         final int tag = constant.getTag();
         switch (tag) {

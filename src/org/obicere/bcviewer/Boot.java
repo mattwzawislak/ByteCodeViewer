@@ -35,6 +35,7 @@ public class Boot {
         // Starting the actual boot sequence, everything needed for boot
         // should be loaded at this point
         final Logger logger = domain.getLogger();
+        logger.info(domain.getApplicationName());
         logger.info("Starting boot.");
 
         // Run the start up tasks
@@ -47,14 +48,14 @@ public class Boot {
             frameManager.loadDefaultTheme();
             frameManager.open();
             try {
-                final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
+                final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer");
                 final File[] files = main.listFiles(pathname -> pathname.getName().endsWith(".class"));
                 if(files != null){
                     for(final File file : files) {
                         final ClassFile cls = new ClassFileReader().read(new IndexedDataInputStream(IOUtils.readData(file)));
                         System.out.println(file);
                         final ConstantPool pool = cls.getConstantPool();
-                        System.out.print("major: ");
+                        System.out.print("Major: ");
                         System.out.println(cls.getMajorVersion());
                         System.out.print("minor: ");
                         System.out.println(cls.getMinorVersion());

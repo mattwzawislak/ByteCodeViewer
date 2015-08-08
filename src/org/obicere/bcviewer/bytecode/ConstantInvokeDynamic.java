@@ -27,6 +27,6 @@ public class ConstantInvokeDynamic extends Constant {
 
     @Override
     public String toString(final ConstantPool constantPool) {
-        return constantPool.getAsString(bootstrapMethodAttrIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
+        return bootstrapMethodAttrIndex + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 }
