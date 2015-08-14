@@ -62,6 +62,10 @@ public class ClassFile extends BytecodeElement {
         return thisClass;
     }
 
+    public String getName(){
+        return constantPool.getAsString(thisClass);
+    }
+
     public int[] getInterfaces() {
         return interfaces;
     }
@@ -81,9 +85,6 @@ public class ClassFile extends BytecodeElement {
     @Override
     public String toString(final ConstantPool constantPool){
         final StringBuilder builder = new StringBuilder();
-    }
-
-    private String toProperClassName(final String className){
-        return className.replace('/', '.');
+        return builder.toString();
     }
 }

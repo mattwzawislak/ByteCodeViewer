@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.util.BytecodeUtils;
+
 /**
  * @author Obicere
  */
@@ -43,8 +45,11 @@ public class Method extends BytecodeElement {
         builder.append("; ");
         builder.append(constantPool.getAsString(descriptorIndex));
         builder.append('\n');
-        builder.append("access: ");
-        builder.append(Integer.toHexString(accessFlags));
+        builder.append("Access: ");
+        for(final String access : BytecodeUtils.getMethodAccessNames(accessFlags)){
+            builder.append(access);
+            builder.append(' ');
+        }
         builder.append('\n');
         for (final Attribute attribute : attributes) {
             builder.append(attribute.toString(constantPool));

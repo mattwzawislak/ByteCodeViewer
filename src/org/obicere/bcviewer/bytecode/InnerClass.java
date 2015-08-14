@@ -1,9 +1,11 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.util.BytecodeUtils;
+
 /**
  * @author Obicere
  */
-public class InnerClass {
+public class InnerClass extends BytecodeElement {
 
     private final int innerClassInfoIndex;
     private final int outerClassInfoIndex;
@@ -32,4 +34,23 @@ public class InnerClass {
     public int getInnerClassAccessFlags() {
         return innerClassAccessFlags;
     }
+
+    @Override
+    public String toString(final ConstantPool constantPool){
+        final StringBuilder builder = new StringBuilder();
+        builder.append("InnerClass: innerClassInfo=");
+        builder.append(constantPool.getAsString(innerClassInfoIndex));
+        builder.append(", outerClassInfo=");
+        builder.append(constantPool.getAsString(outerClassInfoIndex));
+        builder.append(", innerName=");
+        builder.append(constantPool.getAsString(innerNameIndex));
+        builder.append(", access=");
+        for(final String access : BytecodeUtils.getClassAccessNames(innerClassAccessFlags)){
+            builder.append(access);
+            builder.append(' ');
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        return builder.toString();
+    }
+
 }
