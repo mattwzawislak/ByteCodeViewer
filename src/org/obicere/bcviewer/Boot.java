@@ -48,55 +48,57 @@ public class Boot {
             frameManager.loadDefaultTheme();
             frameManager.open();
             try {
-                final File main = new File(".\\out\\production\\BytecodeViewer\\testing\\Foo$Bar.class");
+                final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
 
-                final ClassInformation classInformation = new ClassInformation();
+                for(final File file : main.listFiles(e -> e.getName().endsWith(".class"))) {
+                    final ClassInformation classInformation = new ClassInformation();
 
-                classInformation.loadFile(main);
+                    classInformation.loadFile(file);
 
-                System.out.print("outer most: ");
-                System.out.println(classInformation.getOuterMostClass().getName());
-                System.out.println();
+                    System.out.print("outer most: ");
+                    System.out.println(classInformation.getOuterMostClass().getName());
+                    System.out.println();
 
-                for(final ClassFile cls : classInformation.getLoadedClasses()) {
-                    System.out.println(cls.getName());
-                    final ConstantPool pool = cls.getConstantPool();
-                    System.out.print("Major: ");
-                    System.out.println(cls.getMajorVersion());
-                    System.out.print("Minor: ");
-                    System.out.println(cls.getMinorVersion());
-                    System.out.print("Access: ");
-                    for (final String access : BytecodeUtils.getClassAccessNames(cls.getAccessFlags())) {
-                        System.out.print(access);
-                        System.out.print(' ');
+                    for (final ClassFile cls : classInformation.getLoadedClasses()) {
+                        System.out.println(cls.getName());
+                        final ConstantPool pool = cls.getConstantPool();
+                        System.out.print("Major: ");
+                        System.out.println(cls.getMajorVersion());
+                        System.out.print("Minor: ");
+                        System.out.println(cls.getMinorVersion());
+                        System.out.print("Access: ");
+                        for (final String access : BytecodeUtils.getClassAccessNames(cls.getAccessFlags())) {
+                            System.out.print(access);
+                            System.out.print(' ');
+                        }
+                        System.out.println();
+                        System.out.print("Class: ");
+                        System.out.println(pool.getAsString(cls.getThisClass()));
+                        System.out.print("Super: ");
+                        System.out.println(pool.getAsString(cls.getSuperClass()));
+                        for (final int interfaceIndex : cls.getInterfaces()) {
+                            System.out.print("Interface ");
+                            System.out.print(interfaceIndex);
+                            System.out.print(": ");
+                            System.out.println(pool.getAsString(interfaceIndex));
+                        }
+                        System.out.println();
+                        for (final Attribute attribute : cls.getAttributes()) {
+                            System.out.println(attribute.toString(pool));
+                        }
+                        System.out.println();
+                        for (final Field field : cls.getFields()) {
+                            System.out.print("Field ");
+                            System.out.print(pool.getAsString(field.getNameIndex()));
+                            System.out.print("; ");
+                            System.out.println(pool.getAsString(field.getDescriptorIndex()));
+                        }
+                        System.out.println();
+                        for (final Method method : cls.getMethods()) {
+                            System.out.println(method.toString(pool));
+                        }
+                        System.out.println();
                     }
-                    System.out.println();
-                    System.out.print("Class: ");
-                    System.out.println(pool.getAsString(cls.getThisClass()));
-                    System.out.print("Super: ");
-                    System.out.println(pool.getAsString(cls.getSuperClass()));
-                    for (final int interfaceIndex : cls.getInterfaces()) {
-                        System.out.print("Interface ");
-                        System.out.print(interfaceIndex);
-                        System.out.print(": ");
-                        System.out.println(pool.getAsString(interfaceIndex));
-                    }
-                    System.out.println();
-                    for (final Attribute attribute : cls.getAttributes()) {
-                        System.out.println(attribute.toString(pool));
-                    }
-                    System.out.println();
-                    for (final Field field : cls.getFields()) {
-                        System.out.print("Field ");
-                        System.out.print(pool.getAsString(field.getNameIndex()));
-                        System.out.print("; ");
-                        System.out.println(pool.getAsString(field.getDescriptorIndex()));
-                    }
-                    System.out.println();
-                    for (final Method method : cls.getMethods()) {
-                        System.out.println(method.toString(pool));
-                    }
-                    System.out.println();
                 }
             } catch (final Exception e) {
                 e.printStackTrace();

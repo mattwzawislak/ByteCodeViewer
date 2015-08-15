@@ -77,6 +77,7 @@ public class ClassInformation {
                 }
             }
             // else we reached someone who doesn't follow convention
+            // or a case where the inner class wasn't really an inner class
         }
         return loadOuterClass(needsInnerClass, file);
     }
