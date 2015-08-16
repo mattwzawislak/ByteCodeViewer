@@ -16,10 +16,29 @@ public class Element {
 
     private final String name;
 
-    private boolean visible;
+    private boolean visible = true;
+
+    private String text = "";
 
     public Element(final String name) {
         this.name = name;
+    }
+
+    public Element(final String name, final String text) {
+        this.name = name;
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(final String text) {
+        if (text == null) {
+            this.text = "";
+        } else {
+            this.text = text;
+        }
     }
 
     public String getName() {
@@ -103,11 +122,11 @@ public class Element {
         return element;
     }
 
-    public void setVisible(final boolean visible){
+    public void setVisible(final boolean visible) {
         this.visible = visible;
     }
 
-    public boolean isVisible(){
+    public boolean isVisible() {
         return visible;
     }
 }
