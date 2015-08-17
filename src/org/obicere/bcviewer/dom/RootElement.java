@@ -16,7 +16,7 @@ public class RootElement extends Element {
     }
 
     @Override
-    public void invalidate() {
+    protected void invalidate() {
         document.invalidate();
     }
 

@@ -28,6 +28,14 @@ public class DocumentContent {
         return lines.get(lineNumber);
     }
 
+    public String getLastLine() {
+        return buffer.toString();
+    }
+
+    public int getLastLineLength() {
+        return buffer.length();
+    }
+
     public void newline() {
         lines.add(buffer.toString());
         buffer.delete(0, buffer.length());

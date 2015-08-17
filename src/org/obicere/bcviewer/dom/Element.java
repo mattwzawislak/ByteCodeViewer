@@ -124,19 +124,19 @@ public class Element {
         return visible;
     }
 
-    void invalidate(){
+    protected void invalidate(){
         this.validated = false;
         if(parent != null){
             parent.invalidate();
         }
     }
 
-    void validate(){
+    protected void validate(){
         this.validated = true;
         children.stream().filter(child -> !child.isValid()).forEach(Element::validate);
     }
 
-    boolean isValid(){
+    protected boolean isValid(){
         return validated;
     }
 }
