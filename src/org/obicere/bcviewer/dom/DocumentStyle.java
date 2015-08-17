@@ -9,15 +9,9 @@ public class DocumentStyle {
 
     private Color fontColor;
 
-    private boolean fontColorValid = false;
-
     private Color highlightColor;
 
-    private boolean highlightColorValid = false;
-
     private int fontStyle;
-
-    private boolean fontStyleValid = false;
 
     private boolean underline;
 
@@ -27,32 +21,18 @@ public class DocumentStyle {
         if (fontColor == null) {
             throw new NullPointerException("font color cannot be set to null.");
         }
-        if (!this.fontColor.equals(fontColor)) {
-            this.fontColor = fontColor;
-            fontColorValid = false;
-        }
+        this.fontColor = fontColor;
     }
 
     public void setHighlightColor(final Color highlightColor) {
         if (this.highlightColor == highlightColor) {
             return;
         }
-        if (highlightColor == null) {
-            this.highlightColor = null;
-            highlightColorValid = false;
-            return;
-        }
-        if (!highlightColor.equals(this.highlightColor)) {
-            this.highlightColor = highlightColor;
-            highlightColorValid = false;
-        }
+        this.highlightColor = highlightColor;
     }
 
     public void setFontStyle(final int fontStyle) {
-        if (this.fontStyle != fontStyle) {
-            this.fontStyle = fontStyle;
-            fontStyleValid = false;
-        }
+        this.fontStyle = fontStyle;
     }
 
     public void setUnderline(final boolean underline) {

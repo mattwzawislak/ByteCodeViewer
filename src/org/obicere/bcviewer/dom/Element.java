@@ -18,27 +18,10 @@ public class Element {
 
     private boolean visible = true;
 
-    private String text = "";
+    private boolean validated = true;
 
     public Element(final String name) {
         this.name = name;
-    }
-
-    public Element(final String name, final String text) {
-        this.name = name;
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(final String text) {
-        if (text == null) {
-            this.text = "";
-        } else {
-            this.text = text;
-        }
     }
 
     public String getName() {
@@ -67,12 +50,14 @@ public class Element {
         // if the case-specific addition works - just for flexibility
         if (addElement(element)) {
             children.add(element);
+
+            validated = false;
             return true;
         }
         return false;
     }
 
-    boolean addElement(final Element element) {
+    protected boolean addElement(final Element element) {
         return true;
     }
 
@@ -94,6 +79,14 @@ public class Element {
 
     public List<Element> getChildren() {
         return Collections.unmodifiableList(children);
+    }
+
+    public int getChildrenCount() {
+        return children.size();
+    }
+
+    public boolean isLeaf() {
+        return children.size() == 0;
     }
 
     public Element getElement(final String name) {
@@ -124,9 +117,26 @@ public class Element {
 
     public void setVisible(final boolean visible) {
         this.visible = visible;
+        validated = false;
     }
 
     public boolean isVisible() {
         return visible;
+    }
+
+    void invalidate(){
+        this.validated = false;
+        if(parent != null){
+            parent.invalidate();
+        }
+    }
+
+    void validate(){
+        this.validated = true;
+        children.stream().filter(child -> !child.isValid()).forEach(Element::validate);
+    }
+
+    boolean isValid(){
+        return validated;
     }
 }
