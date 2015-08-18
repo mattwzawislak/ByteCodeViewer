@@ -17,11 +17,11 @@ public class TextElement extends Element {
         setText(text);
     }
 
-    public String getText(){
+    public String getText() {
         return text;
     }
 
-    public void setText(final String text){
+    public void setText(final String text) {
         if (text == null) {
             this.text = "";
         } else {
@@ -29,8 +29,16 @@ public class TextElement extends Element {
         }
     }
 
-    public boolean insertNewLine(){
+    public boolean insertNewLine() {
         return true;
     }
 
+    @Override
+    public void apply(final DocumentContent content) {
+        content.append(text);
+        if (insertNewLine()) {
+            content.newline();
+        }
+        super.apply(content);
+    }
 }

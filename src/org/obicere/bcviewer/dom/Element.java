@@ -16,6 +16,8 @@ public class Element {
 
     private final String name;
 
+    private String qualifiedName;
+
     private boolean visible = true;
 
     private boolean validated = true;
@@ -24,12 +26,20 @@ public class Element {
         this.name = name;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
+    }
+
+    public final String getQualifiedName() {
+        if (qualifiedName == null) {
+            return name;
+        }
+        return qualifiedName;
     }
 
     void addedTo(final Element parent) {
         this.parent = parent;
+        this.qualifiedName = parent.getQualifiedName() + "." + name;
     }
 
     public final Element getParent() {
@@ -51,7 +61,8 @@ public class Element {
         if (addElement(element)) {
             children.add(element);
 
-            validated = false;
+            element.addedTo(this);
+            invalidate();
             return true;
         }
         return false;
@@ -115,28 +126,69 @@ public class Element {
         return element;
     }
 
+    public void apply(final DocumentContent content) {
+        for (final Element child : children) {
+            child.apply(content);
+        }
+    }
+
     public void setVisible(final boolean visible) {
         this.visible = visible;
-        validated = false;
+        invalidate();
     }
 
     public boolean isVisible() {
         return visible;
     }
 
-    protected void invalidate(){
+    protected void invalidate() {
         this.validated = false;
-        if(parent != null){
+        if (parent != null) {
             parent.invalidate();
         }
     }
 
-    protected void validate(){
+    protected void validate() {
         this.validated = true;
         children.stream().filter(child -> !child.isValid()).forEach(Element::validate);
     }
 
-    protected boolean isValid(){
+    protected boolean isValid() {
         return validated;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Element) {
+            return ((Element) obj).getQualifiedName().equals(getQualifiedName());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getQualifiedName().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(getClass().getName());
+        builder.append("[name=");
+        builder.append(getQualifiedName());
+        builder.append(", childrenCount=");
+        builder.append(getChildrenCount());
+        builder.append(", visible=");
+        builder.append(visible);
+        builder.append(", valid=");
+        builder.append(validated);
+        builder.append(']');
+        return builder.toString();
     }
 }

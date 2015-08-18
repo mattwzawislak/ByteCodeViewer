@@ -19,7 +19,7 @@ public class Document {
 
     private boolean validated = false;
 
-    public Document(){
+    public Document() {
         this.root = new RootElement(this);
     }
 
@@ -64,16 +64,40 @@ public class Document {
         return root.addAll(elements);
     }
 
-    public DocumentContent getContent(){
-        final DocumentContent newContent = new DocumentContent();
+    public DocumentContent getContent() {
+        if (validated) {
+            return lastContent;
+        }
+        final DocumentContent content = new DocumentContent();
+
+        final Element root = getRoot();
+
+        root.apply(content);
+        root.validate();
 
         validated = true;
-
-        lastContent = newContent;
-        return newContent;
+        lastContent = content;
+        return content;
     }
 
-    void invalidate(){
+    public Element getElement(final String name) {
+        if (name == null) {
+            throw new NullPointerException("cannot find element by null name.");
+        }
+        final String rootName = root.getName();
+        if(name.equals(rootName)){
+            return root;
+        }
+        if (name.startsWith(rootName)) {
+            // add 1 to also remove the '.' after the root's name
+            final String removed = name.substring(rootName.length() + 1);
+            return root.getElement(removed);
+        } else {
+            return root.getElement(name);
+        }
+    }
+
+    void invalidate() {
         validated = false;
     }
 }

@@ -56,20 +56,20 @@ public class DocumentContent {
         // then, only add a new line if there was a newline character
         if (split.length > 1) {
             newline();
-        }
-        // here, we completely boycott the buffer to improve performance
-        // starts at index 1, as the last
-        // length - 1 as the last line is put into the buffer
-        int i = 1;
-        while (i < split.length - 1) {
-            final String next = split[i++];
-            if (next.length() == 0) {
-                lines.add(null);
-            } else {
-                lines.add(next);
+            // here, we completely boycott the buffer to improve performance
+            // starts at index 1, as the last
+            // length - 1 as the last line is put into the buffer
+            int i = 1;
+            while (i < split.length - 1) {
+                final String next = split[i++];
+                if (next.length() == 0) {
+                    lines.add(null);
+                } else {
+                    lines.add(next);
+                }
             }
+            buffer.append(split[i]);
         }
-        buffer.append(split[i]);
     }
 
     public void appendLine(final CharSequence line) {
