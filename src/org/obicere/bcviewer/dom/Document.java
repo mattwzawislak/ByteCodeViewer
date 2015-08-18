@@ -11,6 +11,8 @@ public class Document {
 
     private final RootElement root;
 
+    private Element view;
+
     private int lineHeight;
 
     private int tabSize = 4;
@@ -23,6 +25,7 @@ public class Document {
 
     public Document() {
         this.root = new RootElement(this);
+        this.view = root;
     }
 
     public void setLineHeight(final int height) {
@@ -52,11 +55,18 @@ public class Document {
     }
 
     public void setTabSize(final int tabSize) {
-        if(tabSize <= 0){
+        if (tabSize <= 0) {
             throw new IllegalArgumentException("illegal tab size. Must be positive.");
         }
         this.tabSize = tabSize;
         invalidate();
+    }
+
+    public void setFont(final Font font) {
+        if (font == null) {
+            throw new NullPointerException("cannot assign null font.");
+        }
+        this.font = font;
     }
 
     public Font getFont() {
@@ -67,37 +77,13 @@ public class Document {
         return root;
     }
 
-    public boolean add(final Element element) {
-        final boolean result = root.add(element);
-        if(result){
-            invalidate();
-        }
-        return result;
-    }
-
-    public boolean addAll(final Element... elements) {
-        final boolean result = root.addAll(elements);
-        if(result){
-            invalidate();
-        }
-        return result;
-    }
-
-    public boolean addAll(final Iterable<Element> elements) {
-        final boolean result = root.addAll(elements);
-        if(result){
-            invalidate();
-        }
-        return result;
-    }
-
     public DocumentContent getContent() {
         if (validated) {
             return lastContent;
         }
         final DocumentContent content = new DocumentContent(this);
 
-        root.apply(content);
+        view.apply(content);
 
         validate();
 
@@ -122,12 +108,34 @@ public class Document {
         }
     }
 
+    public void setView(final Element element) {
+        final String qualifiedName = element.getQualifiedName();
+        if (getElement(qualifiedName) == null) {
+            throw new IllegalArgumentException("cannot set element to view that is not part of document.");
+        }
+        view = element;
+        invalidate();
+    }
+
+    public Element setView(final String name) {
+        if(name == null){
+            throw new NullPointerException("cannot find element by null name.");
+        }
+        view = getElement(name);
+        invalidate();
+        return view;
+    }
+
     protected void invalidate() {
         validated = false;
     }
 
-    protected void validate(){
+    protected void validate() {
         validated = true;
         root.validate();
+    }
+
+    protected boolean isValid() {
+        return validated;
     }
 }
