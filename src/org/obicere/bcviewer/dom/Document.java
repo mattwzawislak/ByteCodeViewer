@@ -13,11 +13,13 @@ public class Document {
 
     private int lineHeight;
 
+    private int tabSize = 4;
+
     private Font font;
 
     private DocumentContent lastContent;
 
-    private boolean validated = false;
+    private boolean validated = true;
 
     public Document() {
         this.root = new RootElement(this);
@@ -32,6 +34,7 @@ public class Document {
         } else {
             this.lineHeight = height;
         }
+        invalidate();
     }
 
     public int getDefaultLineHeight() {
@@ -44,6 +47,18 @@ public class Document {
         return lineHeight;
     }
 
+    public int getTabSize() {
+        return tabSize;
+    }
+
+    public void setTabSize(final int tabSize) {
+        if(tabSize <= 0){
+            throw new IllegalArgumentException("illegal tab size. Must be positive.");
+        }
+        this.tabSize = tabSize;
+        invalidate();
+    }
+
     public Font getFont() {
         return font;
     }
@@ -53,29 +68,39 @@ public class Document {
     }
 
     public boolean add(final Element element) {
-        return root.add(element);
+        final boolean result = root.add(element);
+        if(result){
+            invalidate();
+        }
+        return result;
     }
 
     public boolean addAll(final Element... elements) {
-        return root.addAll(elements);
+        final boolean result = root.addAll(elements);
+        if(result){
+            invalidate();
+        }
+        return result;
     }
 
     public boolean addAll(final Iterable<Element> elements) {
-        return root.addAll(elements);
+        final boolean result = root.addAll(elements);
+        if(result){
+            invalidate();
+        }
+        return result;
     }
 
     public DocumentContent getContent() {
         if (validated) {
             return lastContent;
         }
-        final DocumentContent content = new DocumentContent();
-
-        final Element root = getRoot();
+        final DocumentContent content = new DocumentContent(this);
 
         root.apply(content);
-        root.validate();
 
-        validated = true;
+        validate();
+
         lastContent = content;
         return content;
     }
@@ -85,7 +110,7 @@ public class Document {
             throw new NullPointerException("cannot find element by null name.");
         }
         final String rootName = root.getName();
-        if(name.equals(rootName)){
+        if (name.equals(rootName)) {
             return root;
         }
         if (name.startsWith(rootName)) {
@@ -97,7 +122,12 @@ public class Document {
         }
     }
 
-    void invalidate() {
+    protected void invalidate() {
         validated = false;
+    }
+
+    protected void validate(){
+        validated = true;
+        root.validate();
     }
 }

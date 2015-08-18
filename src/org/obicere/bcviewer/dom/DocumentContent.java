@@ -12,6 +12,12 @@ public class DocumentContent {
 
     private final StringBuilder buffer = new StringBuilder();
 
+    private final Document document;
+
+    public DocumentContent(final Document document) {
+        this.document = document;
+    }
+
     public int getLineCount() {
         if (buffer.length() > 0) {
             // we have a string in the buffer that needs to be considered
@@ -48,10 +54,11 @@ public class DocumentContent {
         if (line.length() == 0) {
             return;
         }
+        final int tabSize = document.getTabSize();
         final String[] split = line.toString().split("\n");
 
         // handle the last buffer up to the next newline
-        buffer.append(split[0]);
+        buffer.append(replaceTabs(split[0], tabSize));
 
         // then, only add a new line if there was a newline character
         if (split.length > 1) {
@@ -62,18 +69,39 @@ public class DocumentContent {
             int i = 1;
             while (i < split.length - 1) {
                 final String next = split[i++];
+
                 if (next.length() == 0) {
-                    lines.add(null);
-                } else {
                     lines.add(next);
+                    continue;
                 }
+                final String fixedTabs = replaceTabs(next, tabSize);
+                lines.add(fixedTabs);
             }
-            buffer.append(split[i]);
+            buffer.append(replaceTabs(split[i], tabSize));
         }
     }
 
     public void appendLine(final CharSequence line) {
         append(line);
         newline();
+    }
+
+    private String replaceTabs(final String input, final int tabSize) {
+        final StringBuilder builder = new StringBuilder(input);
+        int index;
+        // while there is still a tab at some index
+        while ((index = builder.indexOf("\t")) >= 0) {
+
+            // delete the tab
+            builder.deleteCharAt(index);
+
+            // calculate offset from nearest multiple of tab size
+            final int remainder = tabSize - (index % tabSize);
+
+            for (int i = 0; i < remainder; i++) {
+                builder.insert(index, ' ');
+            }
+        }
+        return builder.toString();
     }
 }
