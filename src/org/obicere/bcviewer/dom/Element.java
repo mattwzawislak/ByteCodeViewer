@@ -46,6 +46,19 @@ public class Element {
         return parent;
     }
 
+    public Element remove(final String name) {
+        final Element element = getElement(name);
+        children.remove(element);
+        return element;
+    }
+
+    public boolean remove(final Element element) {
+        if (element == null) {
+            return false;
+        }
+        return children.remove(element);
+    }
+
     public boolean add(final Element element) {
         if (element == null) {
             throw new NullPointerException("cannot add null element.");
@@ -57,18 +70,15 @@ public class Element {
             }
             next = parent.getParent();
         }
-        // if the case-specific addition works - just for flexibility
-        if (addElement(element)) {
-            children.add(element);
-
-            element.addedTo(this);
-            invalidate();
-            return true;
+        final Element oldParent = element.getParent();
+        if (oldParent != null) {
+            oldParent.remove(element);
         }
-        return false;
-    }
 
-    protected boolean addElement(final Element element) {
+        children.add(element);
+
+        element.addedTo(this);
+        invalidate();
         return true;
     }
 
