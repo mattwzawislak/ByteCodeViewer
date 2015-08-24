@@ -5,7 +5,9 @@ package org.obicere.bcviewer.dom;
  */
 public class Document {
 
-    private final RootElement root;
+    private static final String ROOT_NAME = "root";
+
+    private final Element root;
 
     // change this to a View?
     private Element display;
@@ -13,7 +15,7 @@ public class Document {
     private boolean validated = true;
 
     public Document() {
-        this.root = new RootElement(this);
+        this.root = new Element(ROOT_NAME);
         this.display = root;
     }
 
@@ -49,13 +51,12 @@ public class Document {
         if (name == null) {
             throw new NullPointerException("cannot find element by null name.");
         }
-        final String rootName = root.getName();
-        if (name.equals(rootName)) {
+        if (name.equals(ROOT_NAME)) {
             return root;
         }
-        if (name.startsWith(rootName)) {
+        if (name.startsWith(ROOT_NAME)) {
             // add 1 to also remove the '.' after the root's name
-            final String removed = name.substring(rootName.length() + 1);
+            final String removed = name.substring(ROOT_NAME.length() + 1);
             return root.getElement(removed);
         } else {
             return root.getElement(name);
@@ -68,7 +69,6 @@ public class Document {
             throw new IllegalArgumentException("cannot set element to display that is not part of document.");
         }
         display = element;
-        invalidate();
     }
 
     public Element setDisplay(final String name) {
@@ -76,20 +76,6 @@ public class Document {
             throw new NullPointerException("cannot find element by null name.");
         }
         display = getElement(name);
-        invalidate();
         return display;
-    }
-
-    protected void invalidate() {
-        validated = false;
-    }
-
-    protected void validate() {
-        validated = true;
-        root.validate();
-    }
-
-    protected boolean isValid() {
-        return validated;
     }
 }

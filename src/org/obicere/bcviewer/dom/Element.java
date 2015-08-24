@@ -20,10 +20,6 @@ public class Element {
 
     private String qualifiedName;
 
-    private boolean visible = true;
-
-    private boolean validated = true;
-
     private final Attributes attributes = new Attributes();
 
     private final Map<String, Object> properties = new HashMap<>();
@@ -96,7 +92,6 @@ public class Element {
         children.add(element);
 
         element.addedTo(this);
-        invalidate();
         return true;
     }
 
@@ -153,32 +148,6 @@ public class Element {
         }
         return element;
     }
-
-    public void setVisible(final boolean visible) {
-        this.visible = visible;
-        invalidate();
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    protected void invalidate() {
-        this.validated = false;
-        if (parent != null) {
-            parent.invalidate();
-        }
-    }
-
-    protected void validate() {
-        this.validated = true;
-        children.stream().filter(child -> !child.isValid()).forEach(Element::validate);
-    }
-
-    protected boolean isValid() {
-        return validated;
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
@@ -206,10 +175,6 @@ public class Element {
         builder.append(getQualifiedName());
         builder.append(", childrenCount=");
         builder.append(getChildrenCount());
-        builder.append(", visible=");
-        builder.append(visible);
-        builder.append(", valid=");
-        builder.append(validated);
         builder.append(']');
         return builder.toString();
     }

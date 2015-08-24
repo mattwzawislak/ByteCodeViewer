@@ -16,6 +16,8 @@ public class DocumentBuilder {
 
     private final ResourcePool<Highlight> highlightPool = new ResourcePool<>();
 
+    private int tabSize = 4;
+
     public Document build(final Modeler<ClassFile> classFileModeler) {
         final Document document = new Document();
 
@@ -34,5 +36,16 @@ public class DocumentBuilder {
 
     public ResourcePool<Highlight> getHighlightPool() {
         return highlightPool;
+    }
+
+    public int getTabSize() {
+        return tabSize;
+    }
+
+    public void setTabSize(final int tabSize) {
+        if (tabSize <= 0) {
+            throw new IllegalArgumentException("illegal tab size. Must be positive.");
+        }
+        this.tabSize = tabSize;
     }
 }
