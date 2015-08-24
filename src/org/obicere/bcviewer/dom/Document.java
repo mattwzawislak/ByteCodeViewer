@@ -11,7 +11,7 @@ public class Document {
 
     private final RootElement root;
 
-    private Element view;
+    private Element display;
 
     private int lineHeight;
 
@@ -19,13 +19,11 @@ public class Document {
 
     private Font font;
 
-    private DocumentContent lastContent;
-
     private boolean validated = true;
 
     public Document() {
         this.root = new RootElement(this);
-        this.view = root;
+        this.display = root;
     }
 
     public void setLineHeight(final int height) {
@@ -77,20 +75,6 @@ public class Document {
         return root;
     }
 
-    public DocumentContent getContent() {
-        if (validated) {
-            return lastContent;
-        }
-        final DocumentContent content = new DocumentContent(this);
-
-        view.apply(content);
-
-        validate();
-
-        lastContent = content;
-        return content;
-    }
-
     public Element getElement(final String name) {
         if (name == null) {
             throw new NullPointerException("cannot find element by null name.");
@@ -108,22 +92,22 @@ public class Document {
         }
     }
 
-    public void setView(final Element element) {
+    public void setDisplay(final Element element) {
         final String qualifiedName = element.getQualifiedName();
         if (getElement(qualifiedName) == null) {
-            throw new IllegalArgumentException("cannot set element to view that is not part of document.");
+            throw new IllegalArgumentException("cannot set element to display that is not part of document.");
         }
-        view = element;
+        display = element;
         invalidate();
     }
 
-    public Element setView(final String name) {
+    public Element setDisplay(final String name) {
         if(name == null){
             throw new NullPointerException("cannot find element by null name.");
         }
-        view = getElement(name);
+        display = getElement(name);
         invalidate();
-        return view;
+        return display;
     }
 
     protected void invalidate() {

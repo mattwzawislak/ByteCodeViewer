@@ -32,13 +32,4 @@ public class TextElement extends Element {
     public boolean insertNewLine() {
         return true;
     }
-
-    @Override
-    public void apply(final DocumentContent content) {
-        content.append(text);
-        if (insertNewLine()) {
-            content.newline();
-        }
-        super.apply(content);
-    }
 }

@@ -136,12 +136,6 @@ public class Element {
         return element;
     }
 
-    public void apply(final DocumentContent content) {
-        for (final Element child : children) {
-            child.apply(content);
-        }
-    }
-
     public void setVisible(final boolean visible) {
         this.visible = visible;
         invalidate();
