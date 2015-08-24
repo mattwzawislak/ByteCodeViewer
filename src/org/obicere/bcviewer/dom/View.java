@@ -8,6 +8,6 @@ import java.awt.Rectangle;
  */
 public interface View {
 
-    public void doPaint(final Graphics g, final Rectangle bounds);
+    public void paint(final Graphics g, final Rectangle bounds);
 
 }

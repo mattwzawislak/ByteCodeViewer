@@ -10,14 +10,7 @@ public class SharedResource<T> extends Resource<T> {
     private final String name;
 
     public SharedResource(final ResourcePool<T> pool, final String name) {
-        if(pool == null){
-            throw new NullPointerException("pool cannot be null.");
-        }
-        if(name == null){
-            throw new NullPointerException("name cannot be null.");
-        }
-        this.pool = pool;
-        this.name = name;
+        this(pool, name, null);
     }
 
     public SharedResource(final ResourcePool<T> pool, final String name, final T value) {

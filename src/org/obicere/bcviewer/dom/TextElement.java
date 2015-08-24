@@ -7,6 +7,8 @@ public class TextElement extends Element {
 
     private String text;
 
+    private final TextAttributes attributes = new TextAttributes();
+
     public TextElement(final String name) {
         super(name);
     }
@@ -29,7 +31,16 @@ public class TextElement extends Element {
         }
     }
 
-    public boolean insertNewLine() {
+    public TextAttributes getAttributes() {
+        return attributes;
+    }
+
+    public boolean isPrimary() {
         return true;
+    }
+
+    @Override
+    public View getView(){
+        return new TextView(this);
     }
 }

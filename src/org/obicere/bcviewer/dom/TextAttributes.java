@@ -6,13 +6,13 @@ import java.awt.Font;
 /**
  * @author Obicere
  */
-public class Attributes {
+public class TextAttributes {
 
     private boolean underline;
 
     private boolean strikeThrough;
 
-    private Script script;
+    private Script script = Script.BASELINE;
 
     private Resource<Highlight> highlight;
 
@@ -20,15 +20,15 @@ public class Attributes {
 
     private Resource<Font> font;
 
-    public Attributes(){
+    public TextAttributes(){
 
     }
 
-    public Attributes(final Attributes attributes) {
+    public TextAttributes(final TextAttributes attributes) {
         setAttributes(attributes);
     }
 
-    public void setAttributes(final Attributes attributes){
+    public void setAttributes(final TextAttributes attributes){
         this.underline = attributes.underline;
         this.strikeThrough = attributes.strikeThrough;
         this.script = attributes.script;

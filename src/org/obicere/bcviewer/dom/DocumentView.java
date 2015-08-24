@@ -15,11 +15,11 @@ public class DocumentView implements View {
     }
 
     @Override
-    public void doPaint(final Graphics g, final Rectangle bounds) {
+    public void paint(final Graphics g, final Rectangle bounds) {
         if(document == null){
             return;
         }
         g.clipRect(bounds.x, bounds.y, bounds.width, bounds.height);
-        document.getRoot().getView().doPaint(g, bounds);
+        document.getRoot().getView().paint(g, bounds);
     }
 }
