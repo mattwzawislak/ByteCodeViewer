@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.dom;
 
 import java.awt.Color;
+import java.awt.Font;
 
 /**
  * @author Obicere
@@ -13,16 +14,27 @@ public class Attributes {
 
     private Script script;
 
-    private Highlight highlight;
+    private Resource<Highlight> highlight;
 
-    private Color textColor;
+    private Resource<Color> textColor;
 
-    public Attributes(final Attributes attributes){
+    private Resource<Font> font;
+
+    public Attributes(){
+
+    }
+
+    public Attributes(final Attributes attributes) {
+        setAttributes(attributes);
+    }
+
+    public void setAttributes(final Attributes attributes){
         this.underline = attributes.underline;
         this.strikeThrough = attributes.strikeThrough;
         this.script = attributes.script;
         this.highlight = attributes.highlight;
         this.textColor = attributes.textColor;
+        this.font = attributes.font;
     }
 
     public boolean isUnderline() {
@@ -49,19 +61,27 @@ public class Attributes {
         this.script = script;
     }
 
-    public Highlight getHighlight() {
+    public Resource<Highlight> getHighlight() {
         return highlight;
     }
 
-    public void setHighlight(final Highlight highlight) {
+    public void setHighlight(final Resource<Highlight> highlight) {
         this.highlight = highlight;
     }
 
-    public Color getTextColor() {
+    public Resource<Color> getColor(){
         return textColor;
     }
 
-    public void setTextColor(final Color textColor) {
+    public void setColor(final Resource<Color> textColor) {
         this.textColor = textColor;
+    }
+
+    public Resource<Font> getFont(){
+        return font;
+    }
+
+    public void setFont(final Resource<Font> font){
+        this.font = font;
     }
 }

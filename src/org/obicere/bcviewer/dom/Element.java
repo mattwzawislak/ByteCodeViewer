@@ -2,7 +2,9 @@ package org.obicere.bcviewer.dom;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -22,6 +24,10 @@ public class Element {
 
     private boolean validated = true;
 
+    private final Attributes attributes = new Attributes();
+
+    private final Map<String, Object> properties = new HashMap<>();
+
     public Element(final String name) {
         this.name = name;
     }
@@ -35,6 +41,18 @@ public class Element {
             return name;
         }
         return qualifiedName;
+    }
+
+    public Attributes getAttributes() {
+        return attributes;
+    }
+
+    public Map<String, Object> getProperties(){
+        return properties;
+    }
+
+    public View getView(){
+        return null; // TODO, set this to a BasicView instance
     }
 
     void addedTo(final Element parent) {

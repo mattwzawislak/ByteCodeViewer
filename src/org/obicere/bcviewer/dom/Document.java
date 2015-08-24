@@ -1,9 +1,5 @@
 package org.obicere.bcviewer.dom;
 
-import java.awt.Font;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
-
 /**
  * @author Obicere
  */
@@ -11,13 +7,8 @@ public class Document {
 
     private final RootElement root;
 
+    // change this to a View?
     private Element display;
-
-    private int lineHeight;
-
-    private int tabSize = 4;
-
-    private Font font;
 
     private boolean validated = true;
 
@@ -26,6 +17,8 @@ public class Document {
         this.display = root;
     }
 
+    /*
+    TODO: move this to an appropriate modelling class for the documents
     public void setLineHeight(final int height) {
         if (height < 0) {
             throw new IllegalArgumentException("line height cannot be set to negative value.");
@@ -46,30 +39,7 @@ public class Document {
 
     public int getLineHeight() {
         return lineHeight;
-    }
-
-    public int getTabSize() {
-        return tabSize;
-    }
-
-    public void setTabSize(final int tabSize) {
-        if (tabSize <= 0) {
-            throw new IllegalArgumentException("illegal tab size. Must be positive.");
-        }
-        this.tabSize = tabSize;
-        invalidate();
-    }
-
-    public void setFont(final Font font) {
-        if (font == null) {
-            throw new NullPointerException("cannot assign null font.");
-        }
-        this.font = font;
-    }
-
-    public Font getFont() {
-        return font;
-    }
+    } */
 
     public Element getRoot() {
         return root;
