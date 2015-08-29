@@ -1,11 +1,11 @@
 package org.obicere.bcviewer.dom;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 
 /**
  * @author Obicere
@@ -25,71 +25,49 @@ public class TextView implements View {
         final String trim = text.trim();
         final TextAttributes attributes = element.getAttributes();
 
-        final Resource<Font> fontResource = attributes.getFont();
-        if (fontResource != null) {
-            final Font font = fontResource.get();
+        final Font font = attributes.getFont();
+        if (font != null) {
             g.setFont(font);
+        }
+
+        final Script script = attributes.getScript();
+
+        final float size = script.getSize();
+        if (size != 1) {
+            final Font current = g.getFont();
+            final Font derived = current.deriveFont(current.getSize() * size);
+            g.setFont(derived);
         }
         final FontMetrics metrics = g.getFontMetrics();
         final Rectangle trimBounds = metrics.getStringBounds(trim, g).getBounds();
 
-        final Resource<Highlight> highlightResource = attributes.getHighlight();
-        if (highlightResource != null) {
-            final Highlight highlight = highlightResource.get();
+        final Highlight highlight = attributes.getHighlight();
+        if (highlight != null) {
             highlight.highlight(g, trimBounds);
         }
 
-        final Resource<Color> colorResource = attributes.getColor();
-        if (colorResource != null) {
-            final Color color = colorResource.get();
+        final Color color = attributes.getColor();
+        if (color != null) {
             g.setColor(color);
         }
 
-        switch (attributes.getScript()) {
-            case SUBSCRIPT:
-                drawStringSubscript(g, text, bounds, metrics);
-                break;
-            case SUPERSCRIPT:
-                drawStringSuperscript(g, text, bounds, metrics);
-                break;
-            case BASELINE:
-                drawStringBaseline(g, text, bounds, metrics);
-                break;
-        }
+        final int x = bounds.x;
+        final int y = bounds.y + bounds.height - (int) ((metrics.getLeading() + metrics.getAscent()) * (script.getPosition()));
+        g.drawString(text, x, y);
 
         if (attributes.isUnderline()) {
-            final int baseline = bounds.y + metrics.getLeading() + metrics.getAscent();
-            g.drawLine(bounds.x + trimBounds.x, baseline, bounds.x + trimBounds.x + trimBounds.width, baseline);
+            // y + 1 -> the baseline of the text with a 1 pixel gap
+            g.drawLine(bounds.x + trimBounds.x, y + 1, bounds.x + trimBounds.x + trimBounds.width, y + 1);
         }
         if (attributes.isStrikeThrough()) {
-            // approximation for the baseline
-            final int median = bounds.y + metrics.getLeading() + (int) (metrics.getAscent() * 0.66);
+            // approximation for the median
+            final int median = y - (int) (metrics.getHeight() * 0.33);
             g.drawLine(bounds.x + trimBounds.x, median, bounds.x + trimBounds.x + trimBounds.width, median);
         }
     }
 
-    private void drawStringSubscript(final Graphics g, final String text, final Rectangle bounds, final FontMetrics metrics) {
-        final Font font = g.getFont();
-        final Font small = font.deriveFont(font.getSize() * 0.66f);
-        g.setFont(small);
-
-        final int baseline = bounds.y + bounds.height - metrics.getDescent();
-        g.drawString(text, bounds.x, baseline);
-    }
-
-    private void drawStringSuperscript(final Graphics g, final String text, final Rectangle bounds, final FontMetrics metrics) {
-        final Font font = g.getFont();
-        final Font small = font.deriveFont(font.getSize() * 0.66f);
-        g.setFont(small);
-
-        final Rectangle2D textBounds = metrics.getStringBounds(text, g);
-        final double baselineOffset = textBounds.getHeight() * 0.66;
-        final int baseline = bounds.y + bounds.height - (int) baselineOffset;
-        g.drawString(text, bounds.x, baseline);
-    }
-
-    private void drawStringBaseline(final Graphics g, final String text, final Rectangle bounds, final FontMetrics metrics) {
-        final int baseline = bounds.y + bounds.height - (int) (metrics.getAscent() * 0.34);
-        g.drawString(text, bounds.x, baseline);
+    @Override
+    public Dimension getSize() {
+        return null;
     }
 }

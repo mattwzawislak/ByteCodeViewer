@@ -14,13 +14,13 @@ public class TextAttributes {
 
     private Script script = Script.BASELINE;
 
-    private Resource<Highlight> highlight;
+    private Highlight highlight;
 
-    private Resource<Color> textColor;
+    private Color textColor;
 
-    private Resource<Font> font;
+    private Font font;
 
-    public TextAttributes(){
+    public TextAttributes() {
 
     }
 
@@ -28,7 +28,7 @@ public class TextAttributes {
         setAttributes(attributes);
     }
 
-    public void setAttributes(final TextAttributes attributes){
+    public void setAttributes(final TextAttributes attributes) {
         this.underline = attributes.underline;
         this.strikeThrough = attributes.strikeThrough;
         this.script = attributes.script;
@@ -61,27 +61,27 @@ public class TextAttributes {
         this.script = script;
     }
 
-    public Resource<Highlight> getHighlight() {
+    public Highlight getHighlight() {
         return highlight;
     }
 
-    public void setHighlight(final Resource<Highlight> highlight) {
+    public void setHighlight(final Highlight highlight) {
         this.highlight = highlight;
     }
 
-    public Resource<Color> getColor(){
+    public Color getColor() {
         return textColor;
     }
 
-    public void setColor(final Resource<Color> textColor) {
+    public void setColor(final Color textColor) {
         this.textColor = textColor;
     }
 
-    public Resource<Font> getFont(){
+    public Font getFont() {
         return font;
     }
 
-    public void setFont(final Resource<Font> font){
+    public void setFont(final Font font) {
         this.font = font;
     }
 }
