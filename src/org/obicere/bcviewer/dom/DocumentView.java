@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.dom;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -21,5 +22,10 @@ public class DocumentView implements View {
         }
         g.clipRect(bounds.x, bounds.y, bounds.width, bounds.height);
         document.getRoot().getView().paint(g, bounds);
+    }
+
+    @Override
+    public Dimension getSize() {
+        return document.getRoot().getView().getSize();
     }
 }
