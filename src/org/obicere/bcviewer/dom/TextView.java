@@ -55,14 +55,18 @@ public class TextView implements View {
         final int y = bounds.y + bounds.height - (int) ((metrics.getLeading() + metrics.getAscent()) * (script.getPosition()));
         g.drawString(text, x, y);
 
+        // 0.08= 8% of the total height of the font should be the approximate
+        // line size for the strike-through and underline attributes
+        final double approximateLineSize = metrics.getHeight() * 0.08;
+        final int lineSize = approximateLineSize > 1 ? (int) approximateLineSize : 1;
         if (attributes.isUnderline()) {
             // y + 1 -> the baseline of the text with a 1 pixel gap
-            g.drawLine(bounds.x + trimBounds.x, y + 1, bounds.x + trimBounds.x + trimBounds.width, y + 1);
+            g.fillRect(bounds.x + trimBounds.x, y + 1, trimBounds.width, lineSize);
         }
         if (attributes.isStrikeThrough()) {
             // approximation for the median
             final int median = y - (int) (metrics.getHeight() * 0.33);
-            g.drawLine(bounds.x + trimBounds.x, median, bounds.x + trimBounds.x + trimBounds.width, median);
+            g.fillRect(bounds.x + trimBounds.x, median, trimBounds.width, lineSize);
         }
     }
 
