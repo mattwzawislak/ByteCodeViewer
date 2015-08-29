@@ -5,31 +5,32 @@ package org.obicere.bcviewer.dom;
  */
 public enum Script {
 
-    // no position offset, full size
-    BASELINE(0, 1),
+    BASELINE(0.33f, 1),
 
-    // shifted down 33% of full size
-    // 60% of full size
-    SUBSCRIPT(-0.33, 0.6),
+    SUBSCRIPT(0.33f, 0.6f),
 
-    // shifted up 33% of full size
-    // 60% of full size
-    SUPERSCRIPT(0.33, 0.6);
+    SUPERSCRIPT(1.33f, 0.6f);
 
-    private final double position;
+    private final float position;
 
-    private final double size;
+    private final float size;
 
-    private Script(final double position, final double size) {
+    /**
+     * Creates a new type of script.
+     *
+     * @param position The approximation used for the baseline.
+     * @param size     The size of the script, to scale fonts.
+     */
+    private Script(final float position, final float size) {
         this.position = position;
         this.size = size;
     }
 
-    public double getPosition() {
+    public float getPosition() {
         return position;
     }
 
-    public double getSize() {
+    public float getSize() {
         return size;
     }
 
