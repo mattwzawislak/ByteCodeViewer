@@ -22,7 +22,7 @@ public class Element {
 
     private String qualifiedName;
 
-    private int axis = AXIS_LINE;
+    private int axis = AXIS_PAGE;
 
     public Element(final String name) {
         this.name = name;

@@ -55,7 +55,13 @@ public abstract class View<E extends Element> {
         this.size = layoutSelf(x, y);
 
         this.childrenSize = layoutChildren(size);
-        return size;
+
+        final Rectangle bounds = new Rectangle();
+        bounds.x = Math.min(size.x, childrenSize.x);
+        bounds.y = Math.min(size.y, childrenSize.y);
+        bounds.width = Math.max(size.width, childrenSize.width);
+        bounds.height = Math.max(size.height, childrenSize.height);
+        return bounds;
     }
 
     protected Rectangle layoutChildren(final Rectangle parent) {
@@ -73,6 +79,7 @@ public abstract class View<E extends Element> {
         final int x = parent.x;
         final int y = parent.y + parent.height;
         int currentHeight = y;
+        int currentWidth = 0;
         final List<Element> children = element.getChildren();
         for (final Element child : children) {
             final View<? extends Element> view = child.getView();
@@ -80,14 +87,18 @@ public abstract class View<E extends Element> {
 
             final Rectangle rectangle = view.layout(x, currentHeight);
             currentHeight += rectangle.getHeight();
+            currentWidth = Math.max(rectangle.width, currentWidth);
         }
-        return new Rectangle(x, y, parent.width, currentHeight);
+        // subtract initial y to counter parent's offset
+        // TODO: prove that this patch actually worked
+        return new Rectangle(x, y, currentWidth, currentHeight - y);
     }
 
     private Rectangle layoutChildrenLine(final Rectangle parent) {
         final int x = parent.x + parent.width;
         final int y = parent.y;
         int currentWidth = x;
+        int currentHeight = 0;
         final List<Element> children = element.getChildren();
         for (final Element child : children) {
             final View<? extends Element> view = child.getView();
@@ -95,8 +106,11 @@ public abstract class View<E extends Element> {
 
             final Rectangle rectangle = view.layout(currentWidth, y);
             currentWidth += rectangle.getWidth();
+            currentHeight = Math.max(rectangle.height, currentHeight);
         }
-        return new Rectangle(x, y, currentWidth, parent.height);
+        // subtract initial x to counter parent's offset
+        // TODO: prove that this patch actually worked
+        return new Rectangle(x, y, currentWidth - x, currentHeight);
     }
 
     protected abstract Rectangle layoutSelf(final int x, final int y);

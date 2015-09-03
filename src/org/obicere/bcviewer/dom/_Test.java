@@ -18,12 +18,29 @@ import java.awt.RenderingHints;
 public class _Test {
 
     public _Test() {
-        final TextElement element = new TextElement("test", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-        final TextAttributes attributes = element.getAttributes();
+        final Element root = new Element("root");
+        final Element page = new Element("page");
+        for(int i = 1; i <= 3; i++){
+            final TextElement element = new TextElement("elem" + i , "Element " + i);
+            final TextAttributes attributes = element.getAttributes();
+            attributes.setColor(Color.RED);
+            attributes.setFont(new Font("Consolas", Font.PLAIN, 20));
+            page.add(element);
+        }
+        page.setAxis(Element.AXIS_PAGE);
+        final Element line = new Element("line");
+        for(int i = 1; i <= 3; i++){
+            final TextElement element = new TextElement("elem" + i , "Element " + i);
+            final TextAttributes attributes = element.getAttributes();
+            attributes.setColor(Color.ORANGE);
+            attributes.setFont(new Font("Consolas", Font.PLAIN, 20));
+            line.add(element);
+        }
+        line.setAxis(Element.AXIS_LINE);
 
-        attributes.setColor(Color.BLACK);
-        attributes.setFont(new Font("Courier", Font.PLAIN, 40));
+        root.add(page);
+        root.add(line);
 
         final JFrame frame = new JFrame("Text view test");
         final JPanel panel = new JPanel() {
@@ -34,38 +51,15 @@ public class _Test {
 
                 g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-                final Rectangle bounds = g.getFontMetrics(attributes.getFont()).getStringBounds(element.getText(), g).getBounds();
-
-                attributes.setScript(Script.BASELINE);
-                attributes.setUnderline(true);
-                attributes.setStrikeThrough(true);
-                bounds.x = 10;
-                bounds.y += 50;
-                final View<TextElement> view1 = element.getView();
-                g.setColor(Color.GREEN);
-                g.draw(view1.layout(bounds.x, bounds.y));
-                view1.paint(g);
-
-                attributes.setScript(Script.SUBSCRIPT);
-                attributes.setUnderline(true);
-                attributes.setStrikeThrough(true);
-                bounds.x += bounds.width;
-                final View<TextElement> view2 = element.getView();
-                g.setColor(Color.GREEN);
-                g.draw(view2.layout(bounds.x, bounds.y));
-                view2.paint(g);
-
-                attributes.setScript(Script.SUPERSCRIPT);
-                attributes.setUnderline(true);
-                attributes.setStrikeThrough(true);
-                final View<TextElement> view3 = element.getView();
-                g.setColor(Color.GREEN);
-                g.draw(view3.layout(bounds.x, bounds.y));
-                view3.paint(g);
+                final View<?> view = root.getView();
+                view.layout(0, 0);
+                view.paint(g);
             }
         };
 
-        panel.setPreferredSize(new Dimension(1200, 300));
+        final View<?> view = root.getView();
+        final Rectangle size = view.layout(0, 0);
+        panel.setPreferredSize(new Dimension(size.width, size.height));
 
         frame.add(panel);
 
