@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 /**
  * @author Obicere
  */
-public class Element {
+public abstract class Element {
 
     public static final int AXIS_LINE = 1;
 
@@ -39,9 +39,7 @@ public class Element {
         return qualifiedName;
     }
 
-    public View<? extends Element> getView() {
-        return new BasicView(this);
-    }
+    public abstract View<? extends Element> getView();
 
     void addedTo(final Element parent) {
         this.parent = parent;

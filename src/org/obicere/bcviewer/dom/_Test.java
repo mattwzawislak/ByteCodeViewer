@@ -19,8 +19,8 @@ public class _Test {
 
     public _Test() {
 
-        final Element root = new Element("root");
-        final Element page = new Element("page");
+        final Element root = new BasicElement("root");
+        final Element page = new BasicElement("page");
         for(int i = 1; i <= 3; i++){
             final TextElement element = new TextElement("elem" + i , "Element " + i);
             final TextAttributes attributes = element.getAttributes();
@@ -29,7 +29,7 @@ public class _Test {
             page.add(element);
         }
         page.setAxis(Element.AXIS_PAGE);
-        final Element line = new Element("line");
+        final Element line = new BasicElement("line");
         for(int i = 1; i <= 3; i++){
             final TextElement element = new TextElement("elem" + i , "Element " + i);
             final TextAttributes attributes = element.getAttributes();
@@ -71,5 +71,4 @@ public class _Test {
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(_Test::new);
     }
-
 }

@@ -20,6 +20,8 @@ public abstract class View<E extends Element> {
 
     private final List<View<? extends Element>> childViews;
 
+    private boolean isArranged = false;
+
     public View(final E element) {
         this.element = element;
         this.childViews = new ArrayList<>(element.getChildrenCount());
@@ -38,17 +40,24 @@ public abstract class View<E extends Element> {
         }
     }
 
-
-    // TODO make these a bit more tangible
     public Rectangle getSize() {
+        if(!isArranged){
+            return new Rectangle(-1, -1, 0, 0);
+        }
         return size;
     }
 
     public Rectangle getChildrenSize() {
+        if(!isArranged){
+            return new Rectangle(-1, -1, 0, 0);
+        }
         return childrenSize;
     }
 
     public Rectangle getBounds() {
+        if(!isArranged){
+            return new Rectangle(-1, -1, 0, 0);
+        }
         return bounds;
     }
 
@@ -57,13 +66,18 @@ public abstract class View<E extends Element> {
 
         this.childrenSize = layoutChildren(size);
 
-        final Rectangle bounds = new Rectangle();
+        this.bounds = new Rectangle();
         bounds.x = Math.min(size.x, childrenSize.x);
         bounds.y = Math.min(size.y, childrenSize.y);
         bounds.width = Math.max(size.width, childrenSize.width);
         bounds.height = Math.max(size.height, childrenSize.height);
+
+        isArranged = true;
+
         return bounds;
     }
+
+    protected abstract Rectangle layoutSelf(final int x, final int y);
 
     protected Rectangle layoutChildren(final Rectangle parent) {
         switch (element.getAxis()) {
@@ -113,6 +127,4 @@ public abstract class View<E extends Element> {
         // TODO: prove that this patch actually worked
         return new Rectangle(x, y, currentWidth - x, currentHeight);
     }
-
-    protected abstract Rectangle layoutSelf(final int x, final int y);
 }
