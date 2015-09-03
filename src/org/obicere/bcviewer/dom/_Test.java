@@ -41,18 +41,27 @@ public class _Test {
                 attributes.setStrikeThrough(true);
                 bounds.x = 10;
                 bounds.y += 50;
-                element.getView().paint(g, bounds);
+                final View<TextElement> view1 = element.getView();
+                g.setColor(Color.GREEN);
+                g.draw(view1.layout(bounds.x, bounds.y));
+                view1.paint(g);
 
                 attributes.setScript(Script.SUBSCRIPT);
                 attributes.setUnderline(true);
                 attributes.setStrikeThrough(true);
                 bounds.x += bounds.width;
-                element.getView().paint(g, bounds);
+                final View<TextElement> view2 = element.getView();
+                g.setColor(Color.GREEN);
+                g.draw(view2.layout(bounds.x, bounds.y));
+                view2.paint(g);
 
                 attributes.setScript(Script.SUPERSCRIPT);
                 attributes.setUnderline(true);
                 attributes.setStrikeThrough(true);
-                element.getView().paint(g, bounds);
+                final View<TextElement> view3 = element.getView();
+                g.setColor(Color.GREEN);
+                g.draw(view3.layout(bounds.x, bounds.y));
+                view3.paint(g);
             }
         };
 

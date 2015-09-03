@@ -40,7 +40,7 @@ public class TextElement extends Element {
     }
 
     @Override
-    public View getView(){
+    public View<TextElement> getView(){
         return new TextView(this);
     }
 }

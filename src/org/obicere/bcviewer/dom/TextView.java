@@ -1,43 +1,32 @@
 package org.obicere.bcviewer.dom;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 
 /**
  * @author Obicere
  */
-public class TextView implements View {
-
-    private final TextElement element;
+public class TextView extends View<TextElement> {
 
     public TextView(final TextElement element) {
-        this.element = element;
+        super(element);
     }
 
     @Override
-    public void paint(final Graphics g, final Rectangle bounds) {
-
+    public void paintSelf(final Graphics g, final Rectangle bounds) {
         final String text = element.getText();
         final String trim = text.trim();
         final TextAttributes attributes = element.getAttributes();
 
         final Font font = attributes.getFont();
-        if (font != null) {
-            g.setFont(font);
-        }
-
         final Script script = attributes.getScript();
+        g.setFont(getFixedFont(font, script));
 
-        final float size = script.getSize();
-        if (size != 1) {
-            final Font current = g.getFont();
-            final Font derived = current.deriveFont(current.getSize() * size);
-            g.setFont(derived);
-        }
         final FontMetrics metrics = g.getFontMetrics();
         final Rectangle trimBounds = metrics.getStringBounds(trim, g).getBounds();
 
@@ -71,7 +60,28 @@ public class TextView implements View {
     }
 
     @Override
-    public Dimension getSize() {
-        return null;
+    protected Rectangle layoutSelf(final int x, final int y) {
+        final Script script = element.getAttributes().getScript();
+        final Font font = element.getAttributes().getFont();
+        final Font fixedFont = getFixedFont(font, script);
+        final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
+        final Rectangle2D bounds = fixedFont.getStringBounds(element.getText(), fontRenderContext);
+        final Rectangle integerBounds = bounds.getBounds();
+
+        final int height;
+        if (script == Script.BASELINE) {
+            height = integerBounds.height;
+        } else {
+            height = (int) font.getStringBounds(element.getText(), fontRenderContext).getHeight();
+        }
+
+        return new Rectangle(x, y, integerBounds.width, height);
+    }
+
+    private Font getFixedFont(final Font font, final Script script) {
+        if (script == Script.BASELINE) {
+            return font;
+        }
+        return font.deriveFont(font.getSize() * script.getSize());
     }
 }

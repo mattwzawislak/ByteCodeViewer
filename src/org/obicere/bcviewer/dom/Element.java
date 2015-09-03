@@ -10,6 +10,10 @@ import java.util.NoSuchElementException;
  */
 public class Element {
 
+    public static final int AXIS_LINE = 1;
+
+    public static final int AXIS_PAGE = 2;
+
     private final List<Element> children = new ArrayList<>();
 
     private Element parent;
@@ -17,6 +21,8 @@ public class Element {
     private final String name;
 
     private String qualifiedName;
+
+    private int axis = AXIS_LINE;
 
     public Element(final String name) {
         this.name = name;
@@ -33,8 +39,8 @@ public class Element {
         return qualifiedName;
     }
 
-    public View getView(){
-        return null; // TODO, set this to a BasicView instance
+    public View<? extends Element> getView() {
+        return new BasicView(this);
     }
 
     void addedTo(final Element parent) {
@@ -134,6 +140,18 @@ public class Element {
         }
         return element;
     }
+
+    public int getAxis() {
+        return axis;
+    }
+
+    public void setAxis(final int axis) {
+        if (axis != AXIS_LINE && axis != AXIS_PAGE) {
+            throw new IllegalArgumentException("illegal axis provided. Must be one of: line, page");
+        }
+        this.axis = axis;
+    }
+
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
