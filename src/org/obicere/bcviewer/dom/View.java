@@ -39,6 +39,7 @@ public abstract class View<E extends Element> {
     }
 
 
+    // TODO make these a bit more tangible
     public Rectangle getSize() {
         return size;
     }
