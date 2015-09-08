@@ -30,11 +30,6 @@ public class TextView extends View<TextElement> {
         final FontMetrics metrics = g.getFontMetrics();
         final Rectangle trimBounds = metrics.getStringBounds(trim, g).getBounds();
 
-        final Highlight highlight = attributes.getHighlight();
-        if (highlight != null) {
-            highlight.highlight(g, trimBounds);
-        }
-
         final Color color = attributes.getColor();
         if (color != null) {
             g.setColor(color);

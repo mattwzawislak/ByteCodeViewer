@@ -14,8 +14,6 @@ public class TextAttributes {
 
     private Script script = Script.BASELINE;
 
-    private Highlight highlight;
-
     private Color textColor;
 
     private Font font;
@@ -32,7 +30,6 @@ public class TextAttributes {
         this.underline = attributes.underline;
         this.strikeThrough = attributes.strikeThrough;
         this.script = attributes.script;
-        this.highlight = attributes.highlight;
         this.textColor = attributes.textColor;
         this.font = attributes.font;
     }
@@ -59,14 +56,6 @@ public class TextAttributes {
 
     public void setScript(final Script script) {
         this.script = script;
-    }
-
-    public Highlight getHighlight() {
-        return highlight;
-    }
-
-    public void setHighlight(final Highlight highlight) {
-        this.highlight = highlight;
     }
 
     public Color getColor() {

@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.dom.ui.DocumentRenderer;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -11,6 +13,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Obicere
@@ -19,43 +23,40 @@ public class _Test {
 
     public _Test() {
 
-        final Element root = new BasicElement("root");
+        final JFrame frame = new JFrame("Text view test");
+
+        final Document document = new Document(() -> frame.getContentPane().getBounds());
+
+        final Element root = document.getRoot();
         final Element page = new BasicElement("page");
-        for(int i = 1; i <= 3; i++){
-            final TextElement element = new TextElement("elem" + i , "Element " + i);
-            final TextAttributes attributes = element.getAttributes();
-            attributes.setColor(Color.RED);
-            attributes.setFont(new Font("Consolas", Font.PLAIN, 20));
-            page.add(element);
-        }
-        page.setAxis(Element.AXIS_PAGE);
-        final Element line = new BasicElement("line");
-        for(int i = 1; i <= 3; i++){
-            final TextElement element = new TextElement("elem" + i , "Element " + i);
-            final TextAttributes attributes = element.getAttributes();
-            attributes.setColor(Color.ORANGE);
-            attributes.setFont(new Font("Consolas", Font.PLAIN, 20));
-            line.add(element);
-        }
-        line.setAxis(Element.AXIS_LINE);
 
         root.add(page);
-        root.add(line);
-
-        final JFrame frame = new JFrame("Text view test");
         final JPanel panel = new JPanel() {
 
             @Override
             protected void paintComponent(final Graphics g1) {
+                super.paintComponent(g1);
                 final Graphics2D g = (Graphics2D) g1;
 
                 g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-                final View<?> view = root.getView();
-                view.layout(0, 0);
+                final View<? extends Element> view = document.getView();
                 view.paint(g);
             }
         };
+
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                final TextElement element = new TextElement("elem" + e.getWhen(), "Element #" + page.getChildrenCount());
+                final TextAttributes attributes = element.getAttributes();
+                attributes.setFont(new Font("Courier new", Font.PLAIN, 20));
+                page.add(element);
+
+                document.invalidate();
+                panel.repaint();
+            }
+        });
 
         final View<?> view = root.getView();
         final Rectangle size = view.layout(0, 0);

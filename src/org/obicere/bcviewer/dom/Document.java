@@ -1,47 +1,33 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.dom.ui.DocumentRenderer;
+
+import java.awt.Rectangle;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * @author Obicere
  */
 public class Document {
 
-    private static final String ROOT_NAME = "root";
+    private final DocumentRenderer renderer;
 
-    private final Element root;
+    private final RootElement root;
 
-    // change this to a View?
     private Element display;
 
-    private boolean validated = true;
+    private volatile boolean validated = false;
 
-    public Document() {
-        this.root = new Element(ROOT_NAME);
+    private View<? extends Element> latestView;
+
+    private final Lock lock = new ReentrantLock();
+
+    public Document(final DocumentRenderer renderer) {
+        this.renderer = renderer;
+        this.root = new RootElement();
         this.display = root;
     }
-
-    /*
-    TODO: move this to an appropriate modelling class for the documents
-    public void setLineHeight(final int height) {
-        if (height < 0) {
-            throw new IllegalArgumentException("line height cannot be set to negative value.");
-        }
-        if (height == 0) {
-            this.lineHeight = getDefaultLineHeight();
-        } else {
-            this.lineHeight = height;
-        }
-        invalidate();
-    }
-
-    public int getDefaultLineHeight() {
-        final FontRenderContext fontRenderContext = new FontRenderContext(null, false, false);
-        final Rectangle2D bounds = font.getMaxCharBounds(fontRenderContext);
-        return (int) bounds.getHeight();
-    }
-
-    public int getLineHeight() {
-        return lineHeight;
-    } */
 
     public Element getRoot() {
         return root;
@@ -51,16 +37,22 @@ public class Document {
         if (name == null) {
             throw new NullPointerException("cannot find element by null name.");
         }
-        if (name.equals(ROOT_NAME)) {
+        final String rootName = root.getName();
+        if (name.equals(rootName)) {
             return root;
         }
-        if (name.startsWith(ROOT_NAME)) {
+        if (name.startsWith(rootName)) {
             // add 1 to also remove the '.' after the root's name
-            final String removed = name.substring(ROOT_NAME.length() + 1);
+            final String removed = name.substring(rootName.length() + 1);
             return root.getElement(removed);
         } else {
             return root.getElement(name);
         }
+    }
+
+    public void setDisplayToRoot() {
+        display = root;
+        invalidate();
     }
 
     public void setDisplay(final Element element) {
@@ -69,13 +61,56 @@ public class Document {
             throw new IllegalArgumentException("cannot set element to display that is not part of document.");
         }
         display = element;
+        invalidate();
     }
 
     public Element setDisplay(final String name) {
-        if(name == null){
+        if (name == null) {
             throw new NullPointerException("cannot find element by null name.");
         }
         display = getElement(name);
+        invalidate();
         return display;
+    }
+
+    private void updateView(final int viewportX, final int viewportY) {
+        invalidate();
+        // negate to represent the offset needed to apply to the view
+        // so that the elements will appear in their correct position
+        final int deltaX = -viewportX;
+        final int deltaY = -viewportY;
+
+        latestView = display.getView();
+        latestView.layout(viewportX, viewportY);
+
+        validated = true;
+    }
+
+    public void dispose() {
+        latestView = null;
+    }
+
+    public void invalidate() {
+        latestView = null;
+        validated = false;
+    }
+
+    public View<? extends Element> getView() {
+        try {
+            lock.lock();
+            if (validated) {
+                return latestView;
+            }
+
+            final Rectangle viewport = renderer.getViewport();
+
+            System.out.println("Built new view");
+
+            updateView(viewport.x, viewport.y);
+
+            return latestView;
+        } finally {
+            lock.unlock();
+        }
     }
 }

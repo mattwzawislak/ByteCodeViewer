@@ -27,36 +27,38 @@ public abstract class View<E extends Element> {
         this.childViews = new ArrayList<>(element.getChildrenCount());
     }
 
-    public void paint(final Graphics g){
+    public void paint(final Graphics g) {
         paintSelf(g, size);
         paintChildren(g);
     }
 
     protected abstract void paintSelf(final Graphics g, final Rectangle bounds);
 
-    protected void paintChildren(final Graphics g){
-        for(final View<? extends Element> view : childViews){
-            view.paint(g);
+    protected void paintChildren(final Graphics g) {
+        for (final View<? extends Element> view : childViews) {
+            final Graphics childGraphics = g.create();
+            view.paint(childGraphics);
+            childGraphics.dispose();
         }
     }
 
     public Rectangle getSize() {
-        if(!isArranged){
-            return new Rectangle(-1, -1, 0, 0);
+        if (!isArranged) {
+            return new Rectangle();
         }
         return size;
     }
 
     public Rectangle getChildrenSize() {
-        if(!isArranged){
-            return new Rectangle(-1, -1, 0, 0);
+        if (!isArranged) {
+            return new Rectangle();
         }
         return childrenSize;
     }
 
     public Rectangle getBounds() {
-        if(!isArranged){
-            return new Rectangle(-1, -1, 0, 0);
+        if (!isArranged) {
+            return new Rectangle();
         }
         return bounds;
     }

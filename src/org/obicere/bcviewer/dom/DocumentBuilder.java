@@ -1,9 +1,11 @@
 package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Obicere
@@ -18,12 +20,26 @@ public class DocumentBuilder {
 
     private int tabSize = 4;
 
-    public Document build(final Modeler<ClassFile> classFileModeler) {
-        final Document document = new Document();
+    private final ReentrantLock lock = new ReentrantLock();
 
-        classFileModeler.model(this, document.getRoot());
+    public Document build(final DocumentRenderer renderer, final Modeler<ClassFile> classFileModeler) {
+        if (renderer == null) {
+            throw new NullPointerException("cannot render document to null renderer");
+        }
 
-        return document;
+        if (classFileModeler == null) {
+            throw new NullPointerException("cannot model with a null modeler.");
+        }
+        try {
+            lock.lock();
+            final Document document = new Document(renderer);
+
+            classFileModeler.model(this, document.getRoot());
+
+            return document;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public ResourcePool<Color> getColorPool() {
