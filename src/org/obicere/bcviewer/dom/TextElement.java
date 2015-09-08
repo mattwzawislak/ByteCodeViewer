@@ -7,6 +7,9 @@ public class TextElement extends Element {
 
     private String text;
 
+    private int leftPad  = 0;
+    private int rightPad = 0;
+
     private final TextAttributes attributes = new TextAttributes();
 
     public TextElement(final String name) {
@@ -17,6 +20,11 @@ public class TextElement extends Element {
         super(name);
         // delegate to setter to handle null-case
         setText(text);
+    }
+
+    public String getDisplayText(){
+        final PaddingCache cache = PaddingCache.getPaddingCache();
+        return cache.getPadding(getCumulativeLeftPad()) + getText() + cache.getPadding(getCumulativeRightPad());
     }
 
     public String getText() {
@@ -31,16 +39,58 @@ public class TextElement extends Element {
         }
     }
 
+    public void setLeftPad(final int pad){
+        if(pad < 0){
+            throw new IllegalArgumentException("pad size cannot be less than 0.");
+        }
+        this.leftPad = pad;
+    }
+
+    public void setRightPad(final int pad){
+        if(pad < 0){
+            throw new IllegalArgumentException("pad size cannot be less than 0.");
+        }
+        this.rightPad = pad;
+    }
+
+    public int getCumulativeLeftPad() {
+        Element parent = getParent();
+        int sum = leftPad;
+        while (parent != null) {
+            if (parent instanceof TextElement) {
+                sum += ((TextElement) parent).getLeftPad();
+            }
+            parent = parent.getParent();
+        }
+        return sum;
+    }
+
+    public int getCumulativeRightPad() {
+        Element parent = getParent();
+        int sum = rightPad;
+        while (parent != null) {
+            if (parent instanceof TextElement) {
+                sum += ((TextElement) parent).getRightPad();
+            }
+            parent = parent.getParent();
+        }
+        return sum;
+    }
+
+    public int getLeftPad() {
+        return leftPad;
+    }
+
+    public int getRightPad() {
+        return rightPad;
+    }
+
     public TextAttributes getAttributes() {
         return attributes;
     }
 
-    public boolean isPrimary() {
-        return true;
-    }
-
     @Override
-    public View<TextElement> getView(){
+    public View<TextElement> getView() {
         return new TextView(this);
     }
 }

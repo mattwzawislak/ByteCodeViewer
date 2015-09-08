@@ -16,7 +16,7 @@ public class DocumentBuilder {
 
     private final ResourcePool<Font> fontPool = new ResourcePool<>();
 
-    private final ResourcePool<Highlight> highlightPool = new ResourcePool<>();
+    private final PaddingCache padding = new PaddingCache();
 
     private int tabSize = 4;
 
@@ -50,10 +50,6 @@ public class DocumentBuilder {
         return fontPool;
     }
 
-    public ResourcePool<Highlight> getHighlightPool() {
-        return highlightPool;
-    }
-
     public int getTabSize() {
         return tabSize;
     }
@@ -63,5 +59,51 @@ public class DocumentBuilder {
             throw new IllegalArgumentException("illegal tab size. Must be positive.");
         }
         this.tabSize = tabSize;
+    }
+
+    public String getPadding(final int minimum) {
+        return getPadding(0, minimum);
+    }
+
+    public String getPadding(final int sizeSoFar, final int minimum) {
+        return padding.getPadding(getPaddingSize(sizeSoFar, minimum));
+    }
+
+    public int getPaddingSize(final int minimum) {
+        return getPaddingSize(0, minimum);
+    }
+
+    public int getPaddingSize(final int sizeSoFar, final int minimum) {
+        if (sizeSoFar < 0) {
+            throw new IllegalArgumentException("current size cannot be negative.");
+        }
+        if (sizeSoFar > minimum) {
+            return 0;
+        }
+        return minimum - sizeSoFar;
+    }
+
+    public String getTabbedPadding(final int minimum) {
+        return getTabbedPadding(0, minimum);
+    }
+
+    public String getTabbedPadding(final int sizeSoFar, final int minimum) {
+        return padding.getPadding(getTabbedPaddingSize(sizeSoFar, minimum));
+    }
+
+    public int getTabbedPaddingSize(final int minimum) {
+        return getTabbedPaddingSize(0, minimum);
+    }
+
+    public int getTabbedPaddingSize(final int sizeSoFar, final int minimum) {
+        if (sizeSoFar < 0) {
+            throw new IllegalArgumentException("current size cannot be negative.");
+        }
+        final int remainder = minimum % tabSize;
+        if (remainder == 0) {
+            return minimum - sizeSoFar;
+        } else {
+            return (minimum - sizeSoFar) + (tabSize - remainder);
+        }
     }
 }

@@ -28,7 +28,10 @@ public class _Test {
         final Document document = new Document(() -> frame.getContentPane().getBounds());
 
         final Element root = document.getRoot();
-        final Element page = new BasicElement("page");
+        final TextElement page = new TextElement("page");
+        page.getAttributes().setFont(new Font("Courier new", Font.PLAIN, 20));
+        page.setLeftPad(0);
+        page.setText("Branch: ");
 
         root.add(page);
         final JPanel panel = new JPanel() {
@@ -49,6 +52,7 @@ public class _Test {
             @Override
             public void mousePressed(MouseEvent e) {
                 final TextElement element = new TextElement("elem" + e.getWhen(), "Element #" + page.getChildrenCount());
+                element.setLeftPad(4);
                 final TextAttributes attributes = element.getAttributes();
                 attributes.setFont(new Font("Courier new", Font.PLAIN, 20));
                 page.add(element);

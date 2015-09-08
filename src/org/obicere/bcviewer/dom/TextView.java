@@ -19,7 +19,7 @@ public class TextView extends View<TextElement> {
 
     @Override
     public void paintSelf(final Graphics g, final Rectangle bounds) {
-        final String text = element.getText();
+        final String text = element.getDisplayText();
         final String trim = text.trim();
         final TextAttributes attributes = element.getAttributes();
 
@@ -60,7 +60,7 @@ public class TextView extends View<TextElement> {
         final Font font = element.getAttributes().getFont();
         final Font fixedFont = getFixedFont(font, script);
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
-        final Rectangle2D bounds = fixedFont.getStringBounds(element.getText(), fontRenderContext);
+        final Rectangle2D bounds = fixedFont.getStringBounds(element.getDisplayText(), fontRenderContext);
         final Rectangle integerBounds = bounds.getBounds();
 
         final int height;
