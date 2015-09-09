@@ -29,16 +29,24 @@ public class DocumentContent {
         builder.append(text);
     }
 
-    public void writeLine(final String text){
+    public void writeLine(final String text) {
         builder.append(text);
         builder.append(lineSeparator);
     }
 
-    public void writeLine(){
+    public void writeLine() {
         builder.append(lineSeparator);
     }
 
     public int getIndex(final Element element) {
         return indexMap.getOrDefault(element, -1);
+    }
+
+    public void trimToSize() {
+        builder.trimToSize();
+    }
+
+    public String getText() {
+        return builder.toString().trim();
     }
 }

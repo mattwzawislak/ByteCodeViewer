@@ -104,8 +104,6 @@ public class Document {
 
             final Rectangle viewport = renderer.getViewport();
 
-            System.out.println("Built new view");
-
             updateView(viewport.x, viewport.y);
 
             return latestView;

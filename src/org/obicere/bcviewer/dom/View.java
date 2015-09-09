@@ -73,8 +73,17 @@ public abstract class View<E extends Element> {
         this.bounds = new Rectangle();
         bounds.x = Math.min(size.x, childrenSize.x);
         bounds.y = Math.min(size.y, childrenSize.y);
-        bounds.width = Math.max(size.width, childrenSize.width);
-        bounds.height = Math.max(size.height, childrenSize.height);
+        bounds.width = (size.width + childrenSize.width);
+
+        // special case scenario - the parent's height also needs to be
+        // added as an extra line is added regardless of the size or
+        // presence of children
+        if (element.getAxis() == Element.AXIS_PAGE) {
+            bounds.height = (size.height + childrenSize.height);
+        } else {
+            bounds.height = Math.max(size.height, childrenSize.height);
+        }
+
 
         isArranged = true;
 

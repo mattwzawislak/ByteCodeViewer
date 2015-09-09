@@ -1,7 +1,5 @@
 package org.obicere.bcviewer.dom;
 
-import org.obicere.bcviewer.dom.ui.DocumentRenderer;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -13,8 +11,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * @author Obicere
@@ -25,15 +21,28 @@ public class _Test {
 
         final JFrame frame = new JFrame("Text view test");
 
+        final TextAttributes attributes = new TextAttributes();
+        attributes.setFont(new Font("Courier new", Font.PLAIN, 20));
+        attributes.setColor(new Color(227, 80, 0));
+
         final Document document = new Document(() -> frame.getContentPane().getBounds());
 
         final Element root = document.getRoot();
-        final TextElement page = new TextElement("page");
-        page.getAttributes().setFont(new Font("Courier new", Font.PLAIN, 20));
-        page.setLeftPad(0);
-        page.setText("Branch: ");
+        for (int i = 0; i < 8; i++) {
+            final TextElement parent = new TextElement("parent" + i, "Parent #" + i);
+            parent.setAttributes(attributes);
+            parent.setAxis((i % 2 == 0) ? Element.AXIS_LINE : Element.AXIS_PAGE);
+            for (int j = 0; j < 4; j++) {
 
-        root.add(page);
+                final TextElement child = new TextElement("child" + j, "Element #(" + i + ", " + j + ")");
+
+                child.setLeftPad(4);
+                child.setAttributes(attributes);
+                parent.add(child);
+            }
+            root.add(parent);
+        }
+
         final JPanel panel = new JPanel() {
 
             @Override
@@ -48,20 +57,6 @@ public class _Test {
             }
         };
 
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                final TextElement element = new TextElement("elem" + e.getWhen(), "Element #" + page.getChildrenCount());
-                element.setLeftPad(4);
-                final TextAttributes attributes = element.getAttributes();
-                attributes.setFont(new Font("Courier new", Font.PLAIN, 20));
-                page.add(element);
-
-                document.invalidate();
-                panel.repaint();
-            }
-        });
-
         final View<?> view = root.getView();
         final Rectangle size = view.layout(0, 0);
         panel.setPreferredSize(new Dimension(size.width, size.height));
@@ -71,6 +66,10 @@ public class _Test {
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+        final DocumentContent content = new DocumentContent();
+        root.write(content);
+        System.out.println(content.getText());
     }
 
     public static void main(final String[] args) {

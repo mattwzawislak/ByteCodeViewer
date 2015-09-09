@@ -41,17 +41,18 @@ public abstract class Element {
 
     public abstract View<? extends Element> getView();
 
-    public void write(final DocumentContent content){
+    public void write(final DocumentContent content) {
         writeSelf(content);
         writeChildren(content);
     }
 
-    protected void writeChildren(final DocumentContent content){
+    protected void writeChildren(final DocumentContent content) {
         for (final Element child : getChildren()) {
-            child.write(content);
+            // must move to next line
             if (getAxis() == Element.AXIS_PAGE) {
                 content.writeLine();
             }
+            child.write(content);
         }
     }
 
