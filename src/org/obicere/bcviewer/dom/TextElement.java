@@ -10,7 +10,9 @@ public class TextElement extends Element {
     private int leftPad  = 0;
     private int rightPad = 0;
 
-    private final TextAttributes attributes = new TextAttributes();
+    private TextAttributes attributes = new TextAttributes();
+
+    private final TextView view = new TextView(this);
 
     public TextElement(final String name) {
         super(name);
@@ -22,7 +24,11 @@ public class TextElement extends Element {
         setText(text);
     }
 
-    public String getDisplayText(){
+    public void setAttributes(final TextAttributes attributes) {
+        this.attributes = attributes;
+    }
+
+    public String getDisplayText() {
         final PaddingCache cache = PaddingCache.getPaddingCache();
         return cache.getPadding(getCumulativeLeftPad()) + getText() + cache.getPadding(getCumulativeRightPad());
     }
@@ -39,15 +45,15 @@ public class TextElement extends Element {
         }
     }
 
-    public void setLeftPad(final int pad){
-        if(pad < 0){
+    public void setLeftPad(final int pad) {
+        if (pad < 0) {
             throw new IllegalArgumentException("pad size cannot be less than 0.");
         }
         this.leftPad = pad;
     }
 
-    public void setRightPad(final int pad){
-        if(pad < 0){
+    public void setRightPad(final int pad) {
+        if (pad < 0) {
             throw new IllegalArgumentException("pad size cannot be less than 0.");
         }
         this.rightPad = pad;
@@ -91,6 +97,6 @@ public class TextElement extends Element {
 
     @Override
     public View<TextElement> getView() {
-        return new TextView(this);
+        return view;
     }
 }

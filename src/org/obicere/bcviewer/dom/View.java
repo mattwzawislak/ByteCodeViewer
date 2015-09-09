@@ -64,6 +64,8 @@ public abstract class View<E extends Element> {
     }
 
     public Rectangle layout(final int x, final int y) {
+        childViews.clear();
+
         this.size = layoutSelf(x, y);
 
         this.childrenSize = layoutChildren(size);
@@ -107,7 +109,6 @@ public abstract class View<E extends Element> {
             currentWidth = Math.max(rectangle.width, currentWidth);
         }
         // subtract initial y to counter parent's offset
-        // TODO: prove that this patch actually worked
         return new Rectangle(x, y, currentWidth, currentHeight - y);
     }
 
@@ -126,7 +127,6 @@ public abstract class View<E extends Element> {
             currentHeight = Math.max(rectangle.height, currentHeight);
         }
         // subtract initial x to counter parent's offset
-        // TODO: prove that this patch actually worked
         return new Rectangle(x, y, currentWidth - x, currentHeight);
     }
 }
