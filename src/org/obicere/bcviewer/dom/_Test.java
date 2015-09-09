@@ -11,6 +11,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Obicere
@@ -43,6 +46,8 @@ public class _Test {
             root.add(parent);
         }
 
+        final AtomicReference<Element> hovering = new AtomicReference<>();
+
         final JPanel panel = new JPanel() {
 
             @Override
@@ -54,8 +59,35 @@ public class _Test {
 
                 final View<? extends Element> view = document.getView();
                 view.paint(g);
+                if(hovering.get() != null){
+                    final Rectangle bounds = hovering.get().getView().getSize();
+                    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                }
             }
         };
+
+        panel.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+                move(e);
+            }
+
+            @Override
+            public void mouseMoved(final MouseEvent e) {
+                move(e);
+            }
+
+            @Override
+            public void mouseDragged(final MouseEvent e) {
+                move(e);
+            }
+
+            private void move(final MouseEvent e){
+                final Element element = document.getElementAt(e.getX(), e.getY());
+                hovering.set(element);
+                frame.repaint();
+            }
+        });
 
         final View<?> view = root.getView();
         final Rectangle size = view.layout(0, 0);

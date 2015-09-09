@@ -50,6 +50,23 @@ public class Document {
         }
     }
 
+    public Element getElementAt(final int x, final int y) {
+        View<? extends Element> view = getView();
+        while (view.getBounds().contains(x, y)) {
+            boolean found = false;
+            for (final View<? extends Element> child : view.getChildViews()) {
+                if (child.getBounds().contains(x, y)) {
+                    view = child;
+                    found = true;
+                }
+            }
+            if (!found) {
+                return view.getElement();
+            }
+        }
+        return null;
+    }
+
     public void setDisplayToRoot() {
         display = root;
         invalidate();

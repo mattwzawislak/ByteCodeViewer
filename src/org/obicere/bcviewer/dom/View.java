@@ -27,6 +27,14 @@ public abstract class View<E extends Element> {
         this.childViews = new ArrayList<>(element.getChildrenCount());
     }
 
+    public E getElement() {
+        return element;
+    }
+
+    public List<View<? extends Element>> getChildViews() {
+        return childViews;
+    }
+
     public void paint(final Graphics g) {
         paintSelf(g, size);
         paintChildren(g);
