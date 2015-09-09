@@ -22,6 +22,8 @@ public class DocumentBuilder {
 
     private final ReentrantLock lock = new ReentrantLock();
 
+    private String baseFontName;
+
     public Document build(final DocumentRenderer renderer, final Modeler<ClassFile> classFileModeler) {
         if (renderer == null) {
             throw new NullPointerException("cannot render document to null renderer");
@@ -48,6 +50,60 @@ public class DocumentBuilder {
 
     public ResourcePool<Font> getFontPool() {
         return fontPool;
+    }
+
+    public void setBaseFont(final String name, final int size) {
+        this.baseFontName = name;
+
+        loadBaseline(name, size);
+        loadSubscript(name, size);
+        loadSuperscript(name, size);
+    }
+
+    private void loadSuperscript(final String name, final int size) {
+        final String plain = "superscript.plain";
+        final String bold = "superscript.bold";
+        final String italic = "superscript.italic";
+        final String boldItalic = "superscript.boldItalic";
+
+        final int fixedSize = (int) (size * Script.SUPERSCRIPT.getSize());
+
+        fontPool.add(plain, new Font(name, Font.PLAIN, fixedSize));
+        fontPool.add(bold, new Font(name, Font.BOLD, fixedSize));
+        fontPool.add(italic, new Font(name, Font.ITALIC, fixedSize));
+        fontPool.add(boldItalic, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+    }
+
+    private void loadSubscript(final String name, final int size) {
+        final String plain = "subscript.plain";
+        final String bold = "subscript.bold";
+        final String italic = "subscript.italic";
+        final String boldItalic = "subscript.boldItalic";
+
+        final int fixedSize = (int) (size * Script.SUBSCRIPT.getSize());
+
+        fontPool.add(plain, new Font(name, Font.PLAIN, fixedSize));
+        fontPool.add(bold, new Font(name, Font.BOLD, fixedSize));
+        fontPool.add(italic, new Font(name, Font.ITALIC, fixedSize));
+        fontPool.add(boldItalic, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+    }
+
+    private void loadBaseline(final String name, final int size) {
+        final String plain = "baseline.plain";
+        final String bold = "baseline.bold";
+        final String italic = "baseline.italic";
+        final String boldItalic = "baseline.boldItalic";
+
+        final int fixedSize = (int) (size * Script.BASELINE.getSize());
+
+        fontPool.add(plain, new Font(name, Font.PLAIN, fixedSize));
+        fontPool.add(bold, new Font(name, Font.BOLD, fixedSize));
+        fontPool.add(italic, new Font(name, Font.ITALIC, fixedSize));
+        fontPool.add(boldItalic, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+    }
+
+    public String getBaseFontName() {
+        return baseFontName;
     }
 
     public int getTabSize() {

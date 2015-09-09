@@ -14,7 +14,7 @@ public class ConstantUtf8 extends Constant {
         this.bytes = bytes;
     }
 
-    public int getLength() {
+    public int length() {
         return bytes.length();
     }
 
