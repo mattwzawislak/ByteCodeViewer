@@ -2,15 +2,18 @@ package org.obicere.bcviewer.dom;
 
 
 import org.obicere.bcviewer.dom.attributes.InstructionTextAttributes;
+import org.obicere.bcviewer.dom.attributes.ParameterNumberTextAttributes;
 
 /**
  */
 public class TextAttributesResourcePool extends ResourcePool<ResourceTextAttributes> {
 
-    public static final String ATTRIBUTES_INSTRUCTION = "instruction.mnemonic";
+    public static final String ATTRIBUTES_INSTRUCTION      = "instruction.mnemonic";
+    public static final String ATTRIBUTES_PARAMETER_NUMBER = "parameter.number";
 
     public TextAttributesResourcePool() {
-        add(ATTRIBUTES_INSTRUCTION, new InstructionTextAttributes());
+        safeAdd(ATTRIBUTES_INSTRUCTION, new InstructionTextAttributes());
+        safeAdd(ATTRIBUTES_PARAMETER_NUMBER, new ParameterNumberTextAttributes());
     }
 
     void updateFonts(final FontResourcePool resourcePool) {
@@ -24,5 +27,4 @@ public class TextAttributesResourcePool extends ResourcePool<ResourceTextAttribu
             attributes.updateColor(resourcePool);
         }
     }
-
 }

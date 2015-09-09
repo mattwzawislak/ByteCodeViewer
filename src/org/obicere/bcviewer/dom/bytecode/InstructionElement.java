@@ -9,15 +9,14 @@ import org.obicere.bcviewer.dom.TextElement;
  */
 public class InstructionElement extends TextElement {
 
-    private static final int LEFT_PAD = 4;
-
     // the longest mnemonic length + 1
+    // the plus 1 is to ensure there is at least 1 space before the params
     private static final int MINIMUM_RIGHT_PAD = 15;
 
     public InstructionElement(final Instruction instruction, final DocumentBuilder builder) {
         super(instruction.getIdentifier(), instruction.getMnemonic());
         setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_INSTRUCTION));
-        setLeftPad(LEFT_PAD);
+        setLeftPad(builder.getTabSize());
         setRightPad(builder.getTabbedPaddingSize(instruction.getMnemonic().length(), MINIMUM_RIGHT_PAD));
     }
 

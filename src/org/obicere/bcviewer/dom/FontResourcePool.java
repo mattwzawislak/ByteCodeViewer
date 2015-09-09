@@ -85,27 +85,27 @@ public class FontResourcePool extends ResourcePool<Font> {
 
         final int fixedSize = (int) (size * Script.SUPERSCRIPT.getSize());
 
-        super.add(FONT_SUPERSCRIPT_PLAIN, new Font(name, Font.PLAIN, fixedSize));
-        super.add(FONT_SUPERSCRIPT_BOLD, new Font(name, Font.BOLD, fixedSize));
-        super.add(FONT_SUPERSCRIPT_ITALIC, new Font(name, Font.ITALIC, fixedSize));
-        super.add(FONT_SUPERSCRIPT_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_PLAIN, new Font(name, Font.PLAIN, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_BOLD, new Font(name, Font.BOLD, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_ITALIC, new Font(name, Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
     }
 
     private void loadSubscript(final String name, final int size) {
         final int fixedSize = (int) (size * Script.SUBSCRIPT.getSize());
 
-        super.add(FONT_SUBSCRIPT_PLAIN, new Font(name, Font.PLAIN, fixedSize));
-        super.add(FONT_SUBSCRIPT_BOLD, new Font(name, Font.BOLD, fixedSize));
-        super.add(FONT_SUBSCRIPT_ITALIC, new Font(name, Font.ITALIC, fixedSize));
-        super.add(FONT_SUBSCRIPT_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_PLAIN, new Font(name, Font.PLAIN, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_BOLD, new Font(name, Font.BOLD, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_ITALIC, new Font(name, Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
     }
 
     private void loadBaseline(final String name, final int size) {
 
-        super.add(FONT_BASELINE_PLAIN, new Font(name, Font.PLAIN, size));
-        super.add(FONT_BASELINE_BOLD, new Font(name, Font.BOLD, size));
-        super.add(FONT_BASELINE_ITALIC, new Font(name, Font.ITALIC, size));
-        super.add(FONT_BASELINE_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, size));
+        safeAdd(FONT_BASELINE_PLAIN, new Font(name, Font.PLAIN, size));
+        safeAdd(FONT_BASELINE_BOLD, new Font(name, Font.BOLD, size));
+        safeAdd(FONT_BASELINE_ITALIC, new Font(name, Font.ITALIC, size));
+        safeAdd(FONT_BASELINE_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, size));
     }
 
 }

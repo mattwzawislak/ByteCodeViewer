@@ -18,7 +18,7 @@ public class DocumentBuilder {
 
     private final PaddingCache padding = PaddingCache.getPaddingCache();
 
-    private int tabSize = 4;
+    private int tabSize = 5;
 
     private final ReentrantLock lock = new ReentrantLock();
 

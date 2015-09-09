@@ -7,6 +7,7 @@ import org.obicere.bcviewer.dom.FontResourcePool;
 import org.obicere.bcviewer.dom.IntegerElement;
 import org.obicere.bcviewer.dom.Modeler;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterDecimalElement;
 
 /**
  * @author Obicere
@@ -30,11 +31,7 @@ public class aload extends Instruction implements Modeler<aload> {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
-
-        final IntegerElement element = new DecimalElement("index", index);
-        element.setLeftPad(builder.getTabbedPaddingSize(element.getText().length(), builder.getTabSize()));
-        element.getAttributes().setFont(builder.getFontPool().get(FontResourcePool.FONT_BASELINE_PLAIN));
-        parent.add(element);
+        parent.add(new ParameterDecimalElement("index", index, builder));
     }
 
 }
