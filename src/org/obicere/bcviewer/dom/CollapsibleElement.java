@@ -24,4 +24,16 @@ public class CollapsibleElement extends Element {
     public CollapsibleView getView() {
         return view;
     }
+
+    @Override
+    protected void writeChildren(final DocumentContent content) {
+        if (!isCollapsed()) {
+            super.writeChildren(content);
+        }
+    }
+
+    @Override
+    protected void writeSelf(final DocumentContent content) {
+
+    }
 }

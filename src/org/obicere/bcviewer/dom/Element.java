@@ -41,6 +41,22 @@ public abstract class Element {
 
     public abstract View<? extends Element> getView();
 
+    public void write(final DocumentContent content){
+        writeSelf(content);
+        writeChildren(content);
+    }
+
+    protected void writeChildren(final DocumentContent content){
+        for (final Element child : getChildren()) {
+            child.write(content);
+            if (getAxis() == Element.AXIS_PAGE) {
+                content.writeLine();
+            }
+        }
+    }
+
+    protected abstract void writeSelf(final DocumentContent content);
+
     void addedTo(final Element parent) {
         this.parent = parent;
         this.qualifiedName = parent.getQualifiedName() + "." + name;

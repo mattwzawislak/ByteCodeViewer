@@ -99,4 +99,9 @@ public class TextElement extends Element {
     public View<TextElement> getView() {
         return view;
     }
+
+    @Override
+    public void writeSelf(final DocumentContent content) {
+        content.write(getDisplayText());
+    }
 }
