@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public abstract class Constant {
+public abstract class Constant extends BytecodeElement {
 
     private final int tag;
 
@@ -14,6 +14,4 @@ public abstract class Constant {
     public final int getTag(){
         return tag;
     }
-
-    public abstract String toString(final ConstantPool constantPool);
 }

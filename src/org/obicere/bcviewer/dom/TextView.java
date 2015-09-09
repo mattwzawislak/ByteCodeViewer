@@ -6,7 +6,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
-import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -24,9 +23,10 @@ public class TextView extends View<TextElement> {
         final String trim = text.trim();
         final TextAttributes attributes = element.getAttributes();
 
-        final Font font = attributes.getFont();
         final Script script = attributes.getScript();
-        g.setFont(getFixedFont(font, script));
+        final Font fixedFont = getFixedFont();
+
+        g.setFont(fixedFont);
 
         final FontMetrics metrics = g.getFontMetrics();
         final Rectangle trimBounds = metrics.getStringBounds(trim, g).getBounds();
@@ -59,7 +59,7 @@ public class TextView extends View<TextElement> {
     protected Rectangle layoutSelf(final int x, final int y) {
         final Script script = element.getAttributes().getScript();
         final Font font = element.getAttributes().getFont();
-        final Font fixedFont = getFixedFont(font, script);
+        final Font fixedFont = getFixedFont();
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
         final Rectangle2D bounds = fixedFont.getStringBounds(element.getDisplayText(), fontRenderContext);
         final Rectangle integerBounds = bounds.getBounds();
@@ -74,7 +74,9 @@ public class TextView extends View<TextElement> {
         return new Rectangle(x, y, integerBounds.width, height);
     }
 
-    private Font getFixedFont(final Font font, final Script script) {
+    private Font getFixedFont() {
+        final Font font = element.getAttributes().getFont();
+        final Script script = element.getAttributes().getScript();
         if (script == Script.BASELINE) {
             return font;
         }
@@ -86,9 +88,7 @@ public class TextView extends View<TextElement> {
             return -1;
         }
         final int overflowWidth = x - getSize().x;
-        final Script script = element.getAttributes().getScript();
-        final Font font = element.getAttributes().getFont();
-        final Font fixedFont = getFixedFont(font, script);
+        final Font fixedFont = getFixedFont();
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
         final char[] chars = element.getDisplayText().toCharArray();
         for (int i = 1; i < chars.length; i++) {
@@ -101,9 +101,7 @@ public class TextView extends View<TextElement> {
     }
 
     public int getCaretLocation(final int index) {
-        final Script script = element.getAttributes().getScript();
-        final Font font = element.getAttributes().getFont();
-        final Font fixedFont = getFixedFont(font, script);
+        final Font fixedFont = getFixedFont();
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
         final Rectangle2D metrics = fixedFont.getStringBounds(element.getDisplayText(), 0, index, fontRenderContext);
         return (int) metrics.getWidth();
