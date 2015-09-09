@@ -1,5 +1,11 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.bytecode.instruction.aaload;
+import org.obicere.bcviewer.bytecode.instruction.aastore;
+import org.obicere.bcviewer.bytecode.instruction.aconst_null;
+import org.obicere.bcviewer.bytecode.instruction.aload;
+import org.obicere.bcviewer.bytecode.instruction.multianewarray;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -28,33 +34,36 @@ public class _Test {
         attributes.setFont(new Font("Courier new", Font.PLAIN, 20));
         attributes.setColor(new Color(227, 80, 0));
 
+        final DocumentBuilder builder = new DocumentBuilder();
         final Document document = new Document(() -> frame.getContentPane().getBounds());
 
         final Element root = document.getRoot();
 
-        final CollapsibleElement element = new CollapsibleElement("view");
+        final aaload ins1 = new aaload();
+        final aastore ins2 = new aastore();
+        final aconst_null ins3 = new aconst_null();
+        final aload ins4 = new aload(100);
+        final multianewarray ins5 = new multianewarray(255, 0, 10);
 
-        final TextElement collapseMe = new TextElement("collapse", "Click to collapse this");
-        collapseMe.setAttributes(attributes);
-        element.add(collapseMe);
+        final BasicElement line1 = new BasicElement("line1");
+        final BasicElement line2 = new BasicElement("line2");
+        final BasicElement line3 = new BasicElement("line3");
+        final BasicElement line4 = new BasicElement("line4");
+        final BasicElement line5 = new BasicElement("line5");
 
-        root.add(element);
-        for (int i = 0; i < 8; i++) {
-            final TextElement parent = new TextElement("parent" + i, "Parent #" + i);
-            parent.setAttributes(attributes);
-            parent.setAxis((i % 2 == 0) ? Element.AXIS_LINE : Element.AXIS_PAGE);
-            for (int j = 0; j < 4; j++) {
+        line1.setAxis(Element.AXIS_LINE);
+        line2.setAxis(Element.AXIS_LINE);
+        line3.setAxis(Element.AXIS_LINE);
+        line4.setAxis(Element.AXIS_LINE);
+        line5.setAxis(Element.AXIS_LINE);
 
-                final TextElement child = new TextElement("child" + j, "Element #(" + i + ", " + j + ")");
+        ins1.model(builder, line1);
+        ins2.model(builder, line2);
+        ins3.model(builder, line3);
+        ins4.model(builder, line4);
+        ins5.model(builder, line5);
 
-                child.setLeftPad(4);
-                child.setAttributes(attributes);
-                parent.add(child);
-            }
-            root.add(parent);
-        }
-
-        final AtomicReference<Caret> caret = new AtomicReference<>();
+        root.addAll(line1, line2, line3, line4, line5);
 
         final JPanel panel = new JPanel() {
 
@@ -67,50 +76,8 @@ public class _Test {
 
                 final View<? extends Element> view = document.getView();
                 view.paint(g);
-                if (caret.get() != null) {
-                    final Caret bounds = caret.get();
-                    final TextView textView = (TextView) bounds.getElement().getView();
-                    final int x = textView.getCaretLocation(bounds.getIndex());
-                    final Rectangle size = textView.getSize();
-                    g.fillRect(size.x + x, size.y, 2, size.height);
-                }
             }
         };
-
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                element.setCollapsed(!element.isCollapsed());
-                document.invalidate();
-                frame.repaint();
-            }
-        });
-        panel.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(final MouseEvent e) {
-                move(e);
-            }
-
-            @Override
-            public void mouseMoved(final MouseEvent e) {
-                move(e);
-            }
-
-            @Override
-            public void mouseDragged(final MouseEvent e) {
-                move(e);
-            }
-
-            private void move(final MouseEvent e) {
-                final Element element = document.getElementAt(e.getX(), e.getY());
-                if (element instanceof TextElement) {
-                    caret.set(((TextElement) element).getCaret(e.getX(), e.getY()));
-                } else {
-                    caret.set(null);
-                }
-                frame.repaint();
-            }
-        });
 
         final View<?> view = root.getView();
         final Rectangle size = view.layout(0, 0);

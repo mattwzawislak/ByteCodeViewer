@@ -3,8 +3,6 @@ package org.obicere.bcviewer.dom;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -12,9 +10,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DocumentBuilder {
 
-    private final ResourcePool<Color> colorPool = new ResourcePool<>();
+    private final ColorResourcePool colorPool;
 
-    private final ResourcePool<Font> fontPool = new ResourcePool<>();
+    private final FontResourcePool fontPool;
+
+    private final TextAttributesResourcePool attributesPool;
 
     private final PaddingCache padding = PaddingCache.getPaddingCache();
 
@@ -22,7 +22,16 @@ public class DocumentBuilder {
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    private String baseFontName;
+    public DocumentBuilder() {
+        this.colorPool = new ColorResourcePool(this);
+        this.fontPool = new FontResourcePool(this);
+        this.attributesPool = new TextAttributesResourcePool();
+
+        fontPool.setBaseFont("Courier new", 14);
+
+        attributesPool.updateFonts(fontPool);
+        attributesPool.updateColors(colorPool);
+    }
 
     public Document build(final DocumentRenderer renderer, final Modeler<ClassFile> classFileModeler) {
         if (renderer == null) {
@@ -44,66 +53,24 @@ public class DocumentBuilder {
         }
     }
 
-    public ResourcePool<Color> getColorPool() {
+    void notifyFontChange() {
+        attributesPool.updateFonts(fontPool);
+    }
+
+    void notifyColorChange() {
+        attributesPool.updateColors(colorPool);
+    }
+
+    public TextAttributesResourcePool getAttributesPool() {
+        return attributesPool;
+    }
+
+    public ColorResourcePool getColorPool() {
         return colorPool;
     }
 
-    public ResourcePool<Font> getFontPool() {
+    public FontResourcePool getFontPool() {
         return fontPool;
-    }
-
-    public void setBaseFont(final String name, final int size) {
-        this.baseFontName = name;
-
-        loadBaseline(name, size);
-        loadSubscript(name, size);
-        loadSuperscript(name, size);
-    }
-
-    private void loadSuperscript(final String name, final int size) {
-        final String plain = "superscript.plain";
-        final String bold = "superscript.bold";
-        final String italic = "superscript.italic";
-        final String boldItalic = "superscript.boldItalic";
-
-        final int fixedSize = (int) (size * Script.SUPERSCRIPT.getSize());
-
-        fontPool.add(plain, new Font(name, Font.PLAIN, fixedSize));
-        fontPool.add(bold, new Font(name, Font.BOLD, fixedSize));
-        fontPool.add(italic, new Font(name, Font.ITALIC, fixedSize));
-        fontPool.add(boldItalic, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
-    }
-
-    private void loadSubscript(final String name, final int size) {
-        final String plain = "subscript.plain";
-        final String bold = "subscript.bold";
-        final String italic = "subscript.italic";
-        final String boldItalic = "subscript.boldItalic";
-
-        final int fixedSize = (int) (size * Script.SUBSCRIPT.getSize());
-
-        fontPool.add(plain, new Font(name, Font.PLAIN, fixedSize));
-        fontPool.add(bold, new Font(name, Font.BOLD, fixedSize));
-        fontPool.add(italic, new Font(name, Font.ITALIC, fixedSize));
-        fontPool.add(boldItalic, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
-    }
-
-    private void loadBaseline(final String name, final int size) {
-        final String plain = "baseline.plain";
-        final String bold = "baseline.bold";
-        final String italic = "baseline.italic";
-        final String boldItalic = "baseline.boldItalic";
-
-        final int fixedSize = (int) (size * Script.BASELINE.getSize());
-
-        fontPool.add(plain, new Font(name, Font.PLAIN, fixedSize));
-        fontPool.add(bold, new Font(name, Font.BOLD, fixedSize));
-        fontPool.add(italic, new Font(name, Font.ITALIC, fixedSize));
-        fontPool.add(boldItalic, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
-    }
-
-    public String getBaseFontName() {
-        return baseFontName;
     }
 
     public int getTabSize() {

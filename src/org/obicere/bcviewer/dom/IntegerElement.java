@@ -16,6 +16,7 @@ public class IntegerElement extends TextElement {
         super(name);
         this.number = number;
         this.radix = radix;
+        setText(valueOf(number));
     }
 
     public void setNumber(final int number) {
