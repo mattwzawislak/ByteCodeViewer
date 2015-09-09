@@ -16,7 +16,7 @@ public class DocumentBuilder {
 
     private final ResourcePool<Font> fontPool = new ResourcePool<>();
 
-    private final PaddingCache padding = new PaddingCache();
+    private final PaddingCache padding = PaddingCache.getPaddingCache();
 
     private int tabSize = 4;
 

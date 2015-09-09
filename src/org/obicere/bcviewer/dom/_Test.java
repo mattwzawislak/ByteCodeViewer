@@ -31,6 +31,14 @@ public class _Test {
         final Document document = new Document(() -> frame.getContentPane().getBounds());
 
         final Element root = document.getRoot();
+
+        final CollapsibleElement element = new CollapsibleElement("view");
+
+        final TextElement collapseMe = new TextElement("collapse", "Click to collapse this");
+        collapseMe.setAttributes(attributes);
+        element.add(collapseMe);
+
+        root.add(element);
         for (int i = 0; i < 8; i++) {
             final TextElement parent = new TextElement("parent" + i, "Parent #" + i);
             parent.setAttributes(attributes);
@@ -59,13 +67,21 @@ public class _Test {
 
                 final View<? extends Element> view = document.getView();
                 view.paint(g);
-                if(hovering.get() != null){
+                if (hovering.get() != null) {
                     final Rectangle bounds = hovering.get().getView().getSize();
                     g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
                 }
             }
         };
 
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                element.setCollapsed(!element.isCollapsed());
+                document.invalidate();
+                frame.repaint();
+            }
+        });
         panel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseEntered(final MouseEvent e) {
@@ -82,7 +98,7 @@ public class _Test {
                 move(e);
             }
 
-            private void move(final MouseEvent e){
+            private void move(final MouseEvent e) {
                 final Element element = document.getElementAt(e.getX(), e.getY());
                 hovering.set(element);
                 frame.repaint();
