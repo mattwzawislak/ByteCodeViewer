@@ -84,6 +84,10 @@ public abstract class Element {
         if (element == null) {
             throw new NullPointerException("cannot add null element.");
         }
+        // we can't add root elements to any other elements
+        if (element instanceof RootElement) {
+            return false;
+        }
         Element next = parent;
         while (next != null) {
             if (next == element) {

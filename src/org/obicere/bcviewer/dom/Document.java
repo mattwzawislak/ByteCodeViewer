@@ -25,7 +25,7 @@ public class Document {
 
     public Document(final DocumentRenderer renderer) {
         this.renderer = renderer;
-        this.root = new RootElement();
+        this.root = new RootElement(this);
         this.display = root;
     }
 
