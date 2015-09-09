@@ -54,7 +54,7 @@ public class _Test {
             root.add(parent);
         }
 
-        final AtomicReference<Element> hovering = new AtomicReference<>();
+        final AtomicReference<Caret> caret = new AtomicReference<>();
 
         final JPanel panel = new JPanel() {
 
@@ -67,9 +67,12 @@ public class _Test {
 
                 final View<? extends Element> view = document.getView();
                 view.paint(g);
-                if (hovering.get() != null) {
-                    final Rectangle bounds = hovering.get().getView().getSize();
-                    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                if (caret.get() != null) {
+                    final Caret bounds = caret.get();
+                    final TextView textView = (TextView) bounds.getElement().getView();
+                    final int x = textView.getCaretLocation(bounds.getIndex());
+                    final Rectangle size = textView.getSize();
+                    g.fillRect(size.x + x, size.y, 2, size.height);
                 }
             }
         };
@@ -100,7 +103,11 @@ public class _Test {
 
             private void move(final MouseEvent e) {
                 final Element element = document.getElementAt(e.getX(), e.getY());
-                hovering.set(element);
+                if (element instanceof TextElement) {
+                    caret.set(((TextElement) element).getCaret(e.getX(), e.getY()));
+                } else {
+                    caret.set(null);
+                }
                 frame.repaint();
             }
         });

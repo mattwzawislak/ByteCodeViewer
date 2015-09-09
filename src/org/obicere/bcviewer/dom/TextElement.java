@@ -95,8 +95,17 @@ public class TextElement extends Element {
         return attributes;
     }
 
+    public Caret getCaret(final int x, final int y) {
+        final int index = getView().getCaretIndex(x, y);
+        if (index == -1) {
+            return null;
+        } else {
+            return new Caret(this, index);
+        }
+    }
+
     @Override
-    public View<TextElement> getView() {
+    public TextView getView() {
         return view;
     }
 

@@ -6,6 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -78,5 +79,33 @@ public class TextView extends View<TextElement> {
             return font;
         }
         return font.deriveFont(font.getSize() * script.getSize());
+    }
+
+    public int getCaretIndex(final int x, final int y) {
+        if (!getSize().contains(x, y)) {
+            return -1;
+        }
+        final int overflowWidth = x - getSize().x;
+        final Script script = element.getAttributes().getScript();
+        final Font font = element.getAttributes().getFont();
+        final Font fixedFont = getFixedFont(font, script);
+        final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
+        final char[] chars = element.getDisplayText().toCharArray();
+        for (int i = 1; i < chars.length; i++) {
+            final Rectangle2D metrics = fixedFont.getStringBounds(chars, 0, i, fontRenderContext);
+            if (metrics.getWidth() > overflowWidth) {
+                return i - 1;
+            }
+        }
+        return -1;
+    }
+
+    public int getCaretLocation(final int index) {
+        final Script script = element.getAttributes().getScript();
+        final Font font = element.getAttributes().getFont();
+        final Font fixedFont = getFixedFont(font, script);
+        final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
+        final Rectangle2D metrics = fixedFont.getStringBounds(element.getDisplayText(), 0, index, fontRenderContext);
+        return (int) metrics.getWidth();
     }
 }
