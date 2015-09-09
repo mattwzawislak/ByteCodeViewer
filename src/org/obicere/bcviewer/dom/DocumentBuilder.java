@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,9 +19,13 @@ public class DocumentBuilder {
 
     private final PaddingCache padding = PaddingCache.getPaddingCache();
 
-    private int tabSize = 5;
+    private volatile int tabSize = 4;
 
     private final ReentrantLock lock = new ReentrantLock();
+
+    private volatile ClassFile classFile;
+
+    volatile ConstantPool constantPool;
 
     public DocumentBuilder() {
         this.colorPool = new ColorResourcePool(this);
@@ -33,7 +38,7 @@ public class DocumentBuilder {
         attributesPool.updateColors(colorPool);
     }
 
-    public Document build(final DocumentRenderer renderer, final Modeler<ClassFile> classFileModeler) {
+    public Document build(final DocumentRenderer renderer, final ClassFile classFile, final Modeler<ClassFile> classFileModeler) {
         if (renderer == null) {
             throw new NullPointerException("cannot render document to null renderer");
         }
@@ -43,12 +48,17 @@ public class DocumentBuilder {
         }
         try {
             lock.lock();
+
+            this.classFile = classFile;
+            this.constantPool = classFile.getConstantPool();
             final Document document = new Document(renderer);
 
             classFileModeler.model(this, document.getRoot());
 
             return document;
         } finally {
+            this.constantPool = null;
+            this.classFile = null;
             lock.unlock();
         }
     }
@@ -59,6 +69,14 @@ public class DocumentBuilder {
 
     void notifyColorChange() {
         attributesPool.updateColors(colorPool);
+    }
+
+    public ConstantPool getConstantPool() {
+        return constantPool;
+    }
+
+    public ClassFile getClassFile() {
+        return classFile;
     }
 
     public TextAttributesResourcePool getAttributesPool() {
@@ -118,9 +136,18 @@ public class DocumentBuilder {
         return getTabbedPaddingSize(0, minimum);
     }
 
-    public int getTabbedPaddingSize(final int sizeSoFar, final int minimum) {
+    public int getTabbedPaddingSize(final int sizeSoFar, int minimum) {
         if (sizeSoFar < 0) {
             throw new IllegalArgumentException("current size cannot be negative.");
+        }
+        if (minimum < sizeSoFar) {
+            // first we need to calculate the difference between between
+            // sizeSoFar and minimum. We divide and floor this value to
+            // find the number of 'tabs' this would represent. We then add
+            // an extra tab, minimum must be greater than sizeSoFar.
+            // We then subtract the difference to figure out the number
+            // of spaces needed to reach the nearest tab
+            return ((sizeSoFar - minimum) / tabSize) * tabSize + tabSize - (sizeSoFar - minimum);
         }
         final int remainder = minimum % tabSize;
         if (remainder == 0) {

@@ -1,11 +1,8 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.dom.DecimalElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.FontResourcePool;
-import org.obicere.bcviewer.dom.IntegerElement;
 import org.obicere.bcviewer.dom.Modeler;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
 import org.obicere.bcviewer.dom.literals.ParameterDecimalElement;

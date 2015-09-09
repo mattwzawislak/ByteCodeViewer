@@ -15,7 +15,7 @@ public class TextElement extends Element {
     private final TextView view = new TextView(this);
 
     public TextElement(final String name) {
-        super(name);
+        this(name, null);
     }
 
     public TextElement(final String name, final String text) {

@@ -9,6 +9,7 @@ public class ColorResourcePool extends ResourcePool<Color> {
     public static final String COLOR_INSTRUCTION_MNEMONIC = "instruction.mnemonic";
 
     public static final String COLOR_PARAMETER_NUMBER = "parameter.number";
+    public static final String COLOR_PARAMETER_STRING = "parameter.string";
 
     private final DocumentBuilder builder;
 
@@ -16,6 +17,7 @@ public class ColorResourcePool extends ResourcePool<Color> {
         this.builder = builder;
         safeAdd(COLOR_INSTRUCTION_MNEMONIC, new Color(227, 80, 0));
         safeAdd(COLOR_PARAMETER_NUMBER, new Color(86, 151, 250));
+        safeAdd(COLOR_PARAMETER_STRING, new Color(0, 128, 52));
     }
 
     @Override
