@@ -49,7 +49,7 @@ public abstract class Element {
     protected void writeChildren(final DocumentContent content) {
         for (final Element child : getChildren()) {
             // must move to next line
-            if (getAxis() == Element.AXIS_PAGE) {
+            if (!content.isEmpty() && getAxis() == Element.AXIS_PAGE) {
                 content.writeLine();
             }
             child.write(content);

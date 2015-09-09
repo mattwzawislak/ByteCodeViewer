@@ -42,11 +42,35 @@ public class DocumentContent {
         return indexMap.getOrDefault(element, -1);
     }
 
+    public boolean isEmpty() {
+        return builder.length() == 0;
+    }
+
     public void trimToSize() {
         builder.trimToSize();
     }
 
     public String getText() {
-        return builder.toString().trim();
+        return builder.toString();
+    }
+
+    public String getText(final int start) {
+        return builder.substring(start);
+    }
+
+    public String getText(final int start, final int end) {
+        return builder.substring(start, end);
+    }
+
+    public String getText(final Caret start, final Caret end) {
+        final int startIndex = getIndex(start.getElement());
+        if (startIndex == -1) {
+            return null;
+        }
+        final int endIndex = getIndex(end.getElement());
+        if (endIndex == -1) {
+            return null;
+        }
+        return getText(startIndex + start.getIndex(), endIndex + end.getIndex());
     }
 }
