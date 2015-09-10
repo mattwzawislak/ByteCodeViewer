@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.dom;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -13,8 +14,17 @@ import java.awt.geom.Rectangle2D;
  */
 public class TextView extends View<TextElement> {
 
+    private Rectangle textBounds;
+
     public TextView(final TextElement element) {
         super(element);
+    }
+
+    public Rectangle getTextBounds() {
+        if (!isArranged()) {
+            return new Rectangle();
+        }
+        return textBounds;
     }
 
     @Override
@@ -61,17 +71,26 @@ public class TextView extends View<TextElement> {
         final Font font = element.getAttributes().getFont();
         final Font fixedFont = getFixedFont();
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
-        final Rectangle2D bounds = fixedFont.getStringBounds(element.getDisplayText(), fontRenderContext);
-        final Rectangle integerBounds = bounds.getBounds();
+
+        final PaddingCache cache = new PaddingCache();
+        final String leftPad = cache.getPadding(element.getCumulativeLeftPad());
+        final String rightPad = cache.getPadding(element.getCumulativeRightPad());
+        final String text = element.getText();
+
+        final Rectangle leftPadBounds = fixedFont.getStringBounds(leftPad, fontRenderContext).getBounds();
+        final Rectangle rightPadBounds = fixedFont.getStringBounds(rightPad, fontRenderContext).getBounds();
+        final Rectangle textBounds = fixedFont.getStringBounds(text, fontRenderContext).getBounds();
 
         final int height;
         if (script == Script.BASELINE) {
-            height = integerBounds.height;
+            height = textBounds.height;
         } else {
             height = (int) font.getStringBounds(element.getText(), fontRenderContext).getHeight();
         }
 
-        return new Rectangle(x, y, integerBounds.width, height);
+        this.textBounds = new Rectangle(x + leftPadBounds.width, y, textBounds.width, height);
+
+        return new Rectangle(x, y, leftPadBounds.width + textBounds.width + rightPadBounds.width, height);
     }
 
     private Font getFixedFont() {

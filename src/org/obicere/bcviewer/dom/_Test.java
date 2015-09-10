@@ -14,6 +14,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Obicere
@@ -29,6 +32,10 @@ public class _Test {
         final Document document = new Document(() -> frame.getContentPane().getBounds());
 
         final Element root = document.getRoot();
+
+        final TextElement testBuffer= new TextElement("inner");
+        testBuffer.setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_STRING));
+        testBuffer.setLeftPad(4);
 
         final new_ ins1 = new new_(0, 1);
         final new_ ins2 = new new_(0, 2);
@@ -50,7 +57,11 @@ public class _Test {
         ins3.model(builder, line3);
         ins4.model(builder, line4);
 
-        root.addAll(line1, line2, line3, line4);
+        testBuffer.addAll(line1, line2, line3, line4);
+
+        root.add(testBuffer);
+
+        final AtomicReference<Element> hover = new AtomicReference<>(null);
 
         final JPanel panel = new JPanel() {
 
@@ -63,8 +74,34 @@ public class _Test {
 
                 final View<? extends Element> view = document.getView();
                 view.paint(g);
+
+                if(hover.get() != null){
+                    final View<? extends Element> hoveringView = hover.get().getView();
+                    g.draw(hoveringView.getBounds());
+                    if(hoveringView instanceof TextView){
+                        g.draw(((TextView) hoveringView).getTextBounds());
+                    }
+                }
             }
         };
+
+        panel.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(final MouseEvent e) {
+                move(e);
+            }
+
+            @Override
+            public void mouseMoved(final MouseEvent e) {
+                move(e);
+            }
+
+            private void move(final MouseEvent e){
+                hover.set(document.getElementAt(e.getX(), e.getY()));
+                frame.repaint();
+
+            }
+        });
 
         final View<?> view = root.getView();
         final Rectangle size = view.layout(0, 0);

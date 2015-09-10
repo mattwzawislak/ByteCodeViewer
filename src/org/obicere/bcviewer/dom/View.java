@@ -27,6 +27,10 @@ public abstract class View<E extends Element> {
         this.childViews = new ArrayList<>(element.getChildrenCount());
     }
 
+    protected boolean isArranged() {
+        return isArranged;
+    }
+
     public E getElement() {
         return element;
     }
@@ -81,7 +85,11 @@ public abstract class View<E extends Element> {
         this.bounds = new Rectangle();
         bounds.x = Math.min(size.x, childrenSize.x);
         bounds.y = Math.min(size.y, childrenSize.y);
-        bounds.width = (size.width + childrenSize.width);
+        if (element.getAxis() == Element.AXIS_LINE) {
+            bounds.width = (size.width + childrenSize.width);
+        } else {
+            bounds.width = Math.max(size.width, childrenSize.width);
+        }
 
         // special case scenario - the parent's height also needs to be
         // added as an extra line is added regardless of the size or
