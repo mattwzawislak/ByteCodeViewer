@@ -9,13 +9,20 @@ public class CollapsibleView extends View<CollapsibleElement> {
 
     public CollapsibleView(final CollapsibleElement element) {
         super(element);
-
+        addToDocument();
     }
 
-    private void notifyDocument() {
+    void addToDocument() {
         final Document document = element.getDocument();
         if (document != null) {
             document.addCollapsibleRegion(this);
+        }
+    }
+
+    void removeFromDocument() {
+        final Document document = element.getDocument();
+        if (document != null) {
+            document.removeCollapsibleRegion(this);
         }
     }
 

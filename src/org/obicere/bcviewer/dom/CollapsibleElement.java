@@ -36,4 +36,15 @@ public class CollapsibleElement extends Element {
     protected void writeSelf(final DocumentContent content) {
 
     }
+
+    @Override
+    protected void addedTo(final Element parent) {
+        view.addToDocument();
+    }
+
+    @Override
+    protected void removedFrom(final Element parent) {
+        super.removedFrom(parent);
+        view.removeFromDocument();
+    }
 }

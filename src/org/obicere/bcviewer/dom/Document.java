@@ -134,6 +134,13 @@ public class Document {
     }
 
     public void addCollapsibleRegion(final CollapsibleView view) {
+        if (view == null) {
+            return;
+        }
         collapsibleViews.add(view);
+    }
+
+    public void removeCollapsibleRegion(final CollapsibleView view) {
+        collapsibleViews.remove(view);
     }
 }

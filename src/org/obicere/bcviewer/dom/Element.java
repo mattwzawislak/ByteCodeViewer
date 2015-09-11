@@ -75,9 +75,17 @@ public abstract class Element {
         return parent;
     }
 
+    protected void removedFrom(final Element parent) {
+        this.parent = null;
+
+        // make sure to clear the fully qualified name
+        this.qualifiedName = name;
+    }
+
     public Element remove(final String name) {
         final Element element = getElement(name);
         children.remove(element);
+        element.removedFrom(this);
         return element;
     }
 
@@ -85,6 +93,7 @@ public abstract class Element {
         if (element == null) {
             return false;
         }
+        element.removedFrom(this);
         return children.remove(element);
     }
 
