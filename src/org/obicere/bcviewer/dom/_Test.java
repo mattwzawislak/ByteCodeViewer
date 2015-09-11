@@ -1,22 +1,14 @@
 package org.obicere.bcviewer.dom;
 
-import org.obicere.bcviewer.bytecode.Constant;
-import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.bytecode.ConstantUtf8;
 import org.obicere.bcviewer.bytecode.instruction.new_;
+import org.obicere.bcviewer.dom.literals.ParameterDecimalElement;
+import org.obicere.bcviewer.dom.literals.ParameterStringElement;
+import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Obicere
@@ -27,87 +19,20 @@ public class _Test {
 
         final JFrame frame = new JFrame("Text view test");
 
+        final JDocumentArea area = new JDocumentArea();
+
         final DocumentBuilder builder = new DocumentBuilder();
-        builder.constantPool = new ConstantPool(new Constant[]{null, new ConstantUtf8("55555"), new ConstantUtf8("666666"), new ConstantUtf8("7777777"), new ConstantUtf8("88888888")});
-        final Document document = new Document(() -> frame.getContentPane().getBounds());
+        final Document document = new Document(area);
 
         final Element root = document.getRoot();
 
-        final TextElement testBuffer= new TextElement("inner");
-        testBuffer.setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_STRING));
-        testBuffer.setLeftPad(4);
+        area.setDocument(document);
 
-        final new_ ins1 = new new_(0, 1);
-        final new_ ins2 = new new_(0, 2);
-        final new_ ins3 = new new_(0, 3);
-        final new_ ins4 = new new_(0, 4);
+        for (int i = 0; i < 30; i++) {
+            root.add(new ParameterStringElement("test" + i, "A really long string that I am just making up and wanted to be clever but couldn't think of anything and now I'm sad", builder));
+        }
 
-        final BasicElement line1 = new BasicElement("line1");
-        final BasicElement line2 = new BasicElement("line2");
-        final BasicElement line3 = new BasicElement("line3");
-        final BasicElement line4 = new BasicElement("line4");
-
-        line1.setAxis(Element.AXIS_LINE);
-        line2.setAxis(Element.AXIS_LINE);
-        line3.setAxis(Element.AXIS_LINE);
-        line4.setAxis(Element.AXIS_LINE);
-
-        ins1.model(builder, line1);
-        ins2.model(builder, line2);
-        ins3.model(builder, line3);
-        ins4.model(builder, line4);
-
-        testBuffer.addAll(line1, line2, line3, line4);
-
-        root.add(testBuffer);
-
-        final AtomicReference<Element> hover = new AtomicReference<>(null);
-
-        final JPanel panel = new JPanel() {
-
-            @Override
-            protected void paintComponent(final Graphics g1) {
-                super.paintComponent(g1);
-                final Graphics2D g = (Graphics2D) g1;
-
-                g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-                final View<? extends Element> view = document.getView();
-                view.paint(g);
-
-                if(hover.get() != null){
-                    final View<? extends Element> hoveringView = hover.get().getView();
-                    g.draw(hoveringView.getBounds());
-                    if(hoveringView instanceof TextView){
-                        g.draw(((TextView) hoveringView).getTextBounds());
-                    }
-                }
-            }
-        };
-
-        panel.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(final MouseEvent e) {
-                move(e);
-            }
-
-            @Override
-            public void mouseMoved(final MouseEvent e) {
-                move(e);
-            }
-
-            private void move(final MouseEvent e){
-                hover.set(document.getElementAt(e.getX(), e.getY()));
-                frame.repaint();
-
-            }
-        });
-
-        final View<?> view = root.getView();
-        final Rectangle size = view.layout(0, 0);
-        panel.setPreferredSize(new Dimension(size.width, size.height));
-
-        frame.add(panel);
+        frame.add(new JScrollPane(area));
 
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();

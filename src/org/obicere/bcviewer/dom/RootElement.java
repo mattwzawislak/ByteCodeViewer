@@ -18,7 +18,7 @@ public class RootElement extends BasicElement {
     }
 
     @Override
-    final void addedTo(final Element parent) {
+    protected final void addedTo(final Element parent) {
         throw new UnsupportedOperationException("cannot add root element to any other element");
     }
 }
