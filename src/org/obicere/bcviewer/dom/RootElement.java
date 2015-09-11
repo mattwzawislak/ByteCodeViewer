@@ -13,12 +13,12 @@ public class RootElement extends BasicElement {
         this.document = document;
     }
 
-    public Document getDocument() {
+    public final Document getDocument() {
         return document;
     }
 
     @Override
-    void addedTo(final Element parent) {
+    final void addedTo(final Element parent) {
         throw new UnsupportedOperationException("cannot add root element to any other element");
     }
 }

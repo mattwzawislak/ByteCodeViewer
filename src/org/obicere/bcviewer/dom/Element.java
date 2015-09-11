@@ -58,9 +58,17 @@ public abstract class Element {
 
     protected abstract void writeSelf(final DocumentContent content);
 
-    void addedTo(final Element parent) {
+    protected void addedTo(final Element parent) {
         this.parent = parent;
         this.qualifiedName = parent.getQualifiedName() + "." + name;
+    }
+
+    public Document getDocument() {
+        if (parent == null) {
+            // not added yet
+            return null;
+        }
+        return parent.getDocument();
     }
 
     public final Element getParent() {

@@ -3,6 +3,8 @@ package org.obicere.bcviewer.dom;
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
 import java.awt.Rectangle;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -22,6 +24,8 @@ public class Document {
     private View<? extends Element> latestView;
 
     private final Lock lock = new ReentrantLock();
+
+    private final Set<CollapsibleView> collapsibleViews = new HashSet<>();
 
     public Document(final DocumentRenderer renderer) {
         this.renderer = renderer;
@@ -127,5 +131,9 @@ public class Document {
         } finally {
             lock.unlock();
         }
+    }
+
+    public void addCollapsibleRegion(final CollapsibleView view) {
+        collapsibleViews.add(view);
     }
 }

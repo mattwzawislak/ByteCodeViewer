@@ -8,4 +8,6 @@ public interface DocumentRenderer {
 
     public Rectangle getViewport();
 
+    public void scrollToVisible(final Rectangle rectangle);
+
 }
