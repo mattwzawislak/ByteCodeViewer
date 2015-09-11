@@ -2,6 +2,7 @@ package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.HashSet;
 import java.util.Set;
@@ -114,6 +115,12 @@ public class Document {
     public void invalidate() {
         latestView = null;
         validated = false;
+    }
+
+    public Dimension getPreferredSize() {
+        final View<? extends Element> view = getView();
+        final Rectangle bounds = view.layout(0, 0);
+        return new Dimension(bounds.width - bounds.x, bounds.height - bounds.y);
     }
 
     public View<? extends Element> getView() {
