@@ -9,7 +9,6 @@ public class CollapsibleView extends View<CollapsibleElement> {
 
     public CollapsibleView(final CollapsibleElement element) {
         super(element);
-        addToDocument();
     }
 
     void addToDocument() {
@@ -40,6 +39,7 @@ public class CollapsibleView extends View<CollapsibleElement> {
 
     @Override
     protected Rectangle layoutSelf(final int x, final int y) {
+        addToDocument();
         return new Rectangle();
     }
 

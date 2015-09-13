@@ -97,10 +97,6 @@ public class Document {
 
     private void updateView(final int viewportX, final int viewportY) {
         invalidate();
-        // negate to represent the offset needed to apply to the view
-        // so that the elements will appear in their correct position
-        final int deltaX = -viewportX;
-        final int deltaY = -viewportY;
 
         latestView = display.getView();
         latestView.layout(viewportX, viewportY);

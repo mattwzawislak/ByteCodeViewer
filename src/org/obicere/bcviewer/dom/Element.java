@@ -101,6 +101,9 @@ public abstract class Element {
         if (element == null) {
             throw new NullPointerException("cannot add null element.");
         }
+        if(this == element){
+            throw new IllegalArgumentException("cannot add element to itself.");
+        }
         // we can't add root elements to any other elements
         if (element instanceof RootElement) {
             return false;
@@ -110,7 +113,7 @@ public abstract class Element {
             if (next == element) {
                 throw new IllegalArgumentException("cannot add parent to child element.");
             }
-            next = parent.getParent();
+            next = next.getParent();
         }
         final Element oldParent = element.getParent();
         if (oldParent != null) {

@@ -76,8 +76,6 @@ public abstract class View<E extends Element> {
     }
 
     public Rectangle layout(final int x, final int y) {
-        childViews.clear();
-
         this.size = layoutSelf(x, y);
 
         this.childrenSize = layoutChildren(size);
@@ -109,6 +107,9 @@ public abstract class View<E extends Element> {
     protected abstract Rectangle layoutSelf(final int x, final int y);
 
     protected Rectangle layoutChildren(final Rectangle parent) {
+        // be sure to clear the child views
+        childViews.clear();
+
         switch (element.getAxis()) {
             case Element.AXIS_LINE:
                 return layoutChildrenLine(parent);
