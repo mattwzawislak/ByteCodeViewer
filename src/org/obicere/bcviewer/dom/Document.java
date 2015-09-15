@@ -26,7 +26,7 @@ public class Document {
 
     private final Lock lock = new ReentrantLock();
 
-    private final Set<CollapsibleView> collapsibleViews = new HashSet<>();
+    private final Set<Marker> markers = new HashSet<>();
 
     public Document(final DocumentRenderer renderer) {
         this.renderer = renderer;
@@ -105,7 +105,12 @@ public class Document {
     }
 
     public void dispose() {
-        latestView = null;
+        invalidate();
+
+        markers.clear();
+
+        // TODO: add removal all method to elements
+        //root.removeAll();
     }
 
     public void invalidate() {
@@ -134,16 +139,5 @@ public class Document {
         } finally {
             lock.unlock();
         }
-    }
-
-    public void addCollapsibleRegion(final CollapsibleView view) {
-        if (view == null) {
-            return;
-        }
-        collapsibleViews.add(view);
-    }
-
-    public void removeCollapsibleRegion(final CollapsibleView view) {
-        collapsibleViews.remove(view);
     }
 }

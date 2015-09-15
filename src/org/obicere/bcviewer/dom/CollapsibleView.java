@@ -11,20 +11,6 @@ public class CollapsibleView extends View<CollapsibleElement> {
         super(element);
     }
 
-    void addToDocument() {
-        final Document document = element.getDocument();
-        if (document != null) {
-            document.addCollapsibleRegion(this);
-        }
-    }
-
-    void removeFromDocument() {
-        final Document document = element.getDocument();
-        if (document != null) {
-            document.removeCollapsibleRegion(this);
-        }
-    }
-
     @Override
     protected void paintSelf(final Graphics g, final Rectangle bounds) {
 
@@ -39,14 +25,13 @@ public class CollapsibleView extends View<CollapsibleElement> {
 
     @Override
     protected Rectangle layoutSelf(final int x, final int y) {
-        addToDocument();
-        return new Rectangle();
+        return new Rectangle(x, y, 0, 0);
     }
 
     @Override
     protected Rectangle layoutChildren(final Rectangle parent) {
         if (element.isCollapsed()) {
-            return new Rectangle();
+            return new Rectangle(parent.x, parent.y, 0, 0);
         } else {
             return super.layoutChildren(parent);
         }

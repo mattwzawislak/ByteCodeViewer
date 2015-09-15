@@ -11,6 +11,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DocumentBuilder {
 
+    private final ReentrantLock lock = new ReentrantLock();
+
     private final ColorResourcePool colorPool;
 
     private final FontResourcePool fontPool;
@@ -21,17 +23,18 @@ public class DocumentBuilder {
 
     private volatile int tabSize = 4;
 
-    private final ReentrantLock lock = new ReentrantLock();
-
     private volatile ClassFile classFile;
 
-    volatile ConstantPool constantPool;
+    private volatile ConstantPool constantPool;
+
+    private volatile Document document;
 
     public DocumentBuilder() {
         this.colorPool = new ColorResourcePool(this);
         this.fontPool = new FontResourcePool(this);
         this.attributesPool = new TextAttributesResourcePool();
 
+        // TODO: move to the settings value
         fontPool.setBaseFont("Courier new", 14);
 
         attributesPool.updateFonts(fontPool);
@@ -51,16 +54,23 @@ public class DocumentBuilder {
 
             this.classFile = classFile;
             this.constantPool = classFile.getConstantPool();
-            final Document document = new Document(renderer);
+            this.document = new Document(renderer);
 
             classFileModeler.model(this, document.getRoot());
 
             return document;
         } finally {
+
+            // clear the current-working objects
             this.constantPool = null;
             this.classFile = null;
+            this.document = null;
             lock.unlock();
         }
+    }
+
+    public boolean isBusy() {
+        return lock.isLocked();
     }
 
     void notifyFontChange() {
@@ -77,6 +87,10 @@ public class DocumentBuilder {
 
     public ClassFile getClassFile() {
         return classFile;
+    }
+
+    public Document getDocument() {
+        return document;
     }
 
     public TextAttributesResourcePool getAttributesPool() {

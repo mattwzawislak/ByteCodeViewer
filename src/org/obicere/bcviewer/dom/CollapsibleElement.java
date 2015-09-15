@@ -8,7 +8,7 @@ public class CollapsibleElement extends Element {
 
     private final CollapsibleView view = new CollapsibleView(this);
 
-    public CollapsibleElement(final String name) {
+    public CollapsibleElement(final String name, final DocumentBuilder builder) {
         super(name);
     }
 
@@ -35,16 +35,5 @@ public class CollapsibleElement extends Element {
     @Override
     protected void writeSelf(final DocumentContent content) {
 
-    }
-
-    @Override
-    protected void addedTo(final Element parent) {
-        view.addToDocument();
-    }
-
-    @Override
-    protected void removedFrom(final Element parent) {
-        super.removedFrom(parent);
-        view.removeFromDocument();
     }
 }
