@@ -5,8 +5,6 @@ import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 import org.obicere.bcviewer.dom.ui.swing.plaf.DocumentAreaUI;
 
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import java.awt.Insets;
 import java.awt.Rectangle;

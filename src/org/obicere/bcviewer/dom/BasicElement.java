@@ -9,6 +9,11 @@ public class BasicElement extends Element {
         super(name);
     }
 
+    public BasicElement(final String name, final int axis) {
+        super(name);
+        setAxis(axis);
+    }
+
     @Override
     public View<Element> getView() {
         return new BasicView(this);

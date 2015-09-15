@@ -4,5 +4,5 @@ import javax.swing.JComponent;
 
 /**
  */
-public class JDocumentCollapsibleElementControls extends JComponent {
+public class JDocumentControl extends JComponent {
 }

@@ -2,15 +2,12 @@ package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.BorderLayout;
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -22,27 +19,14 @@ public class _Test {
 
         final JFrame frame = new JFrame("Text view test");
 
-        final AtomicReference<Rectangle> hover = new AtomicReference<>();
-
-        final JDocumentArea area = new JDocumentArea() {
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                System.out.println(hover.get());
-                if (hover.get() != null) {
-                    final Rectangle get = hover.get();
-                    g.setColor(Color.RED);
-                    g.drawRect(get.x, get.y, get.width, get.height);
-                }
-            }
-        };
+        final JDocumentArea documentPane = new JDocumentArea();
 
         final DocumentBuilder builder = new DocumentBuilder();
-        final Document document = new Document(area);
+        final Document document = new Document(documentPane);
 
         final Element root = document.getRoot();
 
-        area.setDocument(document);
+        documentPane.setDocument(document);
 
         Element last = root;
         for (int i = 0; i < 30; i++) {
@@ -53,21 +37,7 @@ public class _Test {
             last = next;
         }
 
-        area.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(final MouseEvent e) {
-                final Element get = document.getElementAt(e.getX(), e.getY());
-
-                if (get == null) {
-                    hover.set(null);
-                } else {
-                    hover.set(get.getView().getBounds());
-                }
-                frame.repaint();
-            }
-        });
-
-        frame.add(new JScrollPane(area));
+        frame.add(documentPane);
 
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();
