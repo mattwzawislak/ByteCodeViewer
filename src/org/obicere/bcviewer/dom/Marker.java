@@ -14,8 +14,12 @@ public interface Marker {
 
     public void mouseEntered(final MouseEvent event);
 
+    public void mouseMoved(final MouseEvent event);
+
     public void mouseExited(final MouseEvent event);
 
-    public void mouseClicked(final MouseEvent event);
+    public void mousePressed(final MouseEvent event);
+
+    public void mouseReleased(final MouseEvent event);
 
 }

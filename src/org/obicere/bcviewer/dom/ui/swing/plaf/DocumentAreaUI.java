@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.dom.ui.swing.plaf;
 
 import org.obicere.bcviewer.dom.Document;
+import org.obicere.bcviewer.dom.Marker;
 import org.obicere.bcviewer.dom.View;
 import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
 
@@ -11,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.util.Set;
 
 /**
  */
@@ -27,6 +29,10 @@ public class DocumentAreaUI extends ComponentUI {
                 view.layout(insets.left, insets.top);
                 view.paint(g);
 
+                final Set<Marker> markers = document.getMarkers();
+                for (final Marker marker : markers) {
+                    marker.paint(g);
+                }
             }
         } else {
             throw new IllegalArgumentException("type of component must be " + getClass().getName());

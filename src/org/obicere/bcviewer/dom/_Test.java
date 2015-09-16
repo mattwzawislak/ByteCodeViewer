@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.dom.literals.ParameterDecimalElement;
 import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
 
 import javax.swing.JEditorPane;
@@ -28,13 +29,11 @@ public class _Test {
 
         documentPane.setDocument(document);
 
-        Element last = root;
-        for (int i = 0; i < 30; i++) {
-            final TextElement next = new TextElement("test" + i, "test" + i);
-            next.setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_STRING));
+        for (int i = 0; i < 10; i++) {
+            final CollapsibleElement subCollapse = new CollapsibleElement("test" + i, document);
+            subCollapse.add(new ParameterDecimalElement(String.valueOf(i), i, builder));
+            root.add(subCollapse);
 
-            last.add(next);
-            last = next;
         }
 
         frame.add(documentPane);

@@ -95,6 +95,17 @@ public class Document {
         return display;
     }
 
+    public void addMarker(final Marker marker) {
+        if (marker == null) {
+            throw new NullPointerException("marker must be non-null.");
+        }
+        markers.add(marker);
+    }
+
+    public Set<Marker> getMarkers() {
+        return markers;
+    }
+
     private void updateView(final int viewportX, final int viewportY) {
         invalidate();
 

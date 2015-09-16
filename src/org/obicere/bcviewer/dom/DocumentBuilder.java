@@ -170,4 +170,8 @@ public class DocumentBuilder {
             return (minimum - sizeSoFar) + (tabSize - remainder);
         }
     }
+
+    public void addMarker(final Marker marker) {
+        document.addMarker(marker);
+    }
 }

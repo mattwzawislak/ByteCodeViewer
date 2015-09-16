@@ -8,8 +8,9 @@ public class CollapsibleElement extends Element {
 
     private final CollapsibleView view = new CollapsibleView(this);
 
-    public CollapsibleElement(final String name, final DocumentBuilder builder) {
+    public CollapsibleElement(final String name, final Document builder) {
         super(name);
+        builder.addMarker(new CollapsibleMarker(this));
     }
 
     public void setCollapsed(final boolean collapsed) {
