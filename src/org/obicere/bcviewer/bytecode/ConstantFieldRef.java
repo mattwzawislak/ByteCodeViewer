@@ -31,7 +31,6 @@ public class ConstantFieldRef extends Constant {
 
     @Override
     public String toString(final ConstantPool constantPool) {
-        // Double redirection to toString representation of name and type
         return constantPool.getAsString(classIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 
