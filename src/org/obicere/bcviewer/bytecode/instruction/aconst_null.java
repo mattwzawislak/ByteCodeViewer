@@ -8,7 +8,7 @@ import org.obicere.bcviewer.dom.bytecode.InstructionElement;
 /**
  * @author Obicere
  */
-public class aconst_null extends Instruction implements Modeler<aconst_null> {
+public class aconst_null extends Instruction implements Modeler {
 
     private static final String MNEMONIC = "aconst_null";
     private static final int    OPCODE   = 0x01;

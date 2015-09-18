@@ -10,7 +10,7 @@ import org.obicere.bcviewer.dom.literals.ParameterStringElement;
 /**
  * @author Obicere
  */
-public class new_ extends Instruction implements Modeler<new_> {
+public class new_ extends Instruction implements Modeler {
 
     private static final String MNEMONIC = "new";
     private static final int    OPCODE   = 0xbb;
@@ -40,7 +40,7 @@ public class new_ extends Instruction implements Modeler<new_> {
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder(MNEMONIC);
         builder.append(' ');
-        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(constantPool.getAsString(getIndex()));
         return builder.toString();
     }
 

@@ -1,11 +1,16 @@
 package org.obicere.bcviewer.dom.ui.swing;
 
+import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.dom.Document;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.FontResourcePool;
+import org.obicere.bcviewer.dom.Modeler;
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 import org.obicere.bcviewer.dom.ui.swing.plaf.DocumentAreaUI;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Rectangle;
 
@@ -16,6 +21,10 @@ public class JDocumentArea extends JComponent implements DocumentRenderer {
     private static final String uiClassID = "DocumentAreaUI";
 
     private Document document;
+
+    private boolean markerPaneVisible = true;
+
+    private final DocumentBuilder builder = new DocumentBuilder();
 
     static {
         UIManager.getDefaults().put(uiClassID, DocumentAreaUI.class.getName());
@@ -28,6 +37,43 @@ public class JDocumentArea extends JComponent implements DocumentRenderer {
     public JDocumentArea(final Document document) {
         this.document = document;
         updateUI();
+    }
+
+    public boolean isMarkerPaneVisible() {
+        return markerPaneVisible;
+    }
+
+    public void setMarkerPaneVisible(final boolean visible) {
+        this.markerPaneVisible = visible;
+    }
+
+    @Override
+    public Font getFont() {
+        return builder.getFontPool().get(FontResourcePool.FONT_BASELINE_PLAIN);
+    }
+
+    @Override
+    public void setFont(final Font font) {
+        setFont(font.getName(), font.getSize());
+    }
+
+    public void setFont(final String name, final int size) {
+        builder.getFontPool().setBaseFont(name, size);
+    }
+
+    public int getTabSize() {
+        return builder.getTabSize();
+    }
+
+    public void setTabSize(final int tabSize) {
+        builder.setTabSize(tabSize);
+    }
+
+    public Document setContent(final ClassFile classFile, final Modeler classFileModeler) {
+        final Document document = builder.build(this, classFile, classFileModeler);
+        setDocument(document);
+
+        return document;
     }
 
     public Document getDocument() {

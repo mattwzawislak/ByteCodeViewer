@@ -27,6 +27,7 @@ public abstract class Instruction extends BytecodeElement {
         return opcode;
     }
 
+    @Override
     public String getIdentifier() {
         return getClass().getCanonicalName() + getStart();
     }

@@ -38,7 +38,7 @@ public class invokedynamic extends Instruction {
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder(MNEMONIC);
         builder.append(' ');
-        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(constantPool.getAsString(getIndex()));
         builder.append(" 0 0"); // always 0
         return builder.toString();
     }

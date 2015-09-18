@@ -35,7 +35,7 @@ public class invokevirtual extends Instruction {
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder(MNEMONIC);
         builder.append(' ');
-        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(constantPool.getAsString(getIndex()));
         return builder.toString();
     }
 }

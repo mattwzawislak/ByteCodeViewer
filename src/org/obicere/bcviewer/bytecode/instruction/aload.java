@@ -4,12 +4,12 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.Modeler;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.ParameterDecimalElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
 
 /**
  * @author Obicere
  */
-public class aload extends Instruction implements Modeler<aload> {
+public class aload extends Instruction implements Modeler {
 
     private static final String MNEMONIC = "aload";
     private static final int    OPCODE   = 0x19;
@@ -28,7 +28,7 @@ public class aload extends Instruction implements Modeler<aload> {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterDecimalElement("index", index, builder));
+        parent.add(new ParameterIntegerElement("index", index, builder));
     }
 
 }

@@ -47,7 +47,7 @@ public class invokeinterface extends Instruction {
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder(MNEMONIC);
         builder.append(' ');
-        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(constantPool.getAsString(getIndex()));
         builder.append(' ');
         builder.append(count);
         builder.append(" 0"); // always a 0

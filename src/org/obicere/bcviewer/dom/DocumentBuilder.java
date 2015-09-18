@@ -41,7 +41,7 @@ public class DocumentBuilder {
         attributesPool.updateColors(colorPool);
     }
 
-    public Document build(final DocumentRenderer renderer, final ClassFile classFile, final Modeler<ClassFile> classFileModeler) {
+    public Document build(final DocumentRenderer renderer, final ClassFile classFile, final Modeler classFileModeler) {
         if (renderer == null) {
             throw new NullPointerException("cannot render document to null renderer");
         }

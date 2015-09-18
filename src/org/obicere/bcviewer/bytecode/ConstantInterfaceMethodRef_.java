@@ -3,27 +3,26 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
 import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
  * @author Obicere
  */
-public class ConstantInvokeDynamic extends Constant {
+public class ConstantInterfaceMethodRef_ extends Constant {
 
-    private final int bootstrapMethodAttrIndex;
+    private final int classIndex;
 
     private final int nameAndTypeIndex;
 
-    public ConstantInvokeDynamic(final int bootstrapMethodAttrIndex, final int nameAndTypeIndex) {
-        super(ConstantReader.CONSTANT_INVOKE_DYNAMIC);
-        this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
+    public ConstantInterfaceMethodRef_(final int classIndex, final int nameAndTypeIndex) {
+        super(ConstantReader.CONSTANT_INTERFACE_METHOD_REF);
+        this.classIndex = classIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
 
-    public int getBootstrapMethodAttrIndex() {
-        return bootstrapMethodAttrIndex;
+    public int getClassIndex() {
+        return classIndex;
     }
 
     public int getNameAndTypeIndex() {
@@ -32,7 +31,7 @@ public class ConstantInvokeDynamic extends Constant {
 
     @Override
     public String toString(final ConstantPool constantPool) {
-        return bootstrapMethodAttrIndex + ";" + constantPool.getAsString(nameAndTypeIndex);
+        return constantPool.getAsString(classIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class ConstantInvokeDynamic extends Constant {
         final ConstantPool constantPool = builder.getConstantPool();
 
         parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterIntegerElement("bootstrapMethodAttrIndex", bootstrapMethodAttrIndex, builder));
+        parent.add(new ParameterUtf8Element("class", constantPool.getAsString(classIndex), builder));
         parent.add(new ParameterUtf8Element("nameAndType", constantPool.getAsString(nameAndTypeIndex), builder));
     }
 }

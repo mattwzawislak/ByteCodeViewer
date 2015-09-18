@@ -14,6 +14,6 @@ public class ParameterStringElement extends StringElement {
         // ensure at least 1 whitespace up the a full tab to the left
         setLeftPad(builder.getTabbedPaddingSize(getText().length(), builder.getTabSize()));
 
-        setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_NUMBER));
+        setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_STRING));
     }
 }

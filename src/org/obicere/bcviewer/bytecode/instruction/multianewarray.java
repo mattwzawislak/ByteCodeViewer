@@ -5,12 +5,12 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.Modeler;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.ParameterDecimalElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
 
 /**
  * @author Obicere
  */
-public class multianewarray extends Instruction implements Modeler<multianewarray> {
+public class multianewarray extends Instruction implements Modeler {
 
     private static final String MNEMONIC = "multianewarray";
     private static final int    OPCODE   = 0xc5;
@@ -46,7 +46,7 @@ public class multianewarray extends Instruction implements Modeler<multianewarra
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder(MNEMONIC);
         builder.append(' ');
-        builder.append(constantPool.getAsCodeString(getIndex()));
+        builder.append(constantPool.getAsString(getIndex()));
         builder.append(' ');
         builder.append(dimensions);
         return builder.toString();
@@ -55,8 +55,8 @@ public class multianewarray extends Instruction implements Modeler<multianewarra
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterDecimalElement("indexbyte1", indexbyte1, builder));
-        parent.add(new ParameterDecimalElement("indexbyte2", indexbyte2, builder));
-        parent.add(new ParameterDecimalElement("dimensions", dimensions, builder));
+        parent.add(new ParameterIntegerElement("indexbyte1", indexbyte1, builder));
+        parent.add(new ParameterIntegerElement("indexbyte2", indexbyte2, builder));
+        parent.add(new ParameterIntegerElement("dimensions", dimensions, builder));
     }
 }

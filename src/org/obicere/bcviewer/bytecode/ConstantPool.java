@@ -22,24 +22,7 @@ public class ConstantPool {
         if (constant == null) {
             return "<null entry>";
         }
-        return String.valueOf(constant.toString(this));
-    }
-
-    public String getAsCodeString(final int index) {
-        final Constant constant = get(index);
-        if (constant == null) {
-            return "<null entry>";
-        }
-        final int tag = constant.getTag();
-        switch (tag) {
-            case ConstantReader.CONSTANT_DOUBLE:
-            case ConstantReader.CONSTANT_FLOAT:
-            case ConstantReader.CONSTANT_INTEGER:
-            case ConstantReader.CONSTANT_LONG:
-                return String.valueOf(constant.toString(this));
-            default:
-                return '"' + String.valueOf(constant.toString(this)) + '"';
-        }
+        return constant.toString(this);
     }
 
     public Constant[] getConstants() {

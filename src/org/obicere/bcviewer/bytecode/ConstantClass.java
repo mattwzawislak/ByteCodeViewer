@@ -1,5 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.ConstantElement;
+import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -9,12 +13,12 @@ public class ConstantClass extends Constant {
 
     private final int nameIndex;
 
-    public ConstantClass(final int nameIndex){
+    public ConstantClass(final int nameIndex) {
         super(ConstantReader.CONSTANT_CLASS);
         this.nameIndex = nameIndex;
     }
 
-    public int getNameIndex(){
+    public int getNameIndex() {
         return nameIndex;
     }
 
@@ -22,5 +26,11 @@ public class ConstantClass extends Constant {
     public String toString(final ConstantPool constantPool) {
         // nameIndex points to a ConstantUtf8
         return constantPool.getAsString(nameIndex);
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new ConstantElement(this, builder));
+        parent.add(new ParameterUtf8Element("name", builder.getConstantPool().getAsString(nameIndex), builder));
     }
 }

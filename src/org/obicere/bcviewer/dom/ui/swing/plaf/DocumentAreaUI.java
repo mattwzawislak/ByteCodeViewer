@@ -18,6 +18,8 @@ import java.util.Set;
  */
 public class DocumentAreaUI extends ComponentUI {
 
+    private static final int MARKER_PANE_WIDTH = 10;
+
     @Override
     public void paint(final Graphics g, final JComponent component) {
         if (component instanceof JDocumentArea) {
@@ -25,13 +27,17 @@ public class DocumentAreaUI extends ComponentUI {
             final Insets insets = area.getInsets();
             final Document document = area.getDocument();
             if (document != null) {
+                final boolean drawMarkers = area.isMarkerPaneVisible();
+
                 final View<?> view = document.getView();
-                view.layout(insets.left, insets.top);
+                view.layout((drawMarkers ? MARKER_PANE_WIDTH : 0) + insets.left, insets.top);
                 view.paint(g);
 
-                final Set<Marker> markers = document.getMarkers();
-                for (final Marker marker : markers) {
-                    marker.paint(g);
+                if (drawMarkers) {
+                    final Set<Marker> markers = document.getMarkers();
+                    for (final Marker marker : markers) {
+                        marker.paint(g);
+                    }
                 }
             }
         } else {
@@ -49,6 +55,7 @@ public class DocumentAreaUI extends ComponentUI {
                 return null;
             }
             final Dimension dimensions = document.getPreferredSize();
+            dimensions.width += area.isMarkerPaneVisible() ? MARKER_PANE_WIDTH : 0;
             dimensions.width -= insets.left + insets.right;
             dimensions.height -= insets.top + insets.bottom;
             return dimensions;

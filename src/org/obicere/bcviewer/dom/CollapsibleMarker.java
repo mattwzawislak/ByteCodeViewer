@@ -15,9 +15,9 @@ public class CollapsibleMarker implements Marker {
 
     private static final Color TRIGGER_COLOR = new Color(0x707070);
 
-    private static final int COLLAPSIBLE_MARKER_WIDTH = 10; // TODO
+    private static final int COLLAPSIBLE_MARKER_WIDTH = 9; // TODO
 
-    private static final int MINIMIZER_HEIGHT = 10;
+    private static final int MINIMIZER_HEIGHT = 9;
 
     private final CollapsibleElement element;
 

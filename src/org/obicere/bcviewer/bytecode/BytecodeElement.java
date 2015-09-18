@@ -1,9 +1,11 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.Modeler;
+
 /**
  * @author Obicere
  */
-public abstract class BytecodeElement {
+public abstract class BytecodeElement implements Modeler {
 
     private int start;
     private int end;
@@ -27,6 +29,8 @@ public abstract class BytecodeElement {
     public final int getLength() {
         return end - start;
     }
+
+    public abstract String getIdentifier();
 
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder();

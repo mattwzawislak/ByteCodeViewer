@@ -8,7 +8,7 @@ import org.obicere.bcviewer.dom.bytecode.InstructionElement;
 /**
  * @author Obicere
  */
-public class aastore extends Instruction implements Modeler<aastore> {
+public class aastore extends Instruction implements Modeler {
 
     private static final String MNEMONIC = "aastore";
     private static final int    OPCODE   = 0x53;
