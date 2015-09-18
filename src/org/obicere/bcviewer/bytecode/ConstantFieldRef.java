@@ -9,14 +9,14 @@ import org.obicere.bcviewer.reader.ConstantReader;
 /**
  * @author Obicere
  */
-public class ConstantMethodRef_ extends Constant {
+public class ConstantFieldRef extends Constant {
 
     private final int classIndex;
 
     private final int nameAndTypeIndex;
 
-    public ConstantMethodRef_(final int classIndex, final int nameAndTypeIndex) {
-        super(ConstantReader.CONSTANT_METHOD_REF);
+    public ConstantFieldRef(final int classIndex, final int nameAndTypeIndex) {
+        super(ConstantReader.CONSTANT_FIELD_REF);
         this.classIndex = classIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
@@ -32,7 +32,7 @@ public class ConstantMethodRef_ extends Constant {
     @Override
     public String toString(final ConstantPool constantPool) {
         // Double redirection to toString representation of name and type
-        return constantPool.getAsString(nameAndTypeIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
+        return constantPool.getAsString(classIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 
     @Override
