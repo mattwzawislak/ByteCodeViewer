@@ -98,9 +98,13 @@ public class TextView extends View<TextElement> {
         final Rectangle clone = new Rectangle(parent);
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
         final String fullLeftPad = CACHE.getPadding(element.getCumulativeLeftPad());
-        clone.x += getFixedFont().getStringBounds(fullLeftPad, fontRenderContext).getWidth();
 
-        return super.layoutChildren(clone);
+        final int padOffset = (int) getFixedFont().getStringBounds(fullLeftPad, fontRenderContext).getWidth();
+        clone.x += padOffset;
+
+        final Rectangle bounds = super.layoutChildren(clone);
+        bounds.width += padOffset;
+        return bounds;
     }
 
     private Font getFixedFont() {
