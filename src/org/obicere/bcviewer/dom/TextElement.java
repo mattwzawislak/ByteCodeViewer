@@ -10,7 +10,7 @@ public class TextElement extends Element {
     private int leftPad  = 0;
     private int rightPad = 0;
 
-    private TextAttributes attributes = new TextAttributes();
+    private Attributes attributes = new Attributes();
 
     private final TextView view = new TextView(this);
 
@@ -24,7 +24,7 @@ public class TextElement extends Element {
         setText(text);
     }
 
-    public void setAttributes(final TextAttributes attributes) {
+    public void setAttributes(final Attributes attributes) {
         this.attributes = attributes;
     }
 
@@ -91,7 +91,7 @@ public class TextElement extends Element {
         return rightPad;
     }
 
-    public TextAttributes getAttributes() {
+    public Attributes getAttributes() {
         return attributes;
     }
 

@@ -30,7 +30,7 @@ public class TextView extends View<TextElement> {
     public void paintSelf(final Graphics g, final Rectangle bounds) {
         final String text = element.getDisplayText();
         final String trim = text.trim();
-        final TextAttributes attributes = element.getAttributes();
+        final Attributes attributes = element.getAttributes();
 
         final Script script = attributes.getScript();
         final Font fixedFont = getFixedFont();

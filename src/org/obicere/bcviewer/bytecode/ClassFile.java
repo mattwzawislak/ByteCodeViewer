@@ -3,6 +3,8 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 
 /**
  * @author Obicere
@@ -90,6 +92,19 @@ public class ClassFile extends BytecodeElement {
     public void model(final DocumentBuilder builder, final Element parent) {
         final Element classElement = new BasicElement("class", Element.AXIS_PAGE);
         constantPool.model(builder, classElement);
+        modelVersion(builder, classElement);
+
         parent.add(classElement);
+    }
+
+    private void modelVersion(final DocumentBuilder builder, final Element parent) {
+
+        final Element version = new BasicElement("version", Element.AXIS_LINE);
+        version.add(new ParameterPlainElement("major", "Major: ", builder));
+        version.add(new ParameterIntegerElement("majorVersion", majorVersion, builder));
+        version.add(new ParameterPlainElement("minor", "Minor: ", builder));
+        version.add(new ParameterIntegerElement("minorVersion", minorVersion, builder));
+
+        parent.add(version);
     }
 }

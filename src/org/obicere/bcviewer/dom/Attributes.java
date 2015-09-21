@@ -6,7 +6,7 @@ import java.awt.Font;
 /**
  * @author Obicere
  */
-public class TextAttributes {
+public class Attributes {
 
     private boolean underline;
 
@@ -18,15 +18,15 @@ public class TextAttributes {
 
     private Font font;
 
-    public TextAttributes() {
+    public Attributes() {
 
     }
 
-    public TextAttributes(final TextAttributes attributes) {
+    public Attributes(final Attributes attributes) {
         setAttributes(attributes);
     }
 
-    public void setAttributes(final TextAttributes attributes) {
+    public void setAttributes(final Attributes attributes) {
         this.underline = attributes.underline;
         this.strikeThrough = attributes.strikeThrough;
         this.script = attributes.script;

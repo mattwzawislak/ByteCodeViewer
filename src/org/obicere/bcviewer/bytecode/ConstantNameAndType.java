@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -40,7 +40,7 @@ public class ConstantNameAndType extends Constant {
         final ConstantPool constantPool = builder.getConstantPool();
 
         parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterUtf8Element("name", constantPool.getAsString(nameIndex), builder));
-        parent.add(new ParameterUtf8Element("descriptor", constantPool.getAsString(descriptorIndex), builder));
+        parent.add(new ParameterPlainElement("name", constantPool.getAsString(nameIndex), builder));
+        parent.add(new ParameterPlainElement("descriptor", constantPool.getAsString(descriptorIndex), builder));
     }
 }

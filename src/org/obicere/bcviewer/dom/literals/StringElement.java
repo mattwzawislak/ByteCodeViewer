@@ -1,16 +1,17 @@
-package org.obicere.bcviewer.dom;
+package org.obicere.bcviewer.dom.literals;
 
-import java.awt.Font;
+import org.obicere.bcviewer.dom.AttributesResourcePool;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.TextElement;
 
 /**
  */
 public class StringElement extends TextElement {
-    public StringElement(final String name) {
-        this(name, null);
-    }
 
-    public StringElement(final String name, final String text) {
+    public StringElement(final String name, final String text, final DocumentBuilder builder) {
         super(name, text);
+
+        setAttributes(builder.getAttributesPool().get(AttributesResourcePool.ATTRIBUTES_STRING));
     }
 
     @Override

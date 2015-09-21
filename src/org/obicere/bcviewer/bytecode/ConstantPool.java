@@ -1,13 +1,12 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.AttributesResourcePool;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.CollapsibleElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.TextAttributesResourcePool;
 import org.obicere.bcviewer.dom.TextElement;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 
 /**
  * @author Obicere
@@ -44,7 +43,7 @@ public class ConstantPool extends BytecodeElement {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         final TextElement element = new TextElement("constantPool", "Constant Pool:");
-        element.setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_UTF8));
+        element.setAttributes(builder.getAttributesPool().get(AttributesResourcePool.ATTRIBUTES_PLAIN));
 
         final CollapsibleElement collapse = new CollapsibleElement("collapse", builder);
         collapse.setAxis(Element.AXIS_PAGE);
@@ -56,7 +55,7 @@ public class ConstantPool extends BytecodeElement {
             final Constant constant = constants[i];
             if (constant == null) {
                 // maybe move this to a ConstantNull class with a modeler there?
-                constantElement.add(new ParameterUtf8Element("constant", "null constant", builder));
+                constantElement.add(new ParameterPlainElement("constant", "null constant", builder));
             } else {
                 constant.model(builder, constantElement);
             }

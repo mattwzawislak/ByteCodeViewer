@@ -2,12 +2,12 @@ package org.obicere.bcviewer.dom;
 
 /**
  */
-public class ResourceTextAttributes extends TextAttributes {
+public class ResourceAttributes extends Attributes {
 
     private final String fontName;
     private final String colorName;
 
-    public ResourceTextAttributes(final String fontName, final String colorName) {
+    public ResourceAttributes(final String fontName, final String colorName) {
         this.fontName = fontName;
         this.colorName = colorName;
     }

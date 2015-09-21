@@ -17,7 +17,7 @@ public class DocumentBuilder {
 
     private final FontResourcePool fontPool;
 
-    private final TextAttributesResourcePool attributesPool;
+    private final AttributesResourcePool attributesPool;
 
     private final PaddingCache padding = PaddingCache.getPaddingCache();
 
@@ -32,7 +32,7 @@ public class DocumentBuilder {
     public DocumentBuilder() {
         this.colorPool = new ColorResourcePool(this);
         this.fontPool = new FontResourcePool(this);
-        this.attributesPool = new TextAttributesResourcePool();
+        this.attributesPool = new AttributesResourcePool();
 
         // TODO: move to the settings value
         fontPool.setBaseFont("Courier new", 14);
@@ -93,7 +93,7 @@ public class DocumentBuilder {
         return document;
     }
 
-    public TextAttributesResourcePool getAttributesPool() {
+    public AttributesResourcePool getAttributesPool() {
         return attributesPool;
     }
 

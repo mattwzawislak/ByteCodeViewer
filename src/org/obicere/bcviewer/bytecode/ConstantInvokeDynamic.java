@@ -4,7 +4,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.ConstantElement;
 import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -41,6 +41,6 @@ public class ConstantInvokeDynamic extends Constant {
 
         parent.add(new ConstantElement(this, builder));
         parent.add(new ParameterIntegerElement("bootstrapMethodAttrIndex", bootstrapMethodAttrIndex, builder));
-        parent.add(new ParameterUtf8Element("nameAndType", constantPool.getAsString(nameAndTypeIndex), builder));
+        parent.add(new ParameterPlainElement("nameAndType", constantPool.getAsString(nameAndTypeIndex), builder));
     }
 }

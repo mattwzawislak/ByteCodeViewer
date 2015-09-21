@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -50,7 +50,7 @@ public class ConstantMethodHandle extends Constant {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterUtf8Element("referenceKind", HANDLES[referenceKind], builder));
-        parent.add(new ParameterUtf8Element("reference", builder.getConstantPool().getAsString(referenceIndex), builder));
+        parent.add(new ParameterPlainElement("referenceKind", HANDLES[referenceKind], builder));
+        parent.add(new ParameterPlainElement("reference", builder.getConstantPool().getAsString(referenceIndex), builder));
     }
 }

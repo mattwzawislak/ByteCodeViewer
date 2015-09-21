@@ -1,8 +1,8 @@
 package org.obicere.bcviewer.dom.bytecode;
 
 import org.obicere.bcviewer.bytecode.Constant;
+import org.obicere.bcviewer.dom.AttributesResourcePool;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.TextAttributesResourcePool;
 import org.obicere.bcviewer.dom.TextElement;
 import org.obicere.bcviewer.reader.ConstantReader;
 
@@ -46,7 +46,7 @@ public class ConstantElement extends TextElement {
         setText(getName(constant.getTag()));
         setLeftPad(builder.getTabSize());
         setRightPad(builder.getTabbedPaddingSize(getText().length(), MAX_NAME_LENGTH));
-        setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_CONSTANT));
+        setAttributes(builder.getAttributesPool().get(AttributesResourcePool.ATTRIBUTES_KEYWORD));
     }
 
     private String getName(final int tag) {
