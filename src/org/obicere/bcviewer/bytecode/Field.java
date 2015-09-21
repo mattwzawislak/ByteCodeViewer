@@ -2,7 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.EmptyTextElement;
 import org.obicere.bcviewer.dom.TextElement;
 import org.obicere.bcviewer.dom.literals.KeywordElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
@@ -45,6 +44,13 @@ public class Field extends BytecodeElement {
     public Attribute[] getAttributes() {
         return attributes;
     }
+
+    // TODO: ConstantValue
+    // TODO: Synthetic
+    // TODO: Signature
+    // TODO: Deprecated
+    // TODO: RuntimeVisibleAnnotations
+    // TODO: RuntimeInvisibleAnnotations
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {

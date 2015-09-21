@@ -90,6 +90,11 @@ public class ClassInformation {
 
     private ClassFile loadFully(final boolean needsInnerClass, final File file) throws IOException, InnerOuterClassException {
         // read all the bytes fully and generate a class file from them
+        if (!file.exists()) {
+            // generally this happens when the inner class was generated
+            // by the compiler but doesn't actually exist.
+            throw new InnerOuterClassException();
+        }
         final byte[] bytes = IOUtils.readData(file);
         final IndexedDataInputStream input = new IndexedDataInputStream(bytes);
         final ClassFile classFile = classReader.read(input);
@@ -131,13 +136,20 @@ public class ClassInformation {
                     final String innerClassFileName = innerClassFilePrefix + innerName + ".class";
 
                     // load the class fully, also loading any inner classes
-                    final ClassFile innerClassFile = loadFully(true, new File(innerClassFileName));
+                    // this will also cover compiler-added inner classes
+                    // that don't exist in the FS
+                    try {
+                        final ClassFile innerClassFile = loadFully(true, new File(innerClassFileName));
 
-                    // this register is generally safe, since hasInnerClass
-                    // will become true and the condition to break out of
-                    // the system in the case an inner-outer error happens
-                    // will therefore always be false
-                    register(innerClassFile, pool.getAsString(innerClass.getInnerClassInfoIndex()));
+                        // this register is generally safe, since hasInnerClass
+                        // will become true and the condition to break out of
+                        // the system in the case an inner-outer error happens
+                        // will therefore always be false
+                        register(innerClassFile, pool.getAsString(innerClass.getInnerClassInfoIndex()));
+                    } catch (final InnerOuterClassException e) {
+                        register(classFile, name);
+                        return classFile;
+                    }
                 }
             }
         }

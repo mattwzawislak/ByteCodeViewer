@@ -50,7 +50,7 @@ public class Boot {
             try {
                 final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
 
-                for(final File file : main.listFiles(e -> e.getName().endsWith(".class"))) {
+                for (final File file : main.listFiles(e -> e.getName().endsWith(".class"))) {
                     final ClassInformation classInformation = new ClassInformation();
 
                     classInformation.loadFile(file);
@@ -62,6 +62,7 @@ public class Boot {
                     for (final ClassFile cls : classInformation.getLoadedClasses()) {
                         System.out.println(cls.getName());
                         final ConstantPool pool = cls.getConstantPool();
+                        /*
                         System.out.print("Major: ");
                         System.out.println(cls.getMajorVersion());
                         System.out.print("Minor: ");
@@ -87,17 +88,23 @@ public class Boot {
                             System.out.println(attribute.toString(pool));
                         }
                         System.out.println();
+                        */
                         for (final Field field : cls.getFields()) {
                             System.out.print("Field ");
                             System.out.print(pool.getAsString(field.getNameIndex()));
                             System.out.print("; ");
                             System.out.println(pool.getAsString(field.getDescriptorIndex()));
+                            for (final Attribute attribute : field.getAttributes()) {
+                                System.out.println(attribute.toString(pool));
+                            }
                         }
                         System.out.println();
+                        /*
                         for (final Method method : cls.getMethods()) {
                             System.out.println(method.toString(pool));
                         }
                         System.out.println();
+                        */
                     }
                 }
             } catch (final Exception e) {
