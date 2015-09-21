@@ -20,8 +20,11 @@ public class TextElement extends Element {
 
     public TextElement(final String name, final String text) {
         super(name);
-        // delegate to setter to handle null-case
-        setText(text);
+        if (text == null) {
+            this.text = "";
+        } else {
+            this.text = text;
+        }
     }
 
     public void setAttributes(final Attributes attributes) {
@@ -30,7 +33,7 @@ public class TextElement extends Element {
 
     public String getDisplayText() {
         final PaddingCache cache = PaddingCache.getPaddingCache();
-        return cache.getPadding(getCumulativeLeftPad()) + getText() + cache.getPadding(getCumulativeRightPad());
+        return cache.getPadding(getLeftPad()) + getText() + cache.getPadding(getRightPad());
     }
 
     public String getText() {

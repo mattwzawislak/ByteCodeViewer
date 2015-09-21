@@ -13,6 +13,8 @@ import java.awt.geom.Rectangle2D;
  */
 public class TextView extends View<TextElement> {
 
+    private static final PaddingCache CACHE = PaddingCache.getPaddingCache();
+
     private Rectangle textBounds;
 
     public TextView(final TextElement element) {
@@ -71,9 +73,8 @@ public class TextView extends View<TextElement> {
         final Font fixedFont = getFixedFont();
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
 
-        final PaddingCache cache = new PaddingCache();
-        final String leftPad = cache.getPadding(element.getCumulativeLeftPad());
-        final String rightPad = cache.getPadding(element.getCumulativeRightPad());
+        final String leftPad = CACHE.getPadding(element.getLeftPad());
+        final String rightPad = CACHE.getPadding(element.getRightPad());
         final String text = element.getText();
 
         final Rectangle leftPadBounds = fixedFont.getStringBounds(leftPad, fontRenderContext).getBounds();
@@ -90,6 +91,16 @@ public class TextView extends View<TextElement> {
         this.textBounds = new Rectangle(x + leftPadBounds.width, y, textBounds.width, height);
 
         return new Rectangle(x, y, leftPadBounds.width + textBounds.width + rightPadBounds.width, height);
+    }
+
+    @Override
+    protected Rectangle layoutChildren(final Rectangle parent) {
+        final Rectangle clone = new Rectangle(parent);
+        final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
+        final String fullLeftPad = CACHE.getPadding(element.getCumulativeLeftPad());
+        clone.x += getFixedFont().getStringBounds(fullLeftPad, fontRenderContext).getWidth();
+
+        return super.layoutChildren(clone);
     }
 
     private Font getFixedFont() {

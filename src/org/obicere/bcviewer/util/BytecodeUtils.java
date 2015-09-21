@@ -203,7 +203,7 @@ public class BytecodeUtils {
         return list.toArray(new String[list.size()]);
     }
 
-    public static String[] getFieldAccessNames(final int access){
+    public static String[] getFieldAccessNames(final int access) {
         final int length = FIELD_ORDERED_ACCESS_FLAGS.length; // same length as names
         final List<String> list = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
@@ -212,6 +212,10 @@ public class BytecodeUtils {
             }
         }
         return list.toArray(new String[list.size()]);
+    }
+
+    public static String getQualifiedName(final String className) {
+        return className.replace('/', '.');
     }
 
     public static boolean isPublic(final int access) {

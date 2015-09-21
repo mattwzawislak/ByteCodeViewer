@@ -4,6 +4,7 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
+import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -28,6 +29,8 @@ public class DocumentBuilder {
     private volatile ConstantPool constantPool;
 
     private volatile Document document;
+
+    private final HashMap<String, Object> properties = new HashMap<>();
 
     public DocumentBuilder() {
         this.colorPool = new ColorResourcePool(this);
@@ -65,6 +68,8 @@ public class DocumentBuilder {
             this.constantPool = null;
             this.classFile = null;
             this.document = null;
+
+            properties.clear();
             lock.unlock();
         }
     }
@@ -167,5 +172,13 @@ public class DocumentBuilder {
 
     public void addMarker(final Marker marker) {
         document.addMarker(marker);
+    }
+
+    public void setProperty(final String key, final Object value) {
+        properties.put(key, value);
+    }
+
+    public Object getProperty(final String key) {
+        return properties.get(key);
     }
 }

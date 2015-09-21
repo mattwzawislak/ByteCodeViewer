@@ -1,9 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.TextElement;
+import org.obicere.bcviewer.dom.literals.KeywordElement;
+import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.util.BytecodeUtils;
+
 /**
  * @author Obicere
  */
-public class Field {
+public class Field extends BytecodeElement {
 
     private final int accessFlags;
 
@@ -36,4 +43,25 @@ public class Field {
         return attributes;
     }
 
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final ConstantPool constantPool = builder.getConstantPool();
+
+        final String[] names = BytecodeUtils.getFieldAccessNames(accessFlags);
+
+        for (final String name : names) {
+            final TextElement next = new KeywordElement(name, name, builder);
+            next.setRightPad(1);
+            parent.add(next);
+        }
+
+        modelType(builder, parent, constantPool);
+
+        final TextElement element = new PlainElement("name", constantPool.getAsString(nameIndex) + ";", builder);
+        parent.add(element);
+    }
+
+    private void modelType(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
+
+    }
 }
