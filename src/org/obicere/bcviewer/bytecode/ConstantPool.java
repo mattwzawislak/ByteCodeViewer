@@ -1,11 +1,18 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.reader.ConstantReader;
+import org.obicere.bcviewer.dom.BasicElement;
+import org.obicere.bcviewer.dom.CollapsibleElement;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.TextAttributesResourcePool;
+import org.obicere.bcviewer.dom.TextElement;
+import org.obicere.bcviewer.dom.bytecode.ConstantElement;
+import org.obicere.bcviewer.dom.literals.ParameterUtf8Element;
 
 /**
  * @author Obicere
  */
-public class ConstantPool {
+public class ConstantPool extends BytecodeElement {
 
     private final Constant[] constants;
 
@@ -27,5 +34,36 @@ public class ConstantPool {
 
     public Constant[] getConstants() {
         return constants;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "constantPool";
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final TextElement element = new TextElement("constantPool", "Constant Pool:");
+        element.setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_UTF8));
+
+        final CollapsibleElement collapse = new CollapsibleElement("collapse", builder);
+        collapse.setAxis(Element.AXIS_PAGE);
+        // start at i=1 to avoid the always-null and never used constant
+        for (int i = 1; i < constants.length; i++) {
+            final Element constantElement = new BasicElement("constant" + i);
+            constantElement.setAxis(Element.AXIS_LINE);
+
+            final Constant constant = constants[i];
+            if (constant == null) {
+                // maybe move this to a ConstantNull class with a modeler there?
+                constantElement.add(new ParameterUtf8Element("constant", "null constant", builder));
+            } else {
+                constant.model(builder, constantElement);
+            }
+
+            collapse.add(constantElement);
+        }
+        element.add(collapse);
+        parent.add(element);
     }
 }

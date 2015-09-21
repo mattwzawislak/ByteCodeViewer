@@ -27,7 +27,7 @@ public abstract class View<E extends Element> {
         this.childViews = new ArrayList<>(element.getChildrenCount());
     }
 
-    protected boolean isArranged() {
+    public boolean isArranged() {
         return isArranged;
     }
 

@@ -111,6 +111,6 @@ public class TextElement extends Element {
 
     @Override
     public void writeSelf(final DocumentContent content) {
-        content.write(getDisplayText());
+        content.write(getText());
     }
 }

@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.Modeler;
 
 /**
@@ -30,7 +32,15 @@ public abstract class BytecodeElement implements Modeler {
         return end - start;
     }
 
-    public abstract String getIdentifier();
+    // TODO make abstract again
+    public String getIdentifier() {
+        return "";
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        // TODO remove
+    }
 
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder();

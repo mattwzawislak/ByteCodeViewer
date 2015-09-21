@@ -35,6 +35,10 @@ public class CollapsibleMarker implements Marker {
 
     @Override
     public void paint(final Graphics g) {
+        final Rectangle minimizer = getMinimizerBounds();
+        if (minimizer == null) {
+            return;
+        }
         final Color color;
         if (triggered) {
             color = TRIGGER_COLOR;
@@ -44,9 +48,6 @@ public class CollapsibleMarker implements Marker {
             color = PLAIN_COLOR;
         }
         g.setColor(color);
-
-        final Rectangle bounds = getBounds();
-        final Rectangle minimizer = getMinimizerBounds();
         g.drawRect(minimizer.x, minimizer.y, minimizer.width, minimizer.height);
 
         final int halfHeight = (minimizer.height / 2) + minimizer.y;
@@ -56,6 +57,8 @@ public class CollapsibleMarker implements Marker {
             g.drawLine(minimizer.x + 2, halfHeight, minimizer.x + minimizer.width - 2, halfHeight);
             g.drawLine(minimizer.y + 2, halfWidth, minimizer.y + minimizer.height - 2, halfWidth);
         } else {
+
+            final Rectangle bounds = getBounds();
             // draw a -
             g.drawLine(minimizer.x + 2, halfHeight, minimizer.x + minimizer.width - 2, halfHeight);
 

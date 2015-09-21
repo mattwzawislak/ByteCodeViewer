@@ -45,7 +45,7 @@ public class ConstantElement extends TextElement {
         // will check the tag validity
         setText(getName(constant.getTag()));
         setLeftPad(builder.getTabSize());
-        setRightPad(builder.getTabbedPaddingSize(MAX_NAME_LENGTH, builder.getTabSize()));
+        setRightPad(builder.getTabbedPaddingSize(getText().length(), MAX_NAME_LENGTH));
         setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_CONSTANT));
     }
 

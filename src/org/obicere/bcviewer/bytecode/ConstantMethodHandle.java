@@ -50,7 +50,7 @@ public class ConstantMethodHandle extends Constant {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterUtf8Element("referenceKind", HANDLES[referenceIndex], builder));
+        parent.add(new ParameterUtf8Element("referenceKind", HANDLES[referenceKind], builder));
         parent.add(new ParameterUtf8Element("reference", builder.getConstantPool().getAsString(referenceIndex), builder));
     }
 }

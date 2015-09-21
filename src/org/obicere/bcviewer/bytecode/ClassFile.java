@@ -1,5 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.BasicElement;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+
 /**
  * @author Obicere
  */
@@ -62,7 +66,7 @@ public class ClassFile extends BytecodeElement {
         return thisClass;
     }
 
-    public String getName(){
+    public String getName() {
         return constantPool.getAsString(thisClass);
     }
 
@@ -83,8 +87,9 @@ public class ClassFile extends BytecodeElement {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool){
-        final StringBuilder builder = new StringBuilder();
-        return builder.toString();
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final Element classElement = new BasicElement("class", Element.AXIS_PAGE);
+        constantPool.model(builder, classElement);
+        parent.add(classElement);
     }
 }

@@ -155,13 +155,7 @@ public class DocumentBuilder {
             throw new IllegalArgumentException("current size cannot be negative.");
         }
         if (minimum < sizeSoFar) {
-            // first we need to calculate the difference between between
-            // sizeSoFar and minimum. We divide and floor this value to
-            // find the number of 'tabs' this would represent. We then add
-            // an extra tab, minimum must be greater than sizeSoFar.
-            // We then subtract the difference to figure out the number
-            // of spaces needed to reach the nearest tab
-            return ((sizeSoFar - minimum) / tabSize) * tabSize + tabSize - (sizeSoFar - minimum);
+            return tabSize * (sizeSoFar / tabSize) + tabSize - sizeSoFar;
         }
         final int remainder = minimum % tabSize;
         if (remainder == 0) {

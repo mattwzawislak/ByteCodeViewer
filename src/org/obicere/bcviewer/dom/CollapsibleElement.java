@@ -8,7 +8,7 @@ public class CollapsibleElement extends Element {
 
     private final CollapsibleView view = new CollapsibleView(this);
 
-    public CollapsibleElement(final String name, final Document builder) {
+    public CollapsibleElement(final String name, final DocumentBuilder builder) {
         super(name);
         builder.addMarker(new CollapsibleMarker(this));
     }

@@ -12,7 +12,7 @@ public class ParameterIntegerElement extends TextElement {
         super(name, String.valueOf(value));
 
         // ensure at least 1 whitespace up the a full tab to the left
-        setLeftPad(builder.getTabbedPaddingSize(getText().length(), builder.getTabSize()));
+        setLeftPad(builder.getTabSize());
 
         setAttributes(builder.getAttributesPool().get(TextAttributesResourcePool.ATTRIBUTES_PARAMETER_NUMBER));
     }
