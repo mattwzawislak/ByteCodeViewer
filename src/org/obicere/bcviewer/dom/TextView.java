@@ -97,7 +97,7 @@ public class TextView extends View<TextElement> {
     protected Rectangle layoutChildren(final Rectangle parent) {
         final Rectangle clone = new Rectangle(parent);
         final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
-        final String fullLeftPad = CACHE.getPadding(element.getCumulativeLeftPad());
+        final String fullLeftPad = CACHE.getPadding(element.getLeftPad());
 
         final int padOffset = (int) getFixedFont().getStringBounds(fullLeftPad, fontRenderContext).getWidth();
         clone.x += padOffset;

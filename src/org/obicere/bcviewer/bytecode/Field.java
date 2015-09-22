@@ -51,6 +51,8 @@ public class Field extends BytecodeElement {
     // TODO: Deprecated
     // TODO: RuntimeVisibleAnnotations
     // TODO: RuntimeInvisibleAnnotations
+    // TODO: RuntimeVisibleTypeAnnotations
+    // TODO: RuntimeInvisibleTypeAnnotations
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
@@ -72,6 +74,12 @@ public class Field extends BytecodeElement {
     }
 
     private void modelType(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
+        for (final Attribute attribute : attributes) {
+            if (attribute instanceof SignatureAttribute) {
+                attribute.model(builder, parent);
+                return;
+            }
+        }
         final String descriptor = constantPool.getAsString(descriptorIndex);
         final LinkedList<Element> arrays = new LinkedList<>();
         int i = 0;
@@ -83,6 +91,10 @@ public class Field extends BytecodeElement {
         parent.add(typeDescriptor);
 
         arrays.forEach(parent::add);
+    }
+
+    private void modelFromSignature(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool, final SignatureAttribute signature) {
+
     }
 
     private TextElement getDescriptor(final int index, final String str, final DocumentBuilder builder) {

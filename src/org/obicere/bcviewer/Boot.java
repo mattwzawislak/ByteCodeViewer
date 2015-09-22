@@ -4,16 +4,15 @@ import org.obicere.bcviewer.bytecode.Attribute;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.Field;
-import org.obicere.bcviewer.bytecode.Method;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
-import org.obicere.bcviewer.util.BytecodeUtils;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -26,6 +25,11 @@ public class Boot {
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
+
+    private static LinkedList<Object>           list;
+    private static LinkedList<?>                list1;
+    private static LinkedList<? super Object>   list2;
+    private static LinkedList<? extends Number> list3;
 
     public static void main(final String[] args) {
         // Prepare the current boot
