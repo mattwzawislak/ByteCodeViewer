@@ -157,8 +157,15 @@ public class SignatureAttribute extends Attribute {
         // consume <
         content.next();
         parent.add(new PlainElement("open", "<", builder));
+        boolean first = true;
         while (content.peek() != '>') {
+            if (!first) {
+                final PlainElement comma = new PlainElement("comma", ",", builder);
+                comma.setRightPad(1);
+                parent.add(comma);
+            }
             parseTypeArgument(content, builder, parent);
+            first = false;
         }
         // consume >
         content.next();
@@ -227,7 +234,9 @@ public class SignatureAttribute extends Attribute {
     }
 
     private boolean parseClassSignature(final QueueString content, final DocumentBuilder builder, final Element parent) {
-        parseTypeParameters(content, builder, parent);
+        if (!parseTypeParameters(content, builder, parent)) {
+            return false;
+        }
         if (content.peek() != 'L') {
             return false;
         }
@@ -264,12 +273,15 @@ public class SignatureAttribute extends Attribute {
         boolean first = true;
         while (next != '>') {
             if (!first) {
-                final PlainElement comma = new PlainElement("commna", ",", builder);
+                final PlainElement comma = new PlainElement("comma", ",", builder);
                 comma.setRightPad(1);
                 parent.add(comma);
             }
-            parseTypeParameter(content, builder, parent);
+            if (!parseTypeParameter(content, builder, parent)) {
+                break;
+            }
             first = false;
+            next = content.peek();
         }
         content.next();
         parent.add(new PlainElement("close", ">", builder));
@@ -288,7 +300,9 @@ public class SignatureAttribute extends Attribute {
         }
         char next = content.peek();
         while (next != '>') {
-            parseInterfaceBound(content, builder, parent);
+            if (!parseInterfaceBound(content, builder, parent)) {
+                return true;
+            }
             if (!first) {
                 final PlainElement and = new PlainElement("and", "&", builder);
                 and.setLeftPad(1);

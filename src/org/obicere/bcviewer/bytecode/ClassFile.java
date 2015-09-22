@@ -161,36 +161,47 @@ public class ClassFile extends BytecodeElement {
             declaration.add(next);
         }
 
-        final TextElement className = new PlainElement("name", BytecodeUtils.getQualifiedName(getName()), builder);
-        className.setRightPad(1);
-        declaration.add(className);
+        declaration.add(new PlainElement("name", BytecodeUtils.getQualifiedName(getName()), builder));
 
-        final String superName = getSuperName();
-        if (!superName.equals("java/lang/Object")) {
-            final TextElement extendsKeyword = new KeywordElement("extends", "extends", builder);
-            extendsKeyword.setRightPad(1);
-            declaration.add(extendsKeyword);
-
-            final TextElement superClassName = new PlainElement("super", BytecodeUtils.getQualifiedName(superName), builder);
-            superClassName.setRightPad(1);
-            declaration.add(superClassName);
-        }
-
-        final int[] interfaces = getInterfaces();
-        if (interfaces.length > 0) {
-            final TextElement implementsKeyword = new KeywordElement("implements", "implements", builder);
-            implementsKeyword.setRightPad(1);
-
-            for (int i = 0; i < interfaces.length; i++) {
-                final int index = interfaces[i];
-                // make sure to not add comma at last interface
-                final String text = getInterface(index) + (i == interfaces.length - 1 ? "" : ",");
-                final TextElement next = new PlainElement("interface" + index, text, builder);
-                next.setRightPad(1);
-                declaration.add(next);
+        boolean modeled = false;
+        for (final Attribute attribute : attributes) {
+            if (attribute instanceof SignatureAttribute) {
+                attribute.model(builder, declaration);
+                modeled = true;
+                break;
             }
         }
-        declaration.add(new PlainElement("open", "{", builder));
+
+        if (!modeled) {
+            final String superName = getSuperName();
+            if (!superName.equals("java/lang/Object")) {
+                final TextElement extendsKeyword = new KeywordElement("extends", "extends", builder);
+                extendsKeyword.setRightPad(1);
+                declaration.add(extendsKeyword);
+
+                final TextElement superClassName = new PlainElement("super", BytecodeUtils.getQualifiedName(superName), builder);
+                superClassName.setRightPad(1);
+                declaration.add(superClassName);
+            }
+
+            final int[] interfaces = getInterfaces();
+            if (interfaces.length > 0) {
+                final TextElement implementsKeyword = new KeywordElement("implements", "implements", builder);
+                implementsKeyword.setRightPad(1);
+
+                for (int i = 0; i < interfaces.length; i++) {
+                    final int index = interfaces[i];
+                    // make sure to not add comma at last interface
+                    final String text = getInterface(index) + (i == interfaces.length - 1 ? "" : ",");
+                    final TextElement next = new PlainElement("interface" + index, text, builder);
+                    next.setRightPad(1);
+                    declaration.add(next);
+                }
+            }
+        }
+        final PlainElement element = new PlainElement("open", "{", builder);
+        element.setLeftPad(1);
+        declaration.add(element);
 
         parent.add(declaration);
     }

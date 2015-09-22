@@ -47,7 +47,6 @@ public class Field extends BytecodeElement {
 
     // TODO: ConstantValue
     // TODO: Synthetic
-    // TODO: Signature
     // TODO: Deprecated
     // TODO: RuntimeVisibleAnnotations
     // TODO: RuntimeInvisibleAnnotations
