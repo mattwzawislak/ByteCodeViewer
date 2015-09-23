@@ -106,11 +106,9 @@ public class ClassFile extends BytecodeElement {
         return attributes;
     }
 
-    // TODO: SourceFile
     // EnclosingMethod - Still not fully implemented, the parsing is quite off
     // basically, the information is stored within itself within an inner class
     // attribute
-    // TODO: SourceDebugExtension
     // TODO: BootstrapMethods
     // TODO: RuntimeVisibleTypeAnnotations
     // TODO: RuntimeInvisibleTypeAnnotations
@@ -158,6 +156,7 @@ public class ClassFile extends BytecodeElement {
 
         classElement.add(classContent);
         classElement.add(new PlainElement("close", "}", builder));
+
         parent.add(classElement);
     }
 
@@ -212,7 +211,7 @@ public class ClassFile extends BytecodeElement {
         boolean modeled = false;
         for (final Attribute attribute : attributes) {
             if (attribute instanceof SignatureAttribute) {
-                attribute.model(builder, declaration);
+                System.out.println(((SignatureAttribute) attribute).parseClass(builder.getConstantPool()));
                 modeled = true;
                 break;
             }

@@ -100,7 +100,7 @@ public class Field extends BytecodeElement {
     private void modelType(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
         for (final Attribute attribute : attributes) {
             if (attribute instanceof SignatureAttribute) {
-                attribute.model(builder, parent);
+                System.out.println(((SignatureAttribute) attribute).parseField(builder.getConstantPool()));
                 return;
             }
         }

@@ -12,6 +12,9 @@ import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.util.LinkedList;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -25,13 +28,14 @@ public class Boot {
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
 
-    @Test(foo = 5, fooD = 10)
+    private LinkedList<@Test(foo = 10)? extends Number> list;
+
+    @Test(foo = 5)
     public final int lel = 1230;
 
+    @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
     public @interface Test {
         public int foo();
-
-        public int fooD();
 
         //public int food() default 1;
 
