@@ -1,5 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.StringElement;
+
 /**
  * @author Obicere
  */
@@ -16,5 +20,11 @@ public class StringElementValue extends ElementValue {
 
     public int getConstantValueIndex() {
         return constantValueIndex;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final String constant = builder.getConstantPool().getAsString(constantValueIndex);
+        parent.add(new StringElement("value", constant, builder));
     }
 }

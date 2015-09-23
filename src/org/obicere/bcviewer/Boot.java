@@ -25,6 +25,18 @@ public class Boot {
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
 
+    @Test(foo = 5, fooD = 10)
+    public final int lel = 1230;
+
+    public @interface Test {
+        public int foo();
+
+        public int fooD();
+
+        //public int food() default 1;
+
+    }
+
     public static void main(final String[] args) {
         // Prepare the current boot
         final long start = System.currentTimeMillis();
@@ -114,18 +126,10 @@ public class Boot {
     }
 
     public static Domain getGlobalDomain() {
-        class Test {
-            String heh = "heh";
-        }
-        String heh = new Test().heh;
         return domain;
     }
 
     public static StartUpQueue getStartUpQueue() {
-        class Test {
-            String heh = "heh";
-        }
-        String heh = new Test().heh;
         return QUEUE;
     }
 

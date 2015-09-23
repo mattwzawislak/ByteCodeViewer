@@ -4,6 +4,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
+import java.awt.Font;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -17,6 +18,12 @@ public class ByteTextPane extends JTextPane {
     public ByteTextPane() {
         setEditorKit(new ByteEditorKit());
         setEditable(false);
+        setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+    }
+
+    public ByteTextPane(final byte[] bytes) {
+        this();
+        setBytes(bytes);
     }
 
     @Override
@@ -29,6 +36,16 @@ public class ByteTextPane extends JTextPane {
 
     public byte[] getBytes() {
         return bytes;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        return getUI().getPreferredSize(this).width <= getParent().getSize().getWidth();
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+        return getUI().getPreferredSize(this).height <= getParent().getSize().getHeight();
     }
 
     public void setBytes(final byte[] bytes) {

@@ -24,7 +24,7 @@ public class AnnotationReader implements Reader<Annotation> {
         final int numElementValuePairs = input.readUnsignedShort();
         final ElementValuePair[] pairs = new ElementValuePair[numElementValuePairs];
 
-        for(int i = 0; i < numElementValuePairs; i++){
+        for (int i = 0; i < numElementValuePairs; i++) {
             pairs[i] = new ElementValuePair(input.readUnsignedShort(), elementValue.read(input));
         }
         return new Annotation(typeIndex, pairs);

@@ -5,10 +5,13 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.EmptyTextElement;
 import org.obicere.bcviewer.dom.TextElement;
+import org.obicere.bcviewer.dom.literals.CommentElement;
 import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.KeywordElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 import org.obicere.bcviewer.util.BytecodeUtils;
+
+import java.util.Set;
 
 /**
  * @author Obicere
@@ -35,6 +38,8 @@ public class ClassFile extends BytecodeElement {
 
     private final Attribute[] attributes;
 
+    private final AttributeSet attributeSet;
+
     public ClassFile(final int minorVersion, final int majorVersion, final ConstantPool constantPool, final int accessFlags, final int thisClass, final int superClass, final int[] interfaces, final Field[] fields, final Method[] methods, final Attribute[] attributes) {
         this.minorVersion = minorVersion;
         this.majorVersion = majorVersion;
@@ -46,6 +51,7 @@ public class ClassFile extends BytecodeElement {
         this.fields = fields;
         this.methods = methods;
         this.attributes = attributes;
+        this.attributeSet = new AttributeSet(attributes);
     }
 
     public int getMinorVersion() {
@@ -101,18 +107,25 @@ public class ClassFile extends BytecodeElement {
     }
 
     // TODO: SourceFile
-    // TODO: EnclosingMethod
+    // EnclosingMethod - Still not fully implemented, the parsing is quite off
+    // basically, the information is stored within itself within an inner class
+    // attribute
     // TODO: SourceDebugExtension
     // TODO: BootstrapMethods
-    // TODO: Synthetic
-    // TODO: Deprecated
-    // TODO: RuntimeVisibleAnnotations
-    // TODO: RuntimeInvisibleAnnotations
     // TODO: RuntimeVisibleTypeAnnotations
     // TODO: RuntimeInvisibleTypeAnnotations
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
+        // we use this override for InnerClass attributes to set the proper access flags
+        final int accessFlags;
+        final Object newAccessFlags = builder.getProperty("accessFlags");
+        if (newAccessFlags != null) {
+            accessFlags = (int) newAccessFlags;
+        } else {
+            accessFlags = getAccessFlags();
+        }
+
         final Element classElement = new BasicElement("class");
 
         constantPool.model(builder, classElement);
@@ -123,15 +136,17 @@ public class ClassFile extends BytecodeElement {
 
         classElement.add(new EmptyTextElement(builder));
 
-        // we use this override for InnerClass attributes to set the proper access flags
-        final int accessFlags;
-        final Object newAccessFlags = builder.getProperty("accessFlags");
-        if (newAccessFlags != null) {
-            accessFlags = (int) newAccessFlags;
+        if (BytecodeUtils.isSynthetic(accessFlags)) {
+            addSynthetic(builder, classElement);
         } else {
-            accessFlags = getAccessFlags();
+            final Set<SyntheticAttribute> syntheticAttributes = attributeSet.getAttributes(SyntheticAttribute.class);
+            if (syntheticAttributes != null && !syntheticAttributes.isEmpty()) {
+                // there is at least 1 synthetic - we should set it
+                addSynthetic(builder, classElement);
+            }
         }
 
+        modelAnnotations(builder, classElement);
         modelClassDeclaration(builder, classElement, accessFlags);
 
         final TextElement classContent = new EmptyTextElement(builder);
@@ -144,6 +159,30 @@ public class ClassFile extends BytecodeElement {
         classElement.add(classContent);
         classElement.add(new PlainElement("close", "}", builder));
         parent.add(classElement);
+    }
+
+    private void addSynthetic(final DocumentBuilder builder, final Element parent) {
+        parent.add(new CommentElement("synthetic", "Synthetic Class", builder));
+    }
+
+    private void modelAnnotations(final DocumentBuilder builder, final Element parent) {
+        final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
+        final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
+        final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
+        final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
+
+        if (rvaAttributes != null) {
+            rvaAttributes.forEach(e -> e.model(builder, parent));
+        }
+        if (riaAttributes != null) {
+            riaAttributes.forEach(e -> e.model(builder, parent));
+        }
+        if (rvtaAttributes != null) {
+            rvtaAttributes.forEach(e -> e.model(builder, parent));
+        }
+        if (ritaAttributes != null) {
+            ritaAttributes.forEach(e -> e.model(builder, parent));
+        }
     }
 
     private void modelVersion(final DocumentBuilder builder, final Element parent) {
@@ -222,7 +261,7 @@ public class ClassFile extends BytecodeElement {
         }
         for (int i = 0; i < fields.length; i++) {
             final Field field = fields[i];
-            final BasicElement nextField = new BasicElement("field" + i, Element.AXIS_LINE);
+            final BasicElement nextField = new BasicElement("field" + i);
             field.model(builder, nextField);
 
             parent.add(nextField);
@@ -242,16 +281,14 @@ public class ClassFile extends BytecodeElement {
                     final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
                     final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
 
-                    if(name.equals(getName())){
+                    if (name.equals(getName())) {
                         continue;
                     }
-                    // method enclosed classes have outer be a null entry
                     if (!outer.equals("<null entry>") && !getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
                         continue;
                     }
 
                     parent.add(new EmptyTextElement(builder));
-
                     final BasicElement element = new BasicElement(innerClass.getIdentifier());
                     parent.add(element);
 

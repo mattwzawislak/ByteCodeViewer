@@ -60,10 +60,15 @@ public class ClassInformation implements DomainAccess {
                     final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
                     final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
 
-                    if(name.equals(file.getName())){
+                    // make sure we aren't processing self (every inner
+                    // class contains itself in the list of its inner
+                    // classes and ensure the class isn't already added
+                    if(name.equals(file.getName()) || classes.get(name) != null){
                         continue;
                     }
                     // method enclosed classes have outer be a null entry
+                    // otherwise, this class should be within the file
+                    // and ensure it isn't a Lookup
                     if (!outer.equals("<null entry>") && !file.getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
                         continue;
                     }

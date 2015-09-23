@@ -31,59 +31,58 @@ public class ByteEditorKit extends StyledEditorKit {
 
     @Override
     public void read(final InputStream in, final Document doc, final int pos) throws IOException, BadLocationException {
+        final int perLine = 16;
+
         int read;
 
+        int totalRead = 0;
         int last = pos;
+        final byte[] bytes = new byte[perLine];
         while (true) {
-            read = in.read();
+            read = in.read(bytes);
             if (read < 0) {
 
                 return;
             }
-            read &= 0xff;
-            final char upper = hexTable[read >>> 4];
-            final char lower = hexTable[read & 0xf];
-            final String next = new String(new char[]{upper, lower});
-
-            doc.insertString(last, next, getInputAttributes());
-            last += 2;
-            if(in.available() > 0) {
-                doc.insertString(last, " ", getInputAttributes());
-                last++;
+            final StringBuilder builder = new StringBuilder();
+            builder.append(toHex(totalRead, perLine));
+            builder.append(':');
+            builder.append(' ');
+            for (int i = 0; i < read; i++) {
+                builder.append(toHex(0xFF & bytes[i], 2));
+                builder.append(' ');
             }
+            int pad = (perLine - read) * 3;
+            for (int i = 0; i < pad; i++) {
+                builder.append(' ');
+            }
+            for (int i = 0; i < read; i++) {
+                final char next = (char) bytes[i];
+                if (32 <= next && next < 127) {
+                    builder.append(next);
+                } else {
+                    builder.append('.');
+                }
+            }
+            builder.append('\n');
+            doc.insertString(last, builder.toString(), getInputAttributes());
+            totalRead += read;
+            last += builder.length();
         }
     }
 
     @Override
     public void write(final OutputStream writer, final Document document, final int position, final int length) throws IOException, BadLocationException {
-        final String text = document.getText(position, length);
-        final char[] chars = text.toCharArray();
+    }
 
-        int last = 0;
-        int next = 0;
-        boolean read = false;
-        while (last < length) {
-            final char c = chars[last];
-            if (c == ' ') {
-                if(read){
-                    writer.write(next);
-                }
-                read = false;
-            } else {
-                next <<= 4;
-                final int val;
-                if ('0' <= c && c <= '9') {
-                    val = c - '0';
-                } else if ('A' <= c && c <= 'F') {
-                    val = c - 'A' + 10;
-                } else {
-                    throw new IllegalArgumentException("Illegal byte value: " + c);
-                }
-                next |= (val & 0xF);
-                read = true;
-            }
+    public String toHex(int number, final int padding) {
+        final char[] value = new char[padding];
 
-            last++;
+        for (int i = padding - 1; i >= 0; i--) {
+            value[i] = hexTable[0xF & number];
+            number >>>= 4;
         }
+
+        return new String(value);
     }
 }

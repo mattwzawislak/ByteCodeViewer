@@ -3,6 +3,7 @@ package org.obicere.bcviewer.reader;
 import org.obicere.bcviewer.bytecode.ElementValue;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
 import org.obicere.bcviewer.util.MultiReader;
+import org.obicere.bcviewer.util.Reader;
 
 import java.io.IOException;
 
@@ -43,6 +44,11 @@ public class ElementValueReader extends MultiReader<Integer, ElementValue> {
 
     @Override
     public ElementValue read(final IndexedDataInputStream input) throws IOException {
-        return null;
+        final int tag = input.readUnsignedByte();
+        final Reader<? extends ElementValue> reader = get(tag);
+        if (reader == null) {
+            throw new IllegalStateException("no element value reader found for tag: " + tag);
+        }
+        return reader.read(input);
     }
 }
