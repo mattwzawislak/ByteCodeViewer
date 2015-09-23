@@ -21,24 +21,6 @@ import java.util.logging.Logger;
  */
 public class Boot {
 
-    private static class InnerTest {
-        private static final class InnerInnerTest {
-
-        }
-
-        private enum InnerInnerOtherTest {
-
-        }
-
-        private interface InnerInnerSomeTest {
-
-        }
-    }
-
-    private static @interface InnerOtherTest {
-
-    }
-
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
@@ -67,12 +49,12 @@ public class Boot {
                 final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
 
                 for (final File file : main.listFiles(e -> e.getName().endsWith(".class"))) {
-                    final ClassInformation classInformation = new ClassInformation();
+                    final ClassInformation classInformation = new ClassInformation(domain);
 
-                    classInformation.loadFile(file);
+                    classInformation.load(file);
 
                     System.out.print("outer most: ");
-                    System.out.println(classInformation.getOuterMostClass().getName());
+                    System.out.println(classInformation.getRootClass().getName());
                     System.out.println();
 
                     for (final ClassFile cls : classInformation.getLoadedClasses()) {
@@ -132,10 +114,18 @@ public class Boot {
     }
 
     public static Domain getGlobalDomain() {
+        class Test {
+            String heh = "heh";
+        }
+        String heh = new Test().heh;
         return domain;
     }
 
     public static StartUpQueue getStartUpQueue() {
+        class Test {
+            String heh = "heh";
+        }
+        String heh = new Test().heh;
         return QUEUE;
     }
 

@@ -18,13 +18,14 @@ public class Domain {
 
     private final Logger logger = Logger.getGlobal();
 
-    private ClassInformation classInformation = new ClassInformation();
-    private ClassFileReader  classReader      = new ClassFileReader();
+    private ClassInformation classInformation;
+    private ClassFileReader classReader = new ClassFileReader();
     private GUIManager guiManager;
     private Icons      icons;
     private Paths      paths;
 
     public void initialize() {
+        this.classInformation = new ClassInformation(this);
         this.guiManager = new GUIManager(this);
         this.icons = new Icons(this);
         this.paths = new Paths(this);

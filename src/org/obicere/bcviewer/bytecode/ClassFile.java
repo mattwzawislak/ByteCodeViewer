@@ -106,7 +106,6 @@ public class ClassFile extends BytecodeElement {
     }
 
     // TODO: SourceFile
-    // TODO: InnerClasses
     // TODO: EnclosingMethod
     // TODO: SourceDebugExtension
     // TODO: BootstrapMethods
@@ -248,7 +247,11 @@ public class ClassFile extends BytecodeElement {
                     final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
                     final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
 
-                    if (!getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
+                    if(name.equals(getName())){
+                        continue;
+                    }
+                    // method enclosed classes have outer be a null entry
+                    if (!outer.equals("<null entry>") && !getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
                         continue;
                     }
 
