@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.literals.KeywordElement;
@@ -25,9 +26,19 @@ public class SignatureAttribute extends Attribute {
     public void model(final DocumentBuilder builder, final Element parent) {
         final String signature = builder.getConstantPool().getAsString(signatureIndex);
         final QueueString content = new QueueString(signature);
-        if (!parseFieldSignature(content, builder, parent) && !parseClassSignature(content, builder, parent) && !parseMethodSignature(content, builder, parent)) {
-            throw new IllegalStateException("illegal signature found, failed to parse.");
+        final Element element = new BasicElement("signature", Element.AXIS_LINE);
+        if (!parseClassSignature(content, builder, element)) {
+            content.reset();
+            element.removeAll();
+            if (!parseMethodSignature(content, builder, element)) {
+                content.reset();
+                element.removeAll();
+                if (!parseFieldSignature(content, builder, element)) {
+                    throw new IllegalStateException("illegal signature found, failed to parse.");
+                }
+            }
         }
+        parent.add(element);
     }
 
     private boolean parseIdentifier(final QueueString content, final DocumentBuilder builder, final Element parent) {
@@ -98,10 +109,12 @@ public class SignatureAttribute extends Attribute {
         // consume L
         content.next();
         parsePackageSpecifier(content, builder, parent);
-        parseSimpleClassTypeSignature(content, builder, parent);
+        if(!parseSimpleClassTypeSignature(content, builder, parent)){
+            return false;
+        }
         while (content.peek() != ';') {
             if (!parseClassTypeSignatureSuffix(content, builder, parent)) {
-                break;
+                return false;
             }
         }
         // consume the ;
@@ -234,9 +247,7 @@ public class SignatureAttribute extends Attribute {
     }
 
     private boolean parseClassSignature(final QueueString content, final DocumentBuilder builder, final Element parent) {
-        if (!parseTypeParameters(content, builder, parent)) {
-            return false;
-        }
+        parseTypeParameters(content, builder, parent);
         if (content.peek() != 'L') {
             return false;
         }
@@ -244,7 +255,10 @@ public class SignatureAttribute extends Attribute {
         extend.setLeftPad(1);
         extend.setRightPad(1);
         parent.add(extend);
-        parseSuperclassSignature(content, builder, parent);
+
+        if (!parseSuperclassSignature(content, builder, parent)) {
+            return false;
+        }
         boolean first = true;
         while (content.hasNext()) {
             if (first) {
@@ -258,7 +272,9 @@ public class SignatureAttribute extends Attribute {
                 comma.setRightPad(1);
                 parent.add(comma);
             }
-            parseSuperinterfaceSignature(content, builder, parent);
+            if (!parseSuperinterfaceSignature(content, builder, parent)) {
+                return false;
+            }
         }
         return true;
     }
@@ -409,7 +425,7 @@ public class SignatureAttribute extends Attribute {
 
         private final char[] content;
 
-        private int index;
+        private volatile int index;
 
         private QueueString(final String content) {
             this.content = content.toCharArray();
@@ -425,6 +441,10 @@ public class SignatureAttribute extends Attribute {
 
         public boolean hasNext() {
             return index < content.length;
+        }
+
+        public void reset() {
+            index = 0;
         }
 
     }

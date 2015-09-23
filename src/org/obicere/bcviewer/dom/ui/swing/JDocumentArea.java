@@ -24,18 +24,14 @@ public class JDocumentArea extends JComponent implements DocumentRenderer {
 
     private boolean markerPaneVisible = true;
 
-    private final DocumentBuilder builder = new DocumentBuilder();
+    private final DocumentBuilder builder;
 
     static {
         UIManager.getDefaults().put(uiClassID, DocumentAreaUI.class.getName());
     }
 
-    public JDocumentArea() {
-        updateUI();
-    }
-
-    public JDocumentArea(final Document document) {
-        this.document = document;
+    public JDocumentArea(final DocumentBuilder builder) {
+        this.builder = builder;
         updateUI();
     }
 

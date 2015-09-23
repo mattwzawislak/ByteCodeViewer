@@ -2,6 +2,8 @@ package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.ui.DocumentRenderer;
 
 import java.util.HashMap;
@@ -10,7 +12,9 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Obicere
  */
-public class DocumentBuilder {
+public class DocumentBuilder implements DomainAccess {
+
+    private final Domain domain;
 
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -26,13 +30,12 @@ public class DocumentBuilder {
 
     private volatile ClassFile classFile;
 
-    private volatile ConstantPool constantPool;
-
     private volatile Document document;
 
     private final HashMap<String, Object> properties = new HashMap<>();
 
-    public DocumentBuilder() {
+    public DocumentBuilder(final Domain domain) {
+        this.domain = domain;
         this.colorPool = new ColorResourcePool(this);
         this.fontPool = new FontResourcePool(this);
         this.attributesPool = new AttributesResourcePool();
@@ -56,7 +59,6 @@ public class DocumentBuilder {
             lock.lock();
 
             this.classFile = classFile;
-            this.constantPool = classFile.getConstantPool();
             this.document = new Document(renderer);
 
             classFileModeler.model(this, document.getRoot());
@@ -65,13 +67,16 @@ public class DocumentBuilder {
         } finally {
 
             // clear the current-working objects
-            this.constantPool = null;
             this.classFile = null;
             this.document = null;
 
             properties.clear();
             lock.unlock();
         }
+    }
+
+    public void setWorkingClass(final ClassFile file){
+        this.classFile = file;
     }
 
     public boolean isBusy() {
@@ -87,7 +92,7 @@ public class DocumentBuilder {
     }
 
     public ConstantPool getConstantPool() {
-        return constantPool;
+        return classFile.getConstantPool();
     }
 
     public ClassFile getClassFile() {
@@ -180,5 +185,10 @@ public class DocumentBuilder {
 
     public Object getProperty(final String key) {
         return properties.get(key);
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
     }
 }

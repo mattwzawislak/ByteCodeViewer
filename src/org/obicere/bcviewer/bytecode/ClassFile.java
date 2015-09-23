@@ -105,6 +105,18 @@ public class ClassFile extends BytecodeElement {
         return attributes;
     }
 
+    // TODO: SourceFile
+    // TODO: InnerClasses
+    // TODO: EnclosingMethod
+    // TODO: SourceDebugExtension
+    // TODO: BootstrapMethods
+    // TODO: Synthetic
+    // TODO: Deprecated
+    // TODO: RuntimeVisibleAnnotations
+    // TODO: RuntimeInvisibleAnnotations
+    // TODO: RuntimeVisibleTypeAnnotations
+    // TODO: RuntimeInvisibleTypeAnnotations
+
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         final Element classElement = new BasicElement("class");
@@ -133,6 +145,7 @@ public class ClassFile extends BytecodeElement {
 
         modelFields(builder, classContent);
         modelMethods(builder, classContent);
+        modelInnerClasses(builder, classContent);
 
         classElement.add(classContent);
         classElement.add(new PlainElement("close", "}", builder));
@@ -176,25 +189,27 @@ public class ClassFile extends BytecodeElement {
             final String superName = getSuperName();
             if (!superName.equals("java/lang/Object")) {
                 final TextElement extendsKeyword = new KeywordElement("extends", "extends", builder);
+                extendsKeyword.setLeftPad(1);
                 extendsKeyword.setRightPad(1);
                 declaration.add(extendsKeyword);
 
                 final TextElement superClassName = new PlainElement("super", BytecodeUtils.getQualifiedName(superName), builder);
-                superClassName.setRightPad(1);
                 declaration.add(superClassName);
             }
 
             final int[] interfaces = getInterfaces();
             if (interfaces.length > 0) {
-                final TextElement implementsKeyword = new KeywordElement("implements", "implements", builder);
+                final String impOrExt = BytecodeUtils.isInterface(accessFlags) ? "extends" : "implements";
+                final TextElement implementsKeyword = new KeywordElement(impOrExt, impOrExt, builder);
+                implementsKeyword.setLeftPad(1);
                 implementsKeyword.setRightPad(1);
+                declaration.add(implementsKeyword);
 
                 for (int i = 0; i < interfaces.length; i++) {
                     final int index = interfaces[i];
                     // make sure to not add comma at last interface
                     final String text = getInterface(index) + (i == interfaces.length - 1 ? "" : ",");
-                    final TextElement next = new PlainElement("interface" + index, text, builder);
-                    next.setRightPad(1);
+                    final TextElement next = new PlainElement("interface" + index, BytecodeUtils.getQualifiedName(text), builder);
                     declaration.add(next);
                 }
             }
@@ -223,5 +238,28 @@ public class ClassFile extends BytecodeElement {
 
     private void modelMethods(final DocumentBuilder builder, final Element parent) {
 
+    }
+
+    private void modelInnerClasses(final DocumentBuilder builder, final Element parent) {
+        for (final Attribute attribute : attributes) {
+            if (attribute instanceof InnerClassesAttribute) {
+                final InnerClass[] innerClasses = ((InnerClassesAttribute) attribute).getInnerClasses();
+                for (final InnerClass innerClass : innerClasses) {
+                    final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
+                    final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
+
+                    if (!getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
+                        continue;
+                    }
+
+                    parent.add(new EmptyTextElement(builder));
+
+                    final BasicElement element = new BasicElement(innerClass.getIdentifier());
+                    parent.add(element);
+
+                    innerClass.model(builder, element);
+                }
+            }
+        }
     }
 }

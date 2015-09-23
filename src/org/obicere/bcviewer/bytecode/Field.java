@@ -92,10 +92,6 @@ public class Field extends BytecodeElement {
         arrays.forEach(parent::add);
     }
 
-    private void modelFromSignature(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool, final SignatureAttribute signature) {
-
-    }
-
     private TextElement getDescriptor(final int index, final String str, final DocumentBuilder builder) {
         switch (str.charAt(index)) {
             case 'B':

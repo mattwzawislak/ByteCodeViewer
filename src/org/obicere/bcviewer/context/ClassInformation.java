@@ -43,6 +43,10 @@ public class ClassInformation {
         }
     }
 
+    public ClassFile getClass(final String name) {
+        return classes.get(name);
+    }
+
     private ClassFile loadFileImplementation(final boolean needsInnerClass, final File file) throws IOException, InnerOuterClassException {
         final String name = file.getName();
         if (!name.endsWith(".class")) {

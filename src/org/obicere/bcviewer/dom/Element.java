@@ -97,11 +97,18 @@ public abstract class Element {
         return children.remove(element);
     }
 
+    public void removeAll() {
+        for (final Element element : children) {
+            element.removedFrom(this);
+        }
+        children.clear();
+    }
+
     public boolean add(final Element element) {
         if (element == null) {
             throw new NullPointerException("cannot add null element.");
         }
-        if(this == element){
+        if (this == element) {
             throw new IllegalArgumentException("cannot add element to itself.");
         }
         // we can't add root elements to any other elements

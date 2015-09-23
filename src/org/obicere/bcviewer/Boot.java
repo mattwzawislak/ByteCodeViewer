@@ -12,8 +12,6 @@ import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -23,15 +21,27 @@ import java.util.logging.Logger;
  */
 public class Boot {
 
+    private static class InnerTest {
+        private static final class InnerInnerTest {
+
+        }
+
+        private enum InnerInnerOtherTest {
+
+        }
+
+        private interface InnerInnerSomeTest {
+
+        }
+    }
+
+    private static @interface InnerOtherTest {
+
+    }
+
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
-
-    private static LinkedList<Object>                                                     list;
-    private static LinkedList<?>                                                          list1;
-    private static LinkedList<? super Object>                                             list2;
-    private static LinkedList<? extends Number>                                           list3;
-    private static LinkedList<? extends LinkedList<? super LinkedList<HashMap<?, Enum>>>> list4;
 
     public static void main(final String[] args) {
         // Prepare the current boot

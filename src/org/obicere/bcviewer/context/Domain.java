@@ -18,7 +18,8 @@ public class Domain {
 
     private final Logger logger = Logger.getGlobal();
 
-    private ClassFileReader classReader = new ClassFileReader();
+    private ClassInformation classInformation = new ClassInformation();
+    private ClassFileReader  classReader      = new ClassFileReader();
     private GUIManager guiManager;
     private Icons      icons;
     private Paths      paths;
@@ -27,6 +28,10 @@ public class Domain {
         this.guiManager = new GUIManager(this);
         this.icons = new Icons(this);
         this.paths = new Paths(this);
+    }
+
+    public ClassInformation getClassInformation() {
+        return classInformation;
     }
 
     public ClassFileReader getClassReader() {

@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
@@ -12,14 +14,14 @@ public class InnerClass extends BytecodeElement {
     private final int innerNameIndex;
     private final int innerClassAccessFlags;
 
-    public InnerClass(final int innerClassInfoIndex, final int outerClassInfoIndex, final int innerNameIndex, final int innerClassAccessFlags){
+    public InnerClass(final int innerClassInfoIndex, final int outerClassInfoIndex, final int innerNameIndex, final int innerClassAccessFlags) {
         this.innerClassInfoIndex = innerClassInfoIndex;
         this.outerClassInfoIndex = outerClassInfoIndex;
         this.innerNameIndex = innerNameIndex;
         this.innerClassAccessFlags = innerClassAccessFlags;
     }
 
-    public int getInnerClassInfoIndex(){
+    public int getInnerClassInfoIndex() {
         return innerClassInfoIndex;
     }
 
@@ -36,7 +38,7 @@ public class InnerClass extends BytecodeElement {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool){
+    public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder();
         builder.append("InnerClass: innerClassInfo=");
         builder.append(constantPool.getAsString(innerClassInfoIndex));
@@ -45,7 +47,7 @@ public class InnerClass extends BytecodeElement {
         builder.append(", innerName=");
         builder.append(constantPool.getAsString(innerNameIndex));
         builder.append(", access=");
-        for(final String access : BytecodeUtils.getClassAccessNames(innerClassAccessFlags)){
+        for (final String access : BytecodeUtils.getClassAccessNames(innerClassAccessFlags)) {
             builder.append(access);
             builder.append(' ');
         }
@@ -53,4 +55,17 @@ public class InnerClass extends BytecodeElement {
         return builder.toString();
     }
 
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final String name = builder.getConstantPool().getAsString(innerClassInfoIndex);
+
+        builder.setProperty("accessFlags", innerClassAccessFlags);
+
+        final ClassFile workingFile = builder.getClassFile();
+        final ClassFile file = builder.getDomain().getClassInformation().getClass(name);
+
+        builder.setWorkingClass(file);
+        file.model(builder, parent);
+        builder.setWorkingClass(workingFile);
+    }
 }

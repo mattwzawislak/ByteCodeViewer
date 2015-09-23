@@ -4,7 +4,7 @@ package org.obicere.bcviewer.dom;
  */
 public class CollapsibleElement extends Element {
 
-    private boolean collapsed = false;
+    private boolean collapsed = true;
 
     private final CollapsibleView view = new CollapsibleView(this);
 

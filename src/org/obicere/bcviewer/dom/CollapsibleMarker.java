@@ -55,7 +55,7 @@ public class CollapsibleMarker implements Marker {
         if (element.isCollapsed()) {
             // draw a +
             g.drawLine(minimizer.x + 2, halfHeight, minimizer.x + minimizer.width - 2, halfHeight);
-            g.drawLine(minimizer.y + 2, halfWidth, minimizer.y + minimizer.height - 2, halfWidth);
+            g.drawLine(halfWidth, minimizer.y + 2, halfWidth, minimizer.y + minimizer.height - 2);
         } else {
 
             final Rectangle bounds = getBounds();

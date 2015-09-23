@@ -18,18 +18,17 @@ import java.io.IOException;
 public class _Test {
 
     public _Test() {
-        final JFrame frame = new JFrame();
-
-        final JDocumentArea area = new JDocumentArea();
 
         final Domain domain = new Domain();
+        final JFrame frame = new JFrame();
+
+        final JDocumentArea area = new JDocumentArea(new DocumentBuilder(domain));
 
 
         final ClassFile classFile;
         try {
-            final byte[] bytes = IOUtils.readData(new File("X:\\Programming\\BytecodeViewer\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\Boot.class"));
-            final IndexedDataInputStream input = new IndexedDataInputStream(bytes);
-            classFile = domain.getClassReader().read(input);
+            domain.getClassInformation().loadFile(new File("X:\\Programming\\BytecodeViewer\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\Boot.class"));
+            classFile = domain.getClassInformation().getOuterMostClass();
         } catch (final IOException e) {
             e.printStackTrace();
             return;
