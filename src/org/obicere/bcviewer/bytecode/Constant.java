@@ -1,7 +1,5 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.Modeler;
-
 /**
  * @author Obicere
  */

@@ -1,8 +1,6 @@
 package org.obicere.bcviewer.dom.literals;
 
-import org.obicere.bcviewer.dom.AttributesResourcePool;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.TextElement;
 
 /**
  */

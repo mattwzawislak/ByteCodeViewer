@@ -5,7 +5,6 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.InnerClass;
 import org.obicere.bcviewer.bytecode.InnerClassesAttribute;
-import org.obicere.bcviewer.reader.ClassFileReader;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
 import org.obicere.utility.io.IOUtils;
 

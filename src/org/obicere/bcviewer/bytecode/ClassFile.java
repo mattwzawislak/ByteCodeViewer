@@ -1,19 +1,14 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.Document;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.EmptyTextElement;
 import org.obicere.bcviewer.dom.TextElement;
 import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.KeywordElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 import org.obicere.bcviewer.util.BytecodeUtils;
-
-import javax.xml.soap.Text;
 
 /**
  * @author Obicere

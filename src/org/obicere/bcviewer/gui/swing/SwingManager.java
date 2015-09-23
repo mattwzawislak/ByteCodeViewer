@@ -18,7 +18,6 @@ import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.io.File;
 import java.util.logging.Level;
 
 /**
