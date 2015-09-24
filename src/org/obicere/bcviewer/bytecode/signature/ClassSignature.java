@@ -5,9 +5,14 @@ import org.obicere.bcviewer.bytecode.SuperTypeTarget;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.bytecode.TypeParameterBoundTarget;
 import org.obicere.bcviewer.bytecode.TypeParameterTarget;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.PlainElement;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  */
@@ -59,6 +64,13 @@ public class ClassSignature extends AnnotationTarget {
         }
         final SuperinterfaceSignature[] superinterfaceSignatures = interfaceList.toArray(new SuperinterfaceSignature[interfaceList.size()]);
         return new ClassSignature(typeParameters, superclassSignature, superinterfaceSignatures);
+    }
+
+    public void addAnnotations(final TypeAnnotation[] annotations) {
+        for (final TypeAnnotation annotation : annotations) {
+            final List<Path> pathList = Arrays.asList(annotation.getTargetPath().getPath());
+            walk(annotation, pathList.iterator());
+        }
     }
 
     @Override
@@ -118,5 +130,23 @@ public class ClassSignature extends AnnotationTarget {
             }
             interfaceBounds[fixedIndex].walk(annotation, path);
         }
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        modelTypeParameters(builder, parent);
+    }
+
+    private void modelTypeParameters(final DocumentBuilder builder, final Element parent) {
+        final TypeParameters parameters = typeParameters;
+        final TypeParameter[] types = parameters.getTypeParameters();
+        if (types.length == 0) {
+            return;
+        }
+        parent.add(new PlainElement("open", "<", builder));
+        for (final TypeParameter type : types) {
+            type.model(builder, parent);
+        }
+        parent.add(new PlainElement("close", ">", builder));
     }
 }

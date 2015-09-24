@@ -131,24 +131,40 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
     }
 
     private void modelSignature(final DocumentBuilder builder, final Element parent) {
-        final TypeArguments arguments = simpleClassTypeSignature.getTypeArguments();
-        final TypeArgument[] types = arguments.getTypeArguments();
-        for (final TypeArgument type : types) {
-            type.getWildcardIndicator().model(builder, parent);
-        }
+
         parent.add(new PlainElement("name", simpleClassTypeSignature.getIdentifier(), builder));
+
+        final TypeArguments arguments = simpleClassTypeSignature.getTypeArguments();
+        modelTypeArguments(builder, parent, arguments);
     }
 
     private void modelSuffixes(final DocumentBuilder builder, final Element parent) {
         for (final ClassTypeSignatureSuffix suffix : classTypeSignatureSuffix) {
             final SimpleClassTypeSignature signature = suffix.getSimpleClassTypeSignature();
-            final TypeArguments arguments = signature.getTypeArguments();
-            final TypeArgument[] types = arguments.getTypeArguments();
-            for (final TypeArgument type : types) {
-                type.getWildcardIndicator().model(builder, parent);
-            }
+
             parent.add(new PlainElement("dot", ".", builder));
             parent.add(new PlainElement("suffix", signature.getIdentifier(), builder));
+
+            final TypeArguments arguments = signature.getTypeArguments();
+            modelTypeArguments(builder, parent, arguments);
+        }
+    }
+
+    private void modelTypeArguments(final DocumentBuilder builder, final Element parent, final TypeArguments typeArguments) {
+        final TypeArgument[] types = typeArguments.getTypeArguments();
+        if (types.length != 0) {
+            parent.add(new PlainElement("open", "<", builder));
+            boolean first = true;
+            for (final TypeArgument type : types) {
+                if (!first) {
+                    final PlainElement comma = new PlainElement("comma", ",", builder);
+                    comma.setRightPad(1);
+                    parent.add(comma);
+                }
+                type.getWildcardIndicator().model(builder, parent);
+                first = false;
+            }
+            parent.add(new PlainElement("close", ">", builder));
         }
     }
 }

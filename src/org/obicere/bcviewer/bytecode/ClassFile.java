@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.ClassSignature;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
@@ -167,20 +168,12 @@ public class ClassFile extends BytecodeElement {
     private void modelAnnotations(final DocumentBuilder builder, final Element parent) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
-        final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
-        final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> e.model(builder, parent));
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> e.model(builder, parent));
-        }
-        if (rvtaAttributes != null) {
-            rvtaAttributes.forEach(e -> e.model(builder, parent));
-        }
-        if (ritaAttributes != null) {
-            ritaAttributes.forEach(e -> e.model(builder, parent));
         }
     }
 
@@ -208,44 +201,38 @@ public class ClassFile extends BytecodeElement {
 
         declaration.add(new PlainElement("name", BytecodeUtils.getQualifiedName(getName()), builder));
 
-        boolean modeled = false;
-        for (final Attribute attribute : attributes) {
-            if (attribute instanceof SignatureAttribute) {
-                System.out.println(((SignatureAttribute) attribute).parseClass(builder.getConstantPool()));
-                modeled = true;
-                break;
-            }
-        }
-
-        if (!modeled) {
-            final String superName = getSuperName();
-            if (!superName.equals("java/lang/Object")) {
-                final TextElement extendsKeyword = new KeywordElement("extends", "extends", builder);
-                extendsKeyword.setLeftPad(1);
-                extendsKeyword.setRightPad(1);
-                declaration.add(extendsKeyword);
-
-                final TextElement superClassName = new PlainElement("super", BytecodeUtils.getQualifiedName(superName), builder);
-                declaration.add(superClassName);
-            }
-
+        final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
+        final ClassSignature signature;
+        if (signatures != null && !signatures.isEmpty()) {
+            final SignatureAttribute attribute = signatures.iterator().next();
+            signature = attribute.parseClass(constantPool);
+        } else {
+            final StringBuilder newSignature = new StringBuilder();
+            newSignature.append('L');
+            newSignature.append(getSuperName());
+            newSignature.append(';');
             final int[] interfaces = getInterfaces();
-            if (interfaces.length > 0) {
-                final String impOrExt = BytecodeUtils.isInterface(accessFlags) ? "extends" : "implements";
-                final TextElement implementsKeyword = new KeywordElement(impOrExt, impOrExt, builder);
-                implementsKeyword.setLeftPad(1);
-                implementsKeyword.setRightPad(1);
-                declaration.add(implementsKeyword);
-
-                for (int i = 0; i < interfaces.length; i++) {
-                    final int index = interfaces[i];
-                    // make sure to not add comma at last interface
-                    final String text = getInterface(index) + (i == interfaces.length - 1 ? "" : ",");
-                    final TextElement next = new PlainElement("interface" + index, BytecodeUtils.getQualifiedName(text), builder);
-                    declaration.add(next);
-                }
+            for (final int interfaceIndex : interfaces) {
+                final String name = constantPool.getAsString(interfaceIndex);
+                newSignature.append('L');
+                newSignature.append(name);
+                newSignature.append(';');
             }
+            signature = SignatureAttribute.parseClass(newSignature.toString());
         }
+
+        final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
+        final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
+
+        if (rvtaAttributes != null) {
+            rvtaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+        }
+        if (ritaAttributes != null) {
+            ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+        }
+
+        signature.model(builder, declaration);
+
         final PlainElement element = new PlainElement("open", "{", builder);
         element.setLeftPad(1);
         declaration.add(element);

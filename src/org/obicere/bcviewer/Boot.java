@@ -33,7 +33,7 @@ public class Boot {
 
     @I String @F [] @G [] @H [] myString;
 
-    public class Foo<T> {
+    public class Foo<@F T extends @G Number & @H Comparable<@I T>> {
         @I T @H [] test;
     }
 
