@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
@@ -80,8 +81,6 @@ public class Field extends BytecodeElement {
     private void modelAnnotations(final DocumentBuilder builder, final Element parent) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
-        final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
-        final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> e.model(builder, parent));
@@ -89,32 +88,32 @@ public class Field extends BytecodeElement {
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> e.model(builder, parent));
         }
-        if (rvtaAttributes != null) {
-            rvtaAttributes.forEach(e -> e.model(builder, parent));
-        }
-        if (ritaAttributes != null) {
-            ritaAttributes.forEach(e -> e.model(builder, parent));
-        }
     }
 
     private void modelType(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
-        for (final Attribute attribute : attributes) {
-            if (attribute instanceof SignatureAttribute) {
-                System.out.println(((SignatureAttribute) attribute).parseField(builder.getConstantPool()));
-                return;
-            }
+        final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
+        final FieldSignature signature;
+        if (signatures != null && !signatures.isEmpty()) {
+            final SignatureAttribute attribute = signatures.iterator().next();
+            signature = attribute.parseField(constantPool);
+        } else {
+            final String descriptor = constantPool.getAsString(descriptorIndex);
+            signature = SignatureAttribute.parseField(descriptor);
         }
-        final String descriptor = constantPool.getAsString(descriptorIndex);
-        final LinkedList<Element> arrays = new LinkedList<>();
-        int i = 0;
-        while (descriptor.charAt(i) == '[') {
-            arrays.add(new PlainElement("array" + i, "[]", builder));
-            i++;
-        }
-        final TextElement typeDescriptor = getDescriptor(i, descriptor, builder);
-        parent.add(typeDescriptor);
 
-        arrays.forEach(parent::add);
+        // add type annotations to the signature now
+
+        final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
+        final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
+
+        if (rvtaAttributes != null) {
+            rvtaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+        }
+        if (ritaAttributes != null) {
+            ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+        }
+
+        signature.model(builder, parent);
     }
 
     private void modelDeclaration(final DocumentBuilder builder, final Element parent) {
@@ -131,7 +130,6 @@ public class Field extends BytecodeElement {
         modelType(builder, declaration, constantPool);
 
         final TextElement element = new PlainElement("name", constantPool.getAsString(nameIndex), builder);
-        element.setLeftPad(1);
         declaration.add(element);
 
         for (final Attribute attribute : attributes) {
@@ -151,33 +149,5 @@ public class Field extends BytecodeElement {
         declaration.add(new PlainElement("semicolon", ";", builder));
 
         parent.add(declaration);
-    }
-
-    private TextElement getDescriptor(final int index, final String str, final DocumentBuilder builder) {
-        switch (str.charAt(index)) {
-            case 'B':
-                return new KeywordElement("type", "byte", builder);
-            case 'C':
-                return new KeywordElement("type", "char", builder);
-            case 'D':
-                return new KeywordElement("type", "double", builder);
-            case 'F':
-                return new KeywordElement("type", "float", builder);
-            case 'I':
-                return new KeywordElement("type", "int", builder);
-            case 'J':
-                return new KeywordElement("type", "long", builder);
-            case 'L':
-                // +1 to skip the descriptor character
-                // -1 to skip the trailing ';' character
-                final String type = str.substring(index + 1, str.length() - 1);
-                return new PlainElement("type", BytecodeUtils.getQualifiedName(type), builder);
-            case 'S':
-                return new KeywordElement("type", "short", builder);
-            case 'Z':
-                return new KeywordElement("type", "boolean", builder);
-            default:
-                throw new AssertionError("illegal type descriptor: " + str.charAt(index));
-        }
     }
 }

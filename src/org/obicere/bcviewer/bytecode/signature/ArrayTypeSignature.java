@@ -1,9 +1,14 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.PlainElement;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  */
@@ -39,6 +44,30 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
             if (next.getTypePathKind() == Path.KIND_ARRAY) {
                 signature.walk(annotation, path);
             }
+        }
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final LinkedList<ArrayTypeSignature> arrayList = new LinkedList<>();
+        arrayList.add(this);
+        JavaTypeSignature next = signature;
+        // iterate all the arrays adding them to the array list, this
+        // allows us to first model the component type and then the arrays
+        while (next instanceof ArrayTypeSignature) {
+            final ArrayTypeSignature array = (ArrayTypeSignature) next;
+            arrayList.add(array);
+            next = array.signature;
+        }
+        next.model(builder, parent);
+        for (final ArrayTypeSignature array : arrayList) {
+            for (final Annotation annotation : array.getAnnotations()) {
+                annotation.model(builder, parent);
+            }
+            final PlainElement brackets = new PlainElement("array", "[]", builder);
+            brackets.setRightPad(1);
+            parent.add(brackets);
+
         }
     }
 }

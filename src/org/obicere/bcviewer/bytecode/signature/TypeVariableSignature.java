@@ -1,7 +1,11 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.PlainElement;
 
 import java.util.Iterator;
 
@@ -39,5 +43,16 @@ public class TypeVariableSignature extends ReferenceTypeSignature {
             return;
         }
         add(annotation);
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        for (final Annotation annotation : getAnnotations()) {
+            annotation.model(builder, parent);
+        }
+        final PlainElement name = new PlainElement("identifier", identifier, builder);
+        name.setRightPad(1);
+        parent.add(name);
+
     }
 }

@@ -35,11 +35,13 @@ public class Annotation extends BytecodeElement {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         final Element line = new BasicElement(getIdentifier(), Element.AXIS_LINE);
-        final String name = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
+        final String identifier = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
 
         line.add(new PlainElement("at", "@", builder));
         // substring to remove the leading L and trailing ;
-        line.add(new PlainElement("name", name.substring(1, name.length() - 1), builder));
+        final PlainElement name = new PlainElement("name", identifier.substring(1, identifier.length() - 1), builder);
+        name.setRightPad(1);
+        line.add(name);
         if (elementValuePairs.length > 0) {
             line.add(new PlainElement("open", "(", builder));
 
@@ -54,7 +56,9 @@ public class Annotation extends BytecodeElement {
                 first = false;
             }
 
-            line.add(new PlainElement("close", ")", builder));
+            final PlainElement close = new PlainElement("close", ")", builder);
+            close.setRightPad(1);
+            line.add(close);
         }
         parent.add(line);
     }

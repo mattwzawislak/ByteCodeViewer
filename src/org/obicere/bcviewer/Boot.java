@@ -12,6 +12,8 @@ import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -24,6 +26,32 @@ public class Boot {
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
+
+    @I @G int @F [] myInts;
+
+    @I int myInt;
+
+    @I String @F [] @G [] @H [] myString;
+
+    public class Foo<T> {
+        @I T @H [] test;
+    }
+
+    @Target({ElementType.TYPE_USE})
+    private @interface F {
+    }
+
+    @Target({ElementType.TYPE_USE})
+    private @interface G {
+    }
+
+    @Target({ElementType.TYPE_USE})
+    private @interface H {
+    }
+
+    @Target({ElementType.TYPE_USE})
+    private @interface I {
+    }
 
     public static void main(final String[] args) {
         // Prepare the current boot
