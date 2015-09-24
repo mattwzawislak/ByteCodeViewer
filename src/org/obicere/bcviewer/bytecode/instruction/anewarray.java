@@ -1,6 +1,10 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
 
 /**
  * @author Obicere
@@ -37,5 +41,12 @@ public class anewarray extends Instruction {
         builder.append(' ');
         builder.append(constantPool.getAsString(getIndex()));
         return builder.toString();
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        parent.add(new ParameterIntegerElement("indexbyte1", indexbyte1, builder));
+        parent.add(new ParameterIntegerElement("indexybte2", indexbyte2, builder));
     }
 }

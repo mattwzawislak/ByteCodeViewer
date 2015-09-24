@@ -1,7 +1,5 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.bytecode.signature.ClassSignature;
-import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
