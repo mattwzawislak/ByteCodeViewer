@@ -89,6 +89,8 @@ public class Method extends BytecodeElement {
         modelDeclaration(builder, parent, hasBody);
 
         if (hasBody) {
+            System.out.println(builder.getConstantPool().getAsString(nameIndex));
+            code.model(builder, parent);
             parent.add(new PlainElement("close", "}", builder));
         }
     }
