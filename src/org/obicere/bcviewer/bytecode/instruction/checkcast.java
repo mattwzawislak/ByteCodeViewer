@@ -1,6 +1,10 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterStringElement;
 
 /**
  * @author Obicere
@@ -39,4 +43,9 @@ public class checkcast extends Instruction {
         return builder.toString();
     }
 
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        parent.add(new ParameterStringElement("index", builder.getConstantPool().getAsString(getIndex()), builder));
+    }
 }
