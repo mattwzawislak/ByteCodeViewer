@@ -1,13 +1,11 @@
 package org.obicere.bcviewer.bytecode;
 
-import com.sun.org.apache.bcel.internal.classfile.LocalVariableTable;
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.CollapsibleElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.EmptyTextElement;
-import org.obicere.bcviewer.dom.TextElement;
 import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
