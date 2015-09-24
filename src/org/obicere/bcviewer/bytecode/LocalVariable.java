@@ -1,9 +1,14 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.FieldSignature;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.PlainElement;
+
 /**
  * @author Obicere
  */
-public class LocalVariable {
+public class LocalVariable extends BytecodeElement {
 
     private final int startPC;
     private final int length;
@@ -11,7 +16,7 @@ public class LocalVariable {
     private final int descriptorIndex;
     private final int index;
 
-    public LocalVariable(final int startPC, final int length, final int nameIndex, final int descriptorIndex, final int index){
+    public LocalVariable(final int startPC, final int length, final int nameIndex, final int descriptorIndex, final int index) {
         this.startPC = startPC;
         this.length = length;
         this.nameIndex = nameIndex;
@@ -27,7 +32,7 @@ public class LocalVariable {
         return descriptorIndex;
     }
 
-    public int getLength() {
+    public int getIntervalLength() {
         return length;
     }
 
@@ -37,5 +42,14 @@ public class LocalVariable {
 
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        final ConstantPool constantPool = builder.getConstantPool();
+        final FieldSignature signature = SignatureAttribute.parseField(constantPool.getAsString(descriptorIndex));
+
+        signature.model(builder, parent);
+        parent.add(new PlainElement("name", constantPool.getAsString(nameIndex), builder));
     }
 }

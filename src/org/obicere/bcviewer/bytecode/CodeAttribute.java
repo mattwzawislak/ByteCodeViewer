@@ -1,13 +1,20 @@
 package org.obicere.bcviewer.bytecode;
 
+import com.sun.org.apache.bcel.internal.classfile.LocalVariableTable;
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
+import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.CollapsibleElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.EmptyTextElement;
+import org.obicere.bcviewer.dom.TextElement;
+import org.obicere.bcviewer.dom.literals.IntegerElement;
+import org.obicere.bcviewer.dom.literals.PlainElement;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +40,7 @@ public class CodeAttribute extends Attribute {
 
     private final AttributeSet attributeSet;
 
-    private final Map<Integer, Line> lineNumberToLine = new HashMap<>();
+    private final Map<Integer, Line> startPCToLine = new HashMap<>();
 
     public CodeAttribute(final int maxStack, final int maxLocals, final byte[] code, final Instruction[] instructions, final CodeException[] exceptions, final Attribute[] attributes) {
         this.maxStack = maxStack;
@@ -98,33 +105,141 @@ public class CodeAttribute extends Attribute {
         return builder.toString();
     }
 
-    // TODO: the actual code, yah dingus
-    // TODO: LineNumberTable (separates instructions)
+    // these two need to be merged, since the every entry
+    // in the LVT Table appears in the LV Table - but the
+    // latter is more descriptive
     // TODO: LocalVariableTable
     // TODO: LocalVariableTypeTable
+
+    // fuck this
     // TODO: StackMapTable
+
+    // these two might be difficult to get 100% correct.
+    // a simple association could be formed, possibly.
+    // The 'simple association' would be just latching onto
+    // the given line block
     // TODO: RVTA --\
     // TODO: RITA --+- Should be latched onto Lines, Exceptions, local vars? idk wtf this is
 
     public void model(final DocumentBuilder builder, final Element parent) {
         // entire code block should be collapsible
         final CollapsibleElement codeBlock = new CollapsibleElement("block", builder);
+        codeBlock.setCollapsed(false);
 
+        final EmptyTextElement padding = new EmptyTextElement(builder);
+        padding.setLeftPad(builder.getTabSize());
+        codeBlock.add(padding);
         // TODO: model code :(
 
         final List<LineNumber> staggers = generateStaggers();
         final List<Line> heavyLines = distributeInstructions(staggers);
         final List<Line> lines = joinTables(heavyLines);
 
+        int max = 0;
         for (final Line line : lines) {
-            System.out.print(line.line.getLineNumber());
-            System.out.println(" {");
-            for (final Instruction instruction : line.instructions) {
-                System.out.println("    " + instruction);
-            }
-            System.out.println("}");
+            final LineNumber number = line.line;
+            max = Math.max(number.getLineNumber(), max);
+            startPCToLine.put(number.getStartPC(), line);
         }
+
+        modelLines(builder, padding, lines);
+        modelLocalVariables(builder, padding);
         parent.add(codeBlock);
+    }
+
+    private void modelLines(final DocumentBuilder builder, final Element parent, final List<Line> lines) {
+        for (final Line line : lines) {
+            final BasicElement totalLine = new BasicElement("line", Element.AXIS_PAGE);
+            final BasicElement header = new BasicElement("header", Element.AXIS_LINE);
+
+            final String name = line.getLineName();
+            final PlainElement lineName = new PlainElement(name, name, builder);
+            lineName.setRightPad(1);
+
+            header.add(lineName);
+            header.add(new PlainElement("open", "{", builder));
+
+            totalLine.add(header);
+
+            for (final Instruction instruction : line.instructions) {
+                final BasicElement nextInstruction = new BasicElement(instruction.getIdentifier(), Element.AXIS_LINE);
+                instruction.model(builder, nextInstruction);
+                totalLine.add(nextInstruction);
+            }
+            totalLine.add(new PlainElement("close", "}", builder));
+            parent.add(totalLine);
+        }
+    }
+
+    private void modelLocalVariables(final DocumentBuilder builder, final Element parent) {
+        final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
+        final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
+
+        // this assumes that shared local variables between lvtt and lvt
+        // share the same startPC value (same index in total class file)
+        final Set<Integer> processedStartPCs = new HashSet<>();
+        if (lvttAttributes != null) {
+            for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
+                final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
+                for (final LocalVariableType type : table) {
+
+                    final int startPC = type.getStartPC();
+                    final int endPC = type.getStartPC() + type.getIntervalLength();
+                    final BasicElement declaration = new BasicElement(type.getIdentifier(), Element.AXIS_LINE);
+
+                    type.model(builder, declaration);
+                    modelGenericLocalVariable(builder, declaration, startPC, endPC, type.getIndex());
+                    processedStartPCs.add(startPC);
+
+                    parent.add(declaration);
+                }
+            }
+        }
+        if (lvtAttributes != null) {
+            for (final LocalVariableTableAttribute lvt : lvtAttributes) {
+                final LocalVariable[] table = lvt.getLocalVariableTable();
+                for (final LocalVariable type : table) {
+                    final int startPC = type.getStartPC();
+                    // check to see if we already processed the startPC value
+                    if (processedStartPCs.contains(startPC)) {
+                        return;
+                    }
+                    final int endPC = type.getStartPC() + type.getIntervalLength();
+                    final BasicElement declaration = new BasicElement(type.getIdentifier(), Element.AXIS_LINE);
+
+                    type.model(builder, declaration);
+                    modelGenericLocalVariable(builder, declaration, startPC, endPC, type.getIndex());
+                    processedStartPCs.add(startPC);
+
+                    parent.add(declaration);
+                }
+            }
+        }
+    }
+
+    private void modelGenericLocalVariable(final DocumentBuilder builder, final Element parent, final int startPC, final int endPC, final int index) {
+        final String start = startPCToLine.get(startPC).getLineName();
+        final String end;
+        final Line line = startPCToLine.get(endPC);
+        if (line != null) {
+            end = line.getLineName();
+        } else {
+            end = "end";
+        }
+
+        final PlainElement open = new PlainElement("open", "[", builder);
+        final PlainElement close = new PlainElement("close", "]", builder);
+        open.setLeftPad(1);
+        parent.add(open);
+        parent.add(new PlainElement("start", start, builder));
+        parent.add(new PlainElement("to", "-", builder));
+        parent.add(new PlainElement("end", end, builder));
+        parent.add(close);
+        close.setRightPad(1);
+
+        final PlainElement frameIndex = new PlainElement("frameIndex", "Index", builder);
+        frameIndex.setRightPad(1);
+        parent.add(new IntegerElement("index", index, builder));
     }
 
     private List<LineNumber> generateStaggers() {
@@ -190,6 +305,8 @@ public class CodeAttribute extends Attribute {
         }
         Collections.sort(line, (o1, o2) -> Integer.compare(o1.line.getLineNumber(), o2.line.getLineNumber()));
         final List<Line> flattenedLines = new ArrayList<>(line.size());
+        flattenedLines.addAll(line);
+        /*
         final Iterator<Line> iterator = line.iterator();
         Line current = iterator.next();
         while (iterator.hasNext()) {
@@ -202,6 +319,7 @@ public class CodeAttribute extends Attribute {
             }
         }
         flattenedLines.add(current);
+        */
         return flattenedLines;
     }
 
@@ -213,6 +331,10 @@ public class CodeAttribute extends Attribute {
 
         Line(final LineNumber line) {
             this.line = line;
+        }
+
+        public String getLineName() {
+            return "L" + line.getLineNumber();
         }
 
         Line join(final Line other) {
