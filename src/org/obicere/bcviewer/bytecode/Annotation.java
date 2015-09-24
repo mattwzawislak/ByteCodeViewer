@@ -3,6 +3,7 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.AnnotationElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
@@ -37,9 +38,8 @@ public class Annotation extends BytecodeElement {
         final Element line = new BasicElement(getIdentifier(), Element.AXIS_LINE);
         final String identifier = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
 
-        line.add(new PlainElement("at", "@", builder));
         // substring to remove the leading L and trailing ;
-        final PlainElement name = new PlainElement("name", identifier.substring(1, identifier.length() - 1), builder);
+        final AnnotationElement name = new AnnotationElement("name", identifier.substring(1, identifier.length() - 1), builder);
         name.setRightPad(1);
         line.add(name);
         if (elementValuePairs.length > 0) {

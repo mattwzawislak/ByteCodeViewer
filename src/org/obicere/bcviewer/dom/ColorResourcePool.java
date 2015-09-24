@@ -16,6 +16,10 @@ public class ColorResourcePool extends ResourcePool<Color> {
 
     public static final String COLOR_COMMENT = "comment";
 
+    public static final String COLOR_ANNOTATION = "annotation";
+
+    public static final String COLOR_TYPE = "type";
+
     private final DocumentBuilder builder;
 
     public ColorResourcePool(final DocumentBuilder builder) {
@@ -26,6 +30,8 @@ public class ColorResourcePool extends ResourcePool<Color> {
         safeAdd(COLOR_NUMBER, new Color(86, 151, 250));
         safeAdd(COLOR_STRING, new Color(0, 128, 52));
         safeAdd(COLOR_COMMENT, new Color(188, 188, 188));
+        safeAdd(COLOR_ANNOTATION, new Color(167, 185, 44));
+        safeAdd(COLOR_TYPE, new Color(86, 151, 250));
     }
 
     @Override

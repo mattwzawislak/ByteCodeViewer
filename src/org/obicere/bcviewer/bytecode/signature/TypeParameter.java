@@ -7,6 +7,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.literals.KeywordElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.literals.TypeElement;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -99,7 +100,7 @@ public class TypeParameter extends AnnotationTarget {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        final PlainElement element = new PlainElement("identifier", identifier, builder);
+        final TypeElement element = new TypeElement("identifier", identifier, builder);
         parent.add(element);
 
         boolean classModeled = false;

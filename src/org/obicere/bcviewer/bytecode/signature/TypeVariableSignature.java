@@ -6,6 +6,7 @@ import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.literals.TypeElement;
 
 import java.util.Iterator;
 
@@ -50,8 +51,8 @@ public class TypeVariableSignature extends ReferenceTypeSignature {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        final PlainElement name = new PlainElement("identifier", identifier, builder);
-        name.setRightPad(1);
+        final TypeElement name = new TypeElement("identifier", identifier, builder);
+        //name.setRightPad(1);
         parent.add(name);
 
     }

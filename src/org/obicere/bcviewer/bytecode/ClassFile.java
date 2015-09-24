@@ -255,7 +255,18 @@ public class ClassFile extends BytecodeElement {
     }
 
     private void modelMethods(final DocumentBuilder builder, final Element parent) {
+        final Method[] methods = getMethods();
+        if (methods.length == 0) {
+            return;
+        }
+        for (int i = 0; i < methods.length; i++) {
+            final Method method = methods[i];
+            final BasicElement nextMethod = new BasicElement("method" + i);
+            method.model(builder, nextMethod);
 
+            parent.add(nextMethod);
+            parent.add(new EmptyTextElement(builder));
+        }
     }
 
     private void modelInnerClasses(final DocumentBuilder builder, final Element parent) {

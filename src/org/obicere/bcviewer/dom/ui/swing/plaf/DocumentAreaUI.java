@@ -11,7 +11,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.util.Set;
 
 /**
@@ -21,8 +23,12 @@ public class DocumentAreaUI extends ComponentUI {
     private static final int MARKER_PANE_WIDTH = 10;
 
     @Override
-    public void paint(final Graphics g, final JComponent component) {
+    public void paint(final Graphics g1, final JComponent component) {
         if (component instanceof JDocumentArea) {
+            final Graphics2D g = (Graphics2D) g1;
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+
             final JDocumentArea area = (JDocumentArea) component;
             final Insets insets = area.getInsets();
             final Document document = area.getDocument();

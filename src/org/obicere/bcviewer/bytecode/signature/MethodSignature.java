@@ -1,11 +1,18 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.MethodFormalParameterTarget;
+import org.obicere.bcviewer.bytecode.Parameter;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.ThrowsTarget;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.bytecode.TypeParameterBoundTarget;
 import org.obicere.bcviewer.bytecode.TypeParameterTarget;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.KeywordElement;
+import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -161,5 +168,97 @@ public class MethodSignature extends AnnotationTarget {
     private void walkThrowsTarget(final TypeAnnotation annotation, final Iterator<Path> path) {
         final ThrowsTarget throwsTarget = (ThrowsTarget) annotation.getTargetInfo();
         throwsSignatures[throwsTarget.getThrowsTypeIndex()].walk(annotation, path);
+    }
+
+    public void modelTypeParameters(final DocumentBuilder builder, final Element parent) {
+        final TypeParameter[] types = typeParameters.getTypeParameters();
+        if (types.length == 0) {
+            return;
+        }
+        parent.add(new PlainElement("open", "<", builder));
+
+        boolean first = true;
+        for (final TypeParameter type : types) {
+            if (!first) {
+                final PlainElement comma = new PlainElement("comma", ",", builder);
+                comma.setRightPad(1);
+                parent.add(comma);
+            }
+            type.model(builder, parent);
+            first = false;
+        }
+
+        final PlainElement close = new PlainElement("close", ">", builder);
+        close.setRightPad(1);
+        parent.add(close);
+    }
+
+    public void modelReturnType(final DocumentBuilder builder, final Element parent) {
+        result.model(builder, parent);
+    }
+
+    public void modelParameters(final DocumentBuilder builder, final Element parent, final Parameter[] parameters) {
+        parent.add(new PlainElement("open", "(", builder));
+
+        final JavaTypeSignature[] signatures = this.parameters; // rename
+        final ConstantPool constantPool = builder.getConstantPool();
+        final int min = Math.min(signatures.length, parameters.length);
+        for (int i = 0; i < min; i++) {
+            if (i != 0) {
+                final PlainElement comma = new PlainElement("comma", ",", builder);
+                comma.setRightPad(1);
+                parent.add(comma);
+            }
+            final JavaTypeSignature signature = signatures[i];
+            final Parameter parameter = parameters[i];
+            final String[] accessNames = BytecodeUtils.getFieldAccessNames(parameter.getAccessFlags());
+            for (final String accessName : accessNames) {
+                final KeywordElement access = new KeywordElement(accessName, accessName, builder);
+                access.setRightPad(1);
+                parent.add(access);
+            }
+
+            signature.model(builder, parent);
+
+            parent.add(new PlainElement("name", constantPool.getAsString(parameter.getNameIndex()), builder));
+        }
+
+
+        parent.add(new PlainElement("close", ")", builder));
+    }
+
+    public void modelParameters(final DocumentBuilder builder, final Element parent) {
+        parent.add(new PlainElement("open", "(", builder));
+
+        final ConstantPool constantPool = builder.getConstantPool();
+        for (int i = 0; i < parameters.length; i++) {
+            if (i != 0) {
+                final PlainElement comma = new PlainElement("comma", ",", builder);
+                comma.setRightPad(1);
+                parent.add(comma);
+            }
+            final JavaTypeSignature parameter = parameters[i];
+
+            parameter.model(builder, parent);
+        }
+        parent.add(new PlainElement("close", ")", builder));
+    }
+
+    public void modelThrowsSignatures(final DocumentBuilder builder, final Element parent) {
+        boolean first = true;
+        for (final ThrowsSignature signature : throwsSignatures) {
+            if (first) {
+                final KeywordElement keyword = new KeywordElement("throws", "throws", builder);
+                keyword.setLeftPad(1);
+                keyword.setRightPad(1);
+                parent.add(keyword);
+                first = false;
+            } else {
+                final PlainElement comma = new PlainElement("comma", ",", builder);
+                comma.setRightPad(1);
+                parent.add(comma);
+            }
+            signature.model(builder, parent);
+        }
     }
 }
