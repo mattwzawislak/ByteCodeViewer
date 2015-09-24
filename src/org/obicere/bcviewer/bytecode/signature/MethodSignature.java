@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.MethodFormalParameterTarget;
 import org.obicere.bcviewer.bytecode.Parameter;
@@ -14,8 +15,10 @@ import org.obicere.bcviewer.dom.literals.KeywordElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  */
@@ -90,6 +93,21 @@ public class MethodSignature extends AnnotationTarget {
         }
         final ThrowsSignature[] throwsSignatures = throwsList.toArray(new ThrowsSignature[throwsList.size()]);
         return new MethodSignature(typeParameters, javaTypeSignatures, result, throwsSignatures);
+    }
+
+    public void addAnnotations(final TypeAnnotation[] annotations) {
+        for (final TypeAnnotation annotation : annotations) {
+            final List<Path> path = Arrays.asList(annotation.getTargetPath().getPath());
+            walk(annotation, path.iterator());
+        }
+    }
+
+    public void addAnnotations(final Annotation[][] annotations) {
+        for (int i = 0; i < annotations.length; i++) {
+            for (final Annotation annotation : annotations[i]) {
+                parameters[i].add(annotation);
+            }
+        }
     }
 
     @Override
@@ -230,7 +248,6 @@ public class MethodSignature extends AnnotationTarget {
     public void modelParameters(final DocumentBuilder builder, final Element parent) {
         parent.add(new PlainElement("open", "(", builder));
 
-        final ConstantPool constantPool = builder.getConstantPool();
         for (int i = 0; i < parameters.length; i++) {
             if (i != 0) {
                 final PlainElement comma = new PlainElement("comma", ",", builder);

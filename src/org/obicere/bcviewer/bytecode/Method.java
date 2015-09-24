@@ -4,6 +4,7 @@ import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.literals.CommentElement;
 import org.obicere.bcviewer.dom.literals.KeywordElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 import org.obicere.bcviewer.util.BytecodeUtils;
@@ -72,31 +73,42 @@ public class Method extends BytecodeElement {
 
     // TODO: Code - probably one of the last ones
     // TODO: Exceptions
-    // TODO: RVPA
-    // TODO: RIPA
-    // TODO: AnnotationDefault
-    // TODO: MethodParameters
-    // TODO: Synthetic
-    // TODO: Deprecated - should be handled by RIA
-    // TODO: Signature
-    // TODO: RVA
-    // TODO: RIA
-    // TODO: RVTA
-    // TODO: RITA
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
-        modelAnnotations(builder, parent);
-        modelDeclaration(builder, parent);
+        if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
+            addSynthetic(builder, parent);
+        }
 
-        parent.add(new PlainElement("close", "}", builder));
+        final CodeAttribute code = attributeSet.getAttribute(CodeAttribute.class);
+        final boolean hasBody = (code != null);
+
+        modelAnnotations(builder, parent);
+        modelDeclaration(builder, parent, hasBody);
+
+        if (hasBody) {
+            parent.add(new PlainElement("close", "}", builder));
+        }
     }
 
-    private void modelDeclaration(final DocumentBuilder builder, final Element parent) {
+    private void addSynthetic(final DocumentBuilder builder, final Element parent) {
+        parent.add(new CommentElement("synthetic", "Synthetic Method", builder));
+    }
+
+    private void modelDeclaration(final DocumentBuilder builder, final Element parent, final boolean hasBody) {
         final ConstantPool constantPool = builder.getConstantPool();
 
         final BasicElement declaration = new BasicElement("declaration", Element.AXIS_LINE);
         final String[] accessNames = BytecodeUtils.getMethodAccessNames(accessFlags);
+
+        // make sure to add the default flag if the method has a body
+        // and its containing class is an interface
+        if (hasBody && BytecodeUtils.isInterface(builder.getClassFile().getAccessFlags())) {
+            final KeywordElement access = new KeywordElement("default", "default", builder);
+            access.setRightPad(1);
+            declaration.add(access);
+        }
+
         for (final String accessName : accessNames) {
             final KeywordElement access = new KeywordElement(accessName, accessName, builder);
             access.setRightPad(1);
@@ -127,6 +139,7 @@ public class Method extends BytecodeElement {
         }
 
         if (!staticInitializer) {
+            addAnnotationsSignature(signature);
             final MethodParametersAttribute parameterAttribute = attributeSet.getAttribute(MethodParametersAttribute.class);
             if (parameterAttribute != null) {
                 final Parameter[] parameters = parameterAttribute.getParameters();
@@ -138,8 +151,33 @@ public class Method extends BytecodeElement {
             signature.modelThrowsSignatures(builder, declaration);
 
         }
-        declaration.add(new PlainElement("open", "{", builder));
+
+        if (hasBody) {
+            declaration.add(new PlainElement("open", "{", builder));
+        } else {
+            modelAbstractClose(builder, declaration);
+        }
         parent.add(declaration);
+    }
+
+    private void addAnnotationsSignature(final MethodSignature signature) {
+        final RuntimeVisibleParameterAnnotationsAttribute rvpa = attributeSet.getAttribute(RuntimeVisibleParameterAnnotationsAttribute.class);
+        final RuntimeInvisibleParameterAnnotationsAttribute ripa = attributeSet.getAttribute(RuntimeInvisibleParameterAnnotationsAttribute.class);
+        final RuntimeVisibleTypeAnnotationsAttribute rvta = attributeSet.getAttribute(RuntimeVisibleTypeAnnotationsAttribute.class);
+        final RuntimeInvisibleTypeAnnotationsAttribute rita = attributeSet.getAttribute(RuntimeInvisibleTypeAnnotationsAttribute.class);
+
+        if (rvpa != null) {
+            signature.addAnnotations(rvpa.getParameterAnnotations());
+        }
+        if (ripa != null) {
+            signature.addAnnotations(ripa.getParameterAnnotations());
+        }
+        if (rvta != null) {
+            signature.addAnnotations(rvta.getAnnotations());
+        }
+        if (rita != null) {
+            signature.addAnnotations(rita.getAnnotations());
+        }
     }
 
     private void modelAnnotations(final DocumentBuilder builder, final Element parent) {
@@ -152,6 +190,18 @@ public class Method extends BytecodeElement {
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> e.model(builder, parent));
         }
+    }
+
+    private void modelAbstractClose(final DocumentBuilder builder, final Element parent) {
+        final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
+        if (hasDefault != null) {
+            final KeywordElement defaultKeyword = new KeywordElement("default", "default", builder);
+            defaultKeyword.setLeftPad(1);
+            defaultKeyword.setRightPad(1);
+            parent.add(defaultKeyword);
+            hasDefault.getDefaultValue().model(builder, parent);
+        }
+        parent.add(new PlainElement("semicolon", ";", builder));
     }
 
 }

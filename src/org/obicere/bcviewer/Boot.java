@@ -19,11 +19,29 @@ import java.util.logging.Logger;
 /**
  * @author Obicere
  */
-public class Boot {
+public abstract class Boot {
 
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
+
+    public interface Foo {
+
+        void foo();
+
+        default void foo(int a) {
+
+        }
+
+    }
+
+    public @interface Bar {
+
+        public int bar() default 5;
+
+        public int tee();
+
+    }
 
     public static void main(final String[] args) {
         // Prepare the current boot

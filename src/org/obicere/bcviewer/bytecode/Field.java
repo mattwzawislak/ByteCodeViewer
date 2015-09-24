@@ -56,14 +56,8 @@ public class Field extends BytecodeElement {
     public void model(final DocumentBuilder builder, final Element parent) {
         final Element fieldElement = new BasicElement(getIdentifier());
 
-        if (BytecodeUtils.isSynthetic(accessFlags)) {
-            addSynthetic(builder, fieldElement);
-        } else {
-            final Set<SyntheticAttribute> syntheticAttributes = attributeSet.getAttributes(SyntheticAttribute.class);
-            if (syntheticAttributes != null && !syntheticAttributes.isEmpty()) {
-                // there is at least 1 synthetic - we should set it
-                addSynthetic(builder, fieldElement);
-            }
+        if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
+            addSynthetic(builder, parent);
         }
 
         modelAnnotations(builder, fieldElement);

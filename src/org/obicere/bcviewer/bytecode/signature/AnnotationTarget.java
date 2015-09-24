@@ -19,7 +19,7 @@ public abstract class AnnotationTarget extends BytecodeElement {
         return annotations;
     }
 
-    public void add(final TypeAnnotation annotation) {
+    public void add(final Annotation annotation) {
         annotations.add(annotation);
     }
 

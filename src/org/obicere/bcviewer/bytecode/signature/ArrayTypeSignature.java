@@ -49,6 +49,9 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
+        for (final Annotation annotation : getAnnotations()) {
+            annotation.model(builder, parent);
+        }
         final LinkedList<ArrayTypeSignature> arrayList = new LinkedList<>();
         arrayList.add(this);
         JavaTypeSignature next = signature;

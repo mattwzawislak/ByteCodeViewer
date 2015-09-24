@@ -133,14 +133,8 @@ public class ClassFile extends BytecodeElement {
 
         classElement.add(new EmptyTextElement(builder));
 
-        if (BytecodeUtils.isSynthetic(accessFlags)) {
-            addSynthetic(builder, classElement);
-        } else {
-            final Set<SyntheticAttribute> syntheticAttributes = attributeSet.getAttributes(SyntheticAttribute.class);
-            if (syntheticAttributes != null && !syntheticAttributes.isEmpty()) {
-                // there is at least 1 synthetic - we should set it
-                addSynthetic(builder, classElement);
-            }
+        if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
+            addSynthetic(builder, parent);
         }
 
         modelAnnotations(builder, classElement);
