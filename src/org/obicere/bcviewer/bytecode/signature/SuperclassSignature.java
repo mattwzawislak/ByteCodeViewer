@@ -1,8 +1,13 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
+
 /**
  */
-public class SuperclassSignature {
+public class SuperclassSignature extends AnnotationTarget {
 
     private final ClassTypeSignature classTypeSignature;
 
@@ -25,4 +30,8 @@ public class SuperclassSignature {
         return new SuperclassSignature(classTypeSignature);
     }
 
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        classTypeSignature.walk(annotation, path);
+    }
 }

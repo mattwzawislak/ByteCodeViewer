@@ -11,6 +11,7 @@ public class ThrowsTarget implements Target {
     public ThrowsTarget(final int targetType, final int throwsTypeIndex) {
         this.targetType = targetType;
         this.throwsTypeIndex = throwsTypeIndex;
+        System.out.println(throwsTypeIndex);
     }
 
     public int getThrowsTypeIndex() {

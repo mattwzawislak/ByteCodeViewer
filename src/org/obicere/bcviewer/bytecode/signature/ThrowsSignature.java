@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode.signature;
 
 /**
  */
-public class ThrowsSignature {
+public abstract class ThrowsSignature extends AnnotationTarget {
 
     public static ThrowsSignature parse(final QueueString string){
         if(!string.hasNext() || string.next() != '^'){
@@ -16,5 +16,4 @@ public class ThrowsSignature {
         string.restoreTo(save);
         return TypeThrowsSignature.parse(string);
     }
-
 }

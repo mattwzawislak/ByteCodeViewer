@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode.signature;
 
 /**
  */
-public class JavaTypeSignature {
+public abstract class JavaTypeSignature extends AnnotationTarget {
 
     public static JavaTypeSignature parse(final QueueString string){
         final QueueString save = string.save();

@@ -1,5 +1,10 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
+
 /**
  */
 public class SuperBoundedWildcardIndicator extends WildcardIndicator {
@@ -25,4 +30,17 @@ public class SuperBoundedWildcardIndicator extends WildcardIndicator {
         return new SuperBoundedWildcardIndicator(referenceTypeSignature);
     }
 
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        if (!path.hasNext()) {
+            return;
+        }
+        final Path next = path.next();
+        final int kind = next.getTypePathKind();
+        if (kind == Path.KIND_WILDCARD) {
+            add(annotation);
+        } else if(kind == Path.KIND_TYPE_ARGUMENT){
+            referenceTypeSignature.walk(annotation, path);
+        }
+    }
 }

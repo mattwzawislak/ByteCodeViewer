@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class TypeAnnotation {
+public class TypeAnnotation extends Annotation {
 
     private final int targetType;
 
@@ -11,36 +11,22 @@ public class TypeAnnotation {
 
     private final TypePath targetPath;
 
-    private final int typeIndex;
-
-    private final ElementValuePair[] elementValuePairs;
-
     public TypeAnnotation(final int targetType, final Target targetInfo, final TypePath targetPath, final int typeIndex, final ElementValuePair[] elementValuePairs) {
+        super(typeIndex, elementValuePairs);
         this.targetType = targetType;
         this.targetInfo = targetInfo;
         this.targetPath = targetPath;
-        this.typeIndex = typeIndex;
-        this.elementValuePairs = elementValuePairs;
     }
 
-    public int getTargetType(){
+    public int getTargetType() {
         return targetType;
     }
 
-    public Target getTargetInfo(){
+    public Target getTargetInfo() {
         return targetInfo;
     }
 
-    public TypePath getTargetPath(){
+    public TypePath getTargetPath() {
         return targetPath;
     }
-
-    public int getTypeIndex(){
-        return typeIndex;
-    }
-
-    public ElementValuePair[] getElementValuePairs(){
-        return elementValuePairs;
-    }
-
 }

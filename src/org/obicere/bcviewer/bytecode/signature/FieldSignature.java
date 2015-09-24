@@ -1,28 +1,41 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
+
 /**
  */
-public class FieldSignature {
+public class FieldSignature extends AnnotationTarget {
 
-    private final ReferenceTypeSignature referenceTypeSignature;
+    private final JavaTypeSignature javaTypeSignature;
 
-    private FieldSignature(final ReferenceTypeSignature referenceTypeSignature) {
-        this.referenceTypeSignature = referenceTypeSignature;
+    private FieldSignature(final JavaTypeSignature javaTypeSignature) {
+        this.javaTypeSignature = javaTypeSignature;
     }
 
-    public ReferenceTypeSignature getReferenceTypeSignature() {
-        return referenceTypeSignature;
+    public JavaTypeSignature getJavaTypeSignature() {
+        return javaTypeSignature;
     }
 
     public static FieldSignature parse(final QueueString string) {
         if (!string.hasNext()) {
             return null;
         }
-        final ReferenceTypeSignature referenceTypeSignature = ReferenceTypeSignature.parse(string);
+        final JavaTypeSignature javaTypeSignature = JavaTypeSignature.parse(string);
 
-        if (referenceTypeSignature == null) {
+        if (javaTypeSignature == null) {
             return null;
         }
-        return new FieldSignature(referenceTypeSignature);
+        return new FieldSignature(javaTypeSignature);
+    }
+
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        final int targetType = annotation.getTargetType();
+        if (targetType == 0x13) { // empty_target
+            javaTypeSignature.walk(annotation, path);
+        }
     }
 }

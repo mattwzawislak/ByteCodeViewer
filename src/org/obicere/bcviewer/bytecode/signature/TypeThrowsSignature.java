@@ -1,5 +1,10 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
+
 /**
  */
 public class TypeThrowsSignature extends ThrowsSignature {
@@ -20,5 +25,10 @@ public class TypeThrowsSignature extends ThrowsSignature {
             return null;
         }
         return new TypeThrowsSignature(typeVariableSignature);
+    }
+
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        typeVariableSignature.walk(annotation, path);
     }
 }

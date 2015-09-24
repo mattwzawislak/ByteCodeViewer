@@ -1,5 +1,9 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -59,4 +63,42 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         return new ClassTypeSignature(packageSpecifier, simpleClassTypeSignature, suffixList.toArray(new ClassTypeSignatureSuffix[suffixList.size()]));
     }
 
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        if (!path.hasNext()) {
+            return;
+        }
+        final Path next = path.next();
+        final int kind = next.getTypePathKind();
+        if (kind == Path.KIND_NESTED) {
+            walkNested(annotation, path);
+        } else if (kind == Path.KIND_TYPE_ARGUMENT) {
+            final TypeArguments typeArguments = simpleClassTypeSignature.getTypeArguments();
+            final TypeArgument[] types = typeArguments.getTypeArguments();
+            final TypeArgument type = types[next.getTypeArgumentIndex()];
+            final WildcardIndicator wildcardIndicator = type.getWildcardIndicator();
+            wildcardIndicator.walk(annotation, path);
+        }
+    }
+
+    private void walkNested(final TypeAnnotation annotation, final Iterator<Path> path) {
+
+        int i = 0;
+        ClassTypeSignatureSuffix suffix = classTypeSignatureSuffix[0];
+        while (path.hasNext()) {
+            final Path next = path.next();
+            final int kind = next.getTypePathKind();
+            if (kind == Path.KIND_NESTED) {
+                suffix = classTypeSignatureSuffix[++i];
+            } else if (kind == Path.KIND_TYPE_ARGUMENT) {
+                final SimpleClassTypeSignature simple = suffix.getSimpleClassTypeSignature();
+                final TypeArguments typeArguments = simple.getTypeArguments();
+                final TypeArgument[] types = typeArguments.getTypeArguments();
+                final TypeArgument type = types[next.getTypeArgumentIndex()];
+                final WildcardIndicator wildcardIndicator = type.getWildcardIndicator();
+                wildcardIndicator.walk(annotation, path);
+                return;
+            }
+        }
+    }
 }

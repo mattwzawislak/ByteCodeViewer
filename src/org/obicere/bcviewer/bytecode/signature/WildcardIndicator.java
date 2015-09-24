@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode.signature;
 
 /**
  */
-public class WildcardIndicator {
+public abstract class WildcardIndicator extends AnnotationTarget {
 
     public static WildcardIndicator parse(final QueueString string){
         final QueueString save = string.save();

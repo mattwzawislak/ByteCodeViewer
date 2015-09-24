@@ -1,6 +1,5 @@
 package org.obicere.bcviewer.bytecode.signature;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 /**

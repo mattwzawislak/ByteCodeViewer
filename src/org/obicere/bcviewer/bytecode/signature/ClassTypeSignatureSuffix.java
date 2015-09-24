@@ -6,7 +6,7 @@ public class ClassTypeSignatureSuffix {
 
     private final SimpleClassTypeSignature simpleClassTypeSignature;
 
-    public ClassTypeSignatureSuffix(final SimpleClassTypeSignature simpleClassTypeSignature) {
+    private ClassTypeSignatureSuffix(final SimpleClassTypeSignature simpleClassTypeSignature) {
         this.simpleClassTypeSignature = simpleClassTypeSignature;
     }
 

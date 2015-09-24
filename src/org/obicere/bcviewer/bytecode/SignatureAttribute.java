@@ -29,17 +29,28 @@ public class SignatureAttribute extends Attribute {
     }
 
     public FieldSignature parseField(final ConstantPool constantPool) {
-        return FieldSignature.parse(new QueueString(constantPool.getAsString(signatureIndex)));
+        return parseField(constantPool.getAsString(signatureIndex));
     }
 
     public MethodSignature parseMethod(final ConstantPool constantPool) {
-        return MethodSignature.parse(new QueueString(constantPool.getAsString(signatureIndex)));
+        return parseMethod(constantPool.getAsString(signatureIndex));
     }
 
 
     public ClassSignature parseClass(final ConstantPool constantPool) {
-        return ClassSignature.parse(new QueueString(constantPool.getAsString(signatureIndex)));
+        return parseClass(constantPool.getAsString(signatureIndex));
     }
 
+    public static FieldSignature parseField(final String signature) {
+        return FieldSignature.parse(new QueueString(signature));
+    }
+
+    public static MethodSignature parseMethod(final String signature) {
+        return MethodSignature.parse(new QueueString(signature));
+    }
+
+    public static ClassSignature parseClass(final String signature) {
+        return ClassSignature.parse(new QueueString(signature));
+    }
 
 }

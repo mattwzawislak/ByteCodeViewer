@@ -1,5 +1,10 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
+
 /**
  */
 public class ArrayTypeSignature extends ReferenceTypeSignature {
@@ -25,4 +30,15 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
         return new ArrayTypeSignature(signature);
     }
 
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        if (!path.hasNext()) {
+            add(annotation);
+        } else {
+            final Path next = path.next();
+            if (next.getTypePathKind() == Path.KIND_ARRAY) {
+                signature.walk(annotation, path);
+            }
+        }
+    }
 }

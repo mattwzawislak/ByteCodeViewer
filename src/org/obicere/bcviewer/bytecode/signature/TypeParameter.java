@@ -1,10 +1,14 @@
 package org.obicere.bcviewer.bytecode.signature;
 
+import org.obicere.bcviewer.bytecode.Path;
+import org.obicere.bcviewer.bytecode.TypeAnnotation;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
  */
-public class TypeParameter {
+public class TypeParameter extends AnnotationTarget {
 
     private final String identifier;
 
@@ -54,5 +58,20 @@ public class TypeParameter {
         }
         final InterfaceBound[] interfaceBounds = interfaceBoundList.toArray(new InterfaceBound[interfaceBoundList.size()]);
         return new TypeParameter(identifier, classBound, interfaceBounds);
+    }
+
+    @Override
+    public void walk(final TypeAnnotation annotation, final Iterator<Path> path) {
+        if (!path.hasNext()) {
+            return;
+        }
+        final Path next = path.next();
+        final int kind = next.getTypePathKind();
+        if (kind == Path.KIND_TYPE_ARGUMENT) {
+            final ReferenceTypeSignature referenceTypeSignature = classBound.getReferenceTypeSignature();
+            if (referenceTypeSignature != null) {
+                referenceTypeSignature.walk(annotation, path);
+            }
+        }
     }
 }
