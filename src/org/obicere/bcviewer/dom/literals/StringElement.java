@@ -10,6 +10,7 @@ public class StringElement extends TextElement {
 
     public StringElement(final String name, final String text, final DocumentBuilder builder) {
         super(name, text);
+        setText(text);
 
         setAttributes(builder.getAttributesPool().get(AttributesResourcePool.ATTRIBUTES_STRING));
     }

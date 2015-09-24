@@ -1,6 +1,10 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
 import org.obicere.bcviewer.reader.instruction.InstructionReader;
 
 /**
@@ -77,5 +81,15 @@ public class wide extends Instruction {
             builder.append(getConst());
         }
         return builder.toString();
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        instruction.model(builder, parent);
+        parent.add(new ParameterIntegerElement("index", getIndex(), builder));
+        if (instruction.getOpcode() == InstructionReader.OPCODE_IINC) {
+            parent.add(new ParameterIntegerElement("const", getConst(), builder));
+        }
     }
 }

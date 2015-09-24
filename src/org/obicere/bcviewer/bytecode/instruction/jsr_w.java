@@ -1,5 +1,11 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterLongElement;
+
 /**
  * @author Obicere
  */
@@ -39,5 +45,11 @@ public class jsr_w extends Instruction {
 
     public int getBranchOffset(){
         return (branchbyte1 << 24) | (branchbyte2 << 16) | (branchbyte3 << 8) | branchbyte4;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        parent.add(new ParameterIntegerElement("branch", getBranchOffset(), builder));
     }
 }

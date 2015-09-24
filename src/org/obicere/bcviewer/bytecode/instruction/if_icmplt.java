@@ -1,5 +1,10 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+
 /**
  * @author Obicere
  */
@@ -27,5 +32,11 @@ public class if_icmplt extends Instruction {
 
     public int getBranchOffset(){
         return (branchbyte1 << 8) | branchbyte2;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        parent.add(new ParameterIntegerElement("branch", getBranchOffset(), builder));
     }
 }

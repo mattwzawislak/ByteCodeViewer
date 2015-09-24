@@ -1,5 +1,14 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterLongElement;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+
+import java.util.Arrays;
+
 /**
  * @author Obicere
  */
@@ -108,5 +117,13 @@ public class tableswitch extends Instruction {
 
     public int[] getJumpOffsets() {
         return jumpOffsets;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        parent.add(new ParameterIntegerElement("default", getDefault(), builder));
+        parent.add(new ParameterLongElement("byte", ((long) getHigh() << 32L) | getLow(), builder));
+        parent.add(new ParameterPlainElement("jumpOffsets", Arrays.toString(jumpOffsets), builder));
     }
 }

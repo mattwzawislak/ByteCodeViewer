@@ -1,5 +1,14 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.InstructionElement;
+import org.obicere.bcviewer.dom.literals.IntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+
+import java.util.Arrays;
+
 /**
  * @author Obicere
  */
@@ -52,7 +61,7 @@ public class lookupswitch extends Instruction {
         return defaultbyte4;
     }
 
-    public int getDefault(){
+    public int getDefault() {
         return (defaultbyte1 << 24) | (defaultbyte2 << 16) | (defaultbyte3 << 8) | defaultbyte4;
     }
 
@@ -72,11 +81,19 @@ public class lookupswitch extends Instruction {
         return npairs4;
     }
 
-    public int getNpairs(){
+    public int getNpairs() {
         return (npairs1 << 24) | (npairs2 << 16) | (npairs3 << 8) | npairs4;
     }
 
     public int[][] getMatchOffsetPairs() {
         return matchOffsetPairs;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent) {
+        parent.add(new InstructionElement(this, builder));
+        parent.add(new ParameterIntegerElement("default", getDefault(), builder));
+        parent.add(new ParameterIntegerElement("npairs", getNpairs(), builder));
+        parent.add(new ParameterPlainElement("matchOffsetPairs", Arrays.deepToString(getMatchOffsetPairs()), builder));
     }
 }

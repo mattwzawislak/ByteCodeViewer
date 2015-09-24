@@ -1,10 +1,11 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.CodeAttribute;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterStringElement;
 
 /**
  * @author Obicere
@@ -23,21 +24,21 @@ public class goto_ extends Instruction {
         this.branchbyte2 = branchbyte2;
     }
 
-    public int getBranchbyte1(){
+    public int getBranchbyte1() {
         return branchbyte1;
     }
 
-    public int getBranchbyte2(){
+    public int getBranchbyte2() {
         return branchbyte2;
     }
 
-    public int getBranchOffest(){
+    public int getBranchOffset() {
         return (branchbyte1 << 8) | branchbyte2;
     }
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterIntegerElement("branch", getBranchOffest(), builder));
+        parent.add(new ParameterIntegerElement("branch", getBranchOffset(), builder));
     }
 }

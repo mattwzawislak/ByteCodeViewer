@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
+import org.obicere.bcviewer.bytecode.instruction.goto_;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.CollapsibleElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
@@ -10,6 +11,7 @@ import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,6 +73,27 @@ public class CodeAttribute extends Attribute {
 
     public Attribute[] getAttributes() {
         return attributes;
+    }
+
+    public String getLineContaining(final int pc) {
+        final int searchPC = (pc - getStart() - 14);
+        Line bestLine = null;
+        int bestDist = Integer.MAX_VALUE;
+        for (final Line line : startPCToLine.values()) {
+            final int nextPC = line.line.getStartPC();
+            if (nextPC > searchPC) {
+                continue;
+            }
+            final int dist = pc - nextPC;
+            if (dist < bestDist) {
+                bestLine = line;
+                bestDist = dist;
+            }
+        }
+        if (bestLine == null) {
+            return null;
+        }
+        return bestLine.getLineName();
     }
 
     @Override
@@ -154,6 +177,7 @@ public class CodeAttribute extends Attribute {
             lineName.setRightPad(1);
 
             header.add(lineName);
+            header.add(new PlainElement("startPC", "(" + line.line.getStartPC() + ")", builder));
             header.add(new PlainElement("open", "{", builder));
 
             totalLine.add(header);
@@ -300,7 +324,6 @@ public class CodeAttribute extends Attribute {
         if (line.isEmpty()) {
             return line;
         }
-        Collections.sort(line, (o1, o2) -> Integer.compare(o1.line.getLineNumber(), o2.line.getLineNumber()));
         final List<Line> flattenedLines = new ArrayList<>(line.size());
         flattenedLines.addAll(line);
         /*
