@@ -73,9 +73,6 @@ public class Method extends BytecodeElement {
         return builder.toString();
     }
 
-    // TODO: Code - probably one of the last ones
-    // it now is the last one :(
-
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
@@ -89,7 +86,6 @@ public class Method extends BytecodeElement {
         modelDeclaration(builder, parent, hasBody);
 
         if (hasBody) {
-            System.out.println(builder.getConstantPool().getAsString(nameIndex));
             code.model(builder, parent);
             parent.add(new PlainElement("close", "}", builder));
         }
