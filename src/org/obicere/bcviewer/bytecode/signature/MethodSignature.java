@@ -261,7 +261,7 @@ public class MethodSignature extends AnnotationTarget {
         parent.add(new PlainElement("close", ")", builder));
     }
 
-    public void modelThrowsSignatures(final DocumentBuilder builder, final Element parent) {
+    public boolean modelThrowsSignatures(final DocumentBuilder builder, final Element parent) {
         boolean first = true;
         for (final ThrowsSignature signature : throwsSignatures) {
             if (first) {
@@ -277,5 +277,7 @@ public class MethodSignature extends AnnotationTarget {
             }
             signature.model(builder, parent);
         }
+        // if we are still on the first, no throws were added
+        return !first;
     }
 }

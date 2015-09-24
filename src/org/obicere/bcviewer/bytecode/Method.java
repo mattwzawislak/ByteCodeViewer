@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.ClassSignature;
+import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.BasicElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
@@ -72,7 +74,7 @@ public class Method extends BytecodeElement {
     }
 
     // TODO: Code - probably one of the last ones
-    // TODO: Exceptions
+    // it now is the last one :(
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
@@ -148,12 +150,33 @@ public class Method extends BytecodeElement {
                 // otherwise, model un-named and unknown access parameters
                 signature.modelParameters(builder, declaration);
             }
-            signature.modelThrowsSignatures(builder, declaration);
+            final boolean throwsSet = signature.modelThrowsSignatures(builder, declaration);
+            final ExceptionsAttribute exceptionsAttribute = attributeSet.getAttribute(ExceptionsAttribute.class);
 
+            if (exceptionsAttribute != null) {
+                boolean first = !throwsSet;
+                for (final int index : exceptionsAttribute.getIndexTable()) {
+                    if (first) {
+                        final KeywordElement keyword = new KeywordElement("throws", "throws", builder);
+                        keyword.setLeftPad(1);
+                        keyword.setRightPad(1);
+                        declaration.add(keyword);
+                        first = false;
+                    } else {
+                        final PlainElement comma = new PlainElement("comma", ",", builder);
+                        comma.setRightPad(1);
+                        declaration.add(comma);
+                    }
+                    final String name = constantPool.getAsString(index);
+                    declaration.add(new PlainElement("throws", BytecodeUtils.getQualifiedName(name), builder));
+                }
+            }
         }
 
         if (hasBody) {
-            declaration.add(new PlainElement("open", "{", builder));
+            final PlainElement element = new PlainElement("open", "{", builder);
+            element.setLeftPad(1);
+            declaration.add(element);
         } else {
             modelAbstractClose(builder, declaration);
         }

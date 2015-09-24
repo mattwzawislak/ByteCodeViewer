@@ -12,6 +12,7 @@ import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -25,22 +26,8 @@ public abstract class Boot {
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
 
-    public interface Foo {
-
-        void foo();
-
-        default void foo(int a) {
-
-        }
-
-    }
-
-    public @interface Bar {
-
-        public int bar() default 5;
-
-        public int tee();
-
+    public int foo() throws IOException {
+        return 5;
     }
 
     public static void main(final String[] args) {
