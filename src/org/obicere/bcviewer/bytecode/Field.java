@@ -52,9 +52,6 @@ public class Field extends BytecodeElement {
         return attributes;
     }
 
-    // TODO: RuntimeVisibleTypeAnnotations
-    // TODO: RuntimeInvisibleTypeAnnotations
-
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         final Element fieldElement = new BasicElement(getIdentifier());

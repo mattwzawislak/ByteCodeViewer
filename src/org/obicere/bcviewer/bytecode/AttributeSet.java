@@ -35,4 +35,11 @@ public class AttributeSet {
         return (Set<T>) map.get(cls);
     }
 
+    public <T extends Attribute> T getAttribute(final Class<T> cls) {
+        final Set<T> attributes = getAttributes(cls);
+        if (attributes == null) {
+            return null;
+        }
+        return attributes.iterator().next();
+    }
 }

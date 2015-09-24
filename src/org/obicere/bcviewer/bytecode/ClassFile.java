@@ -2,6 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.ClassSignature;
 import org.obicere.bcviewer.dom.BasicElement;
+import org.obicere.bcviewer.dom.CollapsibleElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.EmptyTextElement;
@@ -110,9 +111,6 @@ public class ClassFile extends BytecodeElement {
     // EnclosingMethod - Still not fully implemented, the parsing is quite off
     // basically, the information is stored within itself within an inner class
     // attribute
-    // TODO: BootstrapMethods
-    // TODO: RuntimeVisibleTypeAnnotations
-    // TODO: RuntimeInvisibleTypeAnnotations
 
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
@@ -153,6 +151,7 @@ public class ClassFile extends BytecodeElement {
 
         modelFields(builder, classContent);
         modelMethods(builder, classContent);
+        modelBootstrapMethods(builder, classContent);
         modelInnerClasses(builder, classContent);
 
         classElement.add(classContent);
@@ -260,27 +259,36 @@ public class ClassFile extends BytecodeElement {
     }
 
     private void modelInnerClasses(final DocumentBuilder builder, final Element parent) {
-        for (final Attribute attribute : attributes) {
-            if (attribute instanceof InnerClassesAttribute) {
-                final InnerClass[] innerClasses = ((InnerClassesAttribute) attribute).getInnerClasses();
-                for (final InnerClass innerClass : innerClasses) {
-                    final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
-                    final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
+        final Set<InnerClassesAttribute> attributes = attributeSet.getAttributes(InnerClassesAttribute.class);
+        for (final InnerClassesAttribute attribute : attributes) {
+            final InnerClass[] innerClasses = attribute.getInnerClasses();
+            for (final InnerClass innerClass : innerClasses) {
+                final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
+                final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
 
-                    if (name.equals(getName())) {
-                        continue;
-                    }
-                    if (!outer.equals("<null entry>") && !getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
-                        continue;
-                    }
-
-                    parent.add(new EmptyTextElement(builder));
-                    final BasicElement element = new BasicElement(innerClass.getIdentifier());
-                    parent.add(element);
-
-                    innerClass.model(builder, element);
+                if (name.equals(getName())) {
+                    continue;
                 }
+                if (!outer.equals("<null entry>") && !getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
+                    continue;
+                }
+
+                parent.add(new EmptyTextElement(builder));
+                final BasicElement element = new BasicElement(innerClass.getIdentifier());
+                parent.add(element);
+
+                innerClass.model(builder, element);
             }
         }
+    }
+
+    private void modelBootstrapMethods(final DocumentBuilder builder, final Element parent) {
+
+        final BootstrapMethodsAttribute attribute = attributeSet.getAttribute(BootstrapMethodsAttribute.class);
+
+        if (attribute == null) {
+            return;
+        }
+        attribute.model(builder, parent);
     }
 }
