@@ -271,6 +271,9 @@ public class ClassFile extends BytecodeElement {
 
     private void modelInnerClasses(final DocumentBuilder builder, final Element parent) {
         final Set<InnerClassesAttribute> attributes = attributeSet.getAttributes(InnerClassesAttribute.class);
+        if (attributes == null) {
+            return;
+        }
         for (final InnerClassesAttribute attribute : attributes) {
             final InnerClass[] innerClasses = attribute.getInnerClasses();
             for (final InnerClass innerClass : innerClasses) {

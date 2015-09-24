@@ -52,7 +52,7 @@ public class TypeVariableSignature extends ReferenceTypeSignature {
             annotation.model(builder, parent);
         }
         final TypeElement name = new TypeElement("identifier", identifier, builder);
-        //name.setRightPad(1);
+        name.setRightPad(1);
         parent.add(name);
 
     }

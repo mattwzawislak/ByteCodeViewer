@@ -25,10 +25,6 @@ public class Boot {
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
 
-    public <T extends Exception> void foo() throws T {
-        throw null;
-    }
-
     public static void main(final String[] args) {
         // Prepare the current boot
         final long start = System.currentTimeMillis();

@@ -121,7 +121,7 @@ public class Method extends BytecodeElement {
             // instead replace method name "<init>" with the class name
             declaration.add(new PlainElement("name", BytecodeUtils.getQualifiedName(builder.getClassFile().getName()), builder));
         } else if (!staticInitializer) {
-            // has no name. We don't do thi
+            // set the name to the method name otherwise - no name for clinit
             signature.modelReturnType(builder, declaration);
             declaration.add(new PlainElement("name", methodName, builder));
         }
