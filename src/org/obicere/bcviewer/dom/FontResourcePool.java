@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.util.QuickWidthFont;
+
 import java.awt.Font;
 
 /**
@@ -54,7 +56,7 @@ public class FontResourcePool extends ResourcePool<Font> {
     }
 
     @Override
-    public void add(final String name, final Font font){
+    public void add(final String name, final Font font) {
         super.add(name, font);
         builder.notifyFontChange();
     }
@@ -85,27 +87,31 @@ public class FontResourcePool extends ResourcePool<Font> {
 
         final int fixedSize = (int) (size * Script.SUPERSCRIPT.getSize());
 
-        safeAdd(FONT_SUPERSCRIPT_PLAIN, new Font(name, Font.PLAIN, fixedSize));
-        safeAdd(FONT_SUPERSCRIPT_BOLD, new Font(name, Font.BOLD, fixedSize));
-        safeAdd(FONT_SUPERSCRIPT_ITALIC, new Font(name, Font.ITALIC, fixedSize));
-        safeAdd(FONT_SUPERSCRIPT_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_PLAIN, newFont(name, Font.PLAIN, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_BOLD, newFont(name, Font.BOLD, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_ITALIC, newFont(name, Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUPERSCRIPT_BOLD_ITALIC, newFont(name, Font.BOLD | Font.ITALIC, fixedSize));
     }
 
     private void loadSubscript(final String name, final int size) {
         final int fixedSize = (int) (size * Script.SUBSCRIPT.getSize());
 
-        safeAdd(FONT_SUBSCRIPT_PLAIN, new Font(name, Font.PLAIN, fixedSize));
-        safeAdd(FONT_SUBSCRIPT_BOLD, new Font(name, Font.BOLD, fixedSize));
-        safeAdd(FONT_SUBSCRIPT_ITALIC, new Font(name, Font.ITALIC, fixedSize));
-        safeAdd(FONT_SUBSCRIPT_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_PLAIN, newFont(name, Font.PLAIN, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_BOLD, newFont(name, Font.BOLD, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_ITALIC, newFont(name, Font.ITALIC, fixedSize));
+        safeAdd(FONT_SUBSCRIPT_BOLD_ITALIC, newFont(name, Font.BOLD | Font.ITALIC, fixedSize));
     }
 
     private void loadBaseline(final String name, final int size) {
 
-        safeAdd(FONT_BASELINE_PLAIN, new Font(name, Font.PLAIN, size));
-        safeAdd(FONT_BASELINE_BOLD, new Font(name, Font.BOLD, size));
-        safeAdd(FONT_BASELINE_ITALIC, new Font(name, Font.ITALIC, size));
-        safeAdd(FONT_BASELINE_BOLD_ITALIC, new Font(name, Font.BOLD | Font.ITALIC, size));
+        safeAdd(FONT_BASELINE_PLAIN, newFont(name, Font.PLAIN, size));
+        safeAdd(FONT_BASELINE_BOLD, newFont(name, Font.BOLD, size));
+        safeAdd(FONT_BASELINE_ITALIC, newFont(name, Font.ITALIC, size));
+        safeAdd(FONT_BASELINE_BOLD_ITALIC, newFont(name, Font.BOLD | Font.ITALIC, size));
+    }
+
+    private Font newFont(final String name, final int style, final int size) {
+        return new QuickWidthFont(name, style, size);
     }
 
 }

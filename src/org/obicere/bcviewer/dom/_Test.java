@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
@@ -22,7 +23,11 @@ public class _Test {
 
         final JFrame frame = new JFrame();
 
-        final JDocumentArea area = new JDocumentArea(new DocumentBuilder(domain));
+        final DocumentBuilder builder = new DocumentBuilder(domain);
+
+        final JDocumentArea area = new JDocumentArea(builder);
+
+        builder.getFontPool().setBaseFont(Font.MONOSPACED, 12);
 
 
         final ClassFile classFile;
