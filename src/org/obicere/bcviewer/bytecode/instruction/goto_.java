@@ -5,6 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
 import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 import org.obicere.bcviewer.dom.literals.ParameterStringElement;
 
 /**
@@ -40,5 +41,8 @@ public class goto_ extends Instruction {
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
         parent.add(new ParameterIntegerElement("branch", getBranchOffset(), builder));
+        final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
+        final String line = code.getLineContaining(getStart(), (short) getBranchOffset());
+        parent.add(new ParameterPlainElement("target", line, builder));
     }
 }
