@@ -49,6 +49,7 @@ public class DocumentAreaUI extends ComponentUI {
         } else {
             throw new IllegalArgumentException("type of component must be " + getClass().getName());
         }
+        g1.dispose();
     }
 
     @Override

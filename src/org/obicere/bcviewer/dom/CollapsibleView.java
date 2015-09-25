@@ -7,6 +7,8 @@ import java.awt.Rectangle;
  */
 public class CollapsibleView extends View<CollapsibleElement> {
 
+    private final Rectangle collapsed = new Rectangle();
+
     public CollapsibleView(final CollapsibleElement element) {
         super(element);
     }
@@ -31,7 +33,9 @@ public class CollapsibleView extends View<CollapsibleElement> {
     @Override
     protected Rectangle layoutChildren(final Rectangle parent) {
         if (element.isCollapsed()) {
-            return new Rectangle(parent.x, parent.y, 0, 0);
+            collapsed.x = parent.x;
+            collapsed.y = parent.y;
+            return collapsed;
         } else {
             return super.layoutChildren(parent);
         }

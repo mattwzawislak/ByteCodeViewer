@@ -15,15 +15,22 @@ public class TextView extends View<TextElement> {
 
     private static final PaddingCache CACHE = PaddingCache.getPaddingCache();
 
-    private Rectangle textBounds;
+    private final Rectangle textBounds = new Rectangle();
+    private final Rectangle self       = new Rectangle();
+
+    private volatile boolean cached = false;
 
     public TextView(final TextElement element) {
         super(element);
     }
 
+    public void dispose() {
+        cached = false;
+    }
+
     public Rectangle getTextBounds() {
         if (!isArranged()) {
-            return new Rectangle();
+            return EMPTY_RECTANGLE;
         }
         return textBounds;
     }
@@ -68,29 +75,41 @@ public class TextView extends View<TextElement> {
 
     @Override
     protected Rectangle layoutSelf(final int x, final int y) {
-        final Script script = element.getAttributes().getScript();
-        final Font font = element.getAttributes().getFont();
-        final Font fixedFont = getFixedFont();
-        final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
+        // if cached, we can boycott this constant calculation completely
+        if (!cached) {
+            final Script script = element.getAttributes().getScript();
+            final Font font = element.getAttributes().getFont();
+            final Font fixedFont = getFixedFont();
+            final FontRenderContext fontRenderContext = new FontRenderContext(null, true, false);
 
-        final String leftPad = CACHE.getPadding(element.getLeftPad());
-        final String rightPad = CACHE.getPadding(element.getRightPad());
-        final String text = element.getText();
+            final String leftPad = CACHE.getPadding(element.getLeftPad());
+            final String rightPad = CACHE.getPadding(element.getRightPad());
+            final String text = element.getText();
 
-        final Rectangle leftPadBounds = fixedFont.getStringBounds(leftPad, fontRenderContext).getBounds();
-        final Rectangle rightPadBounds = fixedFont.getStringBounds(rightPad, fontRenderContext).getBounds();
-        final Rectangle textBounds = fixedFont.getStringBounds(text, fontRenderContext).getBounds();
+            final Rectangle leftPadBounds = fixedFont.getStringBounds(leftPad, fontRenderContext).getBounds();
+            final Rectangle rightPadBounds = fixedFont.getStringBounds(rightPad, fontRenderContext).getBounds();
+            final Rectangle textBounds = fixedFont.getStringBounds(text, fontRenderContext).getBounds();
 
-        final int height;
-        if (script == Script.BASELINE) {
-            height = textBounds.height;
-        } else {
-            height = (int) font.getStringBounds(element.getText(), fontRenderContext).getHeight();
+            final int height;
+            if (script == Script.BASELINE) {
+                height = textBounds.height;
+            } else {
+                height = (int) font.getStringBounds(element.getText(), fontRenderContext).getHeight();
+            }
+
+            textBounds.x = x + leftPadBounds.width;
+            textBounds.y = y;
+            //textBounds.width = textBounds.width;
+            textBounds.height = height;
+
+            self.width = leftPadBounds.width + textBounds.width + rightPadBounds.width;
+            self.height = height;
+
+            cached = true;
         }
-
-        this.textBounds = new Rectangle(x + leftPadBounds.width, y, textBounds.width, height);
-
-        return new Rectangle(x, y, leftPadBounds.width + textBounds.width + rightPadBounds.width, height);
+        self.x = x;
+        self.y = y;
+        return self;
     }
 
     @Override

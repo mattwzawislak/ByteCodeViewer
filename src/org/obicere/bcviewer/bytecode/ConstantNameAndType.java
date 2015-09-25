@@ -34,7 +34,6 @@ public class ConstantNameAndType extends Constant {
         return constantPool.getAsString(nameIndex) + ";" + constantPool.getAsString(descriptorIndex);
     }
 
-
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();

@@ -10,13 +10,15 @@ import java.util.List;
  */
 public abstract class View<E extends Element> {
 
+    protected static final Rectangle EMPTY_RECTANGLE = new Rectangle();
+
     protected final E element;
 
     private Rectangle size;
 
-    private Rectangle childrenSize;
+    private final Rectangle childrenSize = new Rectangle();
 
-    private Rectangle bounds;
+    private final Rectangle bounds = new Rectangle();
 
     private final List<View<? extends Element>> childViews;
 
@@ -48,29 +50,29 @@ public abstract class View<E extends Element> {
 
     protected void paintChildren(final Graphics g) {
         for (final View<? extends Element> view : childViews) {
-            final Graphics childGraphics = g.create();
-            view.paint(childGraphics);
-            childGraphics.dispose();
+            if (view.bounds.intersects(g.getClipBounds())) {
+                view.paint(g);
+            }
         }
     }
 
     public Rectangle getSize() {
         if (!isArranged) {
-            return new Rectangle();
+            return EMPTY_RECTANGLE;
         }
         return size;
     }
 
     public Rectangle getChildrenSize() {
         if (!isArranged) {
-            return new Rectangle();
+            return EMPTY_RECTANGLE;
         }
         return childrenSize;
     }
 
     public Rectangle getBounds() {
         if (!isArranged) {
-            return new Rectangle();
+            return EMPTY_RECTANGLE;
         }
         return bounds;
     }
@@ -78,9 +80,8 @@ public abstract class View<E extends Element> {
     public Rectangle layout(final int x, final int y) {
         this.size = layoutSelf(x, y);
 
-        this.childrenSize = layoutChildren(size);
+        layoutChildren(size);
 
-        this.bounds = new Rectangle();
         bounds.x = Math.min(size.x, childrenSize.x);
         bounds.y = Math.min(size.y, childrenSize.y);
         if (element.getAxis() == Element.AXIS_LINE) {
@@ -112,15 +113,17 @@ public abstract class View<E extends Element> {
 
         switch (element.getAxis()) {
             case Element.AXIS_LINE:
-                return layoutChildrenLine(parent);
+                layoutChildrenLine(parent);
+                return childrenSize;
             case Element.AXIS_PAGE:
-                return layoutChildrenPage(parent);
+                layoutChildrenPage(parent);
+                return childrenSize;
             default:
                 throw new IllegalStateException("invalid axis: " + element.getAxis());
         }
     }
 
-    private Rectangle layoutChildrenPage(final Rectangle parent) {
+    private void layoutChildrenPage(final Rectangle parent) {
         final int x = parent.x;
         final int y = parent.y + parent.height;
         int currentHeight = y;
@@ -135,10 +138,13 @@ public abstract class View<E extends Element> {
             currentWidth = Math.max(rectangle.width, currentWidth);
         }
         // subtract initial y to counter parent's offset
-        return new Rectangle(x, y, currentWidth, currentHeight - y);
+        childrenSize.x = x;
+        childrenSize.y = y;
+        childrenSize.width = currentWidth;
+        childrenSize.height = currentHeight - y;
     }
 
-    private Rectangle layoutChildrenLine(final Rectangle parent) {
+    private void layoutChildrenLine(final Rectangle parent) {
         final int x = parent.x + parent.width;
         final int y = parent.y;
         int currentWidth = x;
@@ -153,6 +159,9 @@ public abstract class View<E extends Element> {
             currentHeight = Math.max(rectangle.height, currentHeight);
         }
         // subtract initial x to counter parent's offset
-        return new Rectangle(x, y, currentWidth - x, currentHeight);
+        childrenSize.x = x;
+        childrenSize.y = y;
+        childrenSize.width = currentWidth - x;
+        childrenSize.height = currentHeight;
     }
 }

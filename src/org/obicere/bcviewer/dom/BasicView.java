@@ -8,6 +8,8 @@ import java.awt.Rectangle;
  */
 public class BasicView extends View<Element> {
 
+    private final Rectangle self = new Rectangle();
+
     public BasicView(final Element element) {
         super(element);
     }
@@ -20,6 +22,8 @@ public class BasicView extends View<Element> {
     @Override
     protected Rectangle layoutSelf(final int x, final int y) {
         // standard view has no size
-        return new Rectangle(x, y, 0, 0);
+        self.x = x;
+        self.y = y;
+        return self;
     }
 }

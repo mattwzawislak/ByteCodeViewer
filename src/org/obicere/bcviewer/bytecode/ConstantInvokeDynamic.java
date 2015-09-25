@@ -5,6 +5,7 @@ import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.ConstantElement;
 import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
 import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.literals.ParameterStringElement;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -40,7 +41,21 @@ public class ConstantInvokeDynamic extends Constant {
         final ConstantPool constantPool = builder.getConstantPool();
 
         parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterIntegerElement("bootstrapMethodAttrIndex", bootstrapMethodAttrIndex, builder));
+
+        BootstrapMethodsAttribute bootstrapMethodsAttribute = null;
+        for (final Attribute attribute : builder.getClassFile().getAttributes()) {
+            if (attribute instanceof BootstrapMethodsAttribute) {
+                bootstrapMethodsAttribute = (BootstrapMethodsAttribute) attribute;
+                break;
+            }
+        }
+
+        if (bootstrapMethodsAttribute != null) {
+            final int methodRef = bootstrapMethodsAttribute.getBootstrapMethods()[bootstrapMethodAttrIndex].getBootstrapMethodRef();
+            parent.add(new ParameterStringElement("bootstrapMethodAttr", constantPool.getAsString(methodRef), builder));
+        } else {
+            parent.add(new ParameterIntegerElement("bootstrapMethodAttrIndex", bootstrapMethodAttrIndex, builder));
+        }
         parent.add(new ParameterPlainElement("nameAndType", constantPool.getAsString(nameAndTypeIndex), builder));
     }
 }

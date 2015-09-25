@@ -46,6 +46,7 @@ public class TextElement extends Element {
         } else {
             this.text = text;
         }
+        view.dispose();
     }
 
     public void setLeftPad(final int pad) {
@@ -53,6 +54,7 @@ public class TextElement extends Element {
             throw new IllegalArgumentException("pad size cannot be less than 0.");
         }
         this.leftPad = pad;
+        view.dispose();
     }
 
     public void setRightPad(final int pad) {
@@ -60,30 +62,7 @@ public class TextElement extends Element {
             throw new IllegalArgumentException("pad size cannot be less than 0.");
         }
         this.rightPad = pad;
-    }
-
-    public int getCumulativeLeftPad() {
-        Element parent = getParent();
-        int sum = leftPad;
-        while (parent != null) {
-            if (parent instanceof TextElement) {
-                sum += ((TextElement) parent).getLeftPad();
-            }
-            parent = parent.getParent();
-        }
-        return sum;
-    }
-
-    public int getCumulativeRightPad() {
-        Element parent = getParent();
-        int sum = rightPad;
-        while (parent != null) {
-            if (parent instanceof TextElement) {
-                sum += ((TextElement) parent).getRightPad();
-            }
-            parent = parent.getParent();
-        }
-        return sum;
+        view.dispose();
     }
 
     public int getLeftPad() {
