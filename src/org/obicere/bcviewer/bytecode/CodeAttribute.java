@@ -11,9 +11,7 @@ import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,11 +76,14 @@ public class CodeAttribute extends Attribute {
         return attributes;
     }
 
-    public String getLineContaining(final int start, final int offset) {
+    public String getBlockName(final int start, final int offset) {
+        // could use a nicer way to get the code offset. By summing the
+        // offsets from the start of the attribute we get this:
+        // u2 + u4 + u2 + u2 + u4 = 14 bytes of information before code.
+        // We then have to subtract this, as instructions include
+        // the 14 bytes in their offset values
         final int pc = start + offset - 14;
         final int searchPC = pc - getStart();
-        System.out.println(startPCToLine.values().stream().map(Block::getStartPC).sorted().collect(Collectors.toList()));
-        System.out.println("search: " + searchPC);
         final Block block = startPCToLine.get(searchPC);
         if (block == null) {
             return null;
@@ -206,7 +207,6 @@ public class CodeAttribute extends Attribute {
             lineName.setRightPad(1);
 
             header.add(lineName);
-            header.add(new PlainElement("startPC", "(" + line.getStartPC() + ")", builder));
             header.add(new PlainElement("open", "{", builder));
 
             totalLine.add(header);
