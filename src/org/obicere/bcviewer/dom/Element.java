@@ -20,8 +20,6 @@ public abstract class Element {
 
     private final String name;
 
-    private String qualifiedName;
-
     private int axis = AXIS_PAGE;
 
     public Element(final String name) {
@@ -33,10 +31,10 @@ public abstract class Element {
     }
 
     public final String getQualifiedName() {
-        if (qualifiedName == null) {
+        if(parent == null){
             return name;
         }
-        return qualifiedName;
+        return parent.getQualifiedName() + "." + name;
     }
 
     public abstract View<? extends Element> getView();
@@ -60,7 +58,6 @@ public abstract class Element {
 
     protected void addedTo(final Element parent) {
         this.parent = parent;
-        this.qualifiedName = parent.getQualifiedName() + "." + name;
     }
 
     public Document getDocument() {
@@ -77,9 +74,6 @@ public abstract class Element {
 
     protected void removedFrom(final Element parent) {
         this.parent = null;
-
-        // make sure to clear the fully qualified name
-        this.qualifiedName = name;
     }
 
     public Element remove(final String name) {

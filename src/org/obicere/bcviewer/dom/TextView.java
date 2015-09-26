@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.bytecode.Attribute;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -49,14 +51,19 @@ public class TextView extends View<TextElement> {
         final FontMetrics metrics = g.getFontMetrics();
         final Rectangle trimBounds = metrics.getStringBounds(trim, g).getBounds();
 
-        final Color color = attributes.getColor();
-        if (color != null) {
-            g.setColor(color);
-        }
 
         final int x = bounds.x;
         final int y = bounds.y + bounds.height - (int) ((metrics.getLeading() + metrics.getAscent()) * (script.getPosition()));
-        g.drawString(text, x, y);
+
+        if (element.isHighlighted()) {
+            if (element.isHighlightClipped()) {
+                drawTextHighlightSplice(g, metrics, attributes, x, y);
+            } else {
+                drawTextHighlightNoSplice(g, metrics, attributes, x, y);
+            }
+        } else {
+            drawTextNoHighlight(g, attributes, x, y);
+        }
 
         // 0.08= 8% of the total height of the font should be the approximate
         // line size for the strike-through and underline attributes
@@ -71,6 +78,73 @@ public class TextView extends View<TextElement> {
             final int median = y - (int) (metrics.getHeight() * 0.33);
             g.fillRect(bounds.x + trimBounds.x, median, trimBounds.width, lineSize);
         }
+    }
+
+    private void drawTextNoHighlight(final Graphics g, final Attributes attributes, final int x, final int y) {
+        final Color color = attributes.getColor();
+        if (color != null) {
+            g.setColor(color);
+        }
+        g.drawString(element.getDisplayText(), x, y);
+    }
+
+    private void drawTextHighlightNoSplice(final Graphics g, final FontMetrics metrics, final Attributes attributes, final int x, final int y) {
+
+        final String display = element.getDisplayText();
+
+        final int leadWidth;
+        if (element.getHighlightStart() == 0) {
+            leadWidth = 0;
+        } else {
+            final Rectangle lead = metrics.getStringBounds(CACHE.getPadding(element.getHighlightStart()), g).getBounds();
+            leadWidth = lead.width;
+        }
+        final Rectangle displayArea = metrics.getStringBounds(display, element.getHighlightStart(), element.getHighlightEnd(), g).getBounds();
+
+        displayArea.x = leadWidth + x;
+        displayArea.y = y - displayArea.height + metrics.getDescent();
+        //displayArea.height += metrics.getAscent();
+
+        g.setColor(attributes.getHighlightColor());
+        g.fillRect(displayArea.x, displayArea.y, displayArea.width, displayArea.height);
+
+        g.setColor(Color.WHITE);
+        g.drawString(display, x, y);
+    }
+
+    private void drawTextHighlightSplice(final Graphics g, final FontMetrics metrics, final Attributes attributes, final int x, final int y) {
+        final String display = element.getDisplayText();
+        final String leadText = display.substring(0, element.getHighlightStart());
+        final String centerText = display.substring(element.getHighlightStart(), element.getHighlightEnd());
+        final String trailingText = display.substring(element.getHighlightEnd());
+
+        final int leadWidth;
+        if (element.getHighlightStart() == 0) {
+            leadWidth = 0;
+        } else {
+            final Rectangle lead = metrics.getStringBounds(leadText, g).getBounds();
+            leadWidth = lead.width;
+        }
+
+        final Rectangle centerArea = metrics.getStringBounds(display, element.getHighlightStart(), element.getHighlightEnd(), g).getBounds();
+
+        final Color color = attributes.getColor();
+        if (color != null) {
+            g.setColor(color);
+        }
+        g.drawString(leadText, x, y);
+        g.drawString(trailingText, x + leadWidth + centerArea.width, y);
+
+        centerArea.x = leadWidth + x;
+        centerArea.y = y - centerArea.height + metrics.getDescent();
+
+        g.setColor(attributes.getHighlightColor());
+        g.fillRect(centerArea.x, centerArea.y, centerArea.width, centerArea.height);
+
+        g.setColor(Color.WHITE);
+        g.drawString(centerText, x + leadWidth, y);
+
+
     }
 
     @Override

@@ -10,6 +10,11 @@ public class TextElement extends Element {
     private int leftPad  = 0;
     private int rightPad = 0;
 
+    private int highlightStart = 0;
+    private int highlightEnd   = 0;
+
+    private boolean highlight = false;
+
     private Attributes attributes = new Attributes();
 
     private final TextView view = new TextView(this);
@@ -47,6 +52,7 @@ public class TextElement extends Element {
             this.text = text;
         }
         view.dispose();
+        clearHighlight();
     }
 
     public void setLeftPad(final int pad) {
@@ -55,6 +61,7 @@ public class TextElement extends Element {
         }
         this.leftPad = pad;
         view.dispose();
+        clearHighlight();
     }
 
     public void setRightPad(final int pad) {
@@ -63,14 +70,85 @@ public class TextElement extends Element {
         }
         this.rightPad = pad;
         view.dispose();
+        clearHighlight();
     }
 
     public int getLeftPad() {
         return leftPad;
     }
 
+    public int getLeftPadIndex() {
+        return leftPad;
+    }
+
     public int getRightPad() {
         return rightPad;
+    }
+
+    public int getRightPadIndex() {
+        // getDisplayLength() - rightPad
+        return leftPad + text.length();
+    }
+
+    public int getDisplayLength() {
+        return leftPad + text.length() + rightPad;
+    }
+
+    public boolean isHighlighted() {
+        return highlight;
+    }
+
+    public boolean isHighlightClipped() {
+        // if not highlighting, no clip
+        if (!highlight) {
+            return false;
+        }
+        // if the highlight start clips the text
+        if (leftPad < highlightStart && highlightStart < getRightPadIndex()) {
+            return true;
+        }
+        // or if the highlight end clips the text
+        return leftPad < highlightEnd && highlightEnd < getRightPadIndex();
+    }
+
+    public int getHighlightStart() {
+        return highlightStart;
+    }
+
+    public int getHighlightEnd() {
+        return highlightEnd;
+    }
+
+    public void clearHighlight() {
+        highlightStart = 0;
+        highlightEnd = 0;
+        highlight = false;
+    }
+
+    public void setHighlightText() {
+        setHighlight(leftPad, leftPad + text.length());
+    }
+
+    public void setHighlightDisplayText() {
+        setHighlight(0, getDisplayLength());
+    }
+
+    public void setHighlight(final int start, int end) {
+        if (start < 0) {
+            throw new IllegalArgumentException("cannot have start of highlight be < 0.");
+        }
+        if (getDisplayLength() < end) {
+            throw new IllegalArgumentException("end of highlight must be <= display length.");
+        }
+        if (end < start) {
+            throw new IllegalArgumentException("start must be <= end");
+        }
+        highlightStart = start;
+        highlightEnd = end;
+        if (start != end) {
+            // only highlight when there is some text to highlight
+            highlight = true;
+        }
     }
 
     public Attributes getAttributes() {

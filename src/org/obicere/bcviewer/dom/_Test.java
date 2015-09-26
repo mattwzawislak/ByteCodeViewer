@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.dom;
 
+import com.alee.laf.WebLookAndFeel;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
@@ -7,6 +8,8 @@ import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import java.awt.Font;
 import java.io.File;
@@ -17,6 +20,12 @@ import java.io.IOException;
 public class _Test {
 
     public _Test() {
+
+        try {
+            UIManager.setLookAndFeel(new WebLookAndFeel());
+        } catch (final UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         final Domain domain = new Domain();
         domain.initialize();

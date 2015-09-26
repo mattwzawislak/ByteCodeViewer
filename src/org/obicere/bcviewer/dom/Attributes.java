@@ -16,23 +16,9 @@ public class Attributes {
 
     private Color textColor;
 
+    private Color highlightColor = new Color(0, 64, 128, 200);
+
     private Font font;
-
-    public Attributes() {
-
-    }
-
-    public Attributes(final Attributes attributes) {
-        setAttributes(attributes);
-    }
-
-    public void setAttributes(final Attributes attributes) {
-        this.underline = attributes.underline;
-        this.strikeThrough = attributes.strikeThrough;
-        this.script = attributes.script;
-        this.textColor = attributes.textColor;
-        this.font = attributes.font;
-    }
 
     public boolean isUnderline() {
         return underline;
@@ -64,6 +50,14 @@ public class Attributes {
 
     public void setColor(final Color textColor) {
         this.textColor = textColor;
+    }
+
+    public Color getHighlightColor() {
+        return highlightColor;
+    }
+
+    public void setHighlightColor(final Color highlightColor) {
+        this.highlightColor = highlightColor;
     }
 
     public Font getFont() {

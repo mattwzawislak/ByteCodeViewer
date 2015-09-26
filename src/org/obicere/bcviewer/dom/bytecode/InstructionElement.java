@@ -18,6 +18,7 @@ public class InstructionElement extends TextElement {
         setAttributes(builder.getAttributesPool().get(AttributesResourcePool.ATTRIBUTES_KEYWORD));
         setLeftPad(builder.getTabSize());
         setRightPad(builder.getTabbedPaddingSize(instruction.getMnemonic().length(), MAX_NAME_LENGTH));
+        setHighlight(0, getDisplayLength() / 2);
     }
 
 }
