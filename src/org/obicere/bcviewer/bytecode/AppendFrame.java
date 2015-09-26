@@ -1,5 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.bytecode.StackMapFrameElement;
+
 /**
  * @author Obicere
  */
@@ -30,5 +34,10 @@ public class AppendFrame extends StackMapFrame {
     @Override
     public int getOffsetDelta() {
         return offset;
+    }
+
+    @Override
+    public void model(final DocumentBuilder builder, final Element parent){
+        parent.add(new StackMapFrameElement(this, builder));
     }
 }

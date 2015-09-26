@@ -76,13 +76,17 @@ public class CodeAttribute extends Attribute {
         return attributes;
     }
 
-    public String getBlockName(final int start, final int offset) {
+    public String getBlockName(final int startPC) {
+        return getBlockName(startPC, 0);
+    }
+
+    public String getBlockName(final int startPC, final int offset) {
         // could use a nicer way to get the code offset. By summing the
         // offsets from the start of the attribute we get this:
         // u2 + u4 + u2 + u2 + u4 = 14 bytes of information before code.
         // We then have to subtract this, as instructions include
         // the 14 bytes in their offset values
-        final int pc = start + offset - 14;
+        final int pc = startPC + offset - 14;
         final int searchPC = pc - getStart();
         final Block block = startPCToLine.get(searchPC);
         if (block == null) {
@@ -197,12 +201,12 @@ public class CodeAttribute extends Attribute {
         }
     }
 
-    private void modelLines(final DocumentBuilder builder, final Element parent, final Iterable<Block> lines) {
-        for (final Block line : lines) {
+    private void modelLines(final DocumentBuilder builder, final Element parent, final Iterable<Block> blocks) {
+        for (final Block block : blocks) {
             final BasicElement totalLine = new BasicElement("line", Element.AXIS_PAGE);
             final BasicElement header = new BasicElement("header", Element.AXIS_LINE);
 
-            final String name = line.getName();
+            final String name = block.getName();
             final PlainElement lineName = new PlainElement(name, name, builder);
             lineName.setRightPad(1);
 
@@ -211,8 +215,9 @@ public class CodeAttribute extends Attribute {
 
             totalLine.add(header);
 
+            block.model(builder, totalLine);
             builder.setProperty("code", this);
-            for (final Instruction instruction : line.getInstructions()) {
+            for (final Instruction instruction : block.getInstructions()) {
                 final BasicElement nextInstruction = new BasicElement(instruction.getIdentifier(), Element.AXIS_LINE);
                 instruction.model(builder, nextInstruction);
                 totalLine.add(nextInstruction);
@@ -332,6 +337,10 @@ public class CodeAttribute extends Attribute {
         public List<Instruction> getInstructions() {
             return instructions;
         }
+
+        public void model(final DocumentBuilder builder, final Element parent){
+            // default does not model
+        }
     }
 
     private class LineBlock extends Block {
@@ -372,6 +381,11 @@ public class CodeAttribute extends Attribute {
         @Override
         public String getName() {
             return "F" + startPC;
+        }
+
+        @Override
+        public void model(final DocumentBuilder builder, final Element parent){
+            frame.model(builder, parent);
         }
     }
 }

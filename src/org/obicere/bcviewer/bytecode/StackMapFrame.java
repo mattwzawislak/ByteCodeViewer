@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public abstract class StackMapFrame {
+public abstract class StackMapFrame extends BytecodeElement {
 
     private final int frameType;
 
