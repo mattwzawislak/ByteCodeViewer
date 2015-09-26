@@ -39,9 +39,12 @@ public class goto_ extends Instruction {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterIntegerElement("branch", getBranchOffset(), builder));
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(getStart(), (short) getBranchOffset());
-        parent.add(new ParameterPlainElement("target", line, builder));
+        if (line == null) {
+            parent.add(new ParameterIntegerElement("branch", (short) getBranchOffset(), builder));
+        } else {
+            parent.add(new ParameterPlainElement("target", line, builder));
+        }
     }
 }

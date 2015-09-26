@@ -1,9 +1,11 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
+import org.obicere.bcviewer.bytecode.CodeAttribute;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.bytecode.InstructionElement;
 import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
+import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
 
 /**
  * @author Obicere
@@ -37,6 +39,12 @@ public class if_icmpeq extends Instruction {
     @Override
     public void model(final DocumentBuilder builder, final Element parent) {
         parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterIntegerElement("branch", getBranchOffset(), builder));
+        final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
+        final String line = code.getBlockName(getStart(), (short) getBranchOffset());
+        if (line == null) {
+            parent.add(new ParameterIntegerElement("branch", (short) getBranchOffset(), builder));
+        } else {
+            parent.add(new ParameterPlainElement("target", line, builder));
+        }
     }
 }
