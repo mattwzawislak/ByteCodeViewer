@@ -11,8 +11,10 @@ import org.obicere.bcviewer.dom.literals.IntegerElement;
 import org.obicere.bcviewer.dom.literals.PlainElement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class CodeAttribute extends Attribute {
 
     private final AttributeSet attributeSet;
 
-    private final Map<Integer, Block> startPCToLine = new HashMap<>();
+    private final Map<Integer, Block> startPCToLine = new TreeMap<>();
 
     public CodeAttribute(final int maxStack, final int maxLocals, final byte[] code, final Instruction[] instructions, final CodeException[] exceptions, final Attribute[] attributes) {
         this.maxStack = maxStack;
@@ -77,11 +79,10 @@ public class CodeAttribute extends Attribute {
     }
 
     public String getLineContaining(final int start, final int offset) {
-        final int pc = start + offset;
+        final int pc = start + offset - 14;
         final int searchPC = pc - getStart();
         System.out.println(startPCToLine.values().stream().map(Block::getStartPC).sorted().collect(Collectors.toList()));
-        System.out.println("goto at: " + (start - getStart()));
-        System.out.println("offset: " + offset);
+        System.out.println("search: " + searchPC);
         final Block block = startPCToLine.get(searchPC);
         if (block == null) {
             return null;
@@ -139,25 +140,32 @@ public class CodeAttribute extends Attribute {
         padding.setLeftPad(builder.getTabSize());
         codeBlock.add(padding);
 
-        final List<LineNumber> staggers = generateStaggers();
-        final List<LineBlock> lines = distributeInstructions(staggers);
-
-        int max = 0;
-        for (final LineBlock line : lines) {
-            final LineNumber number = line.line;
-            max = Math.max(number.getLineNumber(), max);
-            startPCToLine.put(number.getStartPC(), line);
+        final LineNumber[] lines = getLines();
+        for (final LineNumber line : lines) {
+            final LineBlock block = new LineBlock(line);
+            startPCToLine.put(line.getStartPC(), block);
         }
 
+        boolean firstFrame = true; // first frame has different offset calc
+        int lastOffset = 0; // header before the code attribute
         final StackMapFrame[] frames = getFrames();
-        for(final StackMapFrame frame : frames){
+        for (final StackMapFrame frame : frames) {
+            final FrameBlock block = new FrameBlock(frame, lastOffset);
+            lastOffset += frame.getOffsetDelta() + 1;
+            startPCToLine.put(block.getStartPC(), block);
 
+            if (firstFrame) {
+                lastOffset--;
+                firstFrame = false;
+            }
         }
+
+        distributeInstructions(startPCToLine.values());
 
         final Map<Integer, FieldSignature> localVarSignatures = getLocalVariables(constantPool);
 
         modelExceptions(builder, padding);
-        modelLines(builder, padding, lines);
+        modelLines(builder, padding, startPCToLine.values());
         parent.add(codeBlock);
     }
 
@@ -170,14 +178,26 @@ public class CodeAttribute extends Attribute {
         }
     }
 
+    private LineNumber[] getLines() {
+        final Set<LineNumberTableAttribute> lineNumberTables = attributeSet.getAttributes(LineNumberTableAttribute.class);
+        if (lineNumberTables == null) {
+            return new LineNumber[0];
+        }
+        final List<LineNumber> lines = new ArrayList<>();
+        for (final LineNumberTableAttribute lineNumberTable : lineNumberTables) {
+            Collections.addAll(lines, lineNumberTable.getLineNumberTable());
+        }
+        return lines.toArray(new LineNumber[lines.size()]);
+    }
+
     private void modelExceptions(final DocumentBuilder builder, final Element parent) {
         for (final CodeException exception : exceptions) {
 
         }
     }
 
-    private void modelLines(final DocumentBuilder builder, final Element parent, final List<LineBlock> lines) {
-        for (final LineBlock line : lines) {
+    private void modelLines(final DocumentBuilder builder, final Element parent, final Iterable<Block> lines) {
+        for (final Block line : lines) {
             final BasicElement totalLine = new BasicElement("line", Element.AXIS_PAGE);
             final BasicElement header = new BasicElement("header", Element.AXIS_LINE);
 
@@ -186,7 +206,7 @@ public class CodeAttribute extends Attribute {
             lineName.setRightPad(1);
 
             header.add(lineName);
-            header.add(new PlainElement("startPC", "(" + line.line.getStartPC() + ")", builder));
+            header.add(new PlainElement("startPC", "(" + line.getStartPC() + ")", builder));
             header.add(new PlainElement("open", "{", builder));
 
             totalLine.add(header);
@@ -266,85 +286,60 @@ public class CodeAttribute extends Attribute {
         parent.add(new IntegerElement("index", index, builder));
     }
 
-    private List<LineNumber> generateStaggers() {
-        final Set<LineNumberTableAttribute> lineNumberTables = attributeSet.getAttributes(LineNumberTableAttribute.class);
-        if (lineNumberTables == null) {
+    private List<Block> distributeInstructions(final Iterable<Block> staggeredMap) {
+        final Iterator<Block> iterator = staggeredMap.iterator();
+        if (!iterator.hasNext()) {
             return new ArrayList<>();
         }
-        final List<LineNumber> staggeredMap = new ArrayList<>();
-        // this effectively calculates the bounds.
-        for (final LineNumberTableAttribute lineNumberTable : lineNumberTables) {
-            Collections.addAll(staggeredMap, lineNumberTable.getLineNumberTable());
-        }
-        // sort the bounds. This way they will stagger in a processable fashion
-        // giving both the start and end bounds for each line of code.
-        // ex:
-        // [0, 10, 22, 42]
-        // shows that:
-        //     the first code block is bytes [0, 10)
-        //     the second code block is bytes [10, 22)
-        //     etc
-        Collections.sort(staggeredMap, (o1, o2) -> Integer.compare(o1.getStartPC(), o2.getStartPC()));
-        return staggeredMap;
-    }
-
-    private List<LineBlock> distributeInstructions(final List<LineNumber> staggeredMap) {
-        if (staggeredMap.isEmpty()) {
-            return new ArrayList<>();
-        }
-        final ArrayList<LineBlock> lines = new ArrayList<>(staggeredMap.size());
+        final ArrayList<Block> blocks = new ArrayList<>();
         int instruction = 0;
-        LineNumber currentLine = staggeredMap.get(0);
+        Block currentBlock = iterator.next();
 
         // we do -1 so we can dump remaining instructions into last line
-        final int size = staggeredMap.size() - 1;
-        for (int i = 0; i < size; i++) {
-            final LineBlock line = new LineBlock(currentLine);
-            final LineNumber nextLine = staggeredMap.get(i + 1);
-            int start = currentLine.getStartPC();
-            final int endPC = nextLine.getStartPC();
+        while (iterator.hasNext()) {
+            final Block nextBlock = iterator.next();
+            int start = currentBlock.getStartPC();
+            final int endPC = nextBlock.getStartPC();
 
-            final List<Instruction> lineInstructions = line.getInstructions();
+            final List<Instruction> lineInstructions = currentBlock.getInstructions();
             while (start < endPC) {
                 final Instruction next = instructions[instruction++];
 
                 lineInstructions.add(next);
                 start += next.getLength();
             }
-            currentLine = nextLine;
-            lines.add(line);
+            currentBlock = nextBlock;
+            blocks.add(currentBlock);
         }
 
         // dump the remaining instructions into last line
-        final LineBlock lastLine = new LineBlock(currentLine);
-        final List<Instruction> list = lastLine.getInstructions();
+        final List<Instruction> list = currentBlock.getInstructions();
         while (instruction < instructions.length) {
             list.add(instructions[instruction++]);
         }
-        lines.add(lastLine);
-        return lines;
+        blocks.add(currentBlock);
+        return blocks;
     }
 
-    private interface Block {
-
-        public int getStartPC();
-
-        public String getName();
-
-    }
-
-    private class LineBlock implements Block {
+    private abstract class Block {
 
         private final List<Instruction> instructions = new LinkedList<>();
+
+        public abstract int getStartPC();
+
+        public abstract String getName();
+
+        public List<Instruction> getInstructions() {
+            return instructions;
+        }
+    }
+
+    private class LineBlock extends Block {
 
         private final LineNumber line;
 
         public LineBlock(final LineNumber line) {
             this.line = line;
-        }
-
-        public List<Instruction> getInstructions() {
-            return instructions;
         }
 
         @Override
@@ -358,7 +353,7 @@ public class CodeAttribute extends Attribute {
         }
     }
 
-    private class FrameBlock implements Block {
+    private class FrameBlock extends Block {
 
         private final StackMapFrame frame;
 
