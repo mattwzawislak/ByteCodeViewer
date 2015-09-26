@@ -12,8 +12,8 @@ public class SameFrameExtended extends StackMapFrame {
         this.offset = offset;
     }
 
-    public int getOffset() {
+    @Override
+    public int getOffsetDelta() {
         return offset;
     }
-
 }

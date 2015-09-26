@@ -12,8 +12,7 @@ public class ChopFrame extends StackMapFrame {
         this.offset = offset;
     }
 
-    public int getOffset() {
+    public int getOffsetDelta() {
         return offset;
     }
-
 }

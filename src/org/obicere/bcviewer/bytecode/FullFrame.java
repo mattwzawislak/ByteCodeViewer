@@ -25,7 +25,8 @@ public class FullFrame extends StackMapFrame {
         this.stack = stack;
     }
 
-    public int getOffset() {
+    @Override
+    public int getOffsetDelta() {
         return offset;
     }
 

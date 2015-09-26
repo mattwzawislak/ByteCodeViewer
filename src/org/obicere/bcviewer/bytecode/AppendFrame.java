@@ -27,4 +27,8 @@ public class AppendFrame extends StackMapFrame {
         return locals;
     }
 
+    @Override
+    public int getOffsetDelta() {
+        return offset;
+    }
 }

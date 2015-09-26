@@ -21,4 +21,8 @@ public class SameLocals1StackItemFrame extends StackMapFrame {
         return stack;
     }
 
+    @Override
+    public int getOffsetDelta() {
+        return getFrameType() - 64;
+    }
 }

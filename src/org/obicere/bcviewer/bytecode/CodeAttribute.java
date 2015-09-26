@@ -39,7 +39,7 @@ public class CodeAttribute extends Attribute {
 
     private final AttributeSet attributeSet;
 
-    private final Map<Integer, LineBlock> startPCToLine = new HashMap<>();
+    private final Map<Integer, Block> startPCToLine = new HashMap<>();
 
     public CodeAttribute(final int maxStack, final int maxLocals, final byte[] code, final Instruction[] instructions, final CodeException[] exceptions, final Attribute[] attributes) {
         this.maxStack = maxStack;
@@ -79,14 +79,14 @@ public class CodeAttribute extends Attribute {
     public String getLineContaining(final int start, final int offset) {
         final int pc = start + offset;
         final int searchPC = pc - getStart();
-        System.out.println(startPCToLine.values().stream().map(e -> e.line.getStartPC()).sorted().collect(Collectors.toList()));
+        System.out.println(startPCToLine.values().stream().map(Block::getStartPC).sorted().collect(Collectors.toList()));
         System.out.println("goto at: " + (start - getStart()));
         System.out.println("offset: " + offset);
-        final LineBlock line = startPCToLine.get(searchPC);
-        if (line == null) {
+        final Block block = startPCToLine.get(searchPC);
+        if (block == null) {
             return null;
         }
-        return line.getName();
+        return block.getName();
     }
 
     @Override
@@ -147,6 +147,11 @@ public class CodeAttribute extends Attribute {
             final LineNumber number = line.line;
             max = Math.max(number.getLineNumber(), max);
             startPCToLine.put(number.getStartPC(), line);
+        }
+
+        final StackMapFrame[] frames = getFrames();
+        for(final StackMapFrame frame : frames){
+
         }
 
         final Map<Integer, FieldSignature> localVarSignatures = getLocalVariables(constantPool);
@@ -239,7 +244,7 @@ public class CodeAttribute extends Attribute {
     private void modelGenericLocalVariable(final DocumentBuilder builder, final Element parent, final int startPC, final int endPC, final int index) {
         final String start = startPCToLine.get(startPC).getName();
         final String end;
-        final LineBlock line = startPCToLine.get(endPC);
+        final Block line = startPCToLine.get(endPC);
         if (line != null) {
             end = line.getName();
         } else {

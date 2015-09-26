@@ -14,4 +14,6 @@ public abstract class StackMapFrame {
     public int getFrameType() {
         return frameType;
     }
+
+    public abstract int getOffsetDelta();
 }
