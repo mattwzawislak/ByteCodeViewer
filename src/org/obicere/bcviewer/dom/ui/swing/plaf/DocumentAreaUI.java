@@ -1,7 +1,10 @@
 package org.obicere.bcviewer.dom.ui.swing.plaf;
 
+import org.obicere.bcviewer.dom.Caret;
 import org.obicere.bcviewer.dom.Document;
+import org.obicere.bcviewer.dom.Element;
 import org.obicere.bcviewer.dom.Marker;
+import org.obicere.bcviewer.dom.TextElement;
 import org.obicere.bcviewer.dom.View;
 import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
 
@@ -14,6 +17,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Set;
 
 /**
@@ -21,6 +26,14 @@ import java.util.Set;
 public class DocumentAreaUI extends ComponentUI {
 
     private static final int MARKER_PANE_WIDTH = 10;
+
+    @Override
+    public void installUI(final JComponent component) {
+        if (component instanceof JDocumentArea) {
+            final JDocumentArea area = (JDocumentArea) component;
+            installListeners(area);
+        }
+    }
 
     @Override
     public void paint(final Graphics g1, final JComponent component) {
@@ -89,6 +102,49 @@ public class DocumentAreaUI extends ComponentUI {
             throw new NullPointerException("Component must be non-null.");
         }
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
+
+    }
+
+    private void installListeners(final JDocumentArea component) {
+        final DocumentAreaMouseListener listener = new DocumentAreaMouseListener(component);
+        component.addMouseListener(listener);
+    }
+
+    private void uninstallListeners(final JDocumentArea component) {
+    }
+
+    private class DocumentAreaMouseListener extends MouseAdapter {
+
+        private final JDocumentArea area;
+
+        private volatile TextElement lastClickElement;
+
+        public DocumentAreaMouseListener(final JDocumentArea area) {
+            this.area = area;
+        }
+
+        @Override
+        public void mouseClicked(final MouseEvent e) {
+            System.out.println("mouse click " + e.getClickCount());
+            if (e.getClickCount() == 1) {
+                final Element element = area.getDocument().getElementAt(e.getX(), e.getY());
+                if (element instanceof TextElement) {
+                    final Caret caret = ((TextElement) element).getCaret(e.getX(), e.getY());
+                    //area.getDocument().setCaret(caret);
+                    if (lastClickElement != null) {
+                        lastClickElement.clearHighlight();
+                    }
+                }
+            } else {
+                final Element element = area.getDocument().getElementAt(e.getX(), e.getY());
+                if (element instanceof TextElement) {
+                    final TextElement newElement = (TextElement) element;
+                    newElement.setHighlightText();
+                    lastClickElement = newElement;
+                }
+            }
+            area.repaint();
+        }
 
     }
 
