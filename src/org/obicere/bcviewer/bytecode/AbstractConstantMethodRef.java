@@ -58,26 +58,34 @@ public abstract class AbstractConstantMethodRef extends Constant {
         if (isStatic) {
             builder.addKeyword(parent, "static");
         } else if (isConstructor) {
+            builder.addKeyword(parent, "new ");
             builder.addPlain(parent, className);
         } else {
             builder.addPlain(parent, className + "#" + name);
         }
 
-        builder.addPlain(parent, "(");
-        builder.indent();
-
         final JavaTypeSignature[] types = methodSignature.getParameters();
+        final boolean inline = types.length < 4;
+
+        builder.addPlain(parent, "(");
+        if (!inline) {
+            builder.indent();
+        }
 
         for (final JavaTypeSignature type : types) {
-            builder.newLine(parent);
+            if (!inline) {
+                builder.newLine(parent);
+            }
             type.model(builder, parent);
         }
 
         // close the parameters
-        builder.unindent();
+        if (!inline) {
+            builder.unindent();
+        }
 
         // only break the () if there was a parameter
-        if (types.length > 0) {
+        if (!inline && types.length > 0) {
             builder.newLine(parent);
         }
         builder.addPlain(parent, ") ");
