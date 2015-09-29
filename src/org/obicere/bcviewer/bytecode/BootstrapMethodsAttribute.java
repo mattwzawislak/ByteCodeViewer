@@ -32,10 +32,15 @@ public class BootstrapMethodsAttribute extends Attribute {
             return;
         }
         final Element branch = builder.addBranch(parent);
+        builder.addPlain(branch, "Bootstrap Methods:");
+        builder.indent();
 
         for (final BootstrapMethod method : methods) {
+            // add two new lines to provide better spacing
+            builder.newLine(branch);
             builder.newLine(branch);
             method.model(builder, branch);
         }
+        builder.unindent();
     }
 }

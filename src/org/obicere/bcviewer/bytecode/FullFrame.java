@@ -56,7 +56,6 @@ public class FullFrame extends StackMapFrame {
         builder.addPlain(parent, " Locals: [");
         boolean first = true;
         for(final VerificationTypeInfo local : locals){
-            System.out.println(local.getClass());
             if(!first){
                 builder.comma(parent);
             }
