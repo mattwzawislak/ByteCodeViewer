@@ -281,8 +281,6 @@ public class ClassFile extends BytecodeElement {
         if (attribute == null) {
             return;
         }
-        builder.newLine(parent);
-        builder.newLine(parent);
         attribute.model(builder, parent);
     }
 }

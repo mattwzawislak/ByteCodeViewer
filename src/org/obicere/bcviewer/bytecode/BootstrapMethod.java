@@ -37,6 +37,7 @@ public class BootstrapMethod extends BytecodeElement {
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
 
+        builder.addComment(parent, "Bootstrap Method:");
         modelDeclaration(builder, parent);
 
         builder.newLine(parent);

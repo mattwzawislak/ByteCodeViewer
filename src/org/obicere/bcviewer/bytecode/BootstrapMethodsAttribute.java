@@ -32,9 +32,9 @@ public class BootstrapMethodsAttribute extends Attribute {
             return;
         }
         final Element branch = builder.addBranch(parent);
-        builder.addComment(branch, "Bootstrap Methods:");
 
         for (final BootstrapMethod method : methods) {
+            builder.newLine(branch);
             builder.newLine(branch);
             method.model(builder, branch);
         }
