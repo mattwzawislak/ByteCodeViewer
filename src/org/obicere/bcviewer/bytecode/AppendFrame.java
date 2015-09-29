@@ -44,18 +44,9 @@ public class AppendFrame extends StackMapFrame {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
-
-        boolean first = true;
-        builder.addPlain(parent, " Locals: [");
-        for (final VerificationTypeInfo local : locals) {
-            if (!first) {
-                builder.comma(parent);
-            }
-            local.model(builder, parent);
-            first = false;
-        }
-        builder.addPlain(parent, "]");
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.newLine(parent);
+        builder.addPlain(parent, "Locals:");
+        modelInfo(builder, parent, locals);
     }
 }

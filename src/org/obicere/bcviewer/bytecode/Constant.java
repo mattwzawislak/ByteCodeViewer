@@ -9,7 +9,7 @@ import javax.swing.text.Element;
  */
 public abstract class Constant extends BytecodeElement {
 
-    private static final int MAX_NAME_LENGTH = 18;
+    private static final int MAX_NAME_LENGTH = 11;
 
     private final int tag;
 

@@ -31,18 +31,19 @@ public class ConstantInvokeDynamic extends Constant {
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return NAME;
     }
 
     @Override
     public String toString(final ConstantPool constantPool) {
-        return bootstrapMethodAttrIndex + ";" + constantPool.getAsString(nameAndTypeIndex);
+        return constantPool.getAsString(nameAndTypeIndex) + ";" + bootstrapMethodAttrIndex;
     }
 
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
+        builder.indent();
 
         BootstrapMethodsAttribute bootstrapMethodsAttribute = null;
         for (final Attribute attribute : builder.getClassFile().getAttributes()) {
@@ -54,13 +55,15 @@ public class ConstantInvokeDynamic extends Constant {
 
         if (bootstrapMethodsAttribute != null) {
             final BootstrapMethod method = bootstrapMethodsAttribute.getBootstrapMethods()[bootstrapMethodAttrIndex];
-            final int methodRef = method.getBootstrapMethodRef();
-            builder.addPlain(parent, constantPool.getAsString(methodRef));
+            method.modelDeclaration(builder, parent);
 
         } else {
             builder.add(parent, bootstrapMethodAttrIndex);
         }
-        builder.tab(parent);
-        builder.addPlain(parent, constantPool.getAsString(nameAndTypeIndex));
+        builder.newLine(parent);
+
+        constantPool.get(nameAndTypeIndex).modelValue(builder, parent);
+
+        builder.unindent();
     }
 }

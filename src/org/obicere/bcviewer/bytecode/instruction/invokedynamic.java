@@ -50,7 +50,8 @@ public class invokedynamic extends Instruction {
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
         builder.tab(parent);
-        builder.addPlain(parent, builder.getConstantPool().getAsString(getIndex()));
+        builder.getConstantPool().get(getIndex()).modelValue(builder, parent);
+        //builder.addPlain(parent, builder.getConstantPool().getAsString(getIndex()));
         builder.tab(parent);
         builder.add(parent, 0);
         builder.tab(parent);

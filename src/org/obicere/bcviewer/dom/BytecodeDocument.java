@@ -18,6 +18,13 @@ public class BytecodeDocument extends DefaultStyledDocument {
         super();
     }
 
+    @Override
+    public void removeElement(final Element element){
+        writeLock();
+        super.removeElement(element);
+        writeUnlock();
+    }
+
     public Element createLeaf(final Element parent, final String text, final AttributeSet style) {
         writeLock();
         final int start = parent.getDocument().getLength();

@@ -81,7 +81,6 @@ public class Method extends BytecodeElement {
 
         if (hasBody) {
             builder.indent();
-            builder.newLine(parent);
 
             code.model(builder, parent);
 
@@ -131,7 +130,7 @@ public class Method extends BytecodeElement {
         } else if (!staticInitializer) {
             // set the name to the method name otherwise - no name for clinit
             signature.modelReturnType(builder, parent);
-            builder.addPlain(parent, methodName);
+            builder.addPlain(parent, " " + methodName);
         }
 
         if (!staticInitializer) {

@@ -76,6 +76,6 @@ public class BaseType extends JavaTypeSignature {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        builder.addKeyword(parent, type + " ");
+        builder.addKeyword(parent, type);
     }
 }

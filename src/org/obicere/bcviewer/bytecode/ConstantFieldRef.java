@@ -1,7 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+import org.obicere.bcviewer.util.BytecodeUtils;
 
 import javax.swing.text.Element;
 
@@ -43,10 +45,17 @@ public class ConstantFieldRef extends Constant {
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
-
-        builder.addPlain(parent, constantPool.getAsString(getClassIndex()));
+        builder.newLine(parent);
         builder.tab(parent);
-        builder.addPlain(parent, constantPool.getAsString(getNameAndTypeIndex()));
+
+        final ConstantNameAndType nameAndType = (ConstantNameAndType) constantPool.get(nameAndTypeIndex);
+        final FieldSignature signature = SignatureAttribute.parseField(constantPool.getAsString(nameAndType.getDescriptorIndex()));
+        signature.model(builder, parent);
+        builder.addPlain(parent, " ");
+
+        builder.addPlain(parent, BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
+        builder.addPlain(parent, "#");
+        builder.addPlain(parent, BytecodeUtils.getQualifiedName(constantPool.getAsString(nameAndType.getNameIndex())));
 
     }
 }

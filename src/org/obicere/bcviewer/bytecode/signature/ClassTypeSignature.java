@@ -115,7 +115,6 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         modelPackage(builder, parent);
         modelSignature(builder, parent);
         modelSuffixes(builder, parent);
-        builder.pad(parent, 1);
     }
 
     private void modelPackage(final BytecodeDocumentBuilder builder, final Element parent) {

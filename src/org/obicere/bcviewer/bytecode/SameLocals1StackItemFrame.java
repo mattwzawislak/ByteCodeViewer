@@ -38,10 +38,9 @@ public class SameLocals1StackItemFrame extends StackMapFrame {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
-        builder.addPlain(parent, " Stack: [");
-        stack.model(builder, parent);
-        builder.addPlain(parent, "]");
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.newLine(parent);
+        builder.addPlain(parent, "Stack:");
+        modelInfo(builder, parent, new VerificationTypeInfo[]{stack});
     }
 }

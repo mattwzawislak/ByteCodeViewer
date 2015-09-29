@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.dom;
 
 import com.alee.laf.WebLookAndFeel;
+import org.obicere.bcviewer.bytecode.AttributeSet;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.util.QuickWidthFont;
@@ -13,7 +14,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -38,13 +43,13 @@ public class _Test {
 
         final BytecodeDocument document = new BytecodeDocument();
 
-        final JTextPane pane = new JTextPane(document){
+        final JTextPane pane = new JTextPane(document) {
 
             @Override
-            public boolean getScrollableTracksViewportWidth(){
+            public boolean getScrollableTracksViewportWidth() {
                 try {
                     return getUI().getPreferredSize(this).width <= getParent().getWidth();
-                } catch(final NullPointerException e){
+                } catch (final NullPointerException e) {
                     e.printStackTrace();
                     return true;
                 }

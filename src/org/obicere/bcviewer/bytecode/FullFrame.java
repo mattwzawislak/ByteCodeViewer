@@ -50,29 +50,14 @@ public class FullFrame extends StackMapFrame {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent){
-        super.model(builder, parent);
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent){
 
-        builder.addPlain(parent, " Locals: [");
-        boolean first = true;
-        for(final VerificationTypeInfo local : locals){
-            if(!first){
-                builder.comma(parent);
-            }
-            local.model(builder, parent);
-            first = false;
-        }
-        builder.addPlain(parent, "], Stack: [");
+        builder.newLine(parent);
+        builder.addPlain(parent, "Locals:");
+        modelInfo(builder, parent, locals);
 
-        first = true;
-        for(final VerificationTypeInfo stackItem : stack){
-            if(!first){
-                builder.comma(parent);
-            }
-            stackItem.model(builder, parent);
-            first = false;
-        }
-
-        builder.addPlain(parent,"]");
+        builder.newLine(parent);
+        builder.addPlain(parent, "Stack:");
+        modelInfo(builder, parent, stack);
     }
 }

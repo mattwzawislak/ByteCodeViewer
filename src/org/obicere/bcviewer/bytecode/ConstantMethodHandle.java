@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
 
@@ -44,19 +45,19 @@ public class ConstantMethodHandle extends Constant {
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return NAME;
     }
 
     @Override
     public String toString(final ConstantPool constantPool) {
-        return HANDLES[referenceKind] + ";" + constantPool.getAsString(referenceIndex);
+        return HANDLES[referenceKind] + "=" + constantPool.getAsString(referenceIndex);
     }
 
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         builder.addKeyword(parent, HANDLES[referenceKind]);
         builder.tab(parent);
-        builder.addPlain(parent, builder.getConstantPool().getAsString(referenceIndex));
+        builder.getConstantPool().get(referenceIndex).modelValue(builder, parent);
     }
 }

@@ -22,6 +22,14 @@ import java.util.logging.Logger;
  */
 public abstract class Boot {
 
+    public @interface Foo {
+
+    }
+
+    public @interface Bar {
+
+    }
+
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();

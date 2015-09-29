@@ -131,13 +131,9 @@ public class ClassFile extends BytecodeElement {
         modelClassDeclaration(builder, classElement, accessFlags);
 
         builder.indent();
-
         modelFields(builder, classElement);
-        builder.newLine(parent);
         modelMethods(builder, classElement);
-        builder.newLine(parent);
         modelBootstrapMethods(builder, classElement);
-        builder.newLine(parent);
         modelInnerClasses(builder, classElement);
 
         builder.unindent();
@@ -172,7 +168,7 @@ public class ClassFile extends BytecodeElement {
     private void modelVersion(final BytecodeDocumentBuilder builder, final Element parent) {
         builder.addPlain(parent, "Major: ");
         builder.add(parent, majorVersion);
-        builder.addPlain(parent, "Minor: ");
+        builder.addPlain(parent, " Minor: ");
         builder.add(parent, minorVersion);
         builder.newLine(parent);
     }
@@ -229,11 +225,11 @@ public class ClassFile extends BytecodeElement {
             return;
         }
         for (final Field field : fields) {
+            builder.newLine(parent);
+            builder.newLine(parent);
+
             final Element nextField = builder.addBranch(parent);
             field.model(builder, nextField);
-
-            builder.newLine(parent);
-            builder.newLine(parent);
         }
     }
 
@@ -243,11 +239,11 @@ public class ClassFile extends BytecodeElement {
             return;
         }
         for (final Method method : methods) {
+            builder.newLine(parent);
+            builder.newLine(parent);
+
             final Element nextMethod = builder.addBranch(parent);
             method.model(builder, nextMethod);
-
-            builder.newLine(parent);
-            builder.newLine(parent);
         }
     }
 
@@ -271,9 +267,9 @@ public class ClassFile extends BytecodeElement {
 
                 final Element nextInnerClass = builder.addBranch(parent);
 
+                builder.newLine(parent);
+                builder.newLine(parent);
                 innerClass.model(builder, nextInnerClass);
-                builder.newLine(parent);
-                builder.newLine(parent);
             }
         }
     }
@@ -285,6 +281,8 @@ public class ClassFile extends BytecodeElement {
         if (attribute == null) {
             return;
         }
+        builder.newLine(parent);
+        builder.newLine(parent);
         attribute.model(builder, parent);
     }
 }

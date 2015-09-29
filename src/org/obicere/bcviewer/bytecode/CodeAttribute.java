@@ -3,6 +3,7 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.util.BytecodeUtils;
 
 import javax.swing.text.Element;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ public class CodeAttribute extends Attribute {
         return maxStack;
     }
 
-    // TODO
     public CodeException[] getExceptions() {
         return exceptions;
     }
@@ -118,9 +118,6 @@ public class CodeAttribute extends Attribute {
         return builder.toString();
     }
 
-    // fuck this
-    // TODO: StackMapTable
-
     // these two might be difficult to get 100% correct.
     // a simple association could be formed, possibly.
     // The 'simple association' would be just latching onto
@@ -183,14 +180,33 @@ public class CodeAttribute extends Attribute {
     }
 
     private void modelExceptions(final BytecodeDocumentBuilder builder, final Element parent) {
+        final ConstantPool constantPool = builder.getConstantPool();
         for (final CodeException exception : exceptions) {
+            final String start = startPCToLine.get(exception.getStartPC()).getName();
+            final String end;
+            final Block line = startPCToLine.get(exception.getEndPC());
+            if (line != null) {
+                end = line.getName();
+            } else {
+                end = "end";
+            }
 
+            builder.newLine(parent);
+            builder.addKeyword(parent, "try");
+            builder.addPlain(parent, ": [" + start + "-" + end + "] ");
+            builder.addKeyword(parent, "catch ");
+
+            final String catchType = constantPool.getAsString(exception.getCatchType());
+            builder.addPlain(parent, BytecodeUtils.getQualifiedName(catchType));
+
+            final String handler = startPCToLine.get(exception.getHandlerPC()).getName();
+            builder.addPlain(parent, " Handler: " + handler);
         }
     }
 
     private void modelLines(final BytecodeDocumentBuilder builder, final Element parent, final Iterable<Block> blocks) {
         for (final Block block : blocks) {
-
+            builder.newLine(parent);
             builder.addPlain(parent, block.getName());
             builder.addPlain(parent, " {");
             builder.indent();
@@ -207,7 +223,6 @@ public class CodeAttribute extends Attribute {
             builder.unindent();
             builder.newLine(parent);
             builder.addPlain(parent, "}");
-            builder.newLine(parent);
         }
     }
 
@@ -322,7 +337,7 @@ public class CodeAttribute extends Attribute {
             return instructions;
         }
 
-        public void model(final BytecodeDocumentBuilder builder, final Element parent){
+        public void model(final BytecodeDocumentBuilder builder, final Element parent) {
             // default does not model
         }
     }
@@ -368,7 +383,7 @@ public class CodeAttribute extends Attribute {
         }
 
         @Override
-        public void model(final BytecodeDocumentBuilder builder, final Element parent){
+        public void model(final BytecodeDocumentBuilder builder, final Element parent) {
             builder.newLine(parent);
             frame.model(builder, parent);
         }
