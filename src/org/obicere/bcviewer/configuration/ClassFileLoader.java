@@ -26,6 +26,10 @@ public class ClassFileLoader implements DomainAccess {
         final FrameManager frameManager = guiManager.getFrameManager();
         final File[] files = frameManager.promptForFiles(".class");
 
+        if (files == null) {
+            return;
+        }
+
         for (final File file : files) {
             final String name = file.getName();
 

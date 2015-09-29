@@ -7,6 +7,8 @@ import org.obicere.bcviewer.util.MultiReader;
 import org.obicere.bcviewer.util.Reader;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Obicere
@@ -436,6 +438,7 @@ public class InstructionReader extends MultiReader<Integer, Instruction> {
         // if there is no reader associated to this opcode we have an unknown op
         final Instruction instruction;
         if (reader == null) {
+            Logger.getGlobal().log(Level.WARNING, "Found an unknown instruction with operand code: " + next + " at " + start);
             instruction = new UnknownInstruction();
         } else {
             instruction = reader.read(input);

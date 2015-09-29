@@ -20,15 +20,14 @@ public class wideReader implements Reader<wide> {
 
     @Override
     public wide read(final IndexedDataInputStream input) throws IOException {
-        final Instruction contain = instructionReader.read(input);
-        final int opcode = contain.getOpcode();
+        final int opcode = input.readUnsignedByte();
         if (opcode == InstructionReader.OPCODE_IINC) { // iinc opcode
-            return new wide(contain, input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
+            return new wide(opcode, input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
         } else if (opcode == InstructionReader.OPCODE_ILOAD || opcode == InstructionReader.OPCODE_FLOAD || opcode == InstructionReader.OPCODE_LLOAD ||
                    opcode == InstructionReader.OPCODE_DLOAD || opcode == InstructionReader.OPCODE_ISTORE || opcode == InstructionReader.OPCODE_ASTORE ||
                    opcode == InstructionReader.OPCODE_LSTORE || opcode == InstructionReader.OPCODE_DSTORE || opcode == InstructionReader.OPCODE_RET) {
             // Check to ensure this is a valid wide instruction for a wide instruction
-            return new wide(contain, input.readUnsignedByte(), input.readUnsignedByte());
+            return new wide(opcode, input.readUnsignedByte(), input.readUnsignedByte());
         } else {
             throw new ClassFormatError("invalid operation after a wide instruction listing: " + opcode);
         }

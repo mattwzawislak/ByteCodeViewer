@@ -14,7 +14,7 @@ public class wide extends Instruction {
     private static final String MNEMONIC = "wide";
     private static final int    OPCODE   = 0xc4;
 
-    private final Instruction instruction;
+    private final int instruction;
 
     private final int indexbyte1;
     private final int indexbyte2;
@@ -22,7 +22,7 @@ public class wide extends Instruction {
     private final int constbyte1;
     private final int constbyte2;
 
-    public wide(final Instruction instruction, final int indexbyte1, final int indexbyte2) {
+    public wide(final int instruction, final int indexbyte1, final int indexbyte2) {
         super(MNEMONIC, OPCODE);
         this.instruction = instruction;
         this.indexbyte1 = indexbyte1;
@@ -31,7 +31,7 @@ public class wide extends Instruction {
         this.constbyte2 = 0;
     }
 
-    public wide(final Instruction instruction, final int indexbyte1, final int indexbyte2, final int constbyte1, final int constbyte2) {
+    public wide(final int instruction, final int indexbyte1, final int indexbyte2, final int constbyte1, final int constbyte2) {
         super(MNEMONIC, OPCODE);
         this.instruction = instruction;
         this.indexbyte1 = indexbyte1;
@@ -64,7 +64,7 @@ public class wide extends Instruction {
         return (constbyte1 << 8) | constbyte2;
     }
 
-    public Instruction getInstruction() {
+    public int getInstruction() {
         return instruction;
     }
 
@@ -72,10 +72,10 @@ public class wide extends Instruction {
     public String toString(final ConstantPool constantPool) {
         final StringBuilder builder = new StringBuilder(MNEMONIC);
         builder.append(' ');
-        builder.append(instruction.toString(constantPool));
+        builder.append(getInstruction());
         builder.append(' ');
         builder.append(getIndex());
-        if (instruction.getOpcode() == InstructionReader.OPCODE_IINC) {
+        if (instruction == InstructionReader.OPCODE_IINC) {
             builder.append(' ');
             builder.append(getConst());
         }
@@ -86,12 +86,44 @@ public class wide extends Instruction {
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
         builder.tab(parent);
-        instruction.model(builder, parent);
+        builder.addKeyword(parent, getInstructionName());
         builder.tab(parent);
         builder.add(parent, getIndex());
-        if (instruction.getOpcode() == InstructionReader.OPCODE_IINC) {
+        if (instruction == InstructionReader.OPCODE_IINC) {
             builder.tab(parent);
             builder.add(parent, getConst());
+        }
+    }
+
+    private String getInstructionName(){
+        switch (instruction){
+            case InstructionReader.OPCODE_IINC:
+                return "iinc";
+            case InstructionReader.OPCODE_ILOAD:
+                return "iload";
+            case InstructionReader.OPCODE_FLOAD:
+                return "fload";
+            case InstructionReader.OPCODE_ALOAD:
+                return "aload";
+            case InstructionReader.OPCODE_LLOAD:
+                return "lload";
+            case InstructionReader.OPCODE_DLOAD:
+                return "dload";
+            case InstructionReader.OPCODE_ISTORE:
+                return "istore";
+            case InstructionReader.OPCODE_FSTORE:
+                return "fstore";
+            case InstructionReader.OPCODE_ASTORE:
+                return "astore";
+            case InstructionReader.OPCODE_LSTORE:
+                return "lstore";
+            case InstructionReader.OPCODE_DSTORE:
+                return "dstore";
+            case InstructionReader.OPCODE_RET:
+                return "ret";
+            default:
+                throw new AssertionError("illegal operand for wide: " + instruction);
+
         }
     }
 }

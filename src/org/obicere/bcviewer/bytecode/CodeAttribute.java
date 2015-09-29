@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Obicere
@@ -196,10 +198,23 @@ public class CodeAttribute extends Attribute {
             builder.addPlain(parent, ": [" + start + "-" + end + "] ");
             builder.addKeyword(parent, "catch ");
 
-            final String catchType = constantPool.getAsString(exception.getCatchType());
+            final String catchType;
+            final int catchTypeValue = exception.getCatchType();
+            if (catchTypeValue == 0) {
+                catchType = "java.lang.Throwable"; // 0 catches all exceptions
+            } else {
+                catchType = constantPool.getAsString(exception.getCatchType());
+            }
             builder.addPlain(parent, BytecodeUtils.getQualifiedName(catchType));
 
-            final String handler = startPCToLine.get(exception.getHandlerPC()).getName();
+            final int handlerPC = exception.getHandlerPC();
+            final String handler;
+            if (startPCToLine.get(handlerPC) != null) {
+                handler = startPCToLine.get(handlerPC).getName();
+            } else {
+                Logger.getGlobal().log(Level.SEVERE, "Expected a target instruction in CA: " + getIdentifier() + ", target: " + handlerPC);
+                handler = String.valueOf(handlerPC);
+            }
             builder.addPlain(parent, " Handler: " + handler);
         }
     }
@@ -300,17 +315,32 @@ public class CodeAttribute extends Attribute {
         Block currentBlock = iterator.next();
 
         // we do -1 so we can dump remaining instructions into last line
+        final Logger logger = Logger.getGlobal();
+        top:
         while (iterator.hasNext()) {
             final Block nextBlock = iterator.next();
             int start = currentBlock.getStartPC();
             final int endPC = nextBlock.getStartPC();
 
             final List<Instruction> lineInstructions = currentBlock.getInstructions();
-            while (start < endPC) {
-                final Instruction next = instructions[instruction++];
 
-                lineInstructions.add(next);
-                start += next.getLength();
+            while (start < endPC) {
+                try {
+                    final Instruction next = instructions[instruction++];
+
+                    lineInstructions.add(next);
+                    //System.out.print("\tAdded instruction: start=" + start + ", insLength=" + next.getLength() + ", name" + next.getMnemonic());
+                    start += next.getLength();
+                    //System.out.println(", end=" + start);
+                    //logger.log(Level.INFO, "\tAdded instruction: start=" + start + ", insLength=" + next.getLength());
+                } catch (final ArrayIndexOutOfBoundsException e) {
+                    logger.log(Level.SEVERE, "Instruction distribution error. start = " + start + ", endPC = " + endPC + " within CA: " + getIdentifier());
+                    final int lastInsStart = instructions[instruction - 2].getStart() - 14 - getStart();
+                    final int lastInsEnd = instructions[instruction - 2].getEnd() - 14 - getStart();
+                    System.out.println("\tLast Instruction [startPC=" + lastInsStart + ", " + lastInsEnd + "]");
+                    logger.log(Level.SEVERE, "\tLast Instruction [startPC=" + lastInsStart + ", " + lastInsEnd + "]");
+                    break top;
+                }
             }
             currentBlock = nextBlock;
             blocks.add(currentBlock);

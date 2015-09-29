@@ -6,8 +6,12 @@ import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -19,10 +23,6 @@ public class Boot {
     private static Domain domain;
 
     private static final StartUpQueue QUEUE = new StartUpQueue();
-
-    public int foo() throws IOException {
-        return 5;
-    }
 
     public static void main(final String[] args) {
         // Prepare the current boot
