@@ -5,10 +5,9 @@ import org.obicere.bcviewer.bytecode.SuperTypeTarget;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.bytecode.TypeParameterBoundTarget;
 import org.obicere.bcviewer.bytecode.TypeParameterTarget;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -133,20 +132,20 @@ public class ClassSignature extends AnnotationTarget {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         modelTypeParameters(builder, parent);
     }
 
-    private void modelTypeParameters(final DocumentBuilder builder, final Element parent) {
+    private void modelTypeParameters(final BytecodeDocumentBuilder builder, final Element parent) {
         final TypeParameters parameters = typeParameters;
         final TypeParameter[] types = parameters.getTypeParameters();
         if (types.length == 0) {
             return;
         }
-        parent.add(new PlainElement("open", "<", builder));
+        builder.addPlain(parent, "<");
         for (final TypeParameter type : types) {
             type.model(builder, parent);
         }
-        parent.add(new PlainElement("close", ">", builder));
+        builder.addPlain(parent, ">");
     }
 }

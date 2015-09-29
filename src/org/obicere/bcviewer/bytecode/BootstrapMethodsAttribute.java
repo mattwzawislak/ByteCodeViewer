@@ -1,10 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.CollapsibleElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -27,24 +25,17 @@ public class BootstrapMethodsAttribute extends Attribute {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
 
         final BootstrapMethod[] methods = bootstrapMethods;
         if (methods.length == 0) {
             return;
         }
-
-        final PlainElement header = new PlainElement("header", "Bootstrap Methods:", builder);
-        final CollapsibleElement element = new CollapsibleElement("collapse", builder);
+        final Element branch = builder.addBranch(parent);
 
         for (final BootstrapMethod method : methods) {
-            final BasicElement line = new BasicElement(method.getIdentifier());
-            method.model(builder, line);
-            element.add(line);
-
+            builder.newLine(branch);
+            method.model(builder, branch);
         }
-        parent.add(header);
-        parent.add(element);
-
     }
 }

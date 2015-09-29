@@ -1,10 +1,12 @@
 package org.obicere.bcviewer.dom;
 
+import javax.swing.text.Element;
+
 /**
  * @author Obicere
  */
 public interface Modeler {
 
-    public void model(final DocumentBuilder builder, final Element parent);
+    public void model(final BytecodeDocumentBuilder builder, final Element parent);
 
 }

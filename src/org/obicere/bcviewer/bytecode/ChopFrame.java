@@ -5,6 +5,8 @@ package org.obicere.bcviewer.bytecode;
  */
 public class ChopFrame extends StackMapFrame {
 
+    private static final String NAME = "ChopFrame";
+
     private final int offset;
 
     public ChopFrame(final int frameType, final int offset) {
@@ -12,7 +14,13 @@ public class ChopFrame extends StackMapFrame {
         this.offset = offset;
     }
 
+    @Override
     public int getOffsetDelta() {
         return offset;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

@@ -1,17 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
-import org.obicere.bcviewer.dom.literals.ParameterStringElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class ConstantInvokeDynamic extends Constant {
+
+    private static final String NAME = "InvokeDynamic";
 
     private final int bootstrapMethodAttrIndex;
 
@@ -32,15 +31,18 @@ public class ConstantInvokeDynamic extends Constant {
     }
 
     @Override
+    public String getName(){
+        return NAME;
+    }
+
+    @Override
     public String toString(final ConstantPool constantPool) {
         return bootstrapMethodAttrIndex + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
-
-        parent.add(new ConstantElement(this, builder));
 
         BootstrapMethodsAttribute bootstrapMethodsAttribute = null;
         for (final Attribute attribute : builder.getClassFile().getAttributes()) {
@@ -51,11 +53,14 @@ public class ConstantInvokeDynamic extends Constant {
         }
 
         if (bootstrapMethodsAttribute != null) {
-            final int methodRef = bootstrapMethodsAttribute.getBootstrapMethods()[bootstrapMethodAttrIndex].getBootstrapMethodRef();
-            parent.add(new ParameterStringElement("bootstrapMethodAttr", constantPool.getAsString(methodRef), builder));
+            final BootstrapMethod method = bootstrapMethodsAttribute.getBootstrapMethods()[bootstrapMethodAttrIndex];
+            final int methodRef = method.getBootstrapMethodRef();
+            builder.addPlain(parent, constantPool.getAsString(methodRef));
+
         } else {
-            parent.add(new ParameterIntegerElement("bootstrapMethodAttrIndex", bootstrapMethodAttrIndex, builder));
+            builder.add(parent, bootstrapMethodAttrIndex);
         }
-        parent.add(new ParameterPlainElement("nameAndType", constantPool.getAsString(nameAndTypeIndex), builder));
+        builder.tab(parent);
+        builder.addPlain(parent, constantPool.getAsString(nameAndTypeIndex));
     }
 }

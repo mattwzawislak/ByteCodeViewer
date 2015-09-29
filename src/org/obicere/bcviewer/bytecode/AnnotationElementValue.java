@@ -1,7 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -22,7 +23,7 @@ public class AnnotationElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent){
+    public void model(final BytecodeDocumentBuilder builder, final Element parent){
         annotation.model(builder, parent);
     }
 }

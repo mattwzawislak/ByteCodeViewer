@@ -1,5 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
+
 /**
  * @author Obicere
  */
@@ -15,4 +19,8 @@ public class AnnotationDefaultAttribute extends Attribute {
         return defaultValue;
     }
 
+    @Override
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        // modelling not held here
+    }
 }

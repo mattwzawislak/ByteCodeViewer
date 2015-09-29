@@ -2,9 +2,9 @@ package org.obicere.bcviewer.bytecode.signature;
 
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -51,7 +51,7 @@ public class FieldSignature extends AnnotationTarget {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         javaTypeSignature.model(builder, parent);
     }
 }

@@ -1,21 +1,27 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class ConstantClass extends Constant {
 
+    private static final String NAME = "Class";
+
     private final int nameIndex;
 
     public ConstantClass(final int nameIndex) {
         super(ConstantReader.CONSTANT_CLASS);
         this.nameIndex = nameIndex;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 
     public int getNameIndex() {
@@ -29,8 +35,7 @@ public class ConstantClass extends Constant {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterPlainElement("name", builder.getConstantPool().getAsString(nameIndex), builder));
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addPlain(parent, builder.getConstantPool().getAsString(getNameIndex()));
     }
 }

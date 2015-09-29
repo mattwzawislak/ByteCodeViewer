@@ -1,9 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -30,11 +30,12 @@ public class EnumElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(typeNameIndex));
-        parent.add(new PlainElement("type", type.substring(1, type.length() - 1), builder));
-        parent.add(new PlainElement("dot", ".", builder));
-        parent.add(new PlainElement("name", constantPool.getAsString(getConstNameIndex()), builder));
+
+        builder.addPlain(parent, BytecodeUtils.getQualifiedName(type.substring(1, type.length() - 1)));
+        builder.addPlain(parent, ".");
+        builder.addPlain(parent, constantPool.getAsString(getConstNameIndex()));
     }
 }

@@ -1,8 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.IntegerElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -23,8 +23,8 @@ public class ByteElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantInteger constant = (ConstantInteger) builder.getConstantPool().get(constantValueIndex);
-        parent.add(new IntegerElement("value", constant.getBytes(), builder));
+        builder.add(parent, (byte) constant.getBytes());
     }
 }

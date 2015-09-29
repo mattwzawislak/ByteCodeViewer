@@ -3,11 +3,9 @@ package org.obicere.bcviewer.bytecode.signature;
 import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.EmptyTextElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -110,61 +108,56 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
         modelPackage(builder, parent);
         modelSignature(builder, parent);
         modelSuffixes(builder, parent);
-        final EmptyTextElement element = new EmptyTextElement(builder);
-        element.setRightPad(1);
-        parent.add(element);
+        builder.pad(parent, 1);
     }
 
-    private void modelPackage(final DocumentBuilder builder, final Element parent) {
+    private void modelPackage(final BytecodeDocumentBuilder builder, final Element parent) {
         final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
         for (final String identifier : packageIdentifiers) {
-            parent.add(new PlainElement("package", identifier, builder));
-            parent.add(new PlainElement("dot", ".", builder));
+            builder.addPlain(parent, identifier + ".");
         }
     }
 
-    private void modelSignature(final DocumentBuilder builder, final Element parent) {
+    private void modelSignature(final BytecodeDocumentBuilder builder, final Element parent) {
 
-        parent.add(new PlainElement("name", simpleClassTypeSignature.getIdentifier(), builder));
+        builder.addPlain(parent, simpleClassTypeSignature.getIdentifier());
 
         final TypeArguments arguments = simpleClassTypeSignature.getTypeArguments();
         modelTypeArguments(builder, parent, arguments);
     }
 
-    private void modelSuffixes(final DocumentBuilder builder, final Element parent) {
+    private void modelSuffixes(final BytecodeDocumentBuilder builder, final Element parent) {
         for (final ClassTypeSignatureSuffix suffix : classTypeSignatureSuffix) {
             final SimpleClassTypeSignature signature = suffix.getSimpleClassTypeSignature();
 
-            parent.add(new PlainElement("dot", ".", builder));
-            parent.add(new PlainElement("suffix", signature.getIdentifier(), builder));
+            builder.addPlain(parent, "." + signature.getIdentifier());
 
             final TypeArguments arguments = signature.getTypeArguments();
             modelTypeArguments(builder, parent, arguments);
         }
     }
 
-    private void modelTypeArguments(final DocumentBuilder builder, final Element parent, final TypeArguments typeArguments) {
+    private void modelTypeArguments(final BytecodeDocumentBuilder builder, final Element parent, final TypeArguments typeArguments) {
         final TypeArgument[] types = typeArguments.getTypeArguments();
-        if (types.length != 0) {
-            parent.add(new PlainElement("open", "<", builder));
-            boolean first = true;
-            for (final TypeArgument type : types) {
-                if (!first) {
-                    final PlainElement comma = new PlainElement("comma", ",", builder);
-                    comma.setRightPad(1);
-                    parent.add(comma);
-                }
-                type.getWildcardIndicator().model(builder, parent);
-                first = false;
-            }
-            parent.add(new PlainElement("close", ">", builder));
+        if (types.length == 0) {
+            return;
         }
+        builder.addPlain(parent, "<");
+        boolean first = true;
+        for (final TypeArgument type : types) {
+            if (!first) {
+                builder.comma(parent);
+            }
+            type.getWildcardIndicator().model(builder, parent);
+            first = false;
+        }
+        builder.addPlain(parent, ">");
     }
 }

@@ -1,16 +1,10 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.TextElement;
-import org.obicere.bcviewer.dom.literals.CommentElement;
-import org.obicere.bcviewer.dom.literals.KeywordElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import java.util.LinkedList;
+import javax.swing.text.Element;
 import java.util.Set;
 
 /**
@@ -53,35 +47,40 @@ public class Field extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        final Element fieldElement = new BasicElement(getIdentifier());
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder, parent);
+            builder.newLine(parent);
         }
 
-        modelAnnotations(builder, fieldElement);
-        modelDeclaration(builder, fieldElement);
-        parent.add(fieldElement);
+        modelAnnotations(builder, parent);
+        modelDeclaration(builder, parent);
     }
 
-    private void addSynthetic(final DocumentBuilder builder, final Element parent) {
-        parent.add(new CommentElement("synthetic", "Synthetic Field", builder));
+    private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addComment(parent, "Synthetic Field");
     }
 
-    private void modelAnnotations(final DocumentBuilder builder, final Element parent) {
+    private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
-            rvaAttributes.forEach(e -> e.model(builder, parent));
+            rvaAttributes.forEach(e -> {
+                e.model(builder, parent);
+                builder.newLine(parent);
+            });
         }
         if (riaAttributes != null) {
-            riaAttributes.forEach(e -> e.model(builder, parent));
+            riaAttributes.forEach(e -> {
+                e.model(builder, parent);
+                builder.newLine(parent);
+            });
         }
     }
 
-    private void modelType(final DocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
+    private void modelType(final BytecodeDocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
         final FieldSignature signature;
         if (signatures != null && !signatures.isEmpty()) {
@@ -107,38 +106,24 @@ public class Field extends BytecodeElement {
         signature.model(builder, parent);
     }
 
-    private void modelDeclaration(final DocumentBuilder builder, final Element parent) {
+    private void modelDeclaration(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String[] names = BytecodeUtils.getFieldAccessNames(accessFlags);
 
-        final Element declaration = new BasicElement("declaration", Element.AXIS_LINE);
         for (final String name : names) {
-            final TextElement next = new KeywordElement(name, name, builder);
-            next.setRightPad(1);
-            declaration.add(next);
+            builder.addPlain(parent, name + " ");
         }
 
-        modelType(builder, declaration, constantPool);
+        modelType(builder, parent, constantPool);
 
-        final TextElement element = new PlainElement("name", constantPool.getAsString(nameIndex), builder);
-        declaration.add(element);
+        builder.addPlain(parent, constantPool.getAsString(nameIndex));
 
-        for (final Attribute attribute : attributes) {
-            if (attribute instanceof ConstantValueAttribute) {
-                final PlainElement equals = new PlainElement("equals", "=", builder);
-                equals.setLeftPad(1);
-                equals.setRightPad(1);
-                final ConstantValueAttribute constant = (ConstantValueAttribute) attribute;
-                final TextElement constantElement = new PlainElement("constant", constantPool.getAsString(constant.getConstantValueIndex()), builder);
-
-                declaration.add(equals);
-                declaration.add(constantElement);
-                break;
-            }
+        final ConstantValueAttribute constantAttribute = attributeSet.getAttribute(ConstantValueAttribute.class);
+        if (constantAttribute != null) {
+            final Constant constant = constantPool.get(constantAttribute.getConstantValueIndex());
+            builder.addPlain(parent, " = ");
+            constant.modelValue(builder, parent);
         }
-
-        declaration.add(new PlainElement("semicolon", ";", builder));
-
-        parent.add(declaration);
+        builder.addPlain(parent, ";");
     }
 }

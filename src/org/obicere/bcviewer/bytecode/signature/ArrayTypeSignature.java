@@ -3,10 +3,9 @@ package org.obicere.bcviewer.bytecode.signature;
 import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -48,7 +47,7 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
@@ -67,10 +66,7 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
             for (final Annotation annotation : array.getAnnotations()) {
                 annotation.model(builder, parent);
             }
-            final PlainElement brackets = new PlainElement("array", "[]", builder);
-            brackets.setRightPad(1);
-            parent.add(brackets);
-
+            builder.addPlain(parent, "[]");
         }
     }
 }

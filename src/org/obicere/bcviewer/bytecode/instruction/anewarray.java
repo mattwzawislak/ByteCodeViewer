@@ -1,11 +1,9 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterStringElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -45,8 +43,9 @@ public class anewarray extends Instruction {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterStringElement("index", builder.getConstantPool().getAsString(getIndex()), builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+        builder.tab(parent);
+        builder.addPlain(parent, builder.getConstantPool().getAsString(getIndex()));
     }
 }

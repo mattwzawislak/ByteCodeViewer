@@ -3,12 +3,9 @@ package org.obicere.bcviewer.bytecode.signature;
 import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.KeywordElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
-import org.obicere.bcviewer.dom.literals.TypeElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -96,35 +93,25 @@ public class TypeParameter extends AnnotationTarget {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        final TypeElement element = new TypeElement("identifier", identifier, builder);
-        parent.add(element);
+        builder.addType(parent, identifier);
 
         boolean classModeled = false;
         final ReferenceTypeSignature classReference = classBound.getReferenceTypeSignature();
         if (classReference != null) {
-            final KeywordElement extendsKeyword = new KeywordElement("extends", "extends", builder);
-            extendsKeyword.setLeftPad(1);
-            extendsKeyword.setRightPad(1);
-            parent.add(extendsKeyword);
+            builder.addKeyword(parent, " extends ");
             classReference.model(builder, parent);
             classModeled = true;
         }
 
         for (final InterfaceBound bound : interfaceBounds) {
             if (!classModeled) {
-                final KeywordElement extendsKeyword = new KeywordElement("extends", "extends", builder);
-                extendsKeyword.setLeftPad(1);
-                extendsKeyword.setRightPad(1);
-                parent.add(extendsKeyword);
+                builder.addKeyword(parent, " extends ");
             } else {
-                final PlainElement and = new PlainElement("and", "&", builder);
-                and.setLeftPad(1);
-                and.setRightPad(1);
-                parent.add(and);
+                builder.addPlain(parent, " & ");
             }
             final ReferenceTypeSignature interfaceReference = bound.getReferenceTypeSignature();
             interfaceReference.model(builder, parent);

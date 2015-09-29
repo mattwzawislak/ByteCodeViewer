@@ -1,11 +1,9 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.CodeAttribute;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -37,14 +35,15 @@ public class if_icmpgt extends Instruction {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new InstructionElement(this, builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+        builder.tab(parent);
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(getStart(), (short) getBranchOffset());
         if (line == null) {
-            parent.add(new ParameterIntegerElement("branch", (short) getBranchOffset(), builder));
+            builder.add(parent, (short) getBranchOffset());
         } else {
-            parent.add(new ParameterPlainElement("target", line, builder));
+            builder.addPlain(parent, line);
         }
     }
 }

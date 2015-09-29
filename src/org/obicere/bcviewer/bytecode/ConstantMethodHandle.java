@@ -1,16 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterKeywordElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class ConstantMethodHandle extends Constant {
+
+    private static final String NAME = "MethodHandle";
 
     private static final String[] HANDLES = new String[]{
             null,
@@ -44,14 +44,19 @@ public class ConstantMethodHandle extends Constant {
     }
 
     @Override
+    public String getName(){
+        return NAME;
+    }
+
+    @Override
     public String toString(final ConstantPool constantPool) {
         return HANDLES[referenceKind] + ";" + constantPool.getAsString(referenceIndex);
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterKeywordElement("referenceKind", HANDLES[referenceKind], builder));
-        parent.add(new ParameterPlainElement("reference", builder.getConstantPool().getAsString(referenceIndex), builder));
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addKeyword(parent, HANDLES[referenceKind]);
+        builder.tab(parent);
+        builder.addPlain(parent, builder.getConstantPool().getAsString(referenceIndex));
     }
 }

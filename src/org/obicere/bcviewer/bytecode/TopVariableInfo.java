@@ -1,7 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  */
@@ -12,8 +13,7 @@ public class TopVariableInfo extends VerificationTypeInfo {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent){
-        // do nothing?
-        // top has no relevant information
+    public void model(final BytecodeDocumentBuilder builder, final Element parent){
+        builder.addKeyword(parent, "top");
     }
 }

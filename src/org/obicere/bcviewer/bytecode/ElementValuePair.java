@@ -1,8 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -31,15 +31,10 @@ public class ElementValuePair extends BytecodeElement{
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent){
+    public void model(final BytecodeDocumentBuilder builder, final Element parent){
         final ConstantPool constantPool = builder.getConstantPool();
-        parent.add(new PlainElement("name", constantPool.getAsString(elementNameIndex), builder));
-
-        final PlainElement equals = new PlainElement("equals", "=", builder);
-        equals.setLeftPad(1);
-        equals.setRightPad(1);
-        parent.add(equals);
-
+        builder.addPlain(parent, constantPool.getAsString(elementNameIndex));
+        builder.addPlain(parent, " = ");
         value.model(builder, parent);
     }
 

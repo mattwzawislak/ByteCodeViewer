@@ -1,13 +1,15 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.StackMapFrameElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class AppendFrame extends StackMapFrame {
+
+    private static final String NAME = "AppendFrame";
 
     private final int                    offset;
     private final VerificationTypeInfo[] locals;
@@ -37,7 +39,23 @@ public class AppendFrame extends StackMapFrame {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent){
-        parent.add(new StackMapFrameElement(this, builder));
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+
+        boolean first = true;
+        builder.addPlain(parent, " Locals: [");
+        for (final VerificationTypeInfo local : locals) {
+            if (!first) {
+                builder.comma(parent);
+            }
+            local.model(builder, parent);
+            first = false;
+        }
+        builder.addPlain(parent, "]");
     }
 }

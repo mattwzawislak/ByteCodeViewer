@@ -1,13 +1,10 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.dom.Modeler;
-import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
-import org.obicere.bcviewer.dom.literals.ParameterStringElement;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -55,9 +52,11 @@ public class multianewarray extends Instruction implements Modeler {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterStringElement("index", builder.getConstantPool().getAsString(getIndex()), builder));
-        parent.add(new ParameterIntegerElement("dimensions", dimensions, builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+        builder.tab(parent);
+        builder.add(parent, getIndex());
+        builder.tab(parent);
+        builder.add(parent, dimensions);
     }
 }

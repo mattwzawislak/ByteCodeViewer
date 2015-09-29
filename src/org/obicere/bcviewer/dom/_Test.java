@@ -3,10 +3,12 @@ package org.obicere.bcviewer.dom;
 import com.alee.laf.WebLookAndFeel;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.Domain;
-import org.obicere.bcviewer.dom.ui.swing.JDocumentArea;
+import org.obicere.bcviewer.util.QuickWidthFont;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -32,11 +34,27 @@ public class _Test {
 
         final JFrame frame = new JFrame();
 
-        final DocumentBuilder builder = new DocumentBuilder(domain);
+        final JScrollPane scrollPane = new JScrollPane();
 
-        final JDocumentArea area = new JDocumentArea(builder);
+        final BytecodeDocument document = new BytecodeDocument();
 
-        builder.getFontPool().setBaseFont(Font.MONOSPACED, 12);
+        final JTextPane pane = new JTextPane(document){
+
+            @Override
+            public boolean getScrollableTracksViewportWidth(){
+                try {
+                    return getUI().getPreferredSize(this).width <= getParent().getWidth();
+                } catch(final NullPointerException e){
+                    e.printStackTrace();
+                    return true;
+                }
+            }
+
+        };
+        pane.setEditable(false);
+        scrollPane.setViewportView(pane);
+
+        pane.setFont(new QuickWidthFont(Font.MONOSPACED, Font.PLAIN, 12));
 
 
         final ClassFile classFile;
@@ -48,9 +66,9 @@ public class _Test {
             return;
         }
 
-        area.setContent(classFile, classFile);
-
-        frame.add(new JScrollPane(area));
+        final BytecodeDocumentBuilder builder = new BytecodeDocumentBuilder(domain);
+        builder.build(document, classFile, classFile);
+        frame.add(scrollPane);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

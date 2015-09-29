@@ -1,9 +1,15 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
+
 /**
  * @author Obicere
  */
 public class FullFrame extends StackMapFrame {
+
+    private static final String NAME = "FullFrame";
 
     private final int                    offset;
     private final VerificationTypeInfo[] locals;
@@ -30,11 +36,44 @@ public class FullFrame extends StackMapFrame {
         return offset;
     }
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
     public VerificationTypeInfo[] getLocals() {
         return locals;
     }
 
     public VerificationTypeInfo[] getStack() {
         return stack;
+    }
+
+    @Override
+    public void model(final BytecodeDocumentBuilder builder, final Element parent){
+        super.model(builder, parent);
+
+        builder.addPlain(parent, " Locals: [");
+        boolean first = true;
+        for(final VerificationTypeInfo local : locals){
+            System.out.println(local.getClass());
+            if(!first){
+                builder.comma(parent);
+            }
+            local.model(builder, parent);
+            first = false;
+        }
+        builder.addPlain(parent, "], Stack: [");
+
+        first = true;
+        for(final VerificationTypeInfo stackItem : stack){
+            if(!first){
+                builder.comma(parent);
+            }
+            stackItem.model(builder, parent);
+            first = false;
+        }
+
+        builder.addPlain(parent,"]");
     }
 }

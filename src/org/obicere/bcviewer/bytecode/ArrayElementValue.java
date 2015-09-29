@@ -1,8 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -23,20 +23,17 @@ public class ArrayElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new PlainElement("open", "{", builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
 
+        builder.addPlain(parent, "{");
         boolean first = true;
-
         for (final ElementValue value : values) {
             if (!first) {
-                final PlainElement comma = new PlainElement("comma", ",", builder);
-                comma.setRightPad(1);
-                parent.add(comma);
+                builder.comma(parent);
             }
             value.model(builder, parent);
             first = false;
         }
-        parent.add(new PlainElement("close", "}", builder));
+        builder.addPlain(parent, "}");
     }
 }

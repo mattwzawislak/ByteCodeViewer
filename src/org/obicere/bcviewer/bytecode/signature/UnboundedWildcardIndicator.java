@@ -3,10 +3,9 @@ package org.obicere.bcviewer.bytecode.signature;
 import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.Iterator;
 
 /**
@@ -33,10 +32,10 @@ public class UnboundedWildcardIndicator extends WildcardIndicator {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        parent.add(new PlainElement("wildcard", "?", builder));
+        builder.addPlain(parent, "?");
     }
 }

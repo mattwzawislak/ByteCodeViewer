@@ -5,6 +5,8 @@ package org.obicere.bcviewer.bytecode;
  */
 public class SameFrame extends StackMapFrame {
 
+    private static final String NAME = "SameFrame";
+
     public SameFrame(final int frameType) {
         super(frameType);
     }
@@ -12,5 +14,10 @@ public class SameFrame extends StackMapFrame {
     @Override
     public int getOffsetDelta() {
         return getFrameType();
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

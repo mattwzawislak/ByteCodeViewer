@@ -2,14 +2,9 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.CollapsibleElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.EmptyTextElement;
-import org.obicere.bcviewer.dom.literals.IntegerElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
+import javax.swing.text.Element;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -18,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * @author Obicere
@@ -135,15 +129,9 @@ public class CodeAttribute extends Attribute {
     // TODO: RITA --+- Should be latched onto Lines, Exceptions, local vars? idk wtf this is
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
         // entire code block should be collapsible
-        final CollapsibleElement codeBlock = new CollapsibleElement("block", builder);
-        codeBlock.setCollapsed(false);
-
-        final EmptyTextElement padding = new EmptyTextElement(builder);
-        padding.setLeftPad(builder.getTabSize());
-        codeBlock.add(padding);
 
         final LineNumber[] lines = getLines();
         for (final LineNumber line : lines) {
@@ -169,9 +157,8 @@ public class CodeAttribute extends Attribute {
 
         final Map<Integer, FieldSignature> localVarSignatures = getLocalVariables(constantPool);
 
-        modelExceptions(builder, padding);
-        modelLines(builder, padding, startPCToLine.values());
-        parent.add(codeBlock);
+        modelExceptions(builder, parent);
+        modelLines(builder, parent, startPCToLine.values());
     }
 
     private StackMapFrame[] getFrames() {
@@ -195,37 +182,32 @@ public class CodeAttribute extends Attribute {
         return lines.toArray(new LineNumber[lines.size()]);
     }
 
-    private void modelExceptions(final DocumentBuilder builder, final Element parent) {
+    private void modelExceptions(final BytecodeDocumentBuilder builder, final Element parent) {
         for (final CodeException exception : exceptions) {
 
         }
     }
 
-    private void modelLines(final DocumentBuilder builder, final Element parent, final Iterable<Block> blocks) {
+    private void modelLines(final BytecodeDocumentBuilder builder, final Element parent, final Iterable<Block> blocks) {
         for (final Block block : blocks) {
-            final BasicElement totalLine = new BasicElement("line", Element.AXIS_PAGE);
-            final BasicElement header = new BasicElement("header", Element.AXIS_LINE);
 
-            final String name = block.getName();
-            final PlainElement lineName = new PlainElement(name, name, builder);
-            lineName.setRightPad(1);
+            builder.addPlain(parent, block.getName());
+            builder.addPlain(parent, " {");
+            builder.indent();
 
-            header.add(lineName);
-            header.add(new PlainElement("open", "{", builder));
+            block.model(builder, parent);
 
-            totalLine.add(header);
-
-            block.model(builder, totalLine);
             builder.setProperty("code", this);
             for (final Instruction instruction : block.getInstructions()) {
-                final BasicElement nextInstruction = new BasicElement(instruction.getIdentifier(), Element.AXIS_LINE);
-                instruction.model(builder, nextInstruction);
-                totalLine.add(nextInstruction);
+                builder.newLine(parent);
+                instruction.model(builder, parent);
             }
-            builder.setProperty("code", null);
 
-            totalLine.add(new PlainElement("close", "}", builder));
-            parent.add(totalLine);
+            builder.setProperty("code", null);
+            builder.unindent();
+            builder.newLine(parent);
+            builder.addPlain(parent, "}");
+            builder.newLine(parent);
         }
     }
 
@@ -266,7 +248,7 @@ public class CodeAttribute extends Attribute {
         return signatureSet;
     }
 
-    private void modelGenericLocalVariable(final DocumentBuilder builder, final Element parent, final int startPC, final int endPC, final int index) {
+    private void modelGenericLocalVariable(final BytecodeDocumentBuilder builder, final Element parent, final int startPC, final int endPC, final int index) {
         final String start = startPCToLine.get(startPC).getName();
         final String end;
         final Block line = startPCToLine.get(endPC);
@@ -276,19 +258,21 @@ public class CodeAttribute extends Attribute {
             end = "end";
         }
 
-        final PlainElement open = new PlainElement("open", "[", builder);
-        final PlainElement close = new PlainElement("close", "]", builder);
+        /*
+        final PlainBCElement open = new PlainBCElement("open", "[", builder);
+        final PlainBCElement close = new PlainBCElement("close", "]", builder);
         open.setLeftPad(1);
         parent.add(open);
-        parent.add(new PlainElement("start", start, builder));
-        parent.add(new PlainElement("to", "-", builder));
-        parent.add(new PlainElement("end", end, builder));
+        parent.add(new PlainBCElement("start", start, builder));
+        parent.add(new PlainBCElement("to", "-", builder));
+        parent.add(new PlainBCElement("end", end, builder));
         parent.add(close);
         close.setRightPad(1);
 
-        final PlainElement frameIndex = new PlainElement("frameIndex", "Index", builder);
+        final PlainBCElement frameIndex = new PlainBCElement("frameIndex", "Index", builder);
         frameIndex.setRightPad(1);
-        parent.add(new IntegerElement("index", index, builder));
+        parent.add(new IntegerBCElement("index", index, builder));
+        */
     }
 
     private List<Block> distributeInstructions(final Iterable<Block> staggeredMap) {
@@ -338,7 +322,7 @@ public class CodeAttribute extends Attribute {
             return instructions;
         }
 
-        public void model(final DocumentBuilder builder, final Element parent){
+        public void model(final BytecodeDocumentBuilder builder, final Element parent){
             // default does not model
         }
     }
@@ -384,7 +368,8 @@ public class CodeAttribute extends Attribute {
         }
 
         @Override
-        public void model(final DocumentBuilder builder, final Element parent){
+        public void model(final BytecodeDocumentBuilder builder, final Element parent){
+            builder.newLine(parent);
             frame.model(builder, parent);
         }
     }

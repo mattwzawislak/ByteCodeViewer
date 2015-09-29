@@ -1,14 +1,10 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.CommentElement;
-import org.obicere.bcviewer.dom.literals.KeywordElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
+import javax.swing.text.Element;
 import java.util.Set;
 
 /**
@@ -72,7 +68,7 @@ public class Method extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder, parent);
         }
@@ -84,33 +80,35 @@ public class Method extends BytecodeElement {
         modelDeclaration(builder, parent, hasBody);
 
         if (hasBody) {
+            builder.indent();
+            builder.newLine(parent);
+
             code.model(builder, parent);
-            parent.add(new PlainElement("close", "}", builder));
+
+            builder.unindent();
+            builder.newLine(parent);
+            builder.addPlain(parent, "}");
         }
     }
 
-    private void addSynthetic(final DocumentBuilder builder, final Element parent) {
-        parent.add(new CommentElement("synthetic", "Synthetic Method", builder));
+    private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addComment(parent, "Synthetic Method");
+        builder.newLine(parent);
     }
 
-    private void modelDeclaration(final DocumentBuilder builder, final Element parent, final boolean hasBody) {
+    private void modelDeclaration(final BytecodeDocumentBuilder builder, final Element parent, final boolean hasBody) {
         final ConstantPool constantPool = builder.getConstantPool();
 
-        final BasicElement declaration = new BasicElement("declaration", Element.AXIS_LINE);
         final String[] accessNames = BytecodeUtils.getMethodAccessNames(accessFlags);
 
         // make sure to add the default flag if the method has a body
         // and its containing class is an interface
         if (hasBody && BytecodeUtils.isInterface(builder.getClassFile().getAccessFlags())) {
-            final KeywordElement access = new KeywordElement("default", "default", builder);
-            access.setRightPad(1);
-            declaration.add(access);
+            builder.addKeyword(parent, "default ");
         }
 
         for (final String accessName : accessNames) {
-            final KeywordElement access = new KeywordElement(accessName, accessName, builder);
-            access.setRightPad(1);
-            declaration.add(access);
+            builder.addKeyword(parent, accessName + " ");
         }
 
         final MethodSignature signature;
@@ -125,15 +123,15 @@ public class Method extends BytecodeElement {
         final boolean constructor = methodName.equals("<init>");
         final boolean staticInitializer = methodName.equals("<clinit>");
 
-        signature.modelTypeParameters(builder, declaration);
+        signature.modelTypeParameters(builder, parent);
 
         if (constructor) {
             // instead replace method name "<init>" with the class name
-            declaration.add(new PlainElement("name", BytecodeUtils.getQualifiedName(builder.getClassFile().getName()), builder));
+            builder.addPlain(parent, BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
         } else if (!staticInitializer) {
             // set the name to the method name otherwise - no name for clinit
-            signature.modelReturnType(builder, declaration);
-            declaration.add(new PlainElement("name", methodName, builder));
+            signature.modelReturnType(builder, parent);
+            builder.addPlain(parent, methodName);
         }
 
         if (!staticInitializer) {
@@ -141,42 +139,34 @@ public class Method extends BytecodeElement {
             final MethodParametersAttribute parameterAttribute = attributeSet.getAttribute(MethodParametersAttribute.class);
             if (parameterAttribute != null) {
                 final Parameter[] parameters = parameterAttribute.getParameters();
-                signature.modelParameters(builder, declaration, parameters);
+                signature.modelParameters(builder, parent, parameters);
             } else {
                 // otherwise, model un-named and unknown access parameters
-                signature.modelParameters(builder, declaration);
+                signature.modelParameters(builder, parent);
             }
-            final boolean throwsSet = signature.modelThrowsSignatures(builder, declaration);
+            final boolean throwsSet = signature.modelThrowsSignatures(builder, parent);
             final ExceptionsAttribute exceptionsAttribute = attributeSet.getAttribute(ExceptionsAttribute.class);
 
             if (exceptionsAttribute != null) {
                 boolean first = !throwsSet;
                 for (final int index : exceptionsAttribute.getIndexTable()) {
                     if (first) {
-                        final KeywordElement keyword = new KeywordElement("throws", "throws", builder);
-                        keyword.setLeftPad(1);
-                        keyword.setRightPad(1);
-                        declaration.add(keyword);
+                        builder.addKeyword(parent, " throws ");
                         first = false;
                     } else {
-                        final PlainElement comma = new PlainElement("comma", ",", builder);
-                        comma.setRightPad(1);
-                        declaration.add(comma);
+                        builder.comma(parent);
                     }
                     final String name = constantPool.getAsString(index);
-                    declaration.add(new PlainElement("throws", BytecodeUtils.getQualifiedName(name), builder));
+                    builder.addPlain(parent, BytecodeUtils.getQualifiedName(name));
                 }
             }
         }
 
         if (hasBody) {
-            final PlainElement element = new PlainElement("open", "{", builder);
-            element.setLeftPad(1);
-            declaration.add(element);
+            builder.addPlain(parent, " {");
         } else {
-            modelAbstractClose(builder, declaration);
+            modelAbstractClose(builder, parent);
         }
-        parent.add(declaration);
     }
 
     private void addAnnotationsSignature(final MethodSignature signature) {
@@ -199,28 +189,31 @@ public class Method extends BytecodeElement {
         }
     }
 
-    private void modelAnnotations(final DocumentBuilder builder, final Element parent) {
+    private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
-            rvaAttributes.forEach(e -> e.model(builder, parent));
+            rvaAttributes.forEach(e -> {
+                e.model(builder, parent);
+                builder.newLine(parent);
+            });
         }
         if (riaAttributes != null) {
-            riaAttributes.forEach(e -> e.model(builder, parent));
+            riaAttributes.forEach(e -> {
+                e.model(builder, parent);
+                builder.newLine(parent);
+            });
         }
     }
 
-    private void modelAbstractClose(final DocumentBuilder builder, final Element parent) {
+    private void modelAbstractClose(final BytecodeDocumentBuilder builder, final Element parent) {
         final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
         if (hasDefault != null) {
-            final KeywordElement defaultKeyword = new KeywordElement("default", "default", builder);
-            defaultKeyword.setLeftPad(1);
-            defaultKeyword.setRightPad(1);
-            parent.add(defaultKeyword);
+            builder.addKeyword(parent, " default ");
             hasDefault.getDefaultValue().model(builder, parent);
         }
-        parent.add(new PlainElement("semicolon", ";", builder));
+        builder.addPlain(parent, ";");
     }
 
 }

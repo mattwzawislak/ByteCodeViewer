@@ -1,15 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class ConstantMethodRef extends Constant {
+
+    private static final String NAME = "MethodRef";
 
     private final int classIndex;
 
@@ -30,17 +31,21 @@ public class ConstantMethodRef extends Constant {
     }
 
     @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
     public String toString(final ConstantPool constantPool) {
         // Double redirection to toString representation of name and type
         return constantPool.getAsString(classIndex) + ";" + constantPool.getAsString(nameAndTypeIndex);
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
-
-        parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterPlainElement("class", constantPool.getAsString(classIndex), builder));
-        parent.add(new ParameterPlainElement("nameAndType", constantPool.getAsString(nameAndTypeIndex), builder));
+        builder.addPlain(parent, constantPool.getAsString(classIndex));
+        builder.tab(parent);
+        builder.addPlain(parent, constantPool.getAsString(nameAndTypeIndex));
     }
 }

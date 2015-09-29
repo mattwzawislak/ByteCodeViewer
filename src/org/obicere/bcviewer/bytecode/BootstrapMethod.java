@@ -1,10 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.EmptyTextElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -33,16 +31,18 @@ public class BootstrapMethod extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final PlainElement element = new PlainElement("method", constantPool.getAsString(bootstrapMethodRef), builder);
-        element.setRightPad(builder.getTabSize());
+        final String bootstrap = constantPool.getAsString(bootstrapMethodRef);
+        builder.addPlain(parent, bootstrap);
+
+        builder.indent();
         for (final int argument : bootstrapArguments) {
-            final Constant get = constantPool.get(argument);
-            get.model(builder, element);
+            final Constant constant = constantPool.get(argument);
+            builder.newLine(parent);
+            constant.model(builder, parent);
         }
-        element.add(new EmptyTextElement(builder));
-        parent.add(element);
+        builder.unindent();
     }
 
 }

@@ -1,14 +1,16 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.BytecodeElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public abstract class Instruction extends BytecodeElement {
+
+    private static final int MAX_NAME_LENGTH = 14;
 
     private final String mnemonic;
 
@@ -36,8 +38,9 @@ public abstract class Instruction extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new PlainElement("temp", getIdentifier(), builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addKeyword(parent, mnemonic);
+        builder.padTabbed(parent, MAX_NAME_LENGTH, mnemonic.length());
     }
 
 }

@@ -1,15 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class ConstantNameAndType extends Constant {
+
+    private static final String NAME = "NameAndType";
 
     private final int nameIndex;
 
@@ -30,16 +31,21 @@ public class ConstantNameAndType extends Constant {
     }
 
     @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
     public String toString(final ConstantPool constantPool) {
         return constantPool.getAsString(nameIndex) + ";" + constantPool.getAsString(descriptorIndex);
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
 
-        parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterPlainElement("name", constantPool.getAsString(nameIndex), builder));
-        parent.add(new ParameterPlainElement("descriptor", constantPool.getAsString(descriptorIndex), builder));
+        builder.addPlain(parent, constantPool.getAsString(nameIndex));
+        builder.tab(parent);
+        builder.addPlain(parent, constantPool.getAsString(descriptorIndex));
     }
 }

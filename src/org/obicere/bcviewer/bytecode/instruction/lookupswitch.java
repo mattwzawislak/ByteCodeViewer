@@ -1,13 +1,8 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.IntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import java.util.Arrays;
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -90,10 +85,27 @@ public class lookupswitch extends Instruction {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterIntegerElement("default", getDefault(), builder));
-        parent.add(new ParameterIntegerElement("npairs", getNpairs(), builder));
-        parent.add(new ParameterPlainElement("matchOffsetPairs", Arrays.deepToString(getMatchOffsetPairs()), builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+        builder.tab(parent);
+        builder.add(parent, getDefault());
+        builder.tab(parent);
+        builder.add(parent, getNpairs());
+        builder.tab(parent);
+
+        boolean first = true;
+        builder.addPlain(parent, "[");
+
+        for(final int[] pair : matchOffsetPairs){
+            if(!first){
+                builder.comma(parent);
+            }
+            builder.add(parent, pair[0]);
+            builder.addPlain(parent, "->");
+            builder.add(parent, pair[1]);
+            first = false;
+        }
+
+        builder.addPlain(parent, "]");
     }
 }

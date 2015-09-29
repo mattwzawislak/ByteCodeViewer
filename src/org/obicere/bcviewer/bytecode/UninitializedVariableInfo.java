@@ -1,8 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.ParameterKeywordElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  */
@@ -20,7 +20,7 @@ public class UninitializedVariableInfo extends VerificationTypeInfo {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new ParameterKeywordElement("nullptr", "nullptr", builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addKeyword(parent, "nullptr");
     }
 }

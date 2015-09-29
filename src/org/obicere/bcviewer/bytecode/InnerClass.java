@@ -1,8 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -56,7 +57,7 @@ public class InnerClass extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final String name = builder.getConstantPool().getAsString(innerClassInfoIndex);
 
         builder.setProperty("accessFlags", innerClassAccessFlags);

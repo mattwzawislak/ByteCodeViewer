@@ -1,15 +1,16 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.ConstantElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
  */
 public class ConstantUtf8 extends Constant {
+
+    private static final String NAME = "Utf8";
 
     private final String bytes;
 
@@ -27,13 +28,17 @@ public class ConstantUtf8 extends Constant {
     }
 
     @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
     public String toString(final ConstantPool constantPool) {
         return bytes;
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new ConstantElement(this, builder));
-        parent.add(new ParameterPlainElement("bytes", bytes, builder));
+    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+        builder.addString(parent, bytes);
     }
 }

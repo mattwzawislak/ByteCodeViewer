@@ -1,13 +1,8 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.bytecode.InstructionElement;
-import org.obicere.bcviewer.dom.literals.ParameterIntegerElement;
-import org.obicere.bcviewer.dom.literals.ParameterLongElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import java.util.Arrays;
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -120,10 +115,25 @@ public class tableswitch extends Instruction {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        parent.add(new InstructionElement(this, builder));
-        parent.add(new ParameterIntegerElement("default", getDefault(), builder));
-        parent.add(new ParameterLongElement("byte", ((long) getHigh() << 32L) | getLow(), builder));
-        parent.add(new ParameterPlainElement("jumpOffsets", Arrays.toString(jumpOffsets), builder));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+        builder.tab(parent);
+        builder.add(parent, getDefault());
+        builder.tab(parent);
+        builder.add(parent, ((long) getHigh() << 32L) | getLow());
+        builder.tab(parent);
+
+        builder.addPlain(parent, "[");
+        boolean first = true;
+
+        for(final int jump : jumpOffsets){
+            if(!first){
+                builder.comma(parent);
+            }
+            builder.add(parent, jump);
+            first = false;
+        }
+
+        builder.addPlain(parent, "]");
     }
 }

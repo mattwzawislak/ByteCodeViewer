@@ -1,9 +1,15 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
+
 /**
  * @author Obicere
  */
 public class SameLocals1StackItemFrame extends StackMapFrame {
+
+    private static final String NAME = "SameLocalsFrame";
 
     private final VerificationTypeInfo stack;
 
@@ -24,5 +30,18 @@ public class SameLocals1StackItemFrame extends StackMapFrame {
     @Override
     public int getOffsetDelta() {
         return getFrameType() - 64;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        super.model(builder, parent);
+        builder.addPlain(parent, " Stack: [");
+        stack.model(builder, parent);
+        builder.addPlain(parent, "]");
     }
 }

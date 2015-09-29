@@ -1,9 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -45,11 +45,11 @@ public class LocalVariable extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
         final FieldSignature signature = SignatureAttribute.parseField(constantPool.getAsString(descriptorIndex));
 
         signature.model(builder, parent);
-        parent.add(new PlainElement("name", constantPool.getAsString(nameIndex), builder));
+        builder.addPlain(parent, constantPool.getAsString(nameIndex));
     }
 }

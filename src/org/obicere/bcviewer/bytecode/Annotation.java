@@ -1,11 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.literals.AnnotationElement;
-import org.obicere.bcviewer.dom.literals.PlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -34,32 +32,20 @@ public class Annotation extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        final Element line = new BasicElement(getIdentifier(), Element.AXIS_LINE);
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final String identifier = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
-
-        // substring to remove the leading L and trailing ;
-        final AnnotationElement name = new AnnotationElement("name", identifier.substring(1, identifier.length() - 1), builder);
-        name.setRightPad(1);
-        line.add(name);
+        builder.addAnnotation(parent, identifier.substring(1, identifier.length() - 1));
         if (elementValuePairs.length > 0) {
-            line.add(new PlainElement("open", "(", builder));
-
+            builder.addPlain(parent, "(");
             boolean first = true;
             for (final ElementValuePair elementValuePair : elementValuePairs) {
                 if (!first) {
-                    final PlainElement element = new PlainElement("comma", ",", builder);
-                    element.setRightPad(1);
-                    line.add(element);
+                    builder.comma(parent);
                 }
-                elementValuePair.model(builder, line);
+                elementValuePair.model(builder, parent);
                 first = false;
             }
-
-            final PlainElement close = new PlainElement("close", ")", builder);
-            close.setRightPad(1);
-            line.add(close);
+            builder.addPlain(parent, ")");
         }
-        parent.add(line);
     }
 }

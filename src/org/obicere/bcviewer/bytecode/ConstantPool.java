@@ -1,12 +1,8 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.AttributesResourcePool;
-import org.obicere.bcviewer.dom.BasicElement;
-import org.obicere.bcviewer.dom.CollapsibleElement;
-import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.Element;
-import org.obicere.bcviewer.dom.TextElement;
-import org.obicere.bcviewer.dom.literals.ParameterPlainElement;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import javax.swing.text.Element;
 
 /**
  * @author Obicere
@@ -41,28 +37,26 @@ public class ConstantPool extends BytecodeElement {
     }
 
     @Override
-    public void model(final DocumentBuilder builder, final Element parent) {
-        final TextElement element = new TextElement("constantPool", "Constant Pool:");
-        element.setAttributes(builder.getAttributesPool().get(AttributesResourcePool.ATTRIBUTES_PLAIN));
+    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        final Element branch = builder.addBranch(parent);
 
-        final CollapsibleElement collapse = new CollapsibleElement("collapse", builder);
-        collapse.setAxis(Element.AXIS_PAGE);
+        builder.addPlain(branch, "Constant Pool:");
+        builder.indent();
+        builder.newLine(parent);
+
         // start at i=1 to avoid the always-null and never used constant
         for (int i = 1; i < constants.length; i++) {
-            final Element constantElement = new BasicElement("constant" + i);
-            constantElement.setAxis(Element.AXIS_LINE);
+            final Element constantBranch = builder.addBranch(branch);
 
             final Constant constant = constants[i];
             if (constant == null) {
                 // maybe move this to a ConstantNull class with a modeler there?
-                constantElement.add(new ParameterPlainElement("constant", "null constant", builder));
+                builder.addKeyword(constantBranch, "null");
             } else {
-                constant.model(builder, constantElement);
+                constant.model(builder, constantBranch);
             }
-
-            collapse.add(constantElement);
+            builder.newLine(parent);
         }
-        element.add(collapse);
-        parent.add(element);
+        builder.unindent();
     }
 }
