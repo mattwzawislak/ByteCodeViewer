@@ -1,5 +1,11 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
+import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.dom.BytecodeDocument;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.gui.EditorPanel;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -10,18 +16,27 @@ import java.awt.Dimension;
 /**
  * @author Obicere
  */
-public class EditorPanel extends JPanel {
+public class SwingEditorPanel extends JPanel implements EditorPanel {
+
+    private final JTextPane editor;
+
+    private final ByteTextPane byteTextPane;
 
     private final JSplitPane split;
 
     private final JScrollPane bytesScroll;
 
-    public EditorPanel() {
+    private final BytecodeDocumentBuilder builder;
+
+    private volatile ClassFile loadedClassFile;
+
+    public SwingEditorPanel(final Domain domain) {
         super(new BorderLayout(10, 10));
         setName("editor");
+        this.builder = new BytecodeDocumentBuilder(domain);
 
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        final JTextPane editor = new JTextPane() {
+        this.editor = new JTextPane() {
 
             @Override
             public boolean getScrollableTracksViewportWidth() {
@@ -29,9 +44,9 @@ public class EditorPanel extends JPanel {
             }
 
         };
-        final ByteTextPane bytes = new ByteTextPane();
 
-        this.bytesScroll = new JScrollPane(bytes);
+        this.byteTextPane = new ByteTextPane();
+        this.bytesScroll = new JScrollPane(byteTextPane);
         bytesScroll.setName("bytesScroll");
         bytesScroll.getViewport().setName("view");
 
@@ -39,8 +54,9 @@ public class EditorPanel extends JPanel {
         editorScroll.setName("editorScroll");
         editorScroll.getViewport().setName("view");
 
+        editor.setEditable(false);
         editor.setName("text");
-        bytes.setName("bytes");
+        byteTextPane.setName("bytes");
 
         split.setLeftComponent(editorScroll);
         split.setRightComponent(bytesScroll);
@@ -56,9 +72,31 @@ public class EditorPanel extends JPanel {
     }
 
     public void setBytesPanelVisible(final boolean visible) {
-        // Todo switch based off of preferred side
         split.setRightComponent(visible ? bytesScroll : null);
         split.revalidate();
     }
 
+    @Override
+    public ClassFile getClassFile() {
+        return loadedClassFile;
+    }
+
+    @Override
+    public void setClassFile(final ClassFile classFile) {
+        final BytecodeDocument document = builder.build(classFile);
+        editor.setDocument(document);
+        this.loadedClassFile = classFile;
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public byte[] getClassBytes() {
+        return byteTextPane.getBytes();
+    }
+
+    @Override
+    public void setClassBytes(final byte[] bytes) {
+        byteTextPane.setBytes(bytes);
+    }
 }

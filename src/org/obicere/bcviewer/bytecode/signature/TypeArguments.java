@@ -32,6 +32,7 @@ public class TypeArguments {
                 return null;
             }
             while (string.hasNext() && string.peek() != '>') {
+                System.out.println(string);
                 final TypeArgument typeArgument = TypeArgument.parse(string);
                 if (typeArgument == null) {
                     return null;

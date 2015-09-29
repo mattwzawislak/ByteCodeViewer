@@ -1,12 +1,13 @@
 package org.obicere.bcviewer.gui;
 
 import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.swing.SwingManager;
 
 /**
  * @author Obicere
  */
-public class GUIManager {
+public class GUIManager implements DomainAccess {
 
     private final FrameManager manager;
 
@@ -21,5 +22,8 @@ public class GUIManager {
         return manager;
     }
 
-
+    @Override
+    public Domain getDomain() {
+        return domain;
+    }
 }

@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.gui.swing.menu;
 
 import org.obicere.bcviewer.context.Domain;
-import org.obicere.bcviewer.gui.swing.editor.EditorPanel;
+import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -21,7 +21,7 @@ public class ViewMenu extends JMenu {
             final boolean show = showEditorBytes.isSelected();
             final Object component = domain.getGUIManager().getFrameManager().getComponent("content.editor");
             if (component != null) {
-                EditorPanel c = (EditorPanel) component;
+                SwingEditorPanel c = (SwingEditorPanel) component;
                 c.setBytesPanelVisible(show);
             }
             //domain.getGUIManager().getFrameManager().paint();

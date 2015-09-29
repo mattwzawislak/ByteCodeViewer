@@ -39,18 +39,15 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         this.attributeSets = new AttributeSets();
     }
 
-    public BytecodeDocument build(final BytecodeDocument document, final ClassFile classFile, final Modeler classFileModeler) {
+    public BytecodeDocument build(final ClassFile classFile) {
 
-        if (classFileModeler == null) {
-            throw new NullPointerException("cannot model with a null modeler.");
-        }
         try {
             lock.lock();
 
             this.classFile = classFile;
-            this.document = document;
+            this.document = new BytecodeDocument();
 
-            classFileModeler.model(this, document.getDefaultRootElement());
+            classFile.model(this, document.getDefaultRootElement());
 
             return document;
         } finally {

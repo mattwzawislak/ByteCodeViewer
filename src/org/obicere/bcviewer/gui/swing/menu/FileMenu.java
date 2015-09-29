@@ -4,6 +4,7 @@ import org.obicere.bcviewer.context.Domain;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 /**
  */
@@ -23,6 +24,7 @@ public class FileMenu extends JMenu {
         open.setMnemonic('O');
         exit.setMnemonic('x');
 
+        open.addActionListener(e -> SwingUtilities.invokeLater(() -> domain.getClassLoader().attemptLoad()));
         exit.addActionListener(e -> domain.getGUIManager().getFrameManager().close());
 
         add(open);

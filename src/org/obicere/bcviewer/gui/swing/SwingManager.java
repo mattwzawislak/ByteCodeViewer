@@ -2,22 +2,29 @@ package org.obicere.bcviewer.gui.swing;
 
 import com.alee.laf.WebLookAndFeel;
 import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.FrameManager;
-import org.obicere.bcviewer.gui.swing.editor.EditorPanel;
+import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.LookAndFeel;
 import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileFilter;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -27,6 +34,8 @@ public class SwingManager implements FrameManager {
 
     private final JFrame frame;
 
+    private final JTabbedPane tabbedPane;
+
     private final LookAndFeel defaultLookAndFeel;
 
     private final Domain domain;
@@ -34,6 +43,7 @@ public class SwingManager implements FrameManager {
     public SwingManager(final Domain domain) {
         this.domain = domain;
         this.frame = new JFrame(domain.getApplicationName());
+        this.tabbedPane = new JTabbedPane();
 
         this.defaultLookAndFeel = new WebLookAndFeel();
 
@@ -129,9 +139,10 @@ public class SwingManager implements FrameManager {
         final MainMenuBar menuBar = new MainMenuBar(domain);
         final JPanel content = new JPanel(new BorderLayout());
 
-        content.setName("content");
+        tabbedPane.setName("tabs");
 
-        content.add(new EditorPanel());
+        content.setName("content");
+        content.add(tabbedPane);
 
         frame.setJMenuBar(menuBar);
         frame.add(content);
@@ -181,12 +192,12 @@ public class SwingManager implements FrameManager {
     }
 
     @Override
-    public String getDefaultThemeName(){
+    public String getDefaultThemeName() {
         return defaultLookAndFeel.getName();
     }
 
     @Override
-    public String[] getAvailableThemeNames(){
+    public String[] getAvailableThemeNames() {
         final UIManager.LookAndFeelInfo themes[] = UIManager.getInstalledLookAndFeels();
 
         final int length = themes.length;
@@ -211,7 +222,7 @@ public class SwingManager implements FrameManager {
     }
 
     @Override
-    public void loadTheme(final String name){
+    public void loadTheme(final String name) {
         try {
             final UIManager.LookAndFeelInfo[] themes = UIManager.getInstalledLookAndFeels();
             for (final UIManager.LookAndFeelInfo theme : themes) {
@@ -225,6 +236,79 @@ public class SwingManager implements FrameManager {
             frame.repaint();
         } catch (final UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public EditorPanel getEditorPanel(final String className) {
+        for (final Component component : tabbedPane.getComponents()) {
+            if (component instanceof EditorPanel) {
+                final EditorPanel panel = (EditorPanel) component;
+                if (panel.getClass().getName().equals(className)) {
+                    return panel;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean hasEditorPanel(final String className) {
+        return getEditorPanel(className) != null;
+    }
+
+    @Override
+    public void displayEditorPanel(final String className) {
+        final EditorPanel panel = getEditorPanel(className);
+        if (panel != null) {
+            tabbedPane.setSelectedComponent((Component) panel);
+        }
+    }
+
+    @Override
+    public EditorPanel createEditorPanel(final String className) {
+        final SwingEditorPanel panel = new SwingEditorPanel(domain);
+        tabbedPane.add(panel);
+        panel.setName(className);
+        return panel;
+    }
+
+    @Override
+    public File[] promptForFiles(final String... extensions) {
+
+        final List<String> listExtensions = Arrays.asList(extensions);
+        final String description = listExtensions.toString();
+        final String trimmedDescription = description.substring(1, description.length() - 1);
+
+        final JFileChooser chooser = new JFileChooser();
+        chooser.setMultiSelectionEnabled(true);
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(final File f) {
+                final String name = f.getName();
+                final int lastIndex = name.lastIndexOf('.');
+                final String extension;
+                if (lastIndex > 0) {
+                    extension = name.substring(lastIndex);
+                } else {
+                    return false;
+                }
+                return listExtensions.contains(extension);
+            }
+
+            @Override
+            public String getDescription() {
+                return trimmedDescription;
+            }
+        });
+
+        final int response = chooser.showDialog(frame, "Open");
+        if (response == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFiles();
+        } else {
+            return null;
         }
     }
 }

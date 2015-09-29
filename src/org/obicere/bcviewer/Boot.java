@@ -1,17 +1,11 @@
 package org.obicere.bcviewer;
 
-import org.obicere.bcviewer.bytecode.Attribute;
-import org.obicere.bcviewer.bytecode.ClassFile;
-import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.bytecode.Field;
-import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogManager;
@@ -20,15 +14,7 @@ import java.util.logging.Logger;
 /**
  * @author Obicere
  */
-public abstract class Boot {
-
-    public @interface Foo {
-
-    }
-
-    public @interface Bar {
-
-    }
+public class Boot {
 
     private static Domain domain;
 
@@ -58,69 +44,6 @@ public abstract class Boot {
             final FrameManager frameManager = manager.getFrameManager();
             frameManager.loadDefaultTheme();
             frameManager.open();
-            try {
-                final File main = new File(".\\out\\production\\BytecodeViewer\\org\\obicere\\bcviewer\\bytecode");
-
-                for (final File file : main.listFiles(e -> e.getName().endsWith(".class"))) {
-                    final ClassInformation classInformation = new ClassInformation(domain);
-
-                    classInformation.load(file);
-
-                    System.out.print("outer most: ");
-                    System.out.println(classInformation.getRootClass().getName());
-                    System.out.println();
-
-                    for (final ClassFile cls : classInformation.getLoadedClasses()) {
-                        System.out.println(cls.getName());
-                        final ConstantPool pool = cls.getConstantPool();
-                        /*
-                        System.out.print("Major: ");
-                        System.out.println(cls.getMajorVersion());
-                        System.out.print("Minor: ");
-                        System.out.println(cls.getMinorVersion());
-                        System.out.print("Access: ");
-                        for (final String access : BytecodeUtils.getClassAccessNames(cls.getAccessFlags())) {
-                            System.out.print(access);
-                            System.out.print(' ');
-                        }
-                        System.out.println();
-                        System.out.print("Class: ");
-                        System.out.println(pool.getAsString(cls.getThisClass()));
-                        System.out.print("Super: ");
-                        System.out.println(pool.getAsString(cls.getSuperClass()));
-                        for (final int interfaceIndex : cls.getInterfaces()) {
-                            System.out.print("Interface ");
-                            System.out.print(interfaceIndex);
-                            System.out.print(": ");
-                            System.out.println(pool.getAsString(interfaceIndex));
-                        }
-                        System.out.println();
-                        for (final Attribute attribute : cls.getAttributes()) {
-                            System.out.println(attribute.toString(pool));
-                        }
-                        System.out.println();
-                        */
-                        for (final Field field : cls.getFields()) {
-                            System.out.print("Field ");
-                            System.out.print(pool.getAsString(field.getNameIndex()));
-                            System.out.print("; ");
-                            System.out.println(pool.getAsString(field.getDescriptorIndex()));
-                            for (final Attribute attribute : field.getAttributes()) {
-                                System.out.println(attribute.toString(pool));
-                            }
-                        }
-                        System.out.println();
-                        /*
-                        for (final Method method : cls.getMethods()) {
-                            System.out.println(method.toString(pool));
-                        }
-                        System.out.println();
-                        */
-                    }
-                }
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
         });
 
         logger.info("Boot time took (ms): " + (System.currentTimeMillis() - start));

@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.gui;
 
+import java.io.File;
+
 /**
  * @author Obicere
  */
@@ -35,4 +37,13 @@ public interface FrameManager {
 
     public void loadTheme(final String name);
 
+    public EditorPanel getEditorPanel(final String className);
+
+    public boolean hasEditorPanel(final String className);
+
+    public void displayEditorPanel(final String className);
+
+    public EditorPanel createEditorPanel(final String className);
+
+    public File[] promptForFiles(final String... extensions);
 }
