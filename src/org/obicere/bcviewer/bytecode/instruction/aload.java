@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.dom.Modeler;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -25,8 +23,8 @@ public class aload extends Instruction implements Modeler {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
         builder.add(index);
     }

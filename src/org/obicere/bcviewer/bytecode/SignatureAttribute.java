@@ -6,8 +6,6 @@ import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.bytecode.signature.QueueString;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -25,7 +23,7 @@ public class SignatureAttribute extends Attribute {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         throw new UnsupportedOperationException("signatures cannot be modeled properly. Instead call the parseXX methods.");
     }
 

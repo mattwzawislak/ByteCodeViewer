@@ -186,31 +186,31 @@ public class MethodSignature extends AnnotationTarget {
         throwsSignatures[throwsTarget.getThrowsTypeIndex()].walk(annotation, path);
     }
 
-    public void modelTypeParameters(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelTypeParameters(final BytecodeDocumentBuilder builder) {
         final TypeParameter[] types = typeParameters.getTypeParameters();
         if (types.length == 0) {
             return;
         }
-        builder.addPlain("<");
+        builder.add("<");
 
         boolean first = true;
         for (final TypeParameter type : types) {
             if (!first) {
                 builder.comma();
             }
-            type.model(builder, parent);
+            type.model(builder);
             first = false;
         }
 
-        builder.addPlain("> ");
+        builder.add("> ");
     }
 
-    public void modelReturnType(final BytecodeDocumentBuilder builder, final Element parent) {
-        result.model(builder, parent);
+    public void modelReturnType(final BytecodeDocumentBuilder builder) {
+        result.model(builder);
     }
 
-    public void modelParameters(final BytecodeDocumentBuilder builder, final Element parent, final Parameter[] methodParameters) {
-        builder.addPlain("(");
+    public void modelParameters(final BytecodeDocumentBuilder builder, final Parameter[] methodParameters) {
+        builder.add("(");
 
         final ConstantPool constantPool = builder.getConstantPool();
         final int min = Math.min(parameters.length, methodParameters.length);
@@ -225,15 +225,15 @@ public class MethodSignature extends AnnotationTarget {
                 builder.addKeyword(accessName + " ");
             }
 
-            parameter.model(builder, parent);
+            parameter.model(builder);
 
-            builder.addPlain(constantPool.getAsString(methodParameter.getNameIndex()));
+            builder.add(constantPool.getAsString(methodParameter.getNameIndex()));
         }
-        builder.addPlain(")");
+        builder.add(")");
     }
 
-    public void modelParameters(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addPlain("(");
+    public void modelParameters(final BytecodeDocumentBuilder builder) {
+        builder.add("(");
 
         for (int i = 0; i < parameters.length; i++) {
             if (i != 0) {
@@ -241,12 +241,12 @@ public class MethodSignature extends AnnotationTarget {
             }
             final JavaTypeSignature parameter = parameters[i];
 
-            parameter.model(builder, parent);
+            parameter.model(builder);
         }
-        builder.addPlain(")");
+        builder.add(")");
     }
 
-    public boolean modelThrowsSignatures(final BytecodeDocumentBuilder builder, final Element parent) {
+    public boolean modelThrowsSignatures(final BytecodeDocumentBuilder builder) {
         boolean first = true;
         for (final ThrowsSignature signature : throwsSignatures) {
             if (first) {
@@ -255,7 +255,7 @@ public class MethodSignature extends AnnotationTarget {
             } else {
                 builder.comma();
             }
-            signature.model(builder, parent);
+            signature.model(builder);
         }
         // if we are still on the first, no throws were added
         return !first;

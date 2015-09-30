@@ -4,18 +4,18 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
-import org.obicere.bcviewer.dom.attributes.AnnotationAttributeSet;
-import org.obicere.bcviewer.dom.attributes.CommentAttributeSet;
-import org.obicere.bcviewer.dom.attributes.KeywordAttributeSet;
-import org.obicere.bcviewer.dom.attributes.NumberAttributeSet;
-import org.obicere.bcviewer.dom.attributes.PlainAttributeSet;
-import org.obicere.bcviewer.dom.attributes.StringAttributeSet;
-import org.obicere.bcviewer.dom.attributes.TypeAttributeSet;
+import org.obicere.bcviewer.dom.style.AnnotationStyle;
+import org.obicere.bcviewer.dom.style.CommentStyle;
+import org.obicere.bcviewer.dom.style.KeywordStyle;
+import org.obicere.bcviewer.dom.style.NumberStyle;
+import org.obicere.bcviewer.dom.style.PlainStyle;
+import org.obicere.bcviewer.dom.style.StringStyle;
+import org.obicere.bcviewer.dom.style.TypeStyle;
 
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -35,39 +35,47 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     private volatile ClassFile classFile;
 
-    private volatile BytecodeDocument document;
+    private volatile List<Block> blocks;
+
+    private volatile Block workingBlock;
+
+    private volatile StyleConstraints constraints;
+
+    private volatile StringBuilder builder;
 
     private final HashMap<String, Object> properties = new HashMap<>();
 
-    private static final AttributeSet PLAIN      = new PlainAttributeSet();
-    private static final AttributeSet ANNOTATION = new AnnotationAttributeSet();
-    private static final AttributeSet COMMENT    = new CommentAttributeSet();
-    private static final AttributeSet KEYWORD    = new KeywordAttributeSet();
-    private static final AttributeSet NUMBER     = new NumberAttributeSet();
-    private static final AttributeSet STRING     = new StringAttributeSet();
-    private static final AttributeSet TYPE       = new TypeAttributeSet();
+    private static final Style PLAIN      = new PlainStyle();
+    private static final Style ANNOTATION = new AnnotationStyle();
+    private static final Style COMMENT    = new CommentStyle();
+    private static final Style KEYWORD    = new KeywordStyle();
+    private static final Style NUMBER     = new NumberStyle();
+    private static final Style STRING     = new StringStyle();
+    private static final Style TYPE       = new TypeStyle();
 
     public BytecodeDocumentBuilder(final Domain domain) {
         this.domain = domain;
     }
 
-    public BytecodeDocument build(final ClassFile classFile) {
+    public List<Block> build(final ClassFile classFile) {
 
         try {
             lock.lock();
 
             this.classFile = classFile;
-            this.document = new BytecodeDocument();
+            this.blocks = new LinkedList<>();
+            this.builder = new StringBuilder();
+            this.constraints = new StyleConstraints();
 
-            classFile.model(this, document.getDefaultRootElement());
-            document.finish();
+            classFile.model(this);
 
-            return document;
+            return blocks;
         } finally {
 
             // clear the current-working objects
             this.classFile = null;
-            this.document = null;
+            this.blocks = null;
+            this.builder = null;
 
             properties.clear();
             lock.unlock();
@@ -88,10 +96,6 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     public ClassFile getClassFile() {
         return classFile;
-    }
-
-    public BytecodeDocument getDocument() {
-        return document;
     }
 
     public int getTabSize() {
@@ -167,28 +171,55 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         return domain;
     }
 
-    public Element addBranch(final Element parent) {
-        return document.createBranch(parent, parent.getAttributes());
+    private void pushLine() {
+        constraints.close();
+        final Line line = new Line(constraints, builder.toString().toCharArray());
+        workingBlock.addLine(line);
+
+        builder = new StringBuilder();
+        constraints = new StyleConstraints();
+    }
+
+    public void openBlock() {
+        if (workingBlock != null) {
+            closeBlock();
+        }
+        workingBlock = new Block();
+    }
+
+    public void closeBlock() {
+        if (workingBlock == null) {
+            return;
+        }
+        pushLine();
+        blocks.add(workingBlock);
+        workingBlock = null;
+    }
+
+    public void add(final String plain) {
+        constraints.addConstraint(PLAIN, plain.length());
+        builder.append(plain);
     }
 
     public void addKeyword(final String keyword) {
-        document.createLeaf(keyword, KEYWORD);
-    }
-
-    public void addPlain(final String plain) {
-        document.createLeaf(plain, PLAIN);
+        constraints.addConstraint(KEYWORD, keyword.length());
+        builder.append(keyword);
     }
 
     public void addComment(final String comment) {
-        document.createLeaf("// " + comment, COMMENT);
+        constraints.addConstraint(COMMENT, comment.length());
+        builder.append(comment);
     }
 
     public void addType(final String type) {
-        document.createLeaf(type, TYPE);
+        constraints.addConstraint(TYPE, type.length());
+        builder.append(type);
     }
 
-    public void addString(final String text) {
-        document.createLeaf(stringify(text), STRING);
+    public void addString(String text) {
+        text = stringify(text);
+        constraints.addConstraint(STRING, text.length());
+        builder.append(text);
     }
 
     private String stringify(String text) {
@@ -208,75 +239,107 @@ public class BytecodeDocumentBuilder implements DomainAccess {
     }
 
     public void addAnnotation(final String annotation) {
-        document.createLeaf("@" + annotation, ANNOTATION);
+        constraints.addConstraint(ANNOTATION, annotation.length());
+        builder.append(annotation);
     }
 
     public void add(final boolean value) {
-        document.createLeaf(String.valueOf(value), KEYWORD);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(KEYWORD, string.length());
+        builder.append(string);
     }
 
     public void add(final byte value) {
-        document.createLeaf(String.valueOf(value), NUMBER);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void add(final short value) {
-        document.createLeaf(String.valueOf(value), NUMBER);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void add(final char value) {
-        document.createLeaf(String.valueOf(value), STRING);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void add(final int value) {
-        document.createLeaf(String.valueOf(value), NUMBER);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void add(final float value) {
-        document.createLeaf(String.valueOf(value), NUMBER);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void add(final long value) {
-        document.createLeaf(String.valueOf(value), NUMBER);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void add(final double value) {
-        document.createLeaf(String.valueOf(value), NUMBER);
+        final String string = String.valueOf(value);
+        constraints.addConstraint(NUMBER, string.length());
+        builder.append(string);
     }
 
     public void pad(final int size) {
-        document.createLeaf(padding.getPadding(size), PLAIN);
+        final String string = padding.getPadding(size);
+        constraints.addConstraint(null, string.length());
+        builder.append(string);
     }
 
     public void padTabbed(final int size) {
-        document.createLeaf(getTabbedPadding(size), PLAIN);
+        final String string = getTabbedPadding(size);
+        constraints.addConstraint(null, string.length());
+        builder.append(string);
     }
 
     public void padTabbed(final int size, final int soFar) {
-        document.createLeaf(getTabbedPadding(soFar, size), PLAIN);
+        final String string = getTabbedPadding(soFar, size);
+        constraints.addConstraint(null, string.length());
+        builder.append(string);
     }
 
     public void newLine() {
-        document.createLeaf("\n" + padding.getPadding(indentLevel * tabSize), PLAIN);
+        pushLine();
+        tab(indentLevel);
     }
 
     public void tab() {
-        try {
-            final String text = document.getText(0, document.getLength());
-            final int index = text.lastIndexOf('\n');
-            final int fixedIndex = (index < 0) ? 0 : index + 1;
-            final int since = document.getLength() - fixedIndex;
-            final int pad = tabSize - (since % tabSize);
-            if (pad == 0) {
-                return;
-            }
-            pad(pad);
-        } catch (final BadLocationException e) {
-            e.printStackTrace();
+        final int since = builder.length();
+        final int pad = tabSize - (since % tabSize);
+        if (pad == 0) {
+            return;
+        }
+        pad(pad);
+    }
+
+    public void tab(final int count) {
+        if (count <= 0) {
+            return;
+        }
+        final int since = builder.length();
+        final int pad = tabSize - (since % tabSize);
+        if (pad == 0) {
+            return;
+        }
+        pad(pad);
+        if (count > 1) {
+            pad((count - 1) * tabSize);
         }
     }
 
     public void comma() {
-        addPlain(", ");
+        add(", ");
     }
 
     public void indent() {

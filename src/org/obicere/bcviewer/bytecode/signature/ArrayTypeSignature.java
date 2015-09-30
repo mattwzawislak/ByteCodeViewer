@@ -5,7 +5,6 @@ import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -47,9 +46,9 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         for (final Annotation annotation : getAnnotations()) {
-            annotation.model(builder, parent);
+            annotation.model(builder);
         }
         final LinkedList<ArrayTypeSignature> arrayList = new LinkedList<>();
         arrayList.add(this);
@@ -61,12 +60,12 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
             arrayList.add(array);
             next = array.signature;
         }
-        next.model(builder, parent);
+        next.model(builder);
         for (final ArrayTypeSignature array : arrayList) {
             for (final Annotation annotation : array.getAnnotations()) {
-                annotation.model(builder, parent);
+                annotation.model(builder);
             }
-            builder.addPlain("[]");
+            builder.add("[]");
         }
     }
 }

@@ -5,7 +5,6 @@ import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -93,9 +92,9 @@ public class TypeParameter extends AnnotationTarget {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         for (final Annotation annotation : getAnnotations()) {
-            annotation.model(builder, parent);
+            annotation.model(builder);
         }
         builder.addType(identifier);
 
@@ -103,7 +102,7 @@ public class TypeParameter extends AnnotationTarget {
         final ReferenceTypeSignature classReference = classBound.getReferenceTypeSignature();
         if (classReference != null) {
             builder.addKeyword(" extends ");
-            classReference.model(builder, parent);
+            classReference.model(builder);
             classModeled = true;
         }
 
@@ -111,10 +110,10 @@ public class TypeParameter extends AnnotationTarget {
             if (!classModeled) {
                 builder.addKeyword(" extends ");
             } else {
-                builder.addPlain(" & ");
+                builder.add(" & ");
             }
             final ReferenceTypeSignature interfaceReference = bound.getReferenceTypeSignature();
-            interfaceReference.model(builder, parent);
+            interfaceReference.model(builder);
         }
     }
 }

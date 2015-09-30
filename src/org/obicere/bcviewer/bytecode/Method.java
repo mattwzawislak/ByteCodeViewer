@@ -68,34 +68,34 @@ public class Method extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
-            addSynthetic(builder, parent);
+            addSynthetic(builder);
         }
 
         final CodeAttribute code = attributeSet.getAttribute(CodeAttribute.class);
         final boolean hasBody = (code != null);
 
-        modelAnnotations(builder, parent);
-        modelDeclaration(builder, parent, hasBody);
+        modelAnnotations(builder);
+        modelDeclaration(builder, hasBody);
 
         if (hasBody) {
             builder.indent();
 
-            code.model(builder, parent);
+            code.model(builder);
 
             builder.unindent();
             builder.newLine();
-            builder.addPlain("}");
+            builder.add("}");
         }
     }
 
-    private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void addSynthetic(final BytecodeDocumentBuilder builder) {
         builder.addComment("Synthetic Method");
         builder.newLine();
     }
 
-    private void modelDeclaration(final BytecodeDocumentBuilder builder, final Element parent, final boolean hasBody) {
+    private void modelDeclaration(final BytecodeDocumentBuilder builder, final boolean hasBody) {
         final ConstantPool constantPool = builder.getConstantPool();
 
         final String[] accessNames = BytecodeUtils.getMethodAccessNames(accessFlags);
@@ -122,15 +122,15 @@ public class Method extends BytecodeElement {
         final boolean constructor = methodName.equals("<init>");
         final boolean staticInitializer = methodName.equals("<clinit>");
 
-        signature.modelTypeParameters(builder, parent);
+        signature.modelTypeParameters(builder);
 
         if (constructor) {
             // instead replace method name "<init>" with the class name
-            builder.addPlain(BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
+            builder.add(BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
         } else if (!staticInitializer) {
             // set the name to the method name otherwise - no name for clinit
-            signature.modelReturnType(builder, parent);
-            builder.addPlain(" " + methodName);
+            signature.modelReturnType(builder);
+            builder.add(" " + methodName);
         }
 
         if (!staticInitializer) {
@@ -138,12 +138,12 @@ public class Method extends BytecodeElement {
             final MethodParametersAttribute parameterAttribute = attributeSet.getAttribute(MethodParametersAttribute.class);
             if (parameterAttribute != null) {
                 final Parameter[] parameters = parameterAttribute.getParameters();
-                signature.modelParameters(builder, parent, parameters);
+                signature.modelParameters(builder, parameters);
             } else {
                 // otherwise, model un-named and unknown access parameters
-                signature.modelParameters(builder, parent);
+                signature.modelParameters(builder);
             }
-            final boolean throwsSet = signature.modelThrowsSignatures(builder, parent);
+            final boolean throwsSet = signature.modelThrowsSignatures(builder);
             final ExceptionsAttribute exceptionsAttribute = attributeSet.getAttribute(ExceptionsAttribute.class);
 
             if (exceptionsAttribute != null) {
@@ -156,15 +156,15 @@ public class Method extends BytecodeElement {
                         builder.comma();
                     }
                     final String name = constantPool.getAsString(index);
-                    builder.addPlain(BytecodeUtils.getQualifiedName(name));
+                    builder.add(BytecodeUtils.getQualifiedName(name));
                 }
             }
         }
 
         if (hasBody) {
-            builder.addPlain(" {");
+            builder.add(" {");
         } else {
-            modelAbstractClose(builder, parent);
+            modelAbstractClose(builder);
         }
     }
 
@@ -188,31 +188,31 @@ public class Method extends BytecodeElement {
         }
     }
 
-    private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelAnnotations(final BytecodeDocumentBuilder builder) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
-                e.model(builder, parent);
+                e.model(builder);
                 builder.newLine();
             });
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> {
-                e.model(builder, parent);
+                e.model(builder);
                 builder.newLine();
             });
         }
     }
 
-    private void modelAbstractClose(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelAbstractClose(final BytecodeDocumentBuilder builder) {
         final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
         if (hasDefault != null) {
             builder.addKeyword(" default ");
-            hasDefault.getDefaultValue().model(builder, parent);
+            hasDefault.getDefaultValue().model(builder);
         }
-        builder.addPlain(";");
+        builder.add(";");
     }
 
 }

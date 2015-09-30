@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -85,8 +83,8 @@ public class lookupswitch extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
         builder.add(getDefault());
         builder.tab();
@@ -94,18 +92,18 @@ public class lookupswitch extends Instruction {
         builder.tab();
 
         boolean first = true;
-        builder.addPlain("[");
+        builder.add("[");
 
         for(final int[] pair : matchOffsetPairs){
             if(!first){
                 builder.comma();
             }
             builder.add(pair[0]);
-            builder.addPlain("->");
+            builder.add("->");
             builder.add(pair[1]);
             first = false;
         }
 
-        builder.addPlain("]");
+        builder.add("]");
     }
 }

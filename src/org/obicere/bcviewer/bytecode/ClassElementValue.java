@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -24,11 +22,11 @@ public class ClassElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(classInfoIndex));
         builder.tab();
-        builder.addPlain(type.substring(1, type.length() - 1) + ".");
+        builder.add(type.substring(1, type.length() - 1) + ".");
         builder.addKeyword("class");
     }
 }

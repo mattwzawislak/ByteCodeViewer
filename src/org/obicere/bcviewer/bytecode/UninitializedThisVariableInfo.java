@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  */
 public class UninitializedThisVariableInfo extends VerificationTypeInfo {
@@ -13,9 +11,9 @@ public class UninitializedThisVariableInfo extends VerificationTypeInfo {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         builder.addKeyword("this");
-        builder.addPlain("->");
+        builder.add("->");
         builder.addKeyword("nullptr");
     }
 

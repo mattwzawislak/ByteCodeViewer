@@ -132,20 +132,20 @@ public class ClassSignature extends AnnotationTarget {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        modelTypeParameters(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        modelTypeParameters(builder);
     }
 
-    private void modelTypeParameters(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelTypeParameters(final BytecodeDocumentBuilder builder) {
         final TypeParameters parameters = typeParameters;
         final TypeParameter[] types = parameters.getTypeParameters();
         if (types.length == 0) {
             return;
         }
-        builder.addPlain("<");
+        builder.add("<");
         for (final TypeParameter type : types) {
-            type.model(builder, parent);
+            type.model(builder);
         }
-        builder.addPlain(">");
+        builder.add(">");
     }
 }

@@ -37,23 +37,21 @@ public class ConstantPool extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        final Element branch = builder.addBranch(parent);
+    public void model(final BytecodeDocumentBuilder builder) {
 
-        builder.addPlain("Constant Pool:");
+        builder.add("Constant Pool:");
         builder.indent();
         builder.newLine();
 
         // start at i=1 to avoid the always-null and never used constant
         for (int i = 1; i < constants.length; i++) {
-            final Element constantBranch = builder.addBranch(branch);
 
             final Constant constant = constants[i];
             if (constant == null) {
                 // maybe move this to a ConstantNull class with a modeler there?
                 builder.addKeyword("null");
             } else {
-                constant.model(builder, constantBranch);
+                constant.model(builder);
             }
             builder.newLine();
         }

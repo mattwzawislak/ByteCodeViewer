@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  */
 public class DoubleVariableInfo extends VerificationTypeInfo {
@@ -13,7 +11,7 @@ public class DoubleVariableInfo extends VerificationTypeInfo {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         builder.addKeyword("double");
     }
 

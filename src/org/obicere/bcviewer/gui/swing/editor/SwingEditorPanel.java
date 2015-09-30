@@ -2,23 +2,24 @@ package org.obicere.bcviewer.gui.swing.editor;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.Domain;
-import org.obicere.bcviewer.dom.BytecodeDocument;
+import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.List;
 
 /**
  * @author Obicere
  */
 public class SwingEditorPanel extends JPanel implements EditorPanel {
 
-    private final JTextPane editor;
+    private final JDocumentArea documentArea;
 
     private final ByteTextPane byteTextPane;
 
@@ -36,26 +37,18 @@ public class SwingEditorPanel extends JPanel implements EditorPanel {
         this.builder = new BytecodeDocumentBuilder(domain);
 
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        this.editor = new JTextPane() {
-
-            @Override
-            public boolean getScrollableTracksViewportWidth() {
-                return getUI().getPreferredSize(this).width <= getParent().getSize().width;
-            }
-
-        };
+        this.documentArea = new JDocumentArea();
 
         this.byteTextPane = new ByteTextPane();
         this.bytesScroll = new JScrollPane(byteTextPane);
         bytesScroll.setName("bytesScroll");
         bytesScroll.getViewport().setName("view");
 
-        final JScrollPane editorScroll = new JScrollPane(editor);
+        final JScrollPane editorScroll = new JScrollPane(documentArea);
         editorScroll.setName("editorScroll");
         editorScroll.getViewport().setName("view");
 
-        editor.setEditable(false);
-        editor.setName("text");
+        documentArea.setName("document");
         byteTextPane.setName("bytes");
 
         split.setLeftComponent(editorScroll);
@@ -83,8 +76,8 @@ public class SwingEditorPanel extends JPanel implements EditorPanel {
 
     @Override
     public void setClassFile(final ClassFile classFile) {
-        final BytecodeDocument document = builder.build(classFile);
-        editor.setDocument(document);
+        final List<Block> blocks = builder.build(classFile);
+        blocks.forEach(documentArea::addBlock);
         this.loadedClassFile = classFile;
         revalidate();
         repaint();

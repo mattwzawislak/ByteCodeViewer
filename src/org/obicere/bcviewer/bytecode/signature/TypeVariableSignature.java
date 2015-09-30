@@ -5,7 +5,6 @@ import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
 import java.util.Iterator;
 
 /**
@@ -45,9 +44,9 @@ public class TypeVariableSignature extends ReferenceTypeSignature {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         for (final Annotation annotation : getAnnotations()) {
-            annotation.model(builder, parent);
+            annotation.model(builder);
         }
         builder.addType(identifier + " ");
 

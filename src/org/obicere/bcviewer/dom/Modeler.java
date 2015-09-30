@@ -7,6 +7,6 @@ import javax.swing.text.Element;
  */
 public interface Modeler {
 
-    public void model(final BytecodeDocumentBuilder builder, final Element parent);
+    public void model(final BytecodeDocumentBuilder builder);
 
 }

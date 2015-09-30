@@ -105,7 +105,7 @@ public class ClassFile extends BytecodeElement {
     // attribute
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         // we use this override for InnerClass attributes to set the proper access flags
         final int accessFlags;
         final Object newAccessFlags = builder.getProperty("accessFlags");
@@ -115,64 +115,64 @@ public class ClassFile extends BytecodeElement {
             accessFlags = getAccessFlags();
         }
 
-        final Element classElement = builder.addBranch(parent);
+        builder.openBlock();
 
-        modelVersion(builder, classElement);
+        modelVersion(builder);
         builder.newLine();
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
-            addSynthetic(builder, parent);
+            addSynthetic(builder);
         }
 
-        modelAnnotations(builder, classElement);
-        modelClassDeclaration(builder, classElement, accessFlags);
+        modelAnnotations(builder);
+        modelClassDeclaration(builder, accessFlags);
 
         builder.indent();
-        modelFields(builder, classElement);
-        System.gc();
-        modelMethods(builder, classElement);
-        System.gc();
-        modelBootstrapMethods(builder, classElement);
-        modelInnerClasses(builder, classElement);
+        modelFields(builder);
+        modelMethods(builder);
+        modelBootstrapMethods(builder);
+        modelInnerClasses(builder);
 
         builder.unindent();
 
         builder.newLine();
-        builder.addPlain("}");
+        builder.add("}");
+
+        builder.closeBlock();
     }
 
-    private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void addSynthetic(final BytecodeDocumentBuilder builder) {
         builder.addComment("Synthetic Class");
         builder.newLine();
     }
 
-    private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelAnnotations(final BytecodeDocumentBuilder builder) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
-                e.model(builder, parent);
+                e.model(builder);
                 builder.newLine();
             });
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> {
-                e.model(builder, parent);
+                e.model(builder);
                 builder.newLine();
             });
         }
     }
 
-    private void modelVersion(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addPlain("Major: ");
+    private void modelVersion(final BytecodeDocumentBuilder builder) {
+        builder.add("Major: ");
         builder.add(majorVersion);
-        builder.addPlain(" Minor: ");
+        builder.add(" Minor: ");
         builder.add(minorVersion);
         builder.newLine();
     }
 
-    private void modelClassDeclaration(final BytecodeDocumentBuilder builder, final Element parent, final int accessFlags) {
+    private void modelClassDeclaration(final BytecodeDocumentBuilder builder, final int accessFlags) {
 
         final String[] names = BytecodeUtils.getClassAccessNames(accessFlags);
 
@@ -181,7 +181,7 @@ public class ClassFile extends BytecodeElement {
             builder.pad(1);
         }
 
-        builder.addPlain(BytecodeUtils.getQualifiedName(getName()));
+        builder.add(BytecodeUtils.getQualifiedName(getName()));
 
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
         final ClassSignature signature;
@@ -213,12 +213,12 @@ public class ClassFile extends BytecodeElement {
             ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
         }
 
-        signature.model(builder, parent);
+        signature.model(builder);
 
-        builder.addPlain(" {");
+        builder.add(" {");
     }
 
-    private void modelFields(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelFields(final BytecodeDocumentBuilder builder) {
         final Field[] fields = getFields();
         if (fields.length == 0) {
             return;
@@ -229,14 +229,14 @@ public class ClassFile extends BytecodeElement {
             builder.newLine();
 
             System.out.print("\rModelling field: (" + current + " / " + fields.length + ")\t");
-            final Element nextField = builder.addBranch(parent);
-            field.model(builder, nextField);
+
+            field.model(builder);
             current++;
         }
         System.out.println();
     }
 
-    private void modelMethods(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelMethods(final BytecodeDocumentBuilder builder) {
         final Method[] methods = getMethods();
         if (methods.length == 0) {
             return;
@@ -247,14 +247,13 @@ public class ClassFile extends BytecodeElement {
             builder.newLine();
 
             System.out.print("\rModelling method: (" + current + " / " + methods.length + ")\t");
-            final Element nextMethod = builder.addBranch(parent);
-            method.model(builder, nextMethod);
+            method.model(builder);
             current++;
         }
         System.out.println();
     }
 
-    private void modelInnerClasses(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelInnerClasses(final BytecodeDocumentBuilder builder) {
         final Set<InnerClassesAttribute> attributes = attributeSet.getAttributes(InnerClassesAttribute.class);
         if (attributes == null) {
             return;
@@ -272,22 +271,20 @@ public class ClassFile extends BytecodeElement {
                     continue;
                 }
 
-                final Element nextInnerClass = builder.addBranch(parent);
-
                 builder.newLine();
                 builder.newLine();
-                innerClass.model(builder, nextInnerClass);
+                innerClass.model(builder);
             }
         }
     }
 
-    private void modelBootstrapMethods(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelBootstrapMethods(final BytecodeDocumentBuilder builder) {
 
         final BootstrapMethodsAttribute attribute = attributeSet.getAttribute(BootstrapMethodsAttribute.class);
 
         if (attribute == null) {
             return;
         }
-        attribute.model(builder, parent);
+        attribute.model(builder);
     }
 }

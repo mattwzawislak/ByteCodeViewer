@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -44,9 +42,9 @@ public class AppendFrame extends StackMapFrame {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder) {
         builder.newLine();
-        builder.addPlain("Locals:");
-        modelInfo(builder, parent, locals);
+        builder.add("Locals:");
+        modelInfo(builder, locals);
     }
 }

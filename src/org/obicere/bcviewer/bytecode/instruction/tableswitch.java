@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -115,15 +113,15 @@ public class tableswitch extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
         builder.add(getDefault());
         builder.tab();
         builder.add(((long) getHigh() << 32L) | getLow());
         builder.tab();
 
-        builder.addPlain("[");
+        builder.add("[");
         boolean first = true;
 
         for(final int jump : jumpOffsets){
@@ -134,6 +132,6 @@ public class tableswitch extends Instruction {
             first = false;
         }
 
-        builder.addPlain("]");
+        builder.add("]");
     }
 }

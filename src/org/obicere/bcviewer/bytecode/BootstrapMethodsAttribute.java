@@ -25,18 +25,17 @@ public class BootstrapMethodsAttribute extends Attribute {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
 
         final BootstrapMethod[] methods = bootstrapMethods;
         if (methods.length == 0) {
             return;
         }
-        final Element branch = builder.addBranch(parent);
 
         for (final BootstrapMethod method : methods) {
             builder.newLine();
             builder.newLine();
-            method.model(builder, branch);
+            method.model(builder);
         }
     }
 }

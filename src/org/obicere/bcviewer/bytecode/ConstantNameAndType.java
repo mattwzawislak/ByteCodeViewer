@@ -43,21 +43,21 @@ public class ConstantNameAndType extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String name = constantPool.getAsString(nameIndex);
 
         final String signature = constantPool.getAsString(descriptorIndex);
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
         if (methodSignature != null) {
-            methodSignature.modelReturnType(builder, parent);
-            builder.addPlain(" " + name);
-            methodSignature.modelParameters(builder, parent);
+            methodSignature.modelReturnType(builder);
+            builder.add(" " + name);
+            methodSignature.modelParameters(builder);
         } else {
             final FieldSignature fieldSignature = SignatureAttribute.parseField(signature);
             if (fieldSignature != null) {
-                fieldSignature.model(builder, parent);
-                builder.addPlain(name);
+                fieldSignature.model(builder);
+                builder.add(name);
             }
         }
     }

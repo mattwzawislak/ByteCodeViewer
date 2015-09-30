@@ -40,9 +40,9 @@ public class SameLocals1StackItemFrameExtended extends StackMapFrame {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder) {
         builder.newLine();
-        builder.addPlain("Stack:");
-        modelInfo(builder, parent, new VerificationTypeInfo[]{stack});
+        builder.add("Stack:");
+        modelInfo(builder, new VerificationTypeInfo[]{stack});
     }
 }

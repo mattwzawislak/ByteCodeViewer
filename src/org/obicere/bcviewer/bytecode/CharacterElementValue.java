@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -23,7 +21,7 @@ public class CharacterElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         final ConstantInteger constant = (ConstantInteger) builder.getConstantPool().get(constantValueIndex);
         builder.add((char) constant.getBytes());
     }

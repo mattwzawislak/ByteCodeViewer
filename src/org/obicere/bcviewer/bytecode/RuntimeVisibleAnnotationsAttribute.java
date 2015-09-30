@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -20,9 +18,9 @@ public class RuntimeVisibleAnnotationsAttribute extends Attribute {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         for (final Annotation annotation : annotations) {
-            annotation.model(builder, parent);
+            annotation.model(builder);
         }
     }
 

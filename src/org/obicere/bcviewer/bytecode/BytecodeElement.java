@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.dom.Modeler;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -39,7 +37,7 @@ public abstract class BytecodeElement implements Modeler {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         // TODO remove
     }
 

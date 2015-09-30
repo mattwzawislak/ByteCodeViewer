@@ -28,15 +28,15 @@ public abstract class Constant extends BytecodeElement {
 
     public abstract String getName();
 
-    public abstract void modelValue(final BytecodeDocumentBuilder builder, final Element parent);
+    public abstract void modelValue(final BytecodeDocumentBuilder builder);
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent){
+    public void model(final BytecodeDocumentBuilder builder){
         final String type = getName();
         builder.addKeyword(getName());
         builder.padTabbed(MAX_NAME_LENGTH, type.length());
         builder.tab();
-        modelValue(builder, parent);
+        modelValue(builder);
     }
 
 }

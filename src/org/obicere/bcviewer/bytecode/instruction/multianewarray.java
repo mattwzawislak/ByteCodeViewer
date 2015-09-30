@@ -4,8 +4,6 @@ import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.dom.Modeler;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -52,8 +50,8 @@ public class multianewarray extends Instruction implements Modeler {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.newLine();
         builder.tab();
         builder.add(getIndex());

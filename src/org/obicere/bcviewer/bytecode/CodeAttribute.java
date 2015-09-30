@@ -129,7 +129,7 @@ public class CodeAttribute extends Attribute {
     // TODO: RITA --+- Should be latched onto Lines, Exceptions, local vars? idk wtf this is
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         // entire code block should be collapsible
 
@@ -156,8 +156,8 @@ public class CodeAttribute extends Attribute {
 
         final Map<Integer, FieldSignature> localVarSignatures = getLocalVariables(constantPool);
 
-        modelExceptions(builder, parent);
-        modelLines(builder, parent, startPCToLine.values());
+        modelExceptions(builder);
+        modelLines(builder, startPCToLine.values());
     }
 
     private StackMapFrame[] getFrames() {
@@ -181,7 +181,7 @@ public class CodeAttribute extends Attribute {
         return lines.toArray(new LineNumber[lines.size()]);
     }
 
-    private void modelExceptions(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelExceptions(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         for (final CodeException exception : exceptions) {
             final String start = startPCToLine.get(exception.getStartPC()).getName();
@@ -195,7 +195,7 @@ public class CodeAttribute extends Attribute {
 
             builder.newLine();
             builder.addKeyword("try");
-            builder.addPlain(": [" + start + "-" + end + "] ");
+            builder.add(": [" + start + "-" + end + "] ");
             builder.addKeyword("catch ");
 
             final String catchType;
@@ -205,7 +205,7 @@ public class CodeAttribute extends Attribute {
             } else {
                 catchType = constantPool.getAsString(exception.getCatchType());
             }
-            builder.addPlain(BytecodeUtils.getQualifiedName(catchType));
+            builder.add(BytecodeUtils.getQualifiedName(catchType));
 
             final int handlerPC = exception.getHandlerPC();
             final String handler;
@@ -216,29 +216,29 @@ public class CodeAttribute extends Attribute {
                 Logger.getGlobal().log(Level.SEVERE, "\tTargets: " + startPCToLine.entrySet().stream().map(Map.Entry::getValue).map(Block::getStartPC).sorted().collect(Collectors.toList()).toString());
                 handler = String.valueOf(handlerPC);
             }
-            builder.addPlain(" Handler: " + handler);
+            builder.add(" Handler: " + handler);
         }
     }
 
-    private void modelLines(final BytecodeDocumentBuilder builder, final Element parent, final Iterable<Block> blocks) {
+    private void modelLines(final BytecodeDocumentBuilder builder, final Iterable<Block> blocks) {
         for (final Block block : blocks) {
             builder.newLine();
-            builder.addPlain(block.getName());
-            builder.addPlain(" {");
+            builder.add(block.getName());
+            builder.add(" {");
             builder.indent();
 
-            block.model(builder, parent);
+            block.model(builder);
 
             builder.setProperty("code", this);
             for (final Instruction instruction : block.getInstructions()) {
                 builder.newLine();
-                instruction.model(builder, parent);
+                instruction.model(builder);
             }
 
             builder.setProperty("code", null);
             builder.unindent();
             builder.newLine();
-            builder.addPlain("}");
+            builder.add("}");
         }
     }
 
@@ -279,7 +279,7 @@ public class CodeAttribute extends Attribute {
         return signatureSet;
     }
 
-    private void modelGenericLocalVariable(final BytecodeDocumentBuilder builder, final Element parent, final int startPC, final int endPC, final int index) {
+    private void modelGenericLocalVariable(final BytecodeDocumentBuilder builder, final int startPC, final int endPC, final int index) {
         final String start = startPCToLine.get(startPC).getName();
         final String end;
         final Block line = startPCToLine.get(endPC);
@@ -368,7 +368,7 @@ public class CodeAttribute extends Attribute {
             return instructions;
         }
 
-        public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        public void model(final BytecodeDocumentBuilder builder) {
             // default does not model
         }
     }
@@ -414,9 +414,9 @@ public class CodeAttribute extends Attribute {
         }
 
         @Override
-        public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+        public void model(final BytecodeDocumentBuilder builder) {
             builder.newLine();
-            frame.model(builder, parent);
+            frame.model(builder);
         }
     }
 }

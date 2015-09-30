@@ -34,7 +34,7 @@ public class ConstantMethodType extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addPlain(builder.getConstantPool().getAsString(descriptorIndex));
+    public void modelValue(final BytecodeDocumentBuilder builder) {
+        builder.add(builder.getConstantPool().getAsString(descriptorIndex));
     }
 }

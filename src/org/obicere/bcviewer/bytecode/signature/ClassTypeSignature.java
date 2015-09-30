@@ -108,55 +108,55 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         for (final Annotation annotation : getAnnotations()) {
-            annotation.model(builder, parent);
+            annotation.model(builder);
         }
-        modelPackage(builder, parent);
-        modelSignature(builder, parent);
-        modelSuffixes(builder, parent);
+        modelPackage(builder);
+        modelSignature(builder);
+        modelSuffixes(builder);
     }
 
-    private void modelPackage(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelPackage(final BytecodeDocumentBuilder builder) {
         final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
         for (final String identifier : packageIdentifiers) {
-            builder.addPlain(identifier + ".");
+            builder.add(identifier + ".");
         }
     }
 
-    private void modelSignature(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelSignature(final BytecodeDocumentBuilder builder) {
 
-        builder.addPlain(simpleClassTypeSignature.getIdentifier());
+        builder.add(simpleClassTypeSignature.getIdentifier());
 
         final TypeArguments arguments = simpleClassTypeSignature.getTypeArguments();
-        modelTypeArguments(builder, parent, arguments);
+        modelTypeArguments(builder, arguments);
     }
 
-    private void modelSuffixes(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelSuffixes(final BytecodeDocumentBuilder builder) {
         for (final ClassTypeSignatureSuffix suffix : classTypeSignatureSuffix) {
             final SimpleClassTypeSignature signature = suffix.getSimpleClassTypeSignature();
 
-            builder.addPlain("." + signature.getIdentifier());
+            builder.add("." + signature.getIdentifier());
 
             final TypeArguments arguments = signature.getTypeArguments();
-            modelTypeArguments(builder, parent, arguments);
+            modelTypeArguments(builder, arguments);
         }
     }
 
-    private void modelTypeArguments(final BytecodeDocumentBuilder builder, final Element parent, final TypeArguments typeArguments) {
+    private void modelTypeArguments(final BytecodeDocumentBuilder builder, final TypeArguments typeArguments) {
         final TypeArgument[] types = typeArguments.getTypeArguments();
         if (types.length == 0) {
             return;
         }
-        builder.addPlain("<");
+        builder.add("<");
         boolean first = true;
         for (final TypeArgument type : types) {
             if (!first) {
                 builder.comma();
             }
-            type.getWildcardIndicator().model(builder, parent);
+            type.getWildcardIndicator().model(builder);
             first = false;
         }
-        builder.addPlain(">");
+        builder.add(">");
     }
 }

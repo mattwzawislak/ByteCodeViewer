@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -23,17 +21,17 @@ public class ArrayElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
 
-        builder.addPlain("{");
+        builder.add("{");
         boolean first = true;
         for (final ElementValue value : values) {
             if (!first) {
                 builder.comma();
             }
-            value.model(builder, parent);
+            value.model(builder);
             first = false;
         }
-        builder.addPlain("}");
+        builder.add("}");
     }
 }

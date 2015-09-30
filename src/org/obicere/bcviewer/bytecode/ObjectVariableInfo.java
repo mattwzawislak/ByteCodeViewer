@@ -4,8 +4,6 @@ import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.text.Element;
-
 /**
  */
 public class ObjectVariableInfo extends VerificationTypeInfo {
@@ -18,14 +16,14 @@ public class ObjectVariableInfo extends VerificationTypeInfo {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
 
         final String signature = builder.getConstantPool().getAsString(index);
         final FieldSignature fieldSignature = SignatureAttribute.parseField(signature);
         if (fieldSignature != null) {
-            fieldSignature.model(builder, parent);
+            fieldSignature.model(builder);
         } else {
-            builder.addPlain(BytecodeUtils.getQualifiedName(signature));
+            builder.add(BytecodeUtils.getQualifiedName(signature));
         }
     }
 }

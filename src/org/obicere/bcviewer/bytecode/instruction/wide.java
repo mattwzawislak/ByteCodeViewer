@@ -4,8 +4,6 @@ import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.instruction.InstructionReader;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -83,8 +81,8 @@ public class wide extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
         builder.addKeyword(getInstructionName());
         builder.tab();

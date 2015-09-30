@@ -4,7 +4,6 @@ import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
 import java.util.Iterator;
 
 /**
@@ -35,7 +34,7 @@ public class TypeThrowsSignature extends ThrowsSignature {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        typeVariableSignature.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        typeVariableSignature.model(builder);
     }
 }

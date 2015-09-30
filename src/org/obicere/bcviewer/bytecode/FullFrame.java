@@ -50,14 +50,14 @@ public class FullFrame extends StackMapFrame {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent){
+    public void modelValue(final BytecodeDocumentBuilder builder){
 
         builder.newLine();
-        builder.addPlain("Locals:");
-        modelInfo(builder, parent, locals);
+        builder.add("Locals:");
+        modelInfo(builder, locals);
 
         builder.newLine();
-        builder.addPlain("Stack:");
-        modelInfo(builder, parent, stack);
+        builder.add("Stack:");
+        modelInfo(builder, stack);
     }
 }

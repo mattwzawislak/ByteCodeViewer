@@ -34,7 +34,7 @@ public abstract class AbstractConstantMethodRef extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String className = BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex()));
 
@@ -51,7 +51,7 @@ public abstract class AbstractConstantMethodRef extends Constant {
         builder.newLine();
 
         if (!isConstructor && !isStatic) {
-            methodSignature.modelReturnType(builder, parent);
+            methodSignature.modelReturnType(builder);
             builder.pad(1);
         }
 
@@ -59,15 +59,15 @@ public abstract class AbstractConstantMethodRef extends Constant {
             builder.addKeyword("static");
         } else if (isConstructor) {
             builder.addKeyword("new ");
-            builder.addPlain(className);
+            builder.add(className);
         } else {
-            builder.addPlain(className + "#" + name);
+            builder.add(className + "#" + name);
         }
 
         final JavaTypeSignature[] types = methodSignature.getParameters();
         final boolean inline = types.length < 4;
 
-        builder.addPlain("(");
+        builder.add("(");
         if (!inline) {
             builder.indent();
         }
@@ -76,7 +76,7 @@ public abstract class AbstractConstantMethodRef extends Constant {
             if (!inline) {
                 builder.newLine();
             }
-            type.model(builder, parent);
+            type.model(builder);
         }
 
         // close the parameters
@@ -88,7 +88,7 @@ public abstract class AbstractConstantMethodRef extends Constant {
         if (!inline && types.length > 0) {
             builder.newLine();
         }
-        builder.addPlain(") ");
+        builder.add(") ");
 
         // close the method
         builder.unindent();

@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 import org.obicere.bcviewer.bytecode.BytecodeElement;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -38,7 +36,7 @@ public abstract class Instruction extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         builder.addKeyword(mnemonic);
         builder.padTabbed(MAX_NAME_LENGTH, mnemonic.length());
     }

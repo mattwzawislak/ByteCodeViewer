@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 import org.obicere.bcviewer.bytecode.CodeAttribute;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -47,15 +45,15 @@ public class jsr_w extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(getStart(), getBranchOffset());
         if (line == null) {
             builder.add(getBranchOffset());
         } else {
-            builder.addPlain(line);
+            builder.add(line);
         }
     }
 }

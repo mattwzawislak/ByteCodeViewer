@@ -47,40 +47,40 @@ public class Field extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
-            addSynthetic(builder, parent);
+            addSynthetic(builder);
             builder.newLine();
         }
 
-        modelAnnotations(builder, parent);
-        modelDeclaration(builder, parent);
+        modelAnnotations(builder);
+        modelDeclaration(builder);
     }
 
-    private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void addSynthetic(final BytecodeDocumentBuilder builder) {
         builder.addComment("Synthetic Field");
     }
 
-    private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelAnnotations(final BytecodeDocumentBuilder builder) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
-                e.model(builder, parent);
+                e.model(builder);
                 builder.newLine();
             });
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> {
-                e.model(builder, parent);
+                e.model(builder);
                 builder.newLine();
             });
         }
     }
 
-    private void modelType(final BytecodeDocumentBuilder builder, final Element parent, final ConstantPool constantPool) {
+    private void modelType(final BytecodeDocumentBuilder builder, final ConstantPool constantPool) {
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
         final FieldSignature signature;
         if (signatures != null && !signatures.isEmpty()) {
@@ -103,10 +103,10 @@ public class Field extends BytecodeElement {
             ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
         }
 
-        signature.model(builder, parent);
+        signature.model(builder);
     }
 
-    private void modelDeclaration(final BytecodeDocumentBuilder builder, final Element parent) {
+    private void modelDeclaration(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String[] names = BytecodeUtils.getFieldAccessNames(accessFlags);
 
@@ -114,16 +114,16 @@ public class Field extends BytecodeElement {
             builder.addKeyword(name + " ");
         }
 
-        modelType(builder, parent, constantPool);
+        modelType(builder, constantPool);
 
-        builder.addPlain(" " + constantPool.getAsString(nameIndex));
+        builder.add(" " + constantPool.getAsString(nameIndex));
 
         final ConstantValueAttribute constantAttribute = attributeSet.getAttribute(ConstantValueAttribute.class);
         if (constantAttribute != null) {
             final Constant constant = constantPool.get(constantAttribute.getConstantValueIndex());
-            builder.addPlain(" = ");
-            constant.modelValue(builder, parent);
+            builder.add(" = ");
+            constant.modelValue(builder);
         }
-        builder.addPlain(";");
+        builder.add(";");
     }
 }

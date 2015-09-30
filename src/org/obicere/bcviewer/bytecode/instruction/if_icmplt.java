@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 import org.obicere.bcviewer.bytecode.CodeAttribute;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -35,15 +33,15 @@ public class if_icmplt extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(getStart(), (short) getBranchOffset());
         if (line == null) {
             builder.add((short) getBranchOffset());
         } else {
-            builder.addPlain(line);
+            builder.add(line);
         }
     }
 }

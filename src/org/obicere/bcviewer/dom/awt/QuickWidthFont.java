@@ -1,4 +1,4 @@
-package org.obicere.bcviewer.util;
+package org.obicere.bcviewer.dom.awt;
 
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -19,33 +19,45 @@ public class QuickWidthFont extends Font {
 
     public QuickWidthFont(final String name, final int style, final int size) {
         super(name, style, size);
-        this.isFixedWidth = getFixedWidth();
+        this.isFixedWidth = checkFixedWidth();
     }
 
     public QuickWidthFont(final Map<? extends AttributedCharacterIterator.Attribute, ?> attributes) {
         super(attributes);
-        this.isFixedWidth = getFixedWidth();
+        this.isFixedWidth = checkFixedWidth();
     }
 
     protected QuickWidthFont(final Font font) {
         super(font);
-        this.isFixedWidth = getFixedWidth();
+        this.isFixedWidth = checkFixedWidth();
     }
 
-    private boolean getFixedWidth() {
+    private boolean checkFixedWidth() {
+        final String thinText = ";";
+        final Rectangle2D thinRect = super.getStringBounds(thinText, new FontRenderContext(null, true, true));
+        final String thickText = "@";
+        final Rectangle2D thickRect = super.getStringBounds(thickText, new FontRenderContext(null, true, true));
 
-        // make this string switchable? would seem kinda over-engineered
-        // ... my sort of thing
-        final String test = " ";
-        final Rectangle2D rect = super.getStringBounds(test, new FontRenderContext(null, true, true));
-        width = (int) (rect.getWidth() / test.length());
-        height = (int) (rect.getHeight());
+        if (thinRect.getWidth() == thickRect.getWidth()) {
 
-        return getFamily().equals(MONOSPACED);
+            width = (int) (thickRect.getWidth());
+            height = (int) (thickRect.getHeight());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isFixedWidth() {
         return isFixedWidth;
+    }
+
+    public int getFixedWidth() {
+        return width;
+    }
+
+    public int getFixedHeight() {
+        return height;
     }
 
     @Override

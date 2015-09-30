@@ -41,7 +41,7 @@ public class ConstantInvokeDynamic extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         builder.indent();
 
@@ -55,14 +55,14 @@ public class ConstantInvokeDynamic extends Constant {
 
         if (bootstrapMethodsAttribute != null) {
             final BootstrapMethod method = bootstrapMethodsAttribute.getBootstrapMethods()[bootstrapMethodAttrIndex];
-            method.modelDeclaration(builder, parent);
+            method.modelDeclaration(builder);
 
         } else {
             builder.add(bootstrapMethodAttrIndex);
         }
         builder.newLine();
 
-        constantPool.get(nameAndTypeIndex).modelValue(builder, parent);
+        constantPool.get(nameAndTypeIndex).modelValue(builder);
 
         builder.unindent();
     }

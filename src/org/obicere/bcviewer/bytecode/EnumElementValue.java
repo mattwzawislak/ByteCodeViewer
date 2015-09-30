@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -30,12 +28,12 @@ public class EnumElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void model(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(typeNameIndex));
 
-        builder.addPlain(BytecodeUtils.getQualifiedName(type.substring(1, type.length() - 1)));
-        builder.addPlain(".");
-        builder.addPlain(constantPool.getAsString(getConstNameIndex()));
+        builder.add(BytecodeUtils.getQualifiedName(type.substring(1, type.length() - 1)));
+        builder.add(".");
+        builder.add(constantPool.getAsString(getConstNameIndex()));
     }
 }

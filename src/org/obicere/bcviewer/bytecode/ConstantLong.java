@@ -34,7 +34,7 @@ public class ConstantLong extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
+    public void modelValue(final BytecodeDocumentBuilder builder) {
         builder.add(bytes);
     }
 }

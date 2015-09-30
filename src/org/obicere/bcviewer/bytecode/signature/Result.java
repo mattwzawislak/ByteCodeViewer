@@ -4,7 +4,6 @@ import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
 import java.util.Iterator;
 
 /**
@@ -38,7 +37,7 @@ public class Result extends AnnotationTarget {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        javaTypeSignature.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        javaTypeSignature.model(builder);
     }
 }

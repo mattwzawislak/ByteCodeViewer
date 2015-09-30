@@ -3,8 +3,6 @@ package org.obicere.bcviewer.bytecode.instruction;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */
@@ -43,10 +41,10 @@ public class invokevirtual extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        super.model(builder, parent);
+    public void model(final BytecodeDocumentBuilder builder) {
+        super.model(builder);
         builder.tab();
-        builder.getConstantPool().get(getIndex()).modelValue(builder, parent);
-        //builder.addPlain(builder.getConstantPool().getAsString(getIndex()));
+        builder.getConstantPool().get(getIndex()).modelValue(builder);
+        //builder.add(builder.getConstantPool().getAsString(getIndex()));
     }
 }
