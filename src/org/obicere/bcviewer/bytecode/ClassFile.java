@@ -128,6 +128,7 @@ public class ClassFile extends BytecodeElement {
         modelClassDeclaration(builder, accessFlags);
 
         builder.indent();
+
         modelFields(builder);
         modelMethods(builder);
         modelBootstrapMethods(builder);
@@ -137,8 +138,7 @@ public class ClassFile extends BytecodeElement {
 
         builder.newLine();
         builder.add("}");
-
-        builder.closeBlock();
+        builder.newLine();
     }
 
     private void addSynthetic(final BytecodeDocumentBuilder builder) {

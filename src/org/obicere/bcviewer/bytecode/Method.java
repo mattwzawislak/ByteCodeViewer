@@ -80,11 +80,14 @@ public class Method extends BytecodeElement {
         modelDeclaration(builder, hasBody);
 
         if (hasBody) {
+
+            // allow methods to be collapsed
+            builder.openCollapsibleBlock();
             builder.indent();
-
             code.model(builder);
-
             builder.unindent();
+            builder.closeCollapsibleBlock();
+
             builder.newLine();
             builder.add("}");
         }

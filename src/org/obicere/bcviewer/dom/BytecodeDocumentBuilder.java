@@ -172,8 +172,14 @@ public class BytecodeDocumentBuilder implements DomainAccess {
     }
 
     private void pushLine() {
+        if (builder.length() == 0) {
+            return;
+        }
         constraints.close();
         final Line line = new Line(constraints, builder.toString().toCharArray());
+        if (workingBlock == null) {
+            openBlock();
+        }
         workingBlock.addLine(line);
 
         builder = new StringBuilder();
@@ -187,6 +193,13 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         workingBlock = new Block();
     }
 
+    public void openCollapsibleBlock() {
+        if (workingBlock != null) {
+            closeBlock();
+        }
+        workingBlock = new Block(true);
+    }
+
     public void closeBlock() {
         if (workingBlock == null) {
             return;
@@ -194,6 +207,10 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         pushLine();
         blocks.add(workingBlock);
         workingBlock = null;
+    }
+
+    public void closeCollapsibleBlock() {
+        closeBlock();
     }
 
     public void add(final String plain) {

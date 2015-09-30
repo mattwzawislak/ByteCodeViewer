@@ -6,8 +6,11 @@ import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.swing.ui.DocumentAreaUI;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,10 @@ public class JDocumentArea extends JComponent {
 
     private final ArrayList<Block> content = new ArrayList<>();
 
-    private boolean thinCarets = false;
+    private boolean thinCarets = true;
+
+    private final Caret caret     = new Caret(this);
+    private final Caret dropCaret = new Caret(this);
 
     static {
         UIManager.put(uiClassID, DocumentAreaUI.class.getName());
@@ -41,12 +47,36 @@ public class JDocumentArea extends JComponent {
         return uiClassID;
     }
 
+    public Caret getCaret() {
+        return caret;
+    }
+
+    public Caret getDropCaret() {
+        return dropCaret;
+    }
+
+    public void scrollToCaret() {
+        final JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
+        if (scrollPane == null) {
+            return;
+        }
+
+        final int fontHeight = font.getFixedHeight();
+        final int fontWidth = font.getFixedWidth();
+        final Rectangle caretRectangle = new Rectangle(caret.getColumn() * fontWidth, caret.getRow() * fontHeight, 1, fontHeight);
+        scrollPane.getViewport().scrollRectToVisible(caretRectangle);
+        revalidate();
+        repaint();
+    }
+
+    public List<Block> getBlocks() {
+        return content;
+    }
+
     public boolean addBlock(final Block block) {
-        System.out.println("adding block");
         if (block == null) {
             throw new NullPointerException("block must be non-null");
         }
-        System.out.println("added block with linecount: " + block.getLineCount());
         final int start;
         if (content.isEmpty()) {
             start = 0;
@@ -76,24 +106,46 @@ public class JDocumentArea extends JComponent {
 
         if (startBlockIndex == endBlockIndex) {
             final Block block = content.get(startBlockIndex);
-            final int endOffset = end - block.getLineStart();
-            final int startOffset = start - block.getLineStart();
-            lines.addAll(block.getLines(startOffset, endOffset));
+
+            if (block.isVisible()) {
+                final int endOffset = end - block.getLineStart();
+                final int startOffset = start - block.getLineStart();
+                lines.addAll(block.getLines(startOffset, endOffset));
+            }
             return lines;
         } else {
             final Block firstBlock = content.get(startBlockIndex);
-            final int startOffset = start - firstBlock.getLineStart();
-            lines.addAll(firstBlock.getLines(startOffset, firstBlock.getLineCount() - startOffset));
+            if (firstBlock.isVisible()) {
+                final int startOffset = start - firstBlock.getLineStart();
+                lines.addAll(firstBlock.getLines(startOffset, firstBlock.getLineCount()));
+            }
 
             for (int index = startBlockIndex + 1; index < endBlockIndex; index++) {
                 final Block block = content.get(index);
-                lines.addAll(block.getLines());
+                if (block.isVisible()) {
+                    lines.addAll(block.getLines());
+                }
             }
 
             final Block lastBlock = content.get(endBlockIndex);
-            final int lastBlockEnd = lastBlock.getLineCount() - (end - lastBlock.getLineEnd());
-            lines.addAll(lastBlock.getLines(0, lastBlockEnd));
+            if (lastBlock.isVisible()) {
+                final int lastBlockEnd = (end - lastBlock.getLineStart());
+                lines.addAll(lastBlock.getLines(0, lastBlockEnd));
+            }
             return lines;
+        }
+    }
+
+    public void setBlockVisible(final Block block, final boolean visible) {
+        final int index = content.indexOf(block);
+        if (index < 0) {
+            return;
+        }
+        block.setVisible(visible);
+        final int delta = visible ? block.getLineCount() : -block.getLineCount();
+        for (int i = index + 1; i < content.size(); i++) {
+            final Block next = content.get(i);
+            next.setLineStart(next.getLineStart() + delta);
         }
     }
 
@@ -138,9 +190,11 @@ public class JDocumentArea extends JComponent {
     public int getMaxLineLength() {
         int max = 0;
         for (final Block block : content) {
-            final int nextLength = block.getMaxLineLength();
-            if (max < nextLength) {
-                max = nextLength;
+            if (block.isVisible()) {
+                final int nextLength = block.getMaxLineLength();
+                if (max < nextLength) {
+                    max = nextLength;
+                }
             }
         }
         return max;

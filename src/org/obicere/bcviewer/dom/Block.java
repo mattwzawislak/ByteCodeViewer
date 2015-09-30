@@ -15,8 +15,22 @@ public class Block {
 
     private int lineStart = 0;
 
+    private boolean collapsible;
+
     public int getLineCount() {
         return lines.size();
+    }
+
+    public Block() {
+        this(false);
+    }
+
+    public Block(final boolean collapsible) {
+        this.collapsible = collapsible;
+    }
+
+    public boolean isCollapsible() {
+        return collapsible;
     }
 
     public void setLineStart(final int lineStart) {
@@ -66,7 +80,7 @@ public class Block {
     }
 
     public List<Line> getLines(final int start, final int end) {
-        if(end <= start){
+        if (end <= start) {
             return new ArrayList<>();
         }
         return lines.subList(start, end);
