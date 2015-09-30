@@ -58,9 +58,9 @@ public class ConstantInvokeDynamic extends Constant {
             method.modelDeclaration(builder, parent);
 
         } else {
-            builder.add(parent, bootstrapMethodAttrIndex);
+            builder.add(bootstrapMethodAttrIndex);
         }
-        builder.newLine(parent);
+        builder.newLine();
 
         constantPool.get(nameAndTypeIndex).modelValue(builder, parent);
 

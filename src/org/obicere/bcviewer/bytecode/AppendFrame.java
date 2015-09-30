@@ -45,8 +45,8 @@ public class AppendFrame extends StackMapFrame {
 
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.newLine(parent);
-        builder.addPlain(parent, "Locals:");
+        builder.newLine();
+        builder.addPlain("Locals:");
         modelInfo(builder, parent, locals);
     }
 }

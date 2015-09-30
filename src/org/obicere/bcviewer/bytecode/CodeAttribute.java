@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Obicere
@@ -142,14 +143,13 @@ public class CodeAttribute extends Attribute {
         int lastOffset = 0; // header before the code attribute
         final StackMapFrame[] frames = getFrames();
         for (final StackMapFrame frame : frames) {
-            final FrameBlock block = new FrameBlock(frame, lastOffset);
             lastOffset += frame.getOffsetDelta() + 1;
-            startPCToLine.put(block.getStartPC(), block);
-
             if (firstFrame) {
                 lastOffset--;
                 firstFrame = false;
             }
+            final FrameBlock block = new FrameBlock(frame, lastOffset);
+            startPCToLine.put(block.getStartPC(), block);
         }
 
         distributeInstructions(startPCToLine.values());
@@ -193,10 +193,10 @@ public class CodeAttribute extends Attribute {
                 end = "end";
             }
 
-            builder.newLine(parent);
-            builder.addKeyword(parent, "try");
-            builder.addPlain(parent, ": [" + start + "-" + end + "] ");
-            builder.addKeyword(parent, "catch ");
+            builder.newLine();
+            builder.addKeyword("try");
+            builder.addPlain(": [" + start + "-" + end + "] ");
+            builder.addKeyword("catch ");
 
             final String catchType;
             final int catchTypeValue = exception.getCatchType();
@@ -205,7 +205,7 @@ public class CodeAttribute extends Attribute {
             } else {
                 catchType = constantPool.getAsString(exception.getCatchType());
             }
-            builder.addPlain(parent, BytecodeUtils.getQualifiedName(catchType));
+            builder.addPlain(BytecodeUtils.getQualifiedName(catchType));
 
             final int handlerPC = exception.getHandlerPC();
             final String handler;
@@ -213,31 +213,32 @@ public class CodeAttribute extends Attribute {
                 handler = startPCToLine.get(handlerPC).getName();
             } else {
                 Logger.getGlobal().log(Level.SEVERE, "Expected a target instruction in CA: " + getIdentifier() + ", target: " + handlerPC);
+                Logger.getGlobal().log(Level.SEVERE, "\tTargets: " + startPCToLine.entrySet().stream().map(Map.Entry::getValue).map(Block::getStartPC).sorted().collect(Collectors.toList()).toString());
                 handler = String.valueOf(handlerPC);
             }
-            builder.addPlain(parent, " Handler: " + handler);
+            builder.addPlain(" Handler: " + handler);
         }
     }
 
     private void modelLines(final BytecodeDocumentBuilder builder, final Element parent, final Iterable<Block> blocks) {
         for (final Block block : blocks) {
-            builder.newLine(parent);
-            builder.addPlain(parent, block.getName());
-            builder.addPlain(parent, " {");
+            builder.newLine();
+            builder.addPlain(block.getName());
+            builder.addPlain(" {");
             builder.indent();
 
             block.model(builder, parent);
 
             builder.setProperty("code", this);
             for (final Instruction instruction : block.getInstructions()) {
-                builder.newLine(parent);
+                builder.newLine();
                 instruction.model(builder, parent);
             }
 
             builder.setProperty("code", null);
             builder.unindent();
-            builder.newLine(parent);
-            builder.addPlain(parent, "}");
+            builder.newLine();
+            builder.addPlain("}");
         }
     }
 
@@ -414,7 +415,7 @@ public class CodeAttribute extends Attribute {
 
         @Override
         public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-            builder.newLine(parent);
+            builder.newLine();
             frame.model(builder, parent);
         }
     }

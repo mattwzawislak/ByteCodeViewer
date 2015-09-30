@@ -51,7 +51,7 @@ public class Field extends BytecodeElement {
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder, parent);
-            builder.newLine(parent);
+            builder.newLine();
         }
 
         modelAnnotations(builder, parent);
@@ -59,7 +59,7 @@ public class Field extends BytecodeElement {
     }
 
     private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addComment(parent, "Synthetic Field");
+        builder.addComment("Synthetic Field");
     }
 
     private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -69,13 +69,13 @@ public class Field extends BytecodeElement {
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
                 e.model(builder, parent);
-                builder.newLine(parent);
+                builder.newLine();
             });
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> {
                 e.model(builder, parent);
-                builder.newLine(parent);
+                builder.newLine();
             });
         }
     }
@@ -111,19 +111,19 @@ public class Field extends BytecodeElement {
         final String[] names = BytecodeUtils.getFieldAccessNames(accessFlags);
 
         for (final String name : names) {
-            builder.addPlain(parent, name + " ");
+            builder.addKeyword(name + " ");
         }
 
         modelType(builder, parent, constantPool);
 
-        builder.addPlain(parent, constantPool.getAsString(nameIndex));
+        builder.addPlain(" " + constantPool.getAsString(nameIndex));
 
         final ConstantValueAttribute constantAttribute = attributeSet.getAttribute(ConstantValueAttribute.class);
         if (constantAttribute != null) {
             final Constant constant = constantPool.get(constantAttribute.getConstantValueIndex());
-            builder.addPlain(parent, " = ");
+            builder.addPlain(" = ");
             constant.modelValue(builder, parent);
         }
-        builder.addPlain(parent, ";");
+        builder.addPlain(";");
     }
 }

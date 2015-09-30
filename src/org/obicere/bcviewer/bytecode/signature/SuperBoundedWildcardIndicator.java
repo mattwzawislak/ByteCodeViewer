@@ -53,8 +53,8 @@ public class SuperBoundedWildcardIndicator extends WildcardIndicator {
         for(final Annotation annotation : getAnnotations()){
             annotation.model(builder, parent);
         }
-        builder.addPlain(parent, "?");
-        builder.addKeyword(parent, " super ");
+        builder.addPlain("?");
+        builder.addKeyword(" super ");
         referenceTypeSignature.model(builder, parent);
     }
 }

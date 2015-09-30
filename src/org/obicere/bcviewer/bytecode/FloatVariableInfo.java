@@ -14,7 +14,7 @@ public class FloatVariableInfo extends VerificationTypeInfo {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, "float");
+        builder.addKeyword("float");
     }
 
 }

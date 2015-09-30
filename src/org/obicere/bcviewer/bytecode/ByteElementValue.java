@@ -25,6 +25,6 @@ public class ByteElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantInteger constant = (ConstantInteger) builder.getConstantPool().get(constantValueIndex);
-        builder.add(parent, (byte) constant.getBytes());
+        builder.add((byte) constant.getBytes());
     }
 }

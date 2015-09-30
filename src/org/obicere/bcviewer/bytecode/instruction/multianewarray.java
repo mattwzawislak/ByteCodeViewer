@@ -54,10 +54,10 @@ public class multianewarray extends Instruction implements Modeler {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.newLine(parent);
-        builder.tab(parent);
-        builder.add(parent, getIndex());
-        builder.tab(parent);
-        builder.add(parent, dimensions);
+        builder.newLine();
+        builder.tab();
+        builder.add(getIndex());
+        builder.tab();
+        builder.add(dimensions);
     }
 }

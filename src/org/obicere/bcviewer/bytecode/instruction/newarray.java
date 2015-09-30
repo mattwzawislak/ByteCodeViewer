@@ -26,8 +26,8 @@ public class newarray extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.addPlain(parent, getTypeOfAType());
+        builder.tab();
+        builder.addPlain(getTypeOfAType());
     }
 
     private String getTypeOfAType() {

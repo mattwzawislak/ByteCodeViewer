@@ -117,23 +117,23 @@ public class tableswitch extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, getDefault());
-        builder.tab(parent);
-        builder.add(parent, ((long) getHigh() << 32L) | getLow());
-        builder.tab(parent);
+        builder.tab();
+        builder.add(getDefault());
+        builder.tab();
+        builder.add(((long) getHigh() << 32L) | getLow());
+        builder.tab();
 
-        builder.addPlain(parent, "[");
+        builder.addPlain("[");
         boolean first = true;
 
         for(final int jump : jumpOffsets){
             if(!first){
-                builder.comma(parent);
+                builder.comma();
             }
-            builder.add(parent, jump);
+            builder.add(jump);
             first = false;
         }
 
-        builder.addPlain(parent, "]");
+        builder.addPlain("]");
     }
 }

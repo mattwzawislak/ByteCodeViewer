@@ -67,8 +67,8 @@ public class ExtendsBoundedWildcardIndicator extends WildcardIndicator {
             annotation.model(builder, parent);
         }
         if (wildcardPresent) {
-            builder.addPlain(parent, "?");
-            builder.addKeyword(parent, " extends ");
+            builder.addPlain("?");
+            builder.addKeyword(" extends ");
         }
         referenceTypeSignature.model(builder, parent);
     }

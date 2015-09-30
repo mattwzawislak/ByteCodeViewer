@@ -27,8 +27,8 @@ public class ClassElementValue extends ElementValue {
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(classInfoIndex));
-        builder.tab(parent);
-        builder.addPlain(parent, type.substring(1, type.length() - 1) + ".");
-        builder.addKeyword(parent, "class");
+        builder.tab();
+        builder.addPlain(type.substring(1, type.length() - 1) + ".");
+        builder.addKeyword("class");
     }
 }

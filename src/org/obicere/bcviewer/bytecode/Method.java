@@ -85,14 +85,14 @@ public class Method extends BytecodeElement {
             code.model(builder, parent);
 
             builder.unindent();
-            builder.newLine(parent);
-            builder.addPlain(parent, "}");
+            builder.newLine();
+            builder.addPlain("}");
         }
     }
 
     private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addComment(parent, "Synthetic Method");
-        builder.newLine(parent);
+        builder.addComment("Synthetic Method");
+        builder.newLine();
     }
 
     private void modelDeclaration(final BytecodeDocumentBuilder builder, final Element parent, final boolean hasBody) {
@@ -103,11 +103,11 @@ public class Method extends BytecodeElement {
         // make sure to add the default flag if the method has a body
         // and its containing class is an interface
         if (hasBody && BytecodeUtils.isInterface(builder.getClassFile().getAccessFlags())) {
-            builder.addKeyword(parent, "default ");
+            builder.addKeyword("default ");
         }
 
         for (final String accessName : accessNames) {
-            builder.addKeyword(parent, accessName + " ");
+            builder.addKeyword(accessName + " ");
         }
 
         final MethodSignature signature;
@@ -126,11 +126,11 @@ public class Method extends BytecodeElement {
 
         if (constructor) {
             // instead replace method name "<init>" with the class name
-            builder.addPlain(parent, BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
+            builder.addPlain(BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
         } else if (!staticInitializer) {
             // set the name to the method name otherwise - no name for clinit
             signature.modelReturnType(builder, parent);
-            builder.addPlain(parent, " " + methodName);
+            builder.addPlain(" " + methodName);
         }
 
         if (!staticInitializer) {
@@ -150,19 +150,19 @@ public class Method extends BytecodeElement {
                 boolean first = !throwsSet;
                 for (final int index : exceptionsAttribute.getIndexTable()) {
                     if (first) {
-                        builder.addKeyword(parent, " throws ");
+                        builder.addKeyword(" throws ");
                         first = false;
                     } else {
-                        builder.comma(parent);
+                        builder.comma();
                     }
                     final String name = constantPool.getAsString(index);
-                    builder.addPlain(parent, BytecodeUtils.getQualifiedName(name));
+                    builder.addPlain(BytecodeUtils.getQualifiedName(name));
                 }
             }
         }
 
         if (hasBody) {
-            builder.addPlain(parent, " {");
+            builder.addPlain(" {");
         } else {
             modelAbstractClose(builder, parent);
         }
@@ -195,13 +195,13 @@ public class Method extends BytecodeElement {
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
                 e.model(builder, parent);
-                builder.newLine(parent);
+                builder.newLine();
             });
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> {
                 e.model(builder, parent);
-                builder.newLine(parent);
+                builder.newLine();
             });
         }
     }
@@ -209,10 +209,10 @@ public class Method extends BytecodeElement {
     private void modelAbstractClose(final BytecodeDocumentBuilder builder, final Element parent) {
         final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
         if (hasDefault != null) {
-            builder.addKeyword(parent, " default ");
+            builder.addKeyword(" default ");
             hasDefault.getDefaultValue().model(builder, parent);
         }
-        builder.addPlain(parent, ";");
+        builder.addPlain(";");
     }
 
 }

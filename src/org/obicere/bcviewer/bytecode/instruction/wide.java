@@ -85,13 +85,13 @@ public class wide extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.addKeyword(parent, getInstructionName());
-        builder.tab(parent);
-        builder.add(parent, getIndex());
+        builder.tab();
+        builder.addKeyword(getInstructionName());
+        builder.tab();
+        builder.add(getIndex());
         if (instruction == InstructionReader.OPCODE_IINC) {
-            builder.tab(parent);
-            builder.add(parent, getConst());
+            builder.tab();
+            builder.add(getConst());
         }
     }
 

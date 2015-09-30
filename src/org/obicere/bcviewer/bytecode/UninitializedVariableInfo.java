@@ -21,6 +21,6 @@ public class UninitializedVariableInfo extends VerificationTypeInfo {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, "nullptr");
+        builder.addKeyword("nullptr");
     }
 }

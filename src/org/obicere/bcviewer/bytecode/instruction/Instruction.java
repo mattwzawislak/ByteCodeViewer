@@ -39,8 +39,8 @@ public abstract class Instruction extends BytecodeElement {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, mnemonic);
-        builder.padTabbed(parent, MAX_NAME_LENGTH, mnemonic.length());
+        builder.addKeyword(mnemonic);
+        builder.padTabbed(MAX_NAME_LENGTH, mnemonic.length());
     }
 
 }

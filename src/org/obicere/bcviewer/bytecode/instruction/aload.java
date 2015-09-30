@@ -27,8 +27,8 @@ public class aload extends Instruction implements Modeler {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, index);
+        builder.tab();
+        builder.add(index);
     }
 
 }

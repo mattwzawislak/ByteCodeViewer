@@ -26,19 +26,19 @@ public abstract class StackMapFrame extends BytecodeElement {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final String name = getName();
-        builder.addPlain(parent, name + " {");
+        builder.addPlain(name + " {");
 
         builder.indent();
-        builder.newLine(parent);
+        builder.newLine();
 
-        builder.addPlain(parent, "Offset: ");
-        builder.add(parent, getOffsetDelta());
+        builder.addPlain("Offset: ");
+        builder.add(getOffsetDelta());
 
         modelValue(builder, parent);
 
         builder.unindent();
-        builder.newLine(parent);
-        builder.addPlain(parent, "}");
+        builder.newLine();
+        builder.addPlain("}");
     }
 
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -49,26 +49,26 @@ public abstract class StackMapFrame extends BytecodeElement {
 
         if (info.length > 0) {
             builder.indent();
-            builder.newLine(parent);
-            builder.addPlain(parent, "[");
+            builder.newLine();
+            builder.addPlain("[");
             boolean first = true;
             int count = 0;
             for (final VerificationTypeInfo local : info) {
                 if (!first) {
-                    builder.comma(parent);
+                    builder.comma();
                 }
                 if (count == 4) {
                     count = 0;
-                    builder.newLine(parent);
+                    builder.newLine();
                 }
                 local.model(builder, parent);
                 first = false;
                 count++;
             }
-            builder.addPlain(parent, "]");
+            builder.addPlain("]");
             builder.unindent();
         } else {
-            builder.addPlain(parent, " []");
+            builder.addPlain(" []");
         }
     }
 }

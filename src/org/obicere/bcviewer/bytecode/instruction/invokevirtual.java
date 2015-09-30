@@ -45,8 +45,8 @@ public class invokevirtual extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
+        builder.tab();
         builder.getConstantPool().get(getIndex()).modelValue(builder, parent);
-        //builder.addPlain(parent, builder.getConstantPool().getAsString(getIndex()));
+        //builder.addPlain(builder.getConstantPool().getAsString(getIndex()));
     }
 }

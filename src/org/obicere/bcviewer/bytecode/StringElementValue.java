@@ -25,6 +25,6 @@ public class StringElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final String constant = builder.getConstantPool().getAsString(constantValueIndex);
-        builder.addString(parent, constant);
+        builder.addString(constant);
     }
 }

@@ -48,33 +48,33 @@ public abstract class AbstractConstantMethodRef extends Constant {
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(descriptor);
 
         builder.indent();
-        builder.newLine(parent);
+        builder.newLine();
 
         if (!isConstructor && !isStatic) {
             methodSignature.modelReturnType(builder, parent);
-            builder.pad(parent, 1);
+            builder.pad(1);
         }
 
         if (isStatic) {
-            builder.addKeyword(parent, "static");
+            builder.addKeyword("static");
         } else if (isConstructor) {
-            builder.addKeyword(parent, "new ");
-            builder.addPlain(parent, className);
+            builder.addKeyword("new ");
+            builder.addPlain(className);
         } else {
-            builder.addPlain(parent, className + "#" + name);
+            builder.addPlain(className + "#" + name);
         }
 
         final JavaTypeSignature[] types = methodSignature.getParameters();
         final boolean inline = types.length < 4;
 
-        builder.addPlain(parent, "(");
+        builder.addPlain("(");
         if (!inline) {
             builder.indent();
         }
 
         for (final JavaTypeSignature type : types) {
             if (!inline) {
-                builder.newLine(parent);
+                builder.newLine();
             }
             type.model(builder, parent);
         }
@@ -86,9 +86,9 @@ public abstract class AbstractConstantMethodRef extends Constant {
 
         // only break the () if there was a parameter
         if (!inline && types.length > 0) {
-            builder.newLine(parent);
+            builder.newLine();
         }
-        builder.addPlain(parent, ") ");
+        builder.addPlain(") ");
 
         // close the method
         builder.unindent();

@@ -25,15 +25,15 @@ public class ArrayElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
 
-        builder.addPlain(parent, "{");
+        builder.addPlain("{");
         boolean first = true;
         for (final ElementValue value : values) {
             if (!first) {
-                builder.comma(parent);
+                builder.comma();
             }
             value.model(builder, parent);
             first = false;
         }
-        builder.addPlain(parent, "}");
+        builder.addPlain("}");
     }
 }

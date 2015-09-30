@@ -26,7 +26,7 @@ public class bipush extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, (byte) value);
+        builder.tab();
+        builder.add((byte) value);
     }
 }

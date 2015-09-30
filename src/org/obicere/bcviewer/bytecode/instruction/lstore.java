@@ -26,7 +26,7 @@ public class lstore extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, index);
+        builder.tab();
+        builder.add(index);
     }
 }

@@ -97,21 +97,21 @@ public class TypeParameter extends AnnotationTarget {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        builder.addType(parent, identifier);
+        builder.addType(identifier);
 
         boolean classModeled = false;
         final ReferenceTypeSignature classReference = classBound.getReferenceTypeSignature();
         if (classReference != null) {
-            builder.addKeyword(parent, " extends ");
+            builder.addKeyword(" extends ");
             classReference.model(builder, parent);
             classModeled = true;
         }
 
         for (final InterfaceBound bound : interfaceBounds) {
             if (!classModeled) {
-                builder.addKeyword(parent, " extends ");
+                builder.addKeyword(" extends ");
             } else {
-                builder.addPlain(parent, " & ");
+                builder.addPlain(" & ");
             }
             final ReferenceTypeSignature interfaceReference = bound.getReferenceTypeSignature();
             interfaceReference.model(builder, parent);

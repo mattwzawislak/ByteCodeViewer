@@ -25,6 +25,6 @@ public class BooleanElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final String value = builder.getConstantPool().getAsString(constantValueIndex);
-        builder.add(parent, value.equals("true"));
+        builder.add(value.equals("true"));
     }
 }

@@ -45,7 +45,7 @@ public class ldc_w extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
+        builder.tab();
         builder.getConstantPool().get(getIndex()).modelValue(builder, parent);
     }
 }

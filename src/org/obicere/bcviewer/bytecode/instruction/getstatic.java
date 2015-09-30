@@ -45,7 +45,7 @@ public class getstatic extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.addPlain(parent, builder.getConstantPool().getAsString(getIndex()));
+        builder.tab();
+        builder.addPlain(builder.getConstantPool().getAsString(getIndex()));
     }
 }

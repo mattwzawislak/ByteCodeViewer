@@ -4,9 +4,16 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
+import org.obicere.bcviewer.dom.attributes.AnnotationAttributeSet;
+import org.obicere.bcviewer.dom.attributes.CommentAttributeSet;
+import org.obicere.bcviewer.dom.attributes.KeywordAttributeSet;
+import org.obicere.bcviewer.dom.attributes.NumberAttributeSet;
+import org.obicere.bcviewer.dom.attributes.PlainAttributeSet;
+import org.obicere.bcviewer.dom.attributes.StringAttributeSet;
+import org.obicere.bcviewer.dom.attributes.TypeAttributeSet;
 
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,8 +27,6 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    private final AttributeSets attributeSets;
-
     private final PaddingCache padding = PaddingCache.getPaddingCache();
 
     private volatile int indentLevel;
@@ -34,9 +39,16 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     private final HashMap<String, Object> properties = new HashMap<>();
 
+    private static final AttributeSet PLAIN      = new PlainAttributeSet();
+    private static final AttributeSet ANNOTATION = new AnnotationAttributeSet();
+    private static final AttributeSet COMMENT    = new CommentAttributeSet();
+    private static final AttributeSet KEYWORD    = new KeywordAttributeSet();
+    private static final AttributeSet NUMBER     = new NumberAttributeSet();
+    private static final AttributeSet STRING     = new StringAttributeSet();
+    private static final AttributeSet TYPE       = new TypeAttributeSet();
+
     public BytecodeDocumentBuilder(final Domain domain) {
         this.domain = domain;
-        this.attributeSets = new AttributeSets();
     }
 
     public BytecodeDocument build(final ClassFile classFile) {
@@ -48,6 +60,7 @@ public class BytecodeDocumentBuilder implements DomainAccess {
             this.document = new BytecodeDocument();
 
             classFile.model(this, document.getDefaultRootElement());
+            document.finish();
 
             return document;
         } finally {
@@ -79,10 +92,6 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     public BytecodeDocument getDocument() {
         return document;
-    }
-
-    public AttributeSets getAttributeSets() {
-        return attributeSets;
     }
 
     public int getTabSize() {
@@ -162,27 +171,27 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         return document.createBranch(parent, parent.getAttributes());
     }
 
-    public Element addKeyword(final Element parent, final String keyword) {
-        return document.createLeaf(parent, keyword, attributeSets.getAttributeSet(AttributeSets.KEYWORD));
+    public void addKeyword(final String keyword) {
+        document.createLeaf(keyword, KEYWORD);
     }
 
-    public Element addPlain(final Element parent, final String plain) {
-        return document.createLeaf(parent, plain, attributeSets.getAttributeSet(AttributeSets.PLAIN));
+    public void addPlain(final String plain) {
+        document.createLeaf(plain, PLAIN);
     }
 
-    public Element addComment(final Element parent, final String comment) {
-        return document.createLeaf(parent, "// " + comment, attributeSets.getAttributeSet(AttributeSets.COMMENT));
+    public void addComment(final String comment) {
+        document.createLeaf("// " + comment, COMMENT);
     }
 
-    public Element addType(final Element parent, final String type) {
-        return document.createLeaf(parent, type, attributeSets.getAttributeSet(AttributeSets.TYPE));
+    public void addType(final String type) {
+        document.createLeaf(type, TYPE);
     }
 
-    public Element addString(final Element parent, final String text) {
-        return document.createLeaf(parent, stringify(text), attributeSets.getAttributeSet(AttributeSets.STRING));
+    public void addString(final String text) {
+        document.createLeaf(stringify(text), STRING);
     }
 
-    private String stringify(String text){
+    private String stringify(String text) {
         if (text == null) {
             return "null";
         }
@@ -198,59 +207,59 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         return text;
     }
 
-    public Element addAnnotation(final Element parent, final String annotation) {
-        return document.createLeaf(parent, "@" + annotation, attributeSets.getAttributeSet(AttributeSets.ANNOTATION));
+    public void addAnnotation(final String annotation) {
+        document.createLeaf("@" + annotation, ANNOTATION);
     }
 
-    public Element add(final Element parent, final boolean value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.KEYWORD));
+    public void add(final boolean value) {
+        document.createLeaf(String.valueOf(value), KEYWORD);
     }
 
-    public Element add(final Element parent, final byte value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.NUMBER));
+    public void add(final byte value) {
+        document.createLeaf(String.valueOf(value), NUMBER);
     }
 
-    public Element add(final Element parent, final short value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.NUMBER));
+    public void add(final short value) {
+        document.createLeaf(String.valueOf(value), NUMBER);
     }
 
-    public Element add(final Element parent, final char value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.STRING));
+    public void add(final char value) {
+        document.createLeaf(String.valueOf(value), STRING);
     }
 
-    public Element add(final Element parent, final int value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.NUMBER));
+    public void add(final int value) {
+        document.createLeaf(String.valueOf(value), NUMBER);
     }
 
-    public Element add(final Element parent, final float value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.NUMBER));
+    public void add(final float value) {
+        document.createLeaf(String.valueOf(value), NUMBER);
     }
 
-    public Element add(final Element parent, final long value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.NUMBER));
+    public void add(final long value) {
+        document.createLeaf(String.valueOf(value), NUMBER);
     }
 
-    public Element add(final Element parent, final double value) {
-        return document.createLeaf(parent, String.valueOf(value), attributeSets.getAttributeSet(AttributeSets.NUMBER));
+    public void add(final double value) {
+        document.createLeaf(String.valueOf(value), NUMBER);
     }
 
-    public Element pad(final Element parent, final int size) {
-        return document.createLeaf(parent, padding.getPadding(size), parent.getAttributes());
+    public void pad(final int size) {
+        document.createLeaf(padding.getPadding(size), PLAIN);
     }
 
-    public Element padTabbed(final Element parent, final int size) {
-        return document.createLeaf(parent, getTabbedPadding(size), parent.getAttributes());
+    public void padTabbed(final int size) {
+        document.createLeaf(getTabbedPadding(size), PLAIN);
     }
 
-    public Element padTabbed(final Element parent, final int size, final int soFar) {
-        return document.createLeaf(parent, getTabbedPadding(soFar, size), parent.getAttributes());
+    public void padTabbed(final int size, final int soFar) {
+        document.createLeaf(getTabbedPadding(soFar, size), PLAIN);
     }
 
-    public Element newLine(final Element parent) {
-        return document.createLeaf(parent, "\n" + padding.getPadding(indentLevel * tabSize), parent.getAttributes());
+    public void newLine() {
+        document.createLeaf("\n" + padding.getPadding(indentLevel * tabSize), PLAIN);
     }
 
-    public Element tab(final Element parent) {
+    public void tab() {
         try {
             final String text = document.getText(0, document.getLength());
             final int index = text.lastIndexOf('\n');
@@ -258,17 +267,16 @@ public class BytecodeDocumentBuilder implements DomainAccess {
             final int since = document.getLength() - fixedIndex;
             final int pad = tabSize - (since % tabSize);
             if (pad == 0) {
-                return null;
+                return;
             }
-            return pad(parent, pad);
-        } catch (BadLocationException e) {
+            pad(pad);
+        } catch (final BadLocationException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
-    public Element comma(final Element parent) {
-        return addPlain(parent, ", ");
+    public void comma() {
+        addPlain(", ");
     }
 
     public void indent() {

@@ -191,18 +191,18 @@ public class MethodSignature extends AnnotationTarget {
         if (types.length == 0) {
             return;
         }
-        builder.addPlain(parent, "<");
+        builder.addPlain("<");
 
         boolean first = true;
         for (final TypeParameter type : types) {
             if (!first) {
-                builder.comma(parent);
+                builder.comma();
             }
             type.model(builder, parent);
             first = false;
         }
 
-        builder.addPlain(parent, "> ");
+        builder.addPlain("> ");
     }
 
     public void modelReturnType(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -210,50 +210,50 @@ public class MethodSignature extends AnnotationTarget {
     }
 
     public void modelParameters(final BytecodeDocumentBuilder builder, final Element parent, final Parameter[] methodParameters) {
-        builder.addPlain(parent, "(");
+        builder.addPlain("(");
 
         final ConstantPool constantPool = builder.getConstantPool();
         final int min = Math.min(parameters.length, methodParameters.length);
         for (int i = 0; i < min; i++) {
             if (i != 0) {
-                builder.comma(parent);
+                builder.comma();
             }
             final JavaTypeSignature parameter = parameters[i];
             final Parameter methodParameter = methodParameters[i];
             final String[] accessNames = BytecodeUtils.getFieldAccessNames(methodParameter.getAccessFlags());
             for (final String accessName : accessNames) {
-                builder.addKeyword(parent, accessName + " ");
+                builder.addKeyword(accessName + " ");
             }
 
             parameter.model(builder, parent);
 
-            builder.addPlain(parent, constantPool.getAsString(methodParameter.getNameIndex()));
+            builder.addPlain(constantPool.getAsString(methodParameter.getNameIndex()));
         }
-        builder.addPlain(parent, ")");
+        builder.addPlain(")");
     }
 
     public void modelParameters(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addPlain(parent, "(");
+        builder.addPlain("(");
 
         for (int i = 0; i < parameters.length; i++) {
             if (i != 0) {
-                builder.comma(parent);
+                builder.comma();
             }
             final JavaTypeSignature parameter = parameters[i];
 
             parameter.model(builder, parent);
         }
-        builder.addPlain(parent, ")");
+        builder.addPlain(")");
     }
 
     public boolean modelThrowsSignatures(final BytecodeDocumentBuilder builder, final Element parent) {
         boolean first = true;
         for (final ThrowsSignature signature : throwsSignatures) {
             if (first) {
-                builder.addKeyword(parent, " throws ");
+                builder.addKeyword(" throws ");
                 first = false;
             } else {
-                builder.comma(parent);
+                builder.comma();
             }
             signature.model(builder, parent);
         }

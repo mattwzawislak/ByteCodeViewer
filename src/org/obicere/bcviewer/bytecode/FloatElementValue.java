@@ -25,6 +25,6 @@ public class FloatElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantFloat constant = (ConstantFloat) builder.getConstantPool().get(constantValueIndex);
-        builder.add(parent, constant.getBytes());
+        builder.add(constant.getBytes());
     }
 }

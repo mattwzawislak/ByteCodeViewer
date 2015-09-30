@@ -117,11 +117,8 @@ public class ClassFile extends BytecodeElement {
 
         final Element classElement = builder.addBranch(parent);
 
-        builder.pad(parent, 1);
-        constantPool.model(builder, classElement);
-        builder.newLine(classElement);
         modelVersion(builder, classElement);
-        builder.newLine(classElement);
+        builder.newLine();
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder, parent);
@@ -132,19 +129,21 @@ public class ClassFile extends BytecodeElement {
 
         builder.indent();
         modelFields(builder, classElement);
+        System.gc();
         modelMethods(builder, classElement);
+        System.gc();
         modelBootstrapMethods(builder, classElement);
         modelInnerClasses(builder, classElement);
 
         builder.unindent();
 
-        builder.newLine(parent);
-        builder.addPlain(parent, "}");
+        builder.newLine();
+        builder.addPlain("}");
     }
 
     private void addSynthetic(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addComment(parent, "Synthetic Class");
-        builder.newLine(parent);
+        builder.addComment("Synthetic Class");
+        builder.newLine();
     }
 
     private void modelAnnotations(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -154,23 +153,23 @@ public class ClassFile extends BytecodeElement {
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
                 e.model(builder, parent);
-                builder.newLine(parent);
+                builder.newLine();
             });
         }
         if (riaAttributes != null) {
             riaAttributes.forEach(e -> {
                 e.model(builder, parent);
-                builder.newLine(parent);
+                builder.newLine();
             });
         }
     }
 
     private void modelVersion(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addPlain(parent, "Major: ");
-        builder.add(parent, majorVersion);
-        builder.addPlain(parent, " Minor: ");
-        builder.add(parent, minorVersion);
-        builder.newLine(parent);
+        builder.addPlain("Major: ");
+        builder.add(majorVersion);
+        builder.addPlain(" Minor: ");
+        builder.add(minorVersion);
+        builder.newLine();
     }
 
     private void modelClassDeclaration(final BytecodeDocumentBuilder builder, final Element parent, final int accessFlags) {
@@ -178,11 +177,11 @@ public class ClassFile extends BytecodeElement {
         final String[] names = BytecodeUtils.getClassAccessNames(accessFlags);
 
         for (final String name : names) {
-            builder.addKeyword(parent, name);
-            builder.pad(parent, 1);
+            builder.addKeyword(name);
+            builder.pad(1);
         }
 
-        builder.addPlain(parent, BytecodeUtils.getQualifiedName(getName()));
+        builder.addPlain(BytecodeUtils.getQualifiedName(getName()));
 
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
         final ClassSignature signature;
@@ -216,7 +215,7 @@ public class ClassFile extends BytecodeElement {
 
         signature.model(builder, parent);
 
-        builder.addPlain(parent, " {");
+        builder.addPlain(" {");
     }
 
     private void modelFields(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -224,13 +223,17 @@ public class ClassFile extends BytecodeElement {
         if (fields.length == 0) {
             return;
         }
+        int current = 1;
         for (final Field field : fields) {
-            builder.newLine(parent);
-            builder.newLine(parent);
+            builder.newLine();
+            builder.newLine();
 
+            System.out.print("\rModelling field: (" + current + " / " + fields.length + ")\t");
             final Element nextField = builder.addBranch(parent);
             field.model(builder, nextField);
+            current++;
         }
+        System.out.println();
     }
 
     private void modelMethods(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -238,13 +241,17 @@ public class ClassFile extends BytecodeElement {
         if (methods.length == 0) {
             return;
         }
+        int current = 1;
         for (final Method method : methods) {
-            builder.newLine(parent);
-            builder.newLine(parent);
+            builder.newLine();
+            builder.newLine();
 
+            System.out.print("\rModelling method: (" + current + " / " + methods.length + ")\t");
             final Element nextMethod = builder.addBranch(parent);
             method.model(builder, nextMethod);
+            current++;
         }
+        System.out.println();
     }
 
     private void modelInnerClasses(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -267,8 +274,8 @@ public class ClassFile extends BytecodeElement {
 
                 final Element nextInnerClass = builder.addBranch(parent);
 
-                builder.newLine(parent);
-                builder.newLine(parent);
+                builder.newLine();
+                builder.newLine();
                 innerClass.model(builder, nextInnerClass);
             }
         }

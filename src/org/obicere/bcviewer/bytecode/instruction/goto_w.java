@@ -49,14 +49,14 @@ public class goto_w extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
+        builder.tab();
 
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(getStart(), getBranchOffset());
         if (line == null) {
-            builder.add(parent, getBranchOffset());
+            builder.add(getBranchOffset());
         } else {
-            builder.addPlain(parent, line);
+            builder.addPlain(line);
         }
     }
 }

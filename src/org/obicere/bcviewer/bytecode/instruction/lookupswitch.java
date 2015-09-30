@@ -87,25 +87,25 @@ public class lookupswitch extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, getDefault());
-        builder.tab(parent);
-        builder.add(parent, getNpairs());
-        builder.tab(parent);
+        builder.tab();
+        builder.add(getDefault());
+        builder.tab();
+        builder.add(getNpairs());
+        builder.tab();
 
         boolean first = true;
-        builder.addPlain(parent, "[");
+        builder.addPlain("[");
 
         for(final int[] pair : matchOffsetPairs){
             if(!first){
-                builder.comma(parent);
+                builder.comma();
             }
-            builder.add(parent, pair[0]);
-            builder.addPlain(parent, "->");
-            builder.add(parent, pair[1]);
+            builder.add(pair[0]);
+            builder.addPlain("->");
+            builder.add(pair[1]);
             first = false;
         }
 
-        builder.addPlain(parent, "]");
+        builder.addPlain("]");
     }
 }

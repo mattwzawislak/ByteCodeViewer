@@ -36,7 +36,7 @@ public class sipush extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, (short) getValue());
+        builder.tab();
+        builder.add((short) getValue());
     }
 }

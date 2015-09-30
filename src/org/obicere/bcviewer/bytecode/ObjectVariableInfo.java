@@ -25,7 +25,7 @@ public class ObjectVariableInfo extends VerificationTypeInfo {
         if (fieldSignature != null) {
             fieldSignature.model(builder, parent);
         } else {
-            builder.addPlain(parent, BytecodeUtils.getQualifiedName(signature));
+            builder.addPlain(BytecodeUtils.getQualifiedName(signature));
         }
     }
 }

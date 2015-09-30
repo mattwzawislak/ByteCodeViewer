@@ -18,35 +18,50 @@ public class BytecodeDocument extends DefaultStyledDocument {
         super();
     }
 
-    @Override
-    public void removeElement(final Element element){
-        writeLock();
-        super.removeElement(element);
-        writeUnlock();
-    }
+    private volatile AttributeSet previousSet;
+    private volatile StringBuilder lastElement = new StringBuilder();
 
-    public Element createLeaf(final Element parent, final String text, final AttributeSet style) {
-        writeLock();
-        final int start = parent.getDocument().getLength();
-        final Element element = createLeafElement(parent, style, start, start + 1);
-        try {
-            insertString(start, text, style);
-            setParagraphAttributes(start, start + text.length(), style, true);
-        } catch (final BadLocationException e) {
-            e.printStackTrace();
+    public void createLeaf(final String text, final AttributeSet style) {
+        if (style == previousSet) {
+            lastElement.append(text);
+            return;
         }
-        writeUnlock();
-        return element;
+        final String newText = lastElement.toString();
+        if (newText.length() != 0) {
+            final int start = getLength();
+            try {
+                insertString(start, newText, previousSet);
+                setParagraphAttributes(start, start + newText.length(), previousSet, true);
+            } catch (final BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+        previousSet = style;
+        lastElement = new StringBuilder(text);
     }
 
-
-    public Element createBranch(final Element parent, final AttributeSet style){
+    public Element createBranch(final Element parent, final AttributeSet style) {
         try {
             writeLock();
             return new ListBasedBranchElement(parent, style);
         } finally {
             writeUnlock();
         }
+    }
+
+    void finish() {
+        final String newText = lastElement.toString();
+        if (newText.length() != 0) {
+            final int start = getLength();
+            try {
+                insertString(start, newText, previousSet);
+                setParagraphAttributes(start, start + newText.length(), previousSet, true);
+            } catch (final BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+        lastElement = null;
+        previousSet = null;
     }
 
     private class ListBasedBranchElement extends BranchElement {

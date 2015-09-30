@@ -25,6 +25,6 @@ public class DoubleElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantDouble constant = (ConstantDouble) builder.getConstantPool().get(constantValueIndex);
-        builder.add(parent, constant.getBytes());
+        builder.add(constant.getBytes());
     }
 }

@@ -33,8 +33,8 @@ public class ElementValuePair extends BytecodeElement{
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent){
         final ConstantPool constantPool = builder.getConstantPool();
-        builder.addPlain(parent, constantPool.getAsString(elementNameIndex));
-        builder.addPlain(parent, " = ");
+        builder.addPlain(constantPool.getAsString(elementNameIndex));
+        builder.addPlain(" = ");
         value.model(builder, parent);
     }
 

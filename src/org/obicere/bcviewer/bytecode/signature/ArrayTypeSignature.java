@@ -66,7 +66,7 @@ public class ArrayTypeSignature extends ReferenceTypeSignature {
             for (final Annotation annotation : array.getAnnotations()) {
                 annotation.model(builder, parent);
             }
-            builder.addPlain(parent, "[]");
+            builder.addPlain("[]");
         }
     }
 }

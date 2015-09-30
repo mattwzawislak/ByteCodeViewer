@@ -36,6 +36,6 @@ public class UnboundedWildcardIndicator extends WildcardIndicator {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder, parent);
         }
-        builder.addPlain(parent, "?");
+        builder.addPlain("?");
     }
 }

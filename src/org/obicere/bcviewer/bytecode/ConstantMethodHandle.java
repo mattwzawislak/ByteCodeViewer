@@ -56,8 +56,8 @@ public class ConstantMethodHandle extends Constant {
 
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, HANDLES[referenceKind]);
-        builder.tab(parent);
+        builder.addKeyword(HANDLES[referenceKind]);
+        builder.tab();
         builder.getConstantPool().get(referenceIndex).modelValue(builder, parent);
     }
 }

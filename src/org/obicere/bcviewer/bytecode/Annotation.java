@@ -34,18 +34,18 @@ public class Annotation extends BytecodeElement {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final String identifier = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
-        builder.addAnnotation(parent, identifier.substring(1, identifier.length() - 1));
+        builder.addAnnotation(identifier.substring(1, identifier.length() - 1));
         if (elementValuePairs.length > 0) {
-            builder.addPlain(parent, "(");
+            builder.addPlain("(");
             boolean first = true;
             for (final ElementValuePair elementValuePair : elementValuePairs) {
                 if (!first) {
-                    builder.comma(parent);
+                    builder.comma();
                 }
                 elementValuePair.model(builder, parent);
                 first = false;
             }
-            builder.addPlain(parent, ")");
+            builder.addPlain(")");
         }
     }
 }

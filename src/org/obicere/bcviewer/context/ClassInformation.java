@@ -25,10 +25,16 @@ public class ClassInformation implements DomainAccess {
 
     private File parentFile;
 
-    private Domain domain;
+    private byte[] classBytes;
+
+    private final Domain domain;
 
     public ClassInformation(final Domain domain) {
         this.domain = domain;
+    }
+
+    public byte[] getClassBytes() {
+        return classBytes;
     }
 
     public Collection<ClassFile> getLoadedClasses() {
@@ -39,10 +45,19 @@ public class ClassInformation implements DomainAccess {
         return rootClass;
     }
 
+    public void clear() {
+        rootClass = null;
+        parentFile = null;
+        classBytes = null;
+
+        classes.clear();
+    }
+
     public ClassFile load(final File file) throws IOException {
         this.parentFile = file.getParentFile();
 
-        this.rootClass = loadFrom(file);
+        this.classBytes = IOUtils.readData(file);
+        this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
         classes.put(rootClass.getName(), rootClass);
 
         loadInnerClasses(rootClass);
@@ -63,7 +78,7 @@ public class ClassInformation implements DomainAccess {
                     // make sure we aren't processing self (every inner
                     // class contains itself in the list of its inner
                     // classes and ensure the class isn't already added
-                    if(name.equals(file.getName()) || classes.get(name) != null){
+                    if (name.equals(file.getName()) || classes.get(name) != null) {
                         continue;
                     }
                     // method enclosed classes have outer be a null entry

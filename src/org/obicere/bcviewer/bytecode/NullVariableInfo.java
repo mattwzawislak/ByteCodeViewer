@@ -14,7 +14,7 @@ public class NullVariableInfo extends VerificationTypeInfo {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, "null");
+        builder.addKeyword("null");
     }
 
 }

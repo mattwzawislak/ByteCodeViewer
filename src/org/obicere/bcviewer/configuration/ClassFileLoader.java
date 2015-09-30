@@ -1,12 +1,12 @@
 package org.obicere.bcviewer.configuration;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
-import org.obicere.utility.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +45,9 @@ public class ClassFileLoader implements DomainAccess {
             final byte[] bytes;
 
             try {
-                bytes = IOUtils.readData(file);
-                classFile = domain.getClassInformation().load(file);
+                final ClassInformation classInformation = domain.getClassInformation();
+                classFile = classInformation.load(file);
+                bytes = classInformation.getClassBytes();
             } catch (final IOException e) {
                 e.printStackTrace();
                 return;

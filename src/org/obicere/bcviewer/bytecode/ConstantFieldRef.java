@@ -45,17 +45,17 @@ public class ConstantFieldRef extends Constant {
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
-        builder.newLine(parent);
-        builder.tab(parent);
+        builder.newLine();
+        builder.tab();
 
         final ConstantNameAndType nameAndType = (ConstantNameAndType) constantPool.get(nameAndTypeIndex);
         final FieldSignature signature = SignatureAttribute.parseField(constantPool.getAsString(nameAndType.getDescriptorIndex()));
         signature.model(builder, parent);
-        builder.addPlain(parent, " ");
+        builder.addPlain(" ");
 
-        builder.addPlain(parent, BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
-        builder.addPlain(parent, "#");
-        builder.addPlain(parent, BytecodeUtils.getQualifiedName(constantPool.getAsString(nameAndType.getNameIndex())));
+        builder.addPlain(BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
+        builder.addPlain("#");
+        builder.addPlain(BytecodeUtils.getQualifiedName(constantPool.getAsString(nameAndType.getNameIndex())));
 
     }
 }

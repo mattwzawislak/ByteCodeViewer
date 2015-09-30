@@ -14,7 +14,7 @@ public class IntegerVariableInfo extends VerificationTypeInfo {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, "int");
+        builder.addKeyword("int");
     }
 
 }

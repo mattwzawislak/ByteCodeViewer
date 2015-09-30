@@ -39,6 +39,6 @@ public class ConstantUtf8 extends Constant {
 
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addString(parent, bytes);
+        builder.addString(bytes);
     }
 }

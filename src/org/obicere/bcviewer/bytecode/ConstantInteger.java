@@ -35,6 +35,6 @@ public class ConstantInteger extends Constant {
 
     @Override
     public void modelValue(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.add(parent, bytes);
+        builder.add(bytes);
     }
 }

@@ -142,10 +142,10 @@ public class ClassSignature extends AnnotationTarget {
         if (types.length == 0) {
             return;
         }
-        builder.addPlain(parent, "<");
+        builder.addPlain("<");
         for (final TypeParameter type : types) {
             type.model(builder, parent);
         }
-        builder.addPlain(parent, ">");
+        builder.addPlain(">");
     }
 }

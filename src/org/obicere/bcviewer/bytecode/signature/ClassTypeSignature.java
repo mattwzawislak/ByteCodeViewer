@@ -120,13 +120,13 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
     private void modelPackage(final BytecodeDocumentBuilder builder, final Element parent) {
         final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
         for (final String identifier : packageIdentifiers) {
-            builder.addPlain(parent, identifier + ".");
+            builder.addPlain(identifier + ".");
         }
     }
 
     private void modelSignature(final BytecodeDocumentBuilder builder, final Element parent) {
 
-        builder.addPlain(parent, simpleClassTypeSignature.getIdentifier());
+        builder.addPlain(simpleClassTypeSignature.getIdentifier());
 
         final TypeArguments arguments = simpleClassTypeSignature.getTypeArguments();
         modelTypeArguments(builder, parent, arguments);
@@ -136,7 +136,7 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         for (final ClassTypeSignatureSuffix suffix : classTypeSignatureSuffix) {
             final SimpleClassTypeSignature signature = suffix.getSimpleClassTypeSignature();
 
-            builder.addPlain(parent, "." + signature.getIdentifier());
+            builder.addPlain("." + signature.getIdentifier());
 
             final TypeArguments arguments = signature.getTypeArguments();
             modelTypeArguments(builder, parent, arguments);
@@ -148,15 +148,15 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         if (types.length == 0) {
             return;
         }
-        builder.addPlain(parent, "<");
+        builder.addPlain("<");
         boolean first = true;
         for (final TypeArgument type : types) {
             if (!first) {
-                builder.comma(parent);
+                builder.comma();
             }
             type.getWildcardIndicator().model(builder, parent);
             first = false;
         }
-        builder.addPlain(parent, ">");
+        builder.addPlain(">");
     }
 }

@@ -37,13 +37,13 @@ public class ifnonnull extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
+        builder.tab();
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(getStart(), (short) getBranchOffset());
         if (line == null) {
-            builder.add(parent, (short) getBranchOffset());
+            builder.add((short) getBranchOffset());
         } else {
-            builder.addPlain(parent, line);
+            builder.addPlain(line);
         }
     }
 }

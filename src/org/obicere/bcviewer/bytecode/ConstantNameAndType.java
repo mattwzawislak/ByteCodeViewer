@@ -51,13 +51,13 @@ public class ConstantNameAndType extends Constant {
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
         if (methodSignature != null) {
             methodSignature.modelReturnType(builder, parent);
-            builder.addPlain(parent, " " + name);
+            builder.addPlain(" " + name);
             methodSignature.modelParameters(builder, parent);
         } else {
             final FieldSignature fieldSignature = SignatureAttribute.parseField(signature);
             if (fieldSignature != null) {
                 fieldSignature.model(builder, parent);
-                builder.addPlain(parent, name);
+                builder.addPlain(name);
             }
         }
     }

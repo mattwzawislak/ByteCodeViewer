@@ -33,9 +33,9 @@ public abstract class Constant extends BytecodeElement {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent){
         final String type = getName();
-        builder.addKeyword(parent, getName());
-        builder.padTabbed(parent, MAX_NAME_LENGTH, type.length());
-        builder.tab(parent);
+        builder.addKeyword(getName());
+        builder.padTabbed(MAX_NAME_LENGTH, type.length());
+        builder.tab();
         modelValue(builder, parent);
     }
 

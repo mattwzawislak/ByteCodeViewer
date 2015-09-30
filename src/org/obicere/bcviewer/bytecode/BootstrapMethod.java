@@ -37,22 +37,22 @@ public class BootstrapMethod extends BytecodeElement {
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantPool constantPool = builder.getConstantPool();
 
-        builder.addComment(parent, "Bootstrap Method:");
+        builder.addComment("Bootstrap Method:");
         modelDeclaration(builder, parent);
 
-        builder.newLine(parent);
-        builder.addPlain(parent, "Constant Arguments: {");
+        builder.newLine();
+        builder.addPlain("Constant Arguments: {");
         builder.indent();
         for (final int argument : bootstrapArguments) {
             final Constant constant = constantPool.get(argument);
-            builder.newLine(parent);
+            builder.newLine();
             constant.model(builder, parent);
         }
         builder.unindent();
         if(bootstrapArguments.length > 0){
-            builder.newLine(parent);
+            builder.newLine();
         }
-        builder.addPlain(parent, "}");
+        builder.addPlain("}");
     }
 
     public void modelDeclaration(final BytecodeDocumentBuilder builder, final Element parent) {
@@ -66,27 +66,27 @@ public class BootstrapMethod extends BytecodeElement {
         final String signature = bootstrap.substring(signatureBegin);
 
         final String[] pathElements = path.split(";");
-        builder.newLine(parent);
+        builder.newLine();
 
-        builder.addKeyword(parent, kind + " ");
+        builder.addKeyword(kind + " ");
 
         boolean first = true;
         for (final String pathElement : pathElements) {
             if (!first) {
-                builder.addPlain(parent, ".");
+                builder.addPlain(".");
             }
-            builder.addPlain(parent, BytecodeUtils.getQualifiedName(pathElement));
+            builder.addPlain(BytecodeUtils.getQualifiedName(pathElement));
             first = false;
         }
 
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
-        builder.addPlain(parent, "(");
+        builder.addPlain("(");
         builder.indent();
 
         final JavaTypeSignature[] types = methodSignature.getParameters();
 
         for (final JavaTypeSignature type : types) {
-            builder.newLine(parent);
+            builder.newLine();
             type.model(builder, parent);
         }
 
@@ -95,9 +95,9 @@ public class BootstrapMethod extends BytecodeElement {
 
         // only break the () if there was a parameter
         if (types.length > 0) {
-            builder.newLine(parent);
+            builder.newLine();
         }
-        builder.addPlain(parent, ") ");
+        builder.addPlain(") ");
         methodSignature.modelReturnType(builder, parent);
     }
 

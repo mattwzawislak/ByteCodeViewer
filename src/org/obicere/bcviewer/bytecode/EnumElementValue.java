@@ -34,8 +34,8 @@ public class EnumElementValue extends ElementValue {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(typeNameIndex));
 
-        builder.addPlain(parent, BytecodeUtils.getQualifiedName(type.substring(1, type.length() - 1)));
-        builder.addPlain(parent, ".");
-        builder.addPlain(parent, constantPool.getAsString(getConstNameIndex()));
+        builder.addPlain(BytecodeUtils.getQualifiedName(type.substring(1, type.length() - 1)));
+        builder.addPlain(".");
+        builder.addPlain(constantPool.getAsString(getConstNameIndex()));
     }
 }

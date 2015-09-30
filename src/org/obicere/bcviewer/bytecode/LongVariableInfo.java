@@ -14,7 +14,7 @@ public class LongVariableInfo extends VerificationTypeInfo {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
-        builder.addKeyword(parent, "long");
+        builder.addKeyword("long");
     }
 
 }

@@ -25,6 +25,6 @@ public class LongElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantLong constant = (ConstantLong) builder.getConstantPool().get(constantValueIndex);
-        builder.add(parent, constant.getBytes());
+        builder.add(constant.getBytes());
     }
 }

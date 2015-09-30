@@ -60,11 +60,11 @@ public class invokeinterface extends Instruction {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         super.model(builder, parent);
-        builder.tab(parent);
+        builder.tab();
         builder.getConstantPool().get(getIndex()).modelValue(builder, parent);
-        builder.tab(parent);
-        builder.add(parent, count);
-        builder.tab(parent);
-        builder.add(parent, 0);
+        builder.tab();
+        builder.add(count);
+        builder.tab();
+        builder.add(0);
     }
 }

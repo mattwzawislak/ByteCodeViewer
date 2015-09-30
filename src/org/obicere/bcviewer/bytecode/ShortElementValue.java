@@ -25,6 +25,6 @@ public class ShortElementValue extends ElementValue {
     @Override
     public void model(final BytecodeDocumentBuilder builder, final Element parent) {
         final ConstantInteger constant = (ConstantInteger) builder.getConstantPool().get(constantValueIndex);
-        builder.add(parent, (short) constant.getBytes());
+        builder.add((short) constant.getBytes());
     }
 }
