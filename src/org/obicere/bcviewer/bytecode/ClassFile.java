@@ -139,6 +139,7 @@ public class ClassFile extends BytecodeElement {
         builder.newLine();
         builder.add("}");
         builder.newLine();
+        builder.closeBlock();
     }
 
     private void addSynthetic(final BytecodeDocumentBuilder builder) {

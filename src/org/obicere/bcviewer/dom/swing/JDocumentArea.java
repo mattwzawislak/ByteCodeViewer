@@ -7,9 +7,11 @@ import org.obicere.bcviewer.dom.swing.ui.DocumentAreaUI;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,15 +58,29 @@ public class JDocumentArea extends JComponent {
     }
 
     public void scrollToCaret() {
+        scrollTo(caret);
+    }
+
+    public void scrollToDropCaret() {
+        scrollTo(dropCaret);
+    }
+
+    private void scrollTo(final Caret caret) {
         final JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
         if (scrollPane == null) {
             return;
         }
 
+        final JViewport viewport = scrollPane.getViewport();
         final int fontHeight = font.getFixedHeight();
         final int fontWidth = font.getFixedWidth();
-        final Rectangle caretRectangle = new Rectangle(caret.getColumn() * fontWidth, caret.getRow() * fontHeight, 1, fontHeight);
-        scrollPane.getViewport().scrollRectToVisible(caretRectangle);
+        final Point offset = viewport.getViewPosition();
+
+        final int x = caret.getColumn() * fontWidth;
+        final int y = caret.getRow() * fontHeight;
+        final Rectangle caretRectangle = new Rectangle(x - offset.x, y - offset.y, 1, fontHeight);
+
+        viewport.scrollRectToVisible(caretRectangle);
         revalidate();
         repaint();
     }
@@ -154,7 +170,10 @@ public class JDocumentArea extends JComponent {
             final Block block = content.get(i);
             if (block.isVisible()) {
                 lineNumber -= block.getLineCount();
-                if (lineNumber <= 0) {
+                if (lineNumber < 0) {
+                    return i;
+                }
+                if (i == content.size() - 1 && lineNumber == 0) {
                     return i;
                 }
             }
@@ -166,15 +185,11 @@ public class JDocumentArea extends JComponent {
         if (lineNumber < 0) {
             return null;
         }
-        for (final Block block : content) {
-            if (block.isVisible()) {
-                lineNumber -= block.getLineCount();
-                if (lineNumber <= 0) {
-                    return block;
-                }
-            }
+        final int index = getIndexOfBlockContaining(lineNumber);
+        if (index < 0) {
+            return null;
         }
-        return null;
+        return content.get(index);
     }
 
     public int getLineCount() {
