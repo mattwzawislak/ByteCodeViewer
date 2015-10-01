@@ -2,6 +2,8 @@ package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
+import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.style.AnnotationStyle;
@@ -12,7 +14,6 @@ import org.obicere.bcviewer.dom.style.PlainStyle;
 import org.obicere.bcviewer.dom.style.StringStyle;
 import org.obicere.bcviewer.dom.style.TypeStyle;
 
-import javax.swing.text.BadLocationException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,6 +44,10 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     private volatile StringBuilder builder;
 
+    private volatile ClassCallback callback;
+
+    private volatile ClassInformation classInformation;
+
     private final HashMap<String, Object> properties = new HashMap<>();
 
     private static final Style PLAIN      = new PlainStyle();
@@ -57,12 +62,13 @@ public class BytecodeDocumentBuilder implements DomainAccess {
         this.domain = domain;
     }
 
-    public List<Block> build(final ClassFile classFile) {
+    public List<Block> build(final ClassInformation classInformation) {
 
         try {
             lock.lock();
 
-            this.classFile = classFile;
+            this.classInformation = classInformation;
+            this.classFile = classInformation.getRootClass();
             this.blocks = new LinkedList<>();
             this.builder = new StringBuilder();
             this.constraints = new StyleConstraints();
@@ -76,6 +82,8 @@ public class BytecodeDocumentBuilder implements DomainAccess {
             this.classFile = null;
             this.blocks = null;
             this.builder = null;
+            this.constraints = null;
+            this.classInformation = null;
 
             properties.clear();
             lock.unlock();
@@ -92,6 +100,10 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     public ConstantPool getConstantPool() {
         return classFile.getConstantPool();
+    }
+
+    public ClassInformation getClassInformation() {
+        return classInformation;
     }
 
     public ClassFile getClassFile() {
@@ -164,6 +176,22 @@ public class BytecodeDocumentBuilder implements DomainAccess {
 
     public Object getProperty(final String key) {
         return properties.get(key);
+    }
+
+    public void addCallback(final ClassCallback callback) {
+        this.callback = callback;
+    }
+
+    public void removeCallback(final ClassCallback callback) {
+        if (this.callback == callback) {
+            this.callback = null;
+        }
+    }
+
+    public void update(final String update) {
+        if (callback != null) {
+            callback.update(update);
+        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.configuration;
 
-import org.obicere.bcviewer.bytecode.ClassFile;
-import org.obicere.bcviewer.context.ClassInformation;
+import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.concurrent.ClassLoaderService;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.EditorPanel;
@@ -9,7 +9,6 @@ import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  */
@@ -30,6 +29,8 @@ public class ClassFileLoader implements DomainAccess {
             return;
         }
 
+        final ClassLoaderService service = domain.getClassLoaderService();
+
         for (final File file : files) {
             final String name = file.getName();
 
@@ -38,27 +39,10 @@ public class ClassFileLoader implements DomainAccess {
 
             if (frameManager.hasEditorPanel(className)) {
                 frameManager.displayEditorPanel(className);
-                return;
+                break;
             }
-
-            final ClassFile classFile;
-            final byte[] bytes;
-
-            try {
-                final ClassInformation classInformation = domain.getClassInformation();
-                classFile = classInformation.load(file);
-                bytes = classInformation.getClassBytes();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
             final EditorPanel panel = frameManager.createEditorPanel(className);
-
-            panel.setClassBytes(bytes);
-            panel.setClassFile(classFile);
-
-            frameManager.displayEditorPanel(className);
+            service.requestProcess(new ClassCallback(panel), file);
         }
     }
 

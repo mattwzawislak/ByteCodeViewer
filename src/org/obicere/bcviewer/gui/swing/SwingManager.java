@@ -129,6 +129,7 @@ public class SwingManager implements FrameManager {
         }
         addComponents();
 
+        loadDefaultTheme();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setLocationByPlatform(true);
@@ -216,6 +217,9 @@ public class SwingManager implements FrameManager {
             frame.pack();
             frame.revalidate();
             frame.repaint();
+        } catch (final NoClassDefFoundError e) {
+            domain.getLogger().log(Level.WARNING, e.getMessage(), e);
+            domain.getLogger().log(Level.WARNING, "Class for the theme not found. This might occur for stripped-down jars.", e);
         } catch (final UnsupportedLookAndFeelException e) {
             domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
@@ -234,6 +238,9 @@ public class SwingManager implements FrameManager {
             frame.pack();
             frame.revalidate();
             frame.repaint();
+        } catch (final NoClassDefFoundError e) {
+            domain.getLogger().log(Level.WARNING, e.getMessage(), e);
+            domain.getLogger().log(Level.WARNING, "Class for the theme not found. This might occur for stripped-down jars.", e);
         } catch (final UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
@@ -243,8 +250,8 @@ public class SwingManager implements FrameManager {
     public EditorPanel getEditorPanel(final String className) {
         for (final Component component : tabbedPane.getComponents()) {
             if (component instanceof EditorPanel) {
-                final EditorPanel panel = (EditorPanel) component;
-                if (panel.getClass().getName().equals(className)) {
+                final SwingEditorPanel panel = (SwingEditorPanel) component;
+                if (panel.getName().equals(className)) {
                     return panel;
                 }
             }
@@ -268,8 +275,8 @@ public class SwingManager implements FrameManager {
     @Override
     public EditorPanel createEditorPanel(final String className) {
         final SwingEditorPanel panel = new SwingEditorPanel(domain);
-        tabbedPane.add(panel);
         panel.setName(className);
+        tabbedPane.add(panel);
         return panel;
     }
 

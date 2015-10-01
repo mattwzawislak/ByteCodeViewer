@@ -1,17 +1,25 @@
 package org.obicere.bcviewer.gui;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.context.ClassInformation;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
 /**
  */
 public interface EditorPanel {
 
-    public ClassFile getClassFile();
+    public ClassInformation getClassInformation();
 
-    public void setClassFile(final ClassFile classFile);
+    public ClassFile getClassFile();
 
     public byte[] getClassBytes();
 
-    public void setClassBytes(final byte[] bytes);
+    public void setClassInformation(final ClassCallback callback, final ClassInformation information);
 
+    public void update(final String update);
+
+    public void notifyCompletion();
+
+    public BytecodeDocumentBuilder getBuilder();
 }

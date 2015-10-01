@@ -5,6 +5,7 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.InnerClass;
 import org.obicere.bcviewer.bytecode.InnerClassesAttribute;
+import org.obicere.bcviewer.concurrent.ClassCallback;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
 import org.obicere.utility.io.IOUtils;
 
@@ -53,16 +54,19 @@ public class ClassInformation implements DomainAccess {
         classes.clear();
     }
 
-    public ClassFile load(final File file) throws IOException {
+    public ClassFile load(final ClassCallback callback, final File file) throws IOException {
         this.parentFile = file.getParentFile();
 
         this.classBytes = IOUtils.readData(file);
-        this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
+        this.rootClass = domain.getClassReader().read(callback, new IndexedDataInputStream(classBytes));
         classes.put(rootClass.getName(), rootClass);
 
         loadInnerClasses(rootClass);
-
-        return rootClass;
+        try {
+            return rootClass;
+        } finally {
+            callback.notifyInformationComplete(this);
+        }
     }
 
     private void loadInnerClasses(final ClassFile file) throws IOException {

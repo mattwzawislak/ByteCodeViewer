@@ -106,6 +106,9 @@ public class ClassFile extends BytecodeElement {
 
     @Override
     public void model(final BytecodeDocumentBuilder builder) {
+
+        builder.update("Modelling class: " + getName());
+
         // we use this override for InnerClass attributes to set the proper access flags
         final int accessFlags;
         final Object newAccessFlags = builder.getProperty("accessFlags");
@@ -229,12 +232,11 @@ public class ClassFile extends BytecodeElement {
             builder.newLine();
             builder.newLine();
 
-            System.out.print("\rModelling field: (" + current + " / " + fields.length + ")\t");
+            builder.update("Modelling field: (" + current + " / " + fields.length + ")");
 
             field.model(builder);
             current++;
         }
-        System.out.println();
     }
 
     private void modelMethods(final BytecodeDocumentBuilder builder) {
@@ -247,11 +249,10 @@ public class ClassFile extends BytecodeElement {
             builder.newLine();
             builder.newLine();
 
-            System.out.print("\rModelling method: (" + current + " / " + methods.length + ")\t");
+            builder.update("Modelling method: (" + current + " / " + methods.length + ")");
             method.model(builder);
             current++;
         }
-        System.out.println();
     }
 
     private void modelInnerClasses(final BytecodeDocumentBuilder builder) {

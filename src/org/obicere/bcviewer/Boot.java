@@ -42,7 +42,6 @@ public class Boot {
         SwingUtilities.invokeLater(() -> {
             final GUIManager manager = domain.getGUIManager();
             final FrameManager frameManager = manager.getFrameManager();
-            frameManager.loadDefaultTheme();
             frameManager.open();
         });
 

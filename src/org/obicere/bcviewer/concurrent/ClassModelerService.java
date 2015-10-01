@@ -1,0 +1,63 @@
+package org.obicere.bcviewer.concurrent;
+
+import org.obicere.bcviewer.context.ClassInformation;
+import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.context.DomainAccess;
+import org.obicere.bcviewer.dom.Block;
+import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+/**
+ */
+public class ClassModelerService implements DomainAccess {
+
+    private static final int THREAD_POOL_COUNT = 8;
+
+    private final ExecutorService classModelerExecutorService = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
+
+    private final Domain domain;
+
+    public ClassModelerService(final Domain domain) {
+        this.domain = domain;
+    }
+
+    public Future<List<Block>> postRequest(final ClassCallback callback, final BytecodeDocumentBuilder builder, final ClassInformation information) {
+        final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
+
+        return classModelerExecutorService.submit(request);
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
+    }
+
+    private class ClassModelRequest implements Callable<List<Block>> {
+
+        private final ClassCallback           callback;
+        private final BytecodeDocumentBuilder builder;
+        private final ClassInformation        information;
+
+        public ClassModelRequest(final ClassCallback callback, final BytecodeDocumentBuilder builder, final ClassInformation information) {
+            this.callback = callback;
+            this.builder = builder;
+            this.information = information;
+        }
+
+        @Override
+        public List<Block> call() throws Exception {
+            try {
+                builder.addCallback(callback);
+                return builder.build(information);
+            } finally {
+                callback.notifyCompletion();
+                builder.removeCallback(callback);
+            }
+        }
+    }
+}

@@ -1,23 +1,33 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.concurrent.ClassModelerService;
+import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.dom.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * @author Obicere
  */
-public class SwingEditorPanel extends JPanel implements EditorPanel {
+public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAccess {
+
+    private final Domain domain;
 
     private final JDocumentArea documentArea;
 
@@ -29,11 +39,17 @@ public class SwingEditorPanel extends JPanel implements EditorPanel {
 
     private final BytecodeDocumentBuilder builder;
 
+    private volatile ClassInformation classInformation;
+
     private volatile ClassFile loadedClassFile;
+
+    private volatile JLabel status = new JLabel("Loading...", JLabel.CENTER);
+
+    private volatile Future<List<Block>> request;
 
     public SwingEditorPanel(final Domain domain) {
         super(new BorderLayout(10, 10));
-        setName("editor");
+        this.domain = domain;
         this.builder = new BytecodeDocumentBuilder(domain);
 
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -56,7 +72,8 @@ public class SwingEditorPanel extends JPanel implements EditorPanel {
         split.setName("split");
         split.setResizeWeight(0.5);
 
-        add(split);
+        add(status);
+        //add(split);
     }
 
     @Override
@@ -75,12 +92,29 @@ public class SwingEditorPanel extends JPanel implements EditorPanel {
     }
 
     @Override
-    public void setClassFile(final ClassFile classFile) {
-        final List<Block> blocks = builder.build(classFile);
-        blocks.forEach(documentArea::addBlock);
+    public void setClassInformation(final ClassCallback callback, final ClassInformation classInformation) {
+        this.classInformation = classInformation;
+        setClassFile(classInformation.getRootClass());
+        setClassBytes(classInformation.getClassBytes());
+
+        final ClassModelerService service = domain.getClassModelerService();
+        this.request = service.postRequest(callback, builder, classInformation);
+    }
+
+    @Override
+    public ClassInformation getClassInformation() {
+        return classInformation;
+    }
+
+    private void setClassFile(final ClassFile classFile) {
+        if (classFile == null) {
+            return;
+        }
         this.loadedClassFile = classFile;
-        revalidate();
-        repaint();
+    }
+
+    private void setClassBytes(final byte[] bytes) {
+        byteTextPane.setBytes(bytes);
     }
 
     @Override
@@ -89,7 +123,37 @@ public class SwingEditorPanel extends JPanel implements EditorPanel {
     }
 
     @Override
-    public void setClassBytes(final byte[] bytes) {
-        byteTextPane.setBytes(bytes);
+    public void update(final String update) {
+        //SwingUtilities.invokeLater(() -> {
+        status.setText(update);
+        repaint();
+        //});
+    }
+
+    @Override
+    public void notifyCompletion() {
+        remove(status);
+        revalidate();
+        add(split);
+        SwingUtilities.invokeLater(() -> {
+            try {
+                final List<Block> blocks = request.get();
+                blocks.forEach(documentArea::addBlock);
+                revalidate();
+                repaint();
+            } catch (final InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public BytecodeDocumentBuilder getBuilder() {
+        return builder;
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
     }
 }

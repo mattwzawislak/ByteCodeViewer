@@ -61,7 +61,7 @@ public class InnerClass extends BytecodeElement {
         builder.setProperty("accessFlags", innerClassAccessFlags);
 
         final ClassFile workingFile = builder.getClassFile();
-        final ClassFile file = builder.getDomain().getClassInformation().getClass(name);
+        final ClassFile file = builder.getClassInformation().getClass(name);
 
         builder.setWorkingClass(file);
         file.model(builder);

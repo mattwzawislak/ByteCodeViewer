@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.context;
 
+import org.obicere.bcviewer.concurrent.ClassLoaderService;
+import org.obicere.bcviewer.concurrent.ClassModelerService;
 import org.obicere.bcviewer.configuration.ClassFileLoader;
 import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.configuration.Paths;
@@ -11,7 +13,7 @@ import java.util.logging.Logger;
 /**
  * @author Obicere
  */
-public class Domain {
+public final class Domain {
 
     private static final double CURRENT_VERSION = 0.00;
 
@@ -19,23 +21,31 @@ public class Domain {
 
     private final Logger logger = Logger.getGlobal();
 
-    private ClassInformation classInformation;
-    private ClassFileLoader  classLoader;
+    private ClassLoaderService  classLoaderService;
+    private ClassModelerService classModelerService;
+
+    private ClassFileLoader classLoader;
     private ClassFileReader classReader = new ClassFileReader();
     private GUIManager guiManager;
     private Icons      icons;
     private Paths      paths;
 
     public void initialize() {
-        this.classInformation = new ClassInformation(this);
+        this.classLoaderService = new ClassLoaderService(this);
+        this.classModelerService = new ClassModelerService(this);
+
         this.classLoader = new ClassFileLoader(this);
         this.guiManager = new GUIManager(this);
         this.icons = new Icons(this);
         this.paths = new Paths(this);
     }
 
-    public ClassInformation getClassInformation() {
-        return classInformation;
+    public ClassLoaderService getClassLoaderService() {
+        return classLoaderService;
+    }
+
+    public ClassModelerService getClassModelerService() {
+        return classModelerService;
     }
 
     public ClassFileLoader getClassLoader() {
