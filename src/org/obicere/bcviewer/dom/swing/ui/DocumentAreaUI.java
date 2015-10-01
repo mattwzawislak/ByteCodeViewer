@@ -88,6 +88,8 @@ public class DocumentAreaUI extends ComponentUI {
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), CaretUpAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK), SelectAllAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), CopyAction.NAME);
+        inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), PageUpAction.NAME);
+        inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), PageDownAction.NAME);
 
         final ActionMap actions = area.getActionMap();
         actions.put(CaretRightAction.NAME, new CaretRightAction());
@@ -96,6 +98,8 @@ public class DocumentAreaUI extends ComponentUI {
         actions.put(CaretUpAction.NAME, new CaretUpAction());
         actions.put(SelectAllAction.NAME, new SelectAllAction());
         actions.put(CopyAction.NAME, new CopyAction());
+        actions.put(PageUpAction.NAME, new PageUpAction());
+        actions.put(PageDownAction.NAME, new PageDownAction());
     }
 
     @Override
@@ -221,13 +225,14 @@ public class DocumentAreaUI extends ComponentUI {
 
         final int caretColumn = caret.getColumn();
         final int dropCaretColumn = dropCaret.getColumn();
+
+        g.setColor(area.getHighlightColor());
         if (caretRow == dropCaretRow) {
             final int start = Math.min(caretColumn, dropCaretColumn);
             final int end = Math.max(caretColumn, dropCaretColumn);
             if (start == end) {
                 return;
             }
-            g.setColor(new Color(0, 77, 128));
             drawHighlightOnLine(g, start, end, caretRow, fontWidth, fontHeight);
         } else {
             final int startColumn;
@@ -240,20 +245,17 @@ public class DocumentAreaUI extends ComponentUI {
                 endColumn = caretColumn;
             }
 
-            g.setColor(new Color(0, 77, 128));
             if (startRow >= startLine) {
                 drawHighlightOnLine(g, startColumn, area.getLine(startRow).length(), startRow, fontWidth, fontHeight);
             }
 
             final int clippedStartLine = Math.max(startLine, startRow + 1);
             final int clippedEndLine = Math.min(endRow, endLine);
-            for (int i = clippedStartLine; i <= clippedEndLine; i++) {
+            for (int i = clippedStartLine; i < clippedEndLine; i++) {
                 drawHighlightOnLine(g, 0, area.getLine(i).length(), i, fontWidth, fontHeight);
             }
 
-            if (endRow <= endColumn) {
-                drawHighlightOnLine(g, 0, endColumn, endRow, fontWidth, fontHeight);
-            }
+            drawHighlightOnLine(g, 0, endColumn, endRow, fontWidth, fontHeight);
         }
     }
 
@@ -533,7 +535,7 @@ public class DocumentAreaUI extends ComponentUI {
                 final String lineSeparator = System.getProperty("line.separator");
 
                 final Line firstLine = area.getLine(startRow);
-                if(firstLine.length() > startColumn) {
+                if (firstLine.length() > startColumn) {
                     builder.append(area.getLine(startRow).getText().substring(startColumn));
                 }
                 builder.append(lineSeparator);
@@ -550,6 +552,30 @@ public class DocumentAreaUI extends ComponentUI {
             }
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
 
+        }
+    }
+
+    private class PageUpAction extends AbstractAction {
+
+        private static final String NAME = "PageUp";
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            area.pageUp();
+            area.revalidate();
+            area.repaint();
+        }
+    }
+
+    private class PageDownAction extends AbstractAction {
+
+        private static final String NAME = "PageDown";
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            area.pageDown();
+            area.revalidate();
+            area.repaint();
         }
     }
 }

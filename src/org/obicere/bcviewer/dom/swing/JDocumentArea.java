@@ -6,10 +6,12 @@ import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.swing.ui.DocumentAreaUI;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -27,6 +29,8 @@ public class JDocumentArea extends JComponent {
     private final ArrayList<Block> content = new ArrayList<>();
 
     private boolean thinCarets = true;
+
+    private Color highlightColor = new Color(0, 77, 128);
 
     private final Caret caret     = new Caret(this);
     private final Caret dropCaret = new Caret(this);
@@ -65,8 +69,19 @@ public class JDocumentArea extends JComponent {
         scrollTo(dropCaret);
     }
 
+    public Color getHighlightColor() {
+        return highlightColor;
+    }
+
+    public void setHighlightColor(final Color color) {
+        if (color == null) {
+            return;
+        }
+        this.highlightColor = color;
+    }
+
     private void scrollTo(final Caret caret) {
-        final JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
+        final JScrollPane scrollPane = getScrollPaneParent();
         if (scrollPane == null) {
             return;
         }
@@ -83,6 +98,34 @@ public class JDocumentArea extends JComponent {
         viewport.scrollRectToVisible(caretRectangle);
         revalidate();
         repaint();
+    }
+
+    public void pageUp() {
+        final int delta = -font.getFixedHeight() * 4;
+        scroll(delta);
+    }
+
+    public void pageDown() {
+        final int delta = font.getFixedHeight() * 4;
+        scroll(delta);
+    }
+
+    private void scroll(int delta) {
+        final JScrollPane scrollPane = getScrollPaneParent();
+        if (scrollPane == null) {
+            return;
+        }
+        final JScrollBar scrollBar = scrollPane.getVerticalScrollBar();
+        if (scrollBar == null) {
+            return;
+        }
+        final int value = scrollBar.getValue() + delta;
+        final int boundedValue = Math.max(scrollBar.getMinimum(), Math.min(scrollBar.getMaximum(), value));
+        scrollBar.setValue(boundedValue);
+    }
+
+    private JScrollPane getScrollPaneParent() {
+        return (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
     }
 
     public List<Block> getBlocks() {
