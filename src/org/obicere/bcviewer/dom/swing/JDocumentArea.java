@@ -16,6 +16,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class JDocumentArea extends JComponent {
 
     private QuickWidthFont font;
 
-    private final ArrayList<Block> content = new ArrayList<>();
+    private final List<Block> content = new ArrayList<>();
 
     private boolean thinCarets = true;
 
@@ -132,7 +133,8 @@ public class JDocumentArea extends JComponent {
         return content;
     }
 
-    public boolean addBlock(final Block block) {
+    // accessed during building and may trip a concurrent mod exception
+    public synchronized boolean addBlock(final Block block) {
         if (block == null) {
             throw new NullPointerException("block must be non-null");
         }
@@ -235,7 +237,8 @@ public class JDocumentArea extends JComponent {
         return content.get(index);
     }
 
-    public int getLineCount() {
+    // can be accessed during building for calculating sizes
+    public synchronized int getLineCount() {
         int lines = 0;
         for (final Block block : content) {
             if (block.isVisible()) {
@@ -245,7 +248,8 @@ public class JDocumentArea extends JComponent {
         return lines;
     }
 
-    public int getMaxLineLength() {
+    // can be accessed during building for calculating sizes
+    public synchronized int getMaxLineLength() {
         int max = 0;
         for (final Block block : content) {
             if (block.isVisible()) {

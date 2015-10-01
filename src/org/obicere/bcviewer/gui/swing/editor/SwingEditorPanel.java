@@ -27,11 +27,11 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     private final JDocumentArea documentArea;
 
-    private final ByteTextPane byteTextPane;
+    //private final ByteTextPane byteTextPane;
 
     private final JSplitPane split;
 
-    private final JScrollPane bytesScroll;
+    //private final JScrollPane bytesScroll;
 
     private final BytecodeDocumentBuilder builder;
 
@@ -51,20 +51,20 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         this.documentArea = new JDocumentArea();
 
-        this.byteTextPane = new ByteTextPane();
-        this.bytesScroll = new JScrollPane(byteTextPane);
-        bytesScroll.setName("bytesScroll");
-        bytesScroll.getViewport().setName("view");
+        //this.byteTextPane = new ByteTextPane();
+        //this.bytesScroll = new JScrollPane(byteTextPane);
+        //bytesScroll.setName("bytesScroll");
+        //bytesScroll.getViewport().setName("view");
 
         final JScrollPane editorScroll = new JScrollPane(documentArea);
         editorScroll.setName("editorScroll");
         editorScroll.getViewport().setName("view");
 
         documentArea.setName("document");
-        byteTextPane.setName("bytes");
+        //byteTextPane.setName("bytes");
 
         split.setLeftComponent(editorScroll);
-        split.setRightComponent(bytesScroll);
+        //split.setRightComponent(bytesScroll);
         split.setName("split");
         split.setResizeWeight(0.5);
 
@@ -78,7 +78,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     public void setBytesPanelVisible(final boolean visible) {
-        split.setRightComponent(visible ? bytesScroll : null);
+        //split.setRightComponent(visible ? bytesScroll : null);
         split.revalidate();
     }
 
@@ -107,12 +107,13 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     private void setClassBytes(final byte[] bytes) {
-        byteTextPane.setBytes(bytes);
+        //byteTextPane.setBytes(bytes);
     }
 
     @Override
     public byte[] getClassBytes() {
-        return byteTextPane.getBytes();
+        return null;
+        //return byteTextPane.getBytes();
     }
 
     @Override
