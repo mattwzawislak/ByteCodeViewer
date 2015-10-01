@@ -24,7 +24,7 @@ public class FileMenu extends JMenu {
         open.setMnemonic('O');
         exit.setMnemonic('x');
 
-        open.addActionListener(e -> SwingUtilities.invokeLater(() -> domain.getClassLoader().attemptLoad()));
+        open.addActionListener(e -> SwingUtilities.invokeLater(() -> domain.getClassLoader().promptAndLoad()));
         exit.addActionListener(e -> domain.getGUIManager().getFrameManager().close());
 
         add(open);

@@ -252,7 +252,8 @@ public class BytecodeDocumentBuilder implements DomainAccess {
     }
 
     public void addComment(final String comment) {
-        constraints.addConstraint(COMMENT, comment.length());
+        constraints.addConstraint(COMMENT, 3 + comment.length());
+        builder.append("// ");
         builder.append(comment);
     }
 
@@ -284,7 +285,8 @@ public class BytecodeDocumentBuilder implements DomainAccess {
     }
 
     public void addAnnotation(final String annotation) {
-        constraints.addConstraint(ANNOTATION, annotation.length());
+        constraints.addConstraint(ANNOTATION, 1 + annotation.length());
+        builder.append("@");
         builder.append(annotation);
     }
 

@@ -130,7 +130,8 @@ public class SwingManager implements FrameManager {
         addComponents();
 
         loadDefaultTheme();
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
@@ -311,7 +312,8 @@ public class SwingManager implements FrameManager {
             }
         });
 
-        final int response = chooser.showDialog(frame, "Open");
+        final int response = chooser.showOpenDialog(frame);
+
         if (response == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFiles();
         } else {

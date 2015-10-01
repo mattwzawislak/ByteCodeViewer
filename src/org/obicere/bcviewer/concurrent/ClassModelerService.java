@@ -58,6 +58,9 @@ public class ClassModelerService implements DomainAccess {
 
                 callback.notifyCompletion(blocks);
                 return blocks;
+            } catch (final Throwable throwable) {
+                callback.notifyThrowable(throwable);
+                return null;
             } finally {
                 builder.removeCallback(callback);
             }

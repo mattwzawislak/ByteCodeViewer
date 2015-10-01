@@ -1,10 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
-
-import javax.swing.text.Element;
 
 /**
  * @author Obicere

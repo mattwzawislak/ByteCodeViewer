@@ -1,8 +1,6 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
-import org.obicere.bcviewer.concurrent.ClassCallback;
-import org.obicere.bcviewer.concurrent.ClassModelerService;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
@@ -15,11 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**

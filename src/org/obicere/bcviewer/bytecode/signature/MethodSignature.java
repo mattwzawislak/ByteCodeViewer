@@ -12,7 +12,6 @@ import org.obicere.bcviewer.bytecode.TypeParameterTarget;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.text.Element;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;

@@ -6,12 +6,7 @@ import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 

@@ -6,10 +6,11 @@ import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.InnerClass;
 import org.obicere.bcviewer.bytecode.InnerClassesAttribute;
 import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.util.FileUtils;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
+import org.obicere.utility.io.FileSource;
 import org.obicere.utility.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,9 +23,9 @@ public class ClassInformation implements DomainAccess {
 
     private final Map<String, ClassFile> classes = new HashMap<>();
 
-    private ClassFile rootClass;
+    private FileSource fileSource;
 
-    private File parentFile;
+    private ClassFile rootClass;
 
     private byte[] classBytes;
 
@@ -47,25 +48,29 @@ public class ClassInformation implements DomainAccess {
     }
 
     public void clear() {
+        fileSource = null;
         rootClass = null;
-        parentFile = null;
         classBytes = null;
 
         classes.clear();
     }
 
-    public ClassFile load(final ClassCallback callback, final File file) throws IOException {
-        this.parentFile = file.getParentFile();
-
-        this.classBytes = IOUtils.readData(file);
-        this.rootClass = domain.getClassReader().read(callback, new IndexedDataInputStream(classBytes));
-        classes.put(rootClass.getName(), rootClass);
-
-        loadInnerClasses(rootClass);
+    public ClassFile load(final ClassCallback callback, final FileSource fileSource) {
         try {
-            return rootClass;
-        } finally {
-            callback.notifyInformationComplete(this);
+            this.fileSource = fileSource;
+            this.classBytes = IOUtils.readData(fileSource.openSource());
+            this.rootClass = domain.getClassReader().read(callback, new IndexedDataInputStream(classBytes));
+            classes.put(rootClass.getName(), rootClass);
+
+            loadInnerClasses(rootClass);
+            try {
+                return rootClass;
+            } finally {
+                callback.notifyInformationComplete(this);
+            }
+        } catch (final Throwable e) {
+            callback.notifyThrowable(e);
+            return null;
         }
     }
 
@@ -91,8 +96,10 @@ public class ClassInformation implements DomainAccess {
                     if (!outer.equals("<null entry>") && !file.getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
                         continue;
                     }
-                    final String simpleName = name.substring(name.lastIndexOf('/') + 1);
-                    final File innerFile = new File(parentFile, simpleName + ".class");
+
+                    final String simpleName = FileUtils.getFileName(name);
+
+                    final FileSource innerFile = FileUtils.getFileInSameDirectory(fileSource, simpleName + ".class");
                     final ClassFile innerClassFile = loadFrom(innerFile);
                     classes.put(name, innerClassFile);
 
@@ -102,8 +109,8 @@ public class ClassInformation implements DomainAccess {
         }
     }
 
-    private ClassFile loadFrom(final File file) throws IOException {
-        final byte[] bytes = IOUtils.readData(file);
+    private ClassFile loadFrom(final FileSource file) throws IOException {
+        final byte[] bytes = IOUtils.readData(file.openSource());
         return domain.getClassReader().read(new IndexedDataInputStream(bytes));
     }
 

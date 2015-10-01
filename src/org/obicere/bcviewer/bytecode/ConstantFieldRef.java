@@ -5,8 +5,6 @@ import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */

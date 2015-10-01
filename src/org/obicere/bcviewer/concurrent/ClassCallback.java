@@ -6,6 +6,8 @@ import org.obicere.bcviewer.gui.EditorPanel;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  */
@@ -45,6 +47,16 @@ public class ClassCallback {
         try {
             accessLock.lock();
             editorPanel.setClassInformation(information);
+        } finally {
+            accessLock.unlock();
+        }
+    }
+
+    public void notifyThrowable(final Throwable error) {
+        try {
+            accessLock.lock();
+            editorPanel.update("Error while loading: " + error.getMessage());
+            Logger.getGlobal().log(Level.WARNING, error.getMessage(), error);
         } finally {
             accessLock.unlock();
         }

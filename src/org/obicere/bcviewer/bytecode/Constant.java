@@ -2,8 +2,6 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 
-import javax.swing.text.Element;
-
 /**
  * @author Obicere
  */

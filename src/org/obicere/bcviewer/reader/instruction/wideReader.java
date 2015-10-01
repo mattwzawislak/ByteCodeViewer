@@ -1,6 +1,5 @@
 package org.obicere.bcviewer.reader.instruction;
 
-import org.obicere.bcviewer.bytecode.instruction.Instruction;
 import org.obicere.bcviewer.bytecode.instruction.wide;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
 import org.obicere.bcviewer.util.Reader;

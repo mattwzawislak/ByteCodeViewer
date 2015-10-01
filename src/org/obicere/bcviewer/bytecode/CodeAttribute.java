@@ -5,7 +5,6 @@ import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.text.Element;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -154,8 +153,6 @@ public class CodeAttribute extends Attribute {
 
         distributeInstructions(startPCToLine.values());
 
-        final Map<Integer, FieldSignature> localVarSignatures = getLocalVariables(constantPool);
-
         modelExceptions(builder);
         modelLines(builder, startPCToLine.values());
     }
@@ -184,13 +181,19 @@ public class CodeAttribute extends Attribute {
     private void modelExceptions(final BytecodeDocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         for (final CodeException exception : exceptions) {
-            final String start = startPCToLine.get(exception.getStartPC()).getName();
+            final Block startBlock = startPCToLine.get(exception.getStartPC());
+            final String start;
+            if (startBlock != null) {
+                start = startBlock.getName();
+            } else {
+                start = "?";
+            }
             final String end;
             final Block line = startPCToLine.get(exception.getEndPC());
             if (line != null) {
                 end = line.getName();
             } else {
-                end = "end";
+                end = "?";
             }
 
             builder.newLine();
@@ -279,33 +282,6 @@ public class CodeAttribute extends Attribute {
         return signatureSet;
     }
 
-    private void modelGenericLocalVariable(final BytecodeDocumentBuilder builder, final int startPC, final int endPC, final int index) {
-        final String start = startPCToLine.get(startPC).getName();
-        final String end;
-        final Block line = startPCToLine.get(endPC);
-        if (line != null) {
-            end = line.getName();
-        } else {
-            end = "end";
-        }
-
-        /*
-        final PlainBCElement open = new PlainBCElement("open", "[", builder);
-        final PlainBCElement close = new PlainBCElement("close", "]", builder);
-        open.setLeftPad(1);
-        parent.add(open);
-        parent.add(new PlainBCElement("start", start, builder));
-        parent.add(new PlainBCElement("to", "-", builder));
-        parent.add(new PlainBCElement("end", end, builder));
-        parent.add(close);
-        close.setRightPad(1);
-
-        final PlainBCElement frameIndex = new PlainBCElement("frameIndex", "Index", builder);
-        frameIndex.setRightPad(1);
-        parent.add(new IntegerBCElement("index", index, builder));
-        */
-    }
-
     private List<Block> distributeInstructions(final Iterable<Block> staggeredMap) {
         final Iterator<Block> iterator = staggeredMap.iterator();
         if (!iterator.hasNext()) {
@@ -338,7 +314,6 @@ public class CodeAttribute extends Attribute {
                     logger.log(Level.SEVERE, "Instruction distribution error. start = " + start + ", endPC = " + endPC + " within CA: " + getIdentifier());
                     final int lastInsStart = instructions[instruction - 2].getStart() - 14 - getStart();
                     final int lastInsEnd = instructions[instruction - 2].getEnd() - 14 - getStart();
-                    System.out.println("\tLast Instruction [startPC=" + lastInsStart + ", " + lastInsEnd + "]");
                     logger.log(Level.SEVERE, "\tLast Instruction [startPC=" + lastInsStart + ", " + lastInsEnd + "]");
                     break top;
                 }
