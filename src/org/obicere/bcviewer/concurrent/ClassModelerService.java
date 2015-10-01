@@ -53,9 +53,12 @@ public class ClassModelerService implements DomainAccess {
         public List<Block> call() throws Exception {
             try {
                 builder.addCallback(callback);
-                return builder.build(information);
+
+                final List<Block> blocks = builder.build(information);
+
+                callback.notifyCompletion(blocks);
+                return blocks;
             } finally {
-                callback.notifyCompletion();
                 builder.removeCallback(callback);
             }
         }

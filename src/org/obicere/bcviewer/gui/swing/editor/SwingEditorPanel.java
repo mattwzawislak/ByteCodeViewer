@@ -92,13 +92,10 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     @Override
-    public void setClassInformation(final ClassCallback callback, final ClassInformation classInformation) {
+    public void setClassInformation(final ClassInformation classInformation) {
         this.classInformation = classInformation;
         setClassFile(classInformation.getRootClass());
         setClassBytes(classInformation.getClassBytes());
-
-        final ClassModelerService service = domain.getClassModelerService();
-        this.request = service.postRequest(callback, builder, classInformation);
     }
 
     @Override
@@ -131,20 +128,13 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     @Override
-    public void notifyCompletion() {
+    public void setBlocks(final List<Block> blocks) {
         remove(status);
         revalidate();
         add(split);
-        SwingUtilities.invokeLater(() -> {
-            try {
-                final List<Block> blocks = request.get();
-                blocks.forEach(documentArea::addBlock);
-                revalidate();
-                repaint();
-            } catch (final InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
+        blocks.forEach(documentArea::addBlock);
+        revalidate();
+        repaint();
     }
 
     @Override

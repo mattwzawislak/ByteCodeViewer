@@ -52,6 +52,9 @@ public class ClassLoaderService implements DomainAccess {
 
             classInformation.load(callback, file);
 
+            final ClassModelerService service = domain.getClassModelerService();
+            service.postRequest(callback, callback.getEditorPanel().getBuilder(), classInformation);
+
             return classInformation;
         }
     }

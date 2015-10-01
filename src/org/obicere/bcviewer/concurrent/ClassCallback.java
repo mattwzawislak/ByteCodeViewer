@@ -1,8 +1,10 @@
 package org.obicere.bcviewer.concurrent;
 
 import org.obicere.bcviewer.context.ClassInformation;
+import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.gui.EditorPanel;
 
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -17,6 +19,10 @@ public class ClassCallback {
         this.editorPanel = editorPanel;
     }
 
+    public EditorPanel getEditorPanel() {
+        return editorPanel;
+    }
+
     public void update(final String latestUpdate) {
         try {
             accessLock.lock();
@@ -26,10 +32,10 @@ public class ClassCallback {
         }
     }
 
-    public void notifyCompletion() {
+    public void notifyCompletion(final List<Block> blocks) {
         try {
             accessLock.lock();
-            editorPanel.notifyCompletion();
+            editorPanel.setBlocks(blocks);
         } finally {
             accessLock.unlock();
         }
@@ -38,8 +44,8 @@ public class ClassCallback {
     public void notifyInformationComplete(final ClassInformation information) {
         try {
             accessLock.lock();
-            editorPanel.setClassInformation(this, information);
-        }finally{
+            editorPanel.setClassInformation(information);
+        } finally {
             accessLock.unlock();
         }
     }
