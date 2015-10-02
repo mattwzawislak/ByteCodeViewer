@@ -3,6 +3,8 @@ package org.obicere.bcviewer;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
+import org.obicere.bcviewer.startup.StartUpQueue;
+import org.obicere.bcviewer.startup.StartUpTaskLoader;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
@@ -30,10 +32,17 @@ public class Boot {
         logger.info(domain.getApplicationName());
         logger.info("Starting boot.");
 
-        domain.getSettingsController().loadSettings();
+        // Run the start up tasks. This ideally will only set the
+        // appropriate values to the appropriate places for the
+        // initialization to run and set everything properly.
+        performStartUp(domain);
 
-        // Run the start up tasks
-        performStartUp(logger);
+        // Once start up is complete we can initialize everything we need
+        // except for the domain - which should be initialized already as
+        // it is a fundamental process.
+        // This is where settings should be applied, profiles should be
+        // loaded.
+        initializeSystem(domain);
 
         // Create the GUI
         SwingUtilities.invokeLater(() -> {
@@ -72,14 +81,19 @@ public class Boot {
         Logger.getGlobal().addHandler(consoleHandler);
     }
 
-    private static void performStartUp(final Logger logger) {
+    private static void performStartUp(final Domain domain) {
         final long start = System.currentTimeMillis();
-        logger.fine("Starting StartUp");
+        domain.getLogger().fine("Starting StartUp");
 
-        QUEUE.runTasks(logger);
-        QUEUE.cleanUp();
+        final StartUpTaskLoader loader = new StartUpTaskLoader();
+        loader.loadStartUpTasks();
+        QUEUE.runTasks(domain);
 
-        logger.fine("StartUp took (ms): " + (System.currentTimeMillis() - start));
+        domain.getLogger().fine("StartUp took (ms): " + (System.currentTimeMillis() - start));
     }
 
+    private static void initializeSystem(final Domain domain) {
+
+        domain.getSettingsController().loadSettings();
+    }
 }

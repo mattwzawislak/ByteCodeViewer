@@ -21,7 +21,6 @@ import org.obicere.bcviewer.settings.target.LongSetting;
 import org.obicere.bcviewer.settings.target.Setting;
 import org.obicere.bcviewer.settings.target.StringSetting;
 import org.obicere.bcviewer.util.FileUtils;
-import org.obicere.utility.reflect.Reflection;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,8 +29,8 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
@@ -50,8 +49,7 @@ public class SettingsController implements DomainAccess {
 
     private volatile Settings loadedSettings;
 
-    // correspond to the loaded settings instance and only that instance
-    private volatile Set<Group> groups;
+    private final Set<Group> groups = new LinkedHashSet<>();
 
     public SettingsController(final Domain domain) {
         this.domain = domain;
@@ -105,7 +103,6 @@ public class SettingsController implements DomainAccess {
     }
 
     private void safelyLoadSettings() {
-        final Set<Group> groups = getGroups();
 
         final HashMap<String, Setting<?>> defaultsMap = loadSettingsFrom(groups);
         final HashMap<String, Object> settings = loadSetSettings(groups);
@@ -118,7 +115,6 @@ public class SettingsController implements DomainAccess {
             newSettings.addPropertyChangeListener(oldSettings.getPropertyChangeListener());
         }
 
-        this.groups = groups;
         this.loadedSettings = newSettings;
     }
 
@@ -161,22 +157,30 @@ public class SettingsController implements DomainAccess {
         }
     }
 
-    private Set<Group> getGroups() {
-        // this really could be changed to be stored in some file
-        final Set<Class<Group>> classes = Reflection.subclassOf(Group.class);
-        final Set<Group> groups = new HashSet<>();
-
-        for (final Class<Group> group : classes) {
-            final Group newGroup = createGroup(group);
-            if (newGroup != null) {
-                groups.add(newGroup);
+    public boolean addSettingsGroup(final String className) {
+        try {
+            final Class<?> cls = Class.forName(className);
+            if (!Group.class.isAssignableFrom(cls)) {
+                Logger.getGlobal().log(Level.WARNING, "Class is not an instance of " + Group.class.getName());
+                return false;
             }
+            // this is technically checked as the class is assignable
+            // to Group.class
+            @SuppressWarnings("unchecked")
+            final Group group = createGroup((Class<? extends Group>) cls);
+
+            if (group != null) {
+                groups.add(group);
+                return true;
+            }
+        } catch (final ClassNotFoundException e) {
+            Logger.getGlobal().log(Level.WARNING, "No class for group name: " + className);
         }
-        return groups;
+        return false;
     }
 
-    private Group createGroup(final Class<Group> groupClass) {
-        Constructor<Group> constructor = null;
+    private Group createGroup(final Class<? extends Group> groupClass) {
+        Constructor<? extends Group> constructor = null;
         boolean hasDomain = false;
 
         try {

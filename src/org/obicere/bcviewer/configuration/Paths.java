@@ -32,11 +32,18 @@ public class Paths {
 
     private final String APP_DATA    = getAppData() + File.separator;
     private final String FOLDER_HOME = APP_DATA + "BytecodeViewer" + File.separator;
+    private final String PLUGINS     = FOLDER_HOME + "plugins" + File.separator;
 
-    private final String SETTINGS_FILE = FOLDER_HOME + "settings.txt";
+    private final String SETTINGS_FILE           = FOLDER_HOME + "settings.txt";
+    private final String PLUGINS_SETTINGS_GROUPS = PLUGINS + "groups.ini";
 
     // List of system folders to create and the order in which they should be created.
-    private final String[] PATHS = new String[]{APP_DATA, FOLDER_HOME};
+    private final String[] PATHS = new String[]{
+            APP_DATA,
+            FOLDER_HOME,
+            PLUGINS
+
+    };
 
     private final Domain domain;
 
@@ -97,6 +104,10 @@ public class Paths {
 
     public String getSettingsFile() {
         return SETTINGS_FILE;
+    }
+
+    public String getSettingsGroupsFile() {
+        return PLUGINS_SETTINGS_GROUPS;
     }
 
 }
