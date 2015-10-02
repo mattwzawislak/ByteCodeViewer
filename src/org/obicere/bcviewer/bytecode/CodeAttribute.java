@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class CodeAttribute extends Attribute {
     // TODO: RITA --+- Should be latched onto Lines, Exceptions, local vars? idk wtf this is
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         // entire code block should be collapsible
 
@@ -178,7 +178,7 @@ public class CodeAttribute extends Attribute {
         return lines.toArray(new LineNumber[lines.size()]);
     }
 
-    private void modelExceptions(final BytecodeDocumentBuilder builder) {
+    private void modelExceptions(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         for (final CodeException exception : exceptions) {
             final Block startBlock = startPCToLine.get(exception.getStartPC());
@@ -223,7 +223,7 @@ public class CodeAttribute extends Attribute {
         }
     }
 
-    private void modelLines(final BytecodeDocumentBuilder builder, final Iterable<Block> blocks) {
+    private void modelLines(final DocumentBuilder builder, final Iterable<Block> blocks) {
         for (final Block block : blocks) {
             builder.newLine();
             builder.add(block.getName());
@@ -343,7 +343,7 @@ public class CodeAttribute extends Attribute {
             return instructions;
         }
 
-        public void model(final BytecodeDocumentBuilder builder) {
+        public void model(final DocumentBuilder builder) {
             // default does not model
         }
     }
@@ -389,7 +389,7 @@ public class CodeAttribute extends Attribute {
         }
 
         @Override
-        public void model(final BytecodeDocumentBuilder builder) {
+        public void model(final DocumentBuilder builder) {
             builder.newLine();
             frame.model(builder);
         }

@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.Set;
@@ -67,7 +67,7 @@ public class Method extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
         }
@@ -92,12 +92,12 @@ public class Method extends BytecodeElement {
         }
     }
 
-    private void addSynthetic(final BytecodeDocumentBuilder builder) {
+    private void addSynthetic(final DocumentBuilder builder) {
         builder.addComment("Synthetic Method");
         builder.newLine();
     }
 
-    private void modelDeclaration(final BytecodeDocumentBuilder builder, final boolean hasBody) {
+    private void modelDeclaration(final DocumentBuilder builder, final boolean hasBody) {
         final ConstantPool constantPool = builder.getConstantPool();
 
         final String[] accessNames = BytecodeUtils.getMethodAccessNames(accessFlags);
@@ -190,7 +190,7 @@ public class Method extends BytecodeElement {
         }
     }
 
-    private void modelAnnotations(final BytecodeDocumentBuilder builder) {
+    private void modelAnnotations(final DocumentBuilder builder) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
@@ -208,7 +208,7 @@ public class Method extends BytecodeElement {
         }
     }
 
-    private void modelAbstractClose(final BytecodeDocumentBuilder builder) {
+    private void modelAbstractClose(final DocumentBuilder builder) {
         final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
         if (hasDefault != null) {
             builder.addKeyword(" default ");

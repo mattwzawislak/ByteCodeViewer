@@ -7,6 +7,7 @@ import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.configuration.Paths;
 import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.bcviewer.reader.ClassFileReader;
+import org.obicere.bcviewer.settings.SettingsController;
 
 import java.util.logging.Logger;
 
@@ -26,9 +27,10 @@ public final class Domain {
 
     private ClassFileLoader classLoader;
     private ClassFileReader classReader = new ClassFileReader();
-    private GUIManager guiManager;
-    private Icons      icons;
-    private Paths      paths;
+    private GUIManager         guiManager;
+    private Icons              icons;
+    private Paths              paths;
+    private SettingsController settings;
 
     public void initialize() {
         this.classLoaderService = new ClassLoaderService(this);
@@ -38,6 +40,7 @@ public final class Domain {
         this.guiManager = new GUIManager(this);
         this.icons = new Icons(this);
         this.paths = new Paths(this);
+        this.settings = new SettingsController(this);
     }
 
     public ClassLoaderService getClassLoaderService() {
@@ -66,6 +69,10 @@ public final class Domain {
 
     public Icons getIcons() {
         return icons;
+    }
+
+    public SettingsController getSettingsController() {
+        return settings;
     }
 
     public Logger getLogger() {

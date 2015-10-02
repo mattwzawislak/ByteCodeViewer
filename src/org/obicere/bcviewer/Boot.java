@@ -30,6 +30,8 @@ public class Boot {
         logger.info(domain.getApplicationName());
         logger.info("Starting boot.");
 
+        domain.getSettingsController().loadSettings();
+
         // Run the start up tasks
         performStartUp(logger);
 

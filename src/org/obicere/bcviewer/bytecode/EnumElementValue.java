@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
@@ -28,7 +28,7 @@ public class EnumElementValue extends ElementValue {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(typeNameIndex));
 

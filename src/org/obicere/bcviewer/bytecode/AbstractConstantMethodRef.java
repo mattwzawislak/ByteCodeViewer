@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.JavaTypeSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
@@ -32,7 +32,7 @@ public abstract class AbstractConstantMethodRef extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder) {
+    public void modelValue(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String className = BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex()));
 

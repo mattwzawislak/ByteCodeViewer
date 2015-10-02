@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Modeler;
 
 /**
@@ -37,7 +37,7 @@ public abstract class BytecodeElement implements Modeler {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         // TODO remove
     }
 

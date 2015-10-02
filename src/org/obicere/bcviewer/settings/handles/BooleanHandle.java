@@ -10,7 +10,7 @@ public class BooleanHandle implements Handle<Boolean> {
     }
 
     @Override
-    public String encode(final Boolean value) {
-        return Boolean.toString(value);
+    public String encode(final Object value) {
+        return Boolean.toString((Boolean) value);
     }
 }

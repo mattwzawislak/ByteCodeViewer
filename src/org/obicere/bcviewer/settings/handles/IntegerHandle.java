@@ -15,7 +15,7 @@ public class IntegerHandle implements Handle<Integer> {
     }
 
     @Override
-    public String encode(final Integer value) {
-        return Integer.toString(value);
+    public String encode(final Object value) {
+        return Integer.toString((Integer) value);
     }
 }

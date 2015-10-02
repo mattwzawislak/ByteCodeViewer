@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -22,7 +22,7 @@ public abstract class StackMapFrame extends BytecodeElement {
     public abstract String getName();
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         final String name = getName();
         builder.add(name + " {");
 
@@ -39,11 +39,11 @@ public abstract class StackMapFrame extends BytecodeElement {
         builder.add("}");
     }
 
-    public void modelValue(final BytecodeDocumentBuilder builder) {
+    public void modelValue(final DocumentBuilder builder) {
 
     }
 
-    public void modelInfo(final BytecodeDocumentBuilder builder, final VerificationTypeInfo[] info) {
+    public void modelInfo(final DocumentBuilder builder, final VerificationTypeInfo[] info) {
 
         if (info.length > 0) {
             builder.indent();

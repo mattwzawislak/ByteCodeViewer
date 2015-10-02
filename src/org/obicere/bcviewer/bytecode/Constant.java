@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -26,13 +26,13 @@ public abstract class Constant extends BytecodeElement {
 
     public abstract String getName();
 
-    public abstract void modelValue(final BytecodeDocumentBuilder builder);
+    public abstract void modelValue(final DocumentBuilder builder);
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder){
+    public void model(final DocumentBuilder builder){
         final String type = getName();
         builder.addKeyword(getName());
-        builder.padTabbed(MAX_NAME_LENGTH, type.length());
+        builder.padTabbed(type.length(), MAX_NAME_LENGTH);
         builder.tab();
         modelValue(builder);
     }

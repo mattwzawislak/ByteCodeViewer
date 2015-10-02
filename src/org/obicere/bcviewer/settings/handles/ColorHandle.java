@@ -31,14 +31,15 @@ public class ColorHandle implements Handle<Color> {
     }
 
     @Override
-    public String encode(final Color value) {
+    public String encode(final Object value) {
+        final Color color = (Color) value;
         // 11 = length("rrr,ggg,bbb")
         final StringBuilder builder = new StringBuilder(11);
-        builder.append(value.getRed());
+        builder.append(color.getRed());
         builder.append(',');
-        builder.append(value.getGreen());
+        builder.append(color.getGreen());
         builder.append(',');
-        builder.append(value.getBlue());
+        builder.append(color.getBlue());
         return builder.toString();
     }
 }

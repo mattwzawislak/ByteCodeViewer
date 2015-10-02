@@ -15,7 +15,7 @@ public class LongHandle implements Handle<Long> {
     }
 
     @Override
-    public String encode(final Long value) {
-        return Long.toString(value);
+    public String encode(final Object value) {
+        return Long.toString((Long) value);
     }
 }

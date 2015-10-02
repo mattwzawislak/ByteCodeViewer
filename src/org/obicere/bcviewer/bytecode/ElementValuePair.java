@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -29,7 +29,7 @@ public class ElementValuePair extends BytecodeElement{
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder){
+    public void model(final DocumentBuilder builder){
         final ConstantPool constantPool = builder.getConstantPool();
         builder.add(constantPool.getAsString(elementNameIndex));
         builder.add(" = ");

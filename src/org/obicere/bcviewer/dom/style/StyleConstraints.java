@@ -1,4 +1,4 @@
-package org.obicere.bcviewer.dom;
+package org.obicere.bcviewer.dom.style;
 
 import java.util.Iterator;
 import java.util.LinkedList;

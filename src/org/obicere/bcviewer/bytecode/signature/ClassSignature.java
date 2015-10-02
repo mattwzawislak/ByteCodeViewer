@@ -5,7 +5,7 @@ import org.obicere.bcviewer.bytecode.SuperTypeTarget;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.bytecode.TypeParameterBoundTarget;
 import org.obicere.bcviewer.bytecode.TypeParameterTarget;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -131,11 +131,11 @@ public class ClassSignature extends AnnotationTarget {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         modelTypeParameters(builder);
     }
 
-    private void modelTypeParameters(final BytecodeDocumentBuilder builder) {
+    private void modelTypeParameters(final DocumentBuilder builder) {
         final TypeParameters parameters = typeParameters;
         final TypeParameter[] types = parameters.getTypeParameters();
         if (types.length == 0) {

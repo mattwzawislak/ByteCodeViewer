@@ -15,7 +15,7 @@ public class FloatHandle implements Handle<Float> {
     }
 
     @Override
-    public String encode(final Float value) {
-        return Float.toString(value);
+    public String encode(final Object value) {
+        return Float.toString((Float) value);
     }
 }

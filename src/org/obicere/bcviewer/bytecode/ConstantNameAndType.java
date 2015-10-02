@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -41,7 +41,7 @@ public class ConstantNameAndType extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder) {
+    public void modelValue(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String name = constantPool.getAsString(nameIndex);
 

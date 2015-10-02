@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.BytecodeElement;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -36,9 +36,9 @@ public abstract class Instruction extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         builder.addKeyword(mnemonic);
-        builder.padTabbed(MAX_NAME_LENGTH, mnemonic.length());
+        builder.padTabbed(mnemonic.length(), MAX_NAME_LENGTH);
     }
 
 }

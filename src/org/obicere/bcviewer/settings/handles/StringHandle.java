@@ -10,7 +10,7 @@ public class StringHandle implements Handle<String> {
     }
 
     @Override
-    public String encode(final String value) {
-        return value;
+    public String encode(final Object value) {
+        return (String) value;
     }
 }

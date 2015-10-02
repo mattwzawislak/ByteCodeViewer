@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.Set;
@@ -46,7 +46,7 @@ public class Field extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
@@ -57,11 +57,11 @@ public class Field extends BytecodeElement {
         modelDeclaration(builder);
     }
 
-    private void addSynthetic(final BytecodeDocumentBuilder builder) {
+    private void addSynthetic(final DocumentBuilder builder) {
         builder.addComment("Synthetic Field");
     }
 
-    private void modelAnnotations(final BytecodeDocumentBuilder builder) {
+    private void modelAnnotations(final DocumentBuilder builder) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
@@ -79,7 +79,7 @@ public class Field extends BytecodeElement {
         }
     }
 
-    private void modelType(final BytecodeDocumentBuilder builder, final ConstantPool constantPool) {
+    private void modelType(final DocumentBuilder builder, final ConstantPool constantPool) {
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
         final FieldSignature signature;
         if (signatures != null && !signatures.isEmpty()) {
@@ -105,7 +105,7 @@ public class Field extends BytecodeElement {
         signature.model(builder);
     }
 
-    private void modelDeclaration(final BytecodeDocumentBuilder builder) {
+    private void modelDeclaration(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String[] names = BytecodeUtils.getFieldAccessNames(accessFlags);
 

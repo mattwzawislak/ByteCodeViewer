@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.JavaTypeSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
@@ -32,7 +32,7 @@ public class BootstrapMethod extends BytecodeElement {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
 
         builder.addComment("Bootstrap Method:");
@@ -53,7 +53,7 @@ public class BootstrapMethod extends BytecodeElement {
         builder.add("}");
     }
 
-    public void modelDeclaration(final BytecodeDocumentBuilder builder) {
+    public void modelDeclaration(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final String bootstrap = constantPool.getAsString(bootstrapMethodRef);
         final int signatureBegin = bootstrap.indexOf('(');

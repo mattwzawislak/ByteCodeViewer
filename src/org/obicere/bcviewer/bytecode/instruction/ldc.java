@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -31,7 +31,7 @@ public class ldc extends Instruction {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.tab();
         builder.getConstantPool().get(index).modelValue(builder);

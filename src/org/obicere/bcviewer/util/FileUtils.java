@@ -4,7 +4,16 @@ import org.obicere.utility.io.ArchiveFileSource;
 import org.obicere.utility.io.BasicFileSource;
 import org.obicere.utility.io.FileSource;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -96,5 +105,43 @@ public class FileUtils {
             final String parent = getParentName(path);
             return new BasicFileSource(new File(parent, otherName));
         }
+    }
+
+    public static void writeProperties(final Map<String, String> properties, final File file) throws IOException {
+        final PrintWriter writer = new PrintWriter(new FileWriter(file));
+
+        for (final Map.Entry<String, String> entry : properties.entrySet()) {
+            final String result = entry.getKey() + "=" + entry.getValue();
+            writer.println(result);
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    public static Map<String, String> readProperties(final File file) throws IOException {
+        final Map<String, String> properties = new LinkedHashMap<>();
+        final BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        String next;
+        while ((next = reader.readLine()) != null) {
+
+            if (next.startsWith("#")) {
+                continue;
+            }
+
+            final int equalIndex = next.indexOf('=');
+            if (equalIndex <= 0) {
+                Logger.getGlobal().log(Level.WARNING, "Read invalid property line: \"" + next + "\"");
+                continue;
+            }
+
+            final String leftHandSide = next.substring(0, equalIndex);
+            final String rightHandSide = next.substring(equalIndex + 1);
+
+            properties.put(leftHandSide, rightHandSide);
+        }
+
+        reader.close();
+        return properties;
     }
 }

@@ -15,7 +15,7 @@ public class DoubleHandle implements Handle<Double> {
     }
 
     @Override
-    public String encode(final Double value) {
-        return Double.toString(value);
+    public String encode(final Object value) {
+        return Double.toString((Double) value);
     }
 }

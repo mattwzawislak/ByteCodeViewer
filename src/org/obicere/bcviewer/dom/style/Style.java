@@ -1,4 +1,4 @@
-package org.obicere.bcviewer.dom;
+package org.obicere.bcviewer.dom.style;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,6 +10,9 @@ public class Style {
     private Font font;
 
     private Color color;
+
+    public Style() {
+    }
 
     public Style(final Font font, final Color color) {
         this.font = font;

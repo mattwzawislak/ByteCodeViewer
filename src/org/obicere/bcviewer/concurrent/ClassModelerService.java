@@ -4,7 +4,7 @@ import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,7 +26,7 @@ public class ClassModelerService implements DomainAccess {
         this.domain = domain;
     }
 
-    public Future<List<Block>> postRequest(final ClassCallback callback, final BytecodeDocumentBuilder builder, final ClassInformation information) {
+    public Future<List<Block>> postRequest(final ClassCallback callback, final DocumentBuilder builder, final ClassInformation information) {
         final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
 
         return classModelerExecutorService.submit(request);
@@ -39,11 +39,11 @@ public class ClassModelerService implements DomainAccess {
 
     private class ClassModelRequest implements Callable<List<Block>> {
 
-        private final ClassCallback           callback;
-        private final BytecodeDocumentBuilder builder;
-        private final ClassInformation        information;
+        private final ClassCallback    callback;
+        private final DocumentBuilder  builder;
+        private final ClassInformation information;
 
-        public ClassModelRequest(final ClassCallback callback, final BytecodeDocumentBuilder builder, final ClassInformation information) {
+        public ClassModelRequest(final ClassCallback callback, final DocumentBuilder builder, final ClassInformation information) {
             this.callback = callback;
             this.builder = builder;
             this.information = information;
@@ -52,17 +52,13 @@ public class ClassModelerService implements DomainAccess {
         @Override
         public List<Block> call() throws Exception {
             try {
-                builder.addCallback(callback);
-
-                final List<Block> blocks = builder.build(information);
+                final List<Block> blocks = builder.build(information, callback);
 
                 callback.notifyCompletion(blocks);
                 return blocks;
             } catch (final Throwable throwable) {
                 callback.notifyThrowable(throwable);
                 return null;
-            } finally {
-                builder.removeCallback(callback);
             }
         }
     }

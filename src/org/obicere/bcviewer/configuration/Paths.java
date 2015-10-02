@@ -30,12 +30,13 @@ public class Paths {
     private final String RESOURCES_HOME  = "resource" + File.separator;
     private final String RESOURCES_ICONS = RESOURCES_HOME + "icons" + File.separator;
 
-    private final String APP_DATA        = getAppData();
-    private final String FOLDER_HOME     = APP_DATA + File.separator + "BytecodeViewer";
-    private final String FOLDER_SETTINGS = FOLDER_HOME + File.separator + "settings";
+    private final String APP_DATA    = getAppData() + File.separator;
+    private final String FOLDER_HOME = APP_DATA + "BytecodeViewer" + File.separator;
+
+    private final String SETTINGS_FILE = FOLDER_HOME + "settings.txt";
 
     // List of system folders to create and the order in which they should be created.
-    private final String[] PATHS = new String[]{APP_DATA, FOLDER_HOME, FOLDER_SETTINGS};
+    private final String[] PATHS = new String[]{APP_DATA, FOLDER_HOME};
 
     private final Domain domain;
 
@@ -86,12 +87,16 @@ public class Paths {
         return OS.getOS() == OS.WINDOWS ? System.getenv("APPDATA") : System.getProperty("user.home");
     }
 
-    public String getResourceDirectory(){
+    public String getResourceDirectory() {
         return RESOURCES_HOME;
     }
 
-    public String getIconsDirectory(){
+    public String getIconsDirectory() {
         return RESOURCES_ICONS;
+    }
+
+    public String getSettingsFile() {
+        return SETTINGS_FILE;
     }
 
 }

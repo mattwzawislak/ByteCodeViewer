@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
 
 /**
@@ -52,7 +52,7 @@ public class ConstantMethodHandle extends Constant {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder) {
+    public void modelValue(final DocumentBuilder builder) {
         builder.addKeyword(HANDLES[referenceKind]);
         builder.tab();
         builder.getConstantPool().get(referenceIndex).modelValue(builder);

@@ -5,7 +5,7 @@ import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
 
@@ -27,13 +27,9 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     private final JDocumentArea documentArea;
 
-    //private final ByteTextPane byteTextPane;
-
     private final JSplitPane split;
 
-    //private final JScrollPane bytesScroll;
-
-    private final BytecodeDocumentBuilder builder;
+    private final DocumentBuilder builder;
 
     private volatile ClassInformation classInformation;
 
@@ -46,30 +42,22 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     public SwingEditorPanel(final Domain domain) {
         super(new BorderLayout(10, 10));
         this.domain = domain;
-        this.builder = new BytecodeDocumentBuilder(domain);
+        this.builder = new DocumentBuilder(domain);
 
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         this.documentArea = new JDocumentArea();
-
-        //this.byteTextPane = new ByteTextPane();
-        //this.bytesScroll = new JScrollPane(byteTextPane);
-        //bytesScroll.setName("bytesScroll");
-        //bytesScroll.getViewport().setName("view");
 
         final JScrollPane editorScroll = new JScrollPane(documentArea);
         editorScroll.setName("editorScroll");
         editorScroll.getViewport().setName("view");
 
         documentArea.setName("document");
-        //byteTextPane.setName("bytes");
 
         split.setLeftComponent(editorScroll);
-        //split.setRightComponent(bytesScroll);
         split.setName("split");
         split.setResizeWeight(0.5);
 
         add(status);
-        //add(split);
     }
 
     @Override
@@ -118,10 +106,8 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     @Override
     public void update(final String update) {
-        //SwingUtilities.invokeLater(() -> {
         status.setText(update);
         repaint();
-        //});
     }
 
     @Override
@@ -135,7 +121,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     @Override
-    public BytecodeDocumentBuilder getBuilder() {
+    public DocumentBuilder getBuilder() {
         return builder;
     }
 

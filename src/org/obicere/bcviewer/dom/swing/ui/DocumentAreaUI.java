@@ -1,9 +1,10 @@
 package org.obicere.bcviewer.dom.swing.ui;
 
+import org.obicere.bcviewer.Boot;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.Line;
-import org.obicere.bcviewer.dom.Style;
-import org.obicere.bcviewer.dom.StyleConstraints;
+import org.obicere.bcviewer.dom.style.Style;
+import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.swing.Caret;
 import org.obicere.bcviewer.dom.swing.JDocumentArea;
@@ -59,7 +60,10 @@ public class DocumentAreaUI extends ComponentUI {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
         area.setFocusable(true);
-        area.setFont(new QuickWidthFont("Courier new", Font.PLAIN, 12));
+
+        final Font font = Boot.getGlobalDomain().getSettingsController().getSettings().getFont("editor.font");
+        final QuickWidthFont quickWidthFont = new QuickWidthFont(font.getName(), Font.PLAIN, font.getSize());
+        area.setFont(quickWidthFont);
 
         installMouse(area);
         installKeys(area);

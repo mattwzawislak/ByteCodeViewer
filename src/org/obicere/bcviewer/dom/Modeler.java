@@ -5,6 +5,6 @@ package org.obicere.bcviewer.dom;
  */
 public interface Modeler {
 
-    public void model(final BytecodeDocumentBuilder builder);
+    public void model(final DocumentBuilder builder);
 
 }

@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.dom;
 
+import org.obicere.bcviewer.dom.style.StyleConstraints;
+
 /**
  */
 public class Line {

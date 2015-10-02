@@ -9,7 +9,7 @@ import org.obicere.bcviewer.bytecode.ThrowsTarget;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.bytecode.TypeParameterBoundTarget;
 import org.obicere.bcviewer.bytecode.TypeParameterTarget;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.Arrays;
@@ -185,7 +185,7 @@ public class MethodSignature extends AnnotationTarget {
         throwsSignatures[throwsTarget.getThrowsTypeIndex()].walk(annotation, path);
     }
 
-    public void modelTypeParameters(final BytecodeDocumentBuilder builder) {
+    public void modelTypeParameters(final DocumentBuilder builder) {
         final TypeParameter[] types = typeParameters.getTypeParameters();
         if (types.length == 0) {
             return;
@@ -204,11 +204,11 @@ public class MethodSignature extends AnnotationTarget {
         builder.add("> ");
     }
 
-    public void modelReturnType(final BytecodeDocumentBuilder builder) {
+    public void modelReturnType(final DocumentBuilder builder) {
         result.model(builder);
     }
 
-    public void modelParameters(final BytecodeDocumentBuilder builder, final Parameter[] methodParameters) {
+    public void modelParameters(final DocumentBuilder builder, final Parameter[] methodParameters) {
         builder.add("(");
 
         final ConstantPool constantPool = builder.getConstantPool();
@@ -231,7 +231,7 @@ public class MethodSignature extends AnnotationTarget {
         builder.add(")");
     }
 
-    public void modelParameters(final BytecodeDocumentBuilder builder) {
+    public void modelParameters(final DocumentBuilder builder) {
         builder.add("(");
 
         for (int i = 0; i < parameters.length; i++) {
@@ -245,7 +245,7 @@ public class MethodSignature extends AnnotationTarget {
         builder.add(")");
     }
 
-    public boolean modelThrowsSignatures(final BytecodeDocumentBuilder builder) {
+    public boolean modelThrowsSignatures(final DocumentBuilder builder) {
         boolean first = true;
         for (final ThrowsSignature signature : throwsSignatures) {
             if (first) {

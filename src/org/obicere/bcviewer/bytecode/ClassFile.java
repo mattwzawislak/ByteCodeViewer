@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.ClassSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.Set;
@@ -104,7 +104,7 @@ public class ClassFile extends BytecodeElement {
     // attribute
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
 
         builder.update("Modelling class: " + getName());
 
@@ -144,12 +144,12 @@ public class ClassFile extends BytecodeElement {
         builder.closeBlock();
     }
 
-    private void addSynthetic(final BytecodeDocumentBuilder builder) {
+    private void addSynthetic(final DocumentBuilder builder) {
         builder.addComment("Synthetic Class");
         builder.newLine();
     }
 
-    private void modelAnnotations(final BytecodeDocumentBuilder builder) {
+    private void modelAnnotations(final DocumentBuilder builder) {
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
@@ -167,7 +167,7 @@ public class ClassFile extends BytecodeElement {
         }
     }
 
-    private void modelVersion(final BytecodeDocumentBuilder builder) {
+    private void modelVersion(final DocumentBuilder builder) {
         builder.add("Major: ");
         builder.add(majorVersion);
         builder.add(" Minor: ");
@@ -175,7 +175,7 @@ public class ClassFile extends BytecodeElement {
         builder.newLine();
     }
 
-    private void modelClassDeclaration(final BytecodeDocumentBuilder builder, final int accessFlags) {
+    private void modelClassDeclaration(final DocumentBuilder builder, final int accessFlags) {
 
         final String[] names = BytecodeUtils.getClassAccessNames(accessFlags);
 
@@ -221,7 +221,7 @@ public class ClassFile extends BytecodeElement {
         builder.add(" {");
     }
 
-    private void modelFields(final BytecodeDocumentBuilder builder) {
+    private void modelFields(final DocumentBuilder builder) {
         final Field[] fields = getFields();
         if (fields.length == 0) {
             return;
@@ -238,7 +238,7 @@ public class ClassFile extends BytecodeElement {
         }
     }
 
-    private void modelMethods(final BytecodeDocumentBuilder builder) {
+    private void modelMethods(final DocumentBuilder builder) {
         final Method[] methods = getMethods();
         if (methods.length == 0) {
             return;
@@ -254,7 +254,7 @@ public class ClassFile extends BytecodeElement {
         }
     }
 
-    private void modelInnerClasses(final BytecodeDocumentBuilder builder) {
+    private void modelInnerClasses(final DocumentBuilder builder) {
         final Set<InnerClassesAttribute> attributes = attributeSet.getAttributes(InnerClassesAttribute.class);
         if (attributes == null) {
             return;
@@ -279,7 +279,7 @@ public class ClassFile extends BytecodeElement {
         }
     }
 
-    private void modelBootstrapMethods(final BytecodeDocumentBuilder builder) {
+    private void modelBootstrapMethods(final DocumentBuilder builder) {
 
         final BootstrapMethodsAttribute attribute = attributeSet.getAttribute(BootstrapMethodsAttribute.class);
 

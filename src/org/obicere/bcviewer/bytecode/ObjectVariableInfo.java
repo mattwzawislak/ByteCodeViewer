@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
@@ -16,7 +16,7 @@ public class ObjectVariableInfo extends VerificationTypeInfo {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
 
         final String signature = builder.getConstantPool().getAsString(index);
         final FieldSignature fieldSignature = SignatureAttribute.parseField(signature);

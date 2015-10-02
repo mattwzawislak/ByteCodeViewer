@@ -1,6 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -36,7 +36,7 @@ public class SameLocals1StackItemFrame extends StackMapFrame {
     }
 
     @Override
-    public void modelValue(final BytecodeDocumentBuilder builder) {
+    public void modelValue(final DocumentBuilder builder) {
         builder.newLine();
         builder.add("Stack:");
         modelInfo(builder, new VerificationTypeInfo[]{stack});

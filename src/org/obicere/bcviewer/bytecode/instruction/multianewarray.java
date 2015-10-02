@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
 import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Modeler;
 
 /**
@@ -50,7 +50,7 @@ public class multianewarray extends Instruction implements Modeler {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.newLine();
         builder.tab();

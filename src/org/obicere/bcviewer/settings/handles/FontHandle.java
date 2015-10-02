@@ -26,7 +26,8 @@ public class FontHandle implements Handle<Font> {
     }
 
     @Override
-    public String encode(final Font value) {
-        return value.getName() + "," + value.getSize();
+    public String encode(final Object value) {
+        final Font font = (Font) value;
+        return font.getName() + "," + font.getSize();
     }
 }

@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode.signature;
 import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -107,7 +107,7 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder);
         }
@@ -116,14 +116,14 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         modelSuffixes(builder);
     }
 
-    private void modelPackage(final BytecodeDocumentBuilder builder) {
+    private void modelPackage(final DocumentBuilder builder) {
         final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
         for (final String identifier : packageIdentifiers) {
             builder.add(identifier + ".");
         }
     }
 
-    private void modelSignature(final BytecodeDocumentBuilder builder) {
+    private void modelSignature(final DocumentBuilder builder) {
 
         builder.add(simpleClassTypeSignature.getIdentifier());
 
@@ -131,7 +131,7 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         modelTypeArguments(builder, arguments);
     }
 
-    private void modelSuffixes(final BytecodeDocumentBuilder builder) {
+    private void modelSuffixes(final DocumentBuilder builder) {
         for (final ClassTypeSignatureSuffix suffix : classTypeSignatureSuffix) {
             final SimpleClassTypeSignature signature = suffix.getSimpleClassTypeSignature();
 
@@ -142,7 +142,7 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
         }
     }
 
-    private void modelTypeArguments(final BytecodeDocumentBuilder builder, final TypeArguments typeArguments) {
+    private void modelTypeArguments(final DocumentBuilder builder, final TypeArguments typeArguments) {
         final TypeArgument[] types = typeArguments.getTypeArguments();
         if (types.length == 0) {
             return;

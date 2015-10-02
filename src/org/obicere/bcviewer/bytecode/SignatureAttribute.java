@@ -4,7 +4,7 @@ import org.obicere.bcviewer.bytecode.signature.ClassSignature;
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.bytecode.signature.QueueString;
-import org.obicere.bcviewer.dom.BytecodeDocumentBuilder;
+import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
@@ -23,7 +23,7 @@ public class SignatureAttribute extends Attribute {
     }
 
     @Override
-    public void model(final BytecodeDocumentBuilder builder) {
+    public void model(final DocumentBuilder builder) {
         throw new UnsupportedOperationException("signatures cannot be modeled properly. Instead call the parseXX methods.");
     }
 
