@@ -1,6 +1,5 @@
 package org.obicere.bcviewer.settings.application;
 
-import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.style.Style;
 import org.obicere.bcviewer.dom.style.StyleConstants;
@@ -18,14 +17,18 @@ import java.beans.PropertyChangeListener;
  */
 public class EditorGroup implements Group {
 
-    private static final ColorSetting PLAIN_COLOR_SETTING      = new ColorSetting("plainColor", "Plain text color for editor", new Color(16, 16, 16));
-    private static final ColorSetting ANNOTATION_COLOR_SETTING = new ColorSetting("annotationColor", "Annotation text color for editor", new Color(167, 185, 44));
-    private static final ColorSetting COMMENT_COLOR_SETTING    = new ColorSetting("commentColor", "Comment text color for editor", new Color(188, 188, 188));
-    private static final ColorSetting KEYWORD_COLOR_SETTING    = new ColorSetting("keywordColor", "Keyword text color for editor", new Color(227, 80, 0));
-    private static final ColorSetting NUMBER_COLOR_SETTING     = new ColorSetting("numberColor", "Number literals text color for editor", new Color(86, 151, 250));
-    private static final ColorSetting STRING_COLOR_SETTING     = new ColorSetting("stringColor", "String literals text color for editor", new Color(0, 128, 52));
-    private static final ColorSetting TYPE_COLOR_SETTING       = new ColorSetting("typeColor", "Generic type text color for editor", new Color(86, 151, 250));
-    private static final FontSetting  FONT_SETTING             = new FontSetting("font", "Font for the editor", new QuickWidthFont("Courier new", Font.PLAIN, 14));
+    private static final String NAME = "editor";
+
+    private static final String SUFFIX = NAME + ".";
+
+    private static final ColorSetting PLAIN_COLOR_SETTING      = new ColorSetting(SUFFIX + "plainColor", "Plain text color for editor", new Color(16, 16, 16));
+    private static final ColorSetting ANNOTATION_COLOR_SETTING = new ColorSetting(SUFFIX + "annotationColor", "Annotation text color for editor", new Color(167, 185, 44));
+    private static final ColorSetting COMMENT_COLOR_SETTING    = new ColorSetting(SUFFIX + "commentColor", "Comment text color for editor", new Color(188, 188, 188));
+    private static final ColorSetting KEYWORD_COLOR_SETTING    = new ColorSetting(SUFFIX + "keywordColor", "Keyword text color for editor", new Color(227, 80, 0));
+    private static final ColorSetting NUMBER_COLOR_SETTING     = new ColorSetting(SUFFIX + "numberColor", "Number literals text color for editor", new Color(86, 151, 250));
+    private static final ColorSetting STRING_COLOR_SETTING     = new ColorSetting(SUFFIX + "stringColor", "String literals text color for editor", new Color(0, 128, 52));
+    private static final ColorSetting TYPE_COLOR_SETTING       = new ColorSetting(SUFFIX + "typeColor", "Generic type text color for editor", new Color(86, 151, 250));
+    private static final FontSetting  FONT_SETTING             = new FontSetting(SUFFIX + "font", "Font for the editor", new QuickWidthFont("Courier new", Font.PLAIN, 14));
 
     private static final Setting<?>[] SETTINGS = new Setting[]{
             PLAIN_COLOR_SETTING,
@@ -39,31 +42,33 @@ public class EditorGroup implements Group {
     };
 
     public EditorGroup() {
-        final String suffix = getGroupName() + ".";
-        setColorPropertyListener(suffix, PLAIN_COLOR_SETTING, StyleConstants.PLAIN);
-        setColorPropertyListener(suffix, ANNOTATION_COLOR_SETTING, StyleConstants.ANNOTATION);
-        setColorPropertyListener(suffix, COMMENT_COLOR_SETTING, StyleConstants.COMMENT);
-        setColorPropertyListener(suffix, KEYWORD_COLOR_SETTING, StyleConstants.KEYWORD);
-        setColorPropertyListener(suffix, NUMBER_COLOR_SETTING, StyleConstants.NUMBER);
-        setColorPropertyListener(suffix, STRING_COLOR_SETTING, StyleConstants.STRING);
-        setColorPropertyListener(suffix, TYPE_COLOR_SETTING, StyleConstants.TYPE);
+        setColorPropertyListener(PLAIN_COLOR_SETTING, StyleConstants.PLAIN);
+        setColorPropertyListener(ANNOTATION_COLOR_SETTING, StyleConstants.ANNOTATION);
+        setColorPropertyListener(COMMENT_COLOR_SETTING, StyleConstants.COMMENT);
+        setColorPropertyListener(KEYWORD_COLOR_SETTING, StyleConstants.KEYWORD);
+        setColorPropertyListener(NUMBER_COLOR_SETTING, StyleConstants.NUMBER);
+        setColorPropertyListener(STRING_COLOR_SETTING, StyleConstants.STRING);
+        setColorPropertyListener(TYPE_COLOR_SETTING, StyleConstants.TYPE);
 
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.PLAIN);
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.ANNOTATION);
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.COMMENT);
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.KEYWORD);
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.NUMBER);
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.STRING);
-        setFontPropertyListener(suffix, FONT_SETTING, StyleConstants.TYPE);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.PLAIN);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.ANNOTATION);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.COMMENT);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.KEYWORD);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.NUMBER);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.STRING);
+        setFontPropertyListener(FONT_SETTING, StyleConstants.TYPE);
 
         // we then need to set all the styles
         for (final Setting<?> setting : SETTINGS) {
-            setting.getPropertyChangeListener().propertyChange(new PropertyChangeEvent(setting, suffix + setting.getName(), null, setting.getValue()));
+            final PropertyChangeListener[] listeners = setting.getPropertyChangeListeners();
+            for (final PropertyChangeListener listener : listeners) {
+                listener.propertyChange(new PropertyChangeEvent(setting, setting.getName(), null, setting.getDefaultValue()));
+            }
         }
     }
 
-    private void setColorPropertyListener(final String suffix, final ColorSetting setting, final Style style) {
-        final PropertyChangeListener listener = buildColorListener(suffix + setting.getName(), style);
+    private void setColorPropertyListener(final ColorSetting setting, final Style style) {
+        final PropertyChangeListener listener = buildColorListener(setting.getName(), style);
         setting.addPropertyChangeListener(listener);
     }
 
@@ -75,8 +80,8 @@ public class EditorGroup implements Group {
         };
     }
 
-    private void setFontPropertyListener(final String suffix, final FontSetting setting, final Style style) {
-        final PropertyChangeListener listener = buildFontListener(suffix + setting.getName(), style);
+    private void setFontPropertyListener(final FontSetting setting, final Style style) {
+        final PropertyChangeListener listener = buildFontListener(setting.getName(), style);
         setting.addPropertyChangeListener(listener);
     }
 
@@ -90,7 +95,7 @@ public class EditorGroup implements Group {
 
     @Override
     public String getGroupName() {
-        return "editor";
+        return NAME;
     }
 
     @Override

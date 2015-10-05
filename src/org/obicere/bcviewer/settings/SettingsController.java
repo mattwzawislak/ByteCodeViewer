@@ -22,8 +22,6 @@ import org.obicere.bcviewer.settings.target.Setting;
 import org.obicere.bcviewer.settings.target.StringSetting;
 import org.obicere.bcviewer.util.FileUtils;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -104,23 +102,15 @@ public class SettingsController implements DomainAccess {
 
     private void safelyLoadSettings() {
 
-        final HashMap<String, Setting<?>> defaultsMap = loadSettingsFrom(groups);
-        final HashMap<String, Object> settings = loadSetSettings(groups);
+        final HashMap<String, Setting<?>> settings = loadSettingsFrom(groups);
 
-        final Settings newSettings = new Settings(defaultsMap, settings);
-        final Settings oldSettings = loadedSettings;
+        loadSetSettings(settings);
 
-        if (oldSettings != null) {
-            // transfer ownership of the property change listener
-            newSettings.addPropertyChangeListener(oldSettings.getPropertyChangeListener());
-        }
-
-        this.loadedSettings = newSettings;
+        this.loadedSettings = new Settings(settings);
     }
 
     private void safelySaveSettings() {
         final HashMap<String, Setting<?>> settings = loadedSettings.getSettings();
-        final HashMap<String, Object> current = loadedSettings.getCurrentMap();
 
         final LinkedHashMap<String, String> output = new LinkedHashMap<>();
 
@@ -128,21 +118,18 @@ public class SettingsController implements DomainAccess {
         // this allows the settings to remain sorted properly
         for (final Group group : groups) {
             for (final Setting<?> setting : group.getSettings()) {
-                final String key = group.getGroupName() + "." + setting.getName();
+                final String key = setting.getName();
 
-                final Object defaultValue = settings.get(key).getValue();
-                final Object setValue = current.get(key);
-
-                final Handle<?> handler = handleMap.get(setting.getClass());
+                final Object setValue = setting.getValue();
 
                 if (setValue == null) {
                     continue;
                 }
-                if (!setValue.equals(defaultValue)) {
-                    final String print = handler.encode(setValue);
-                    if (print != null) {
-                        output.put(key, print);
-                    }
+
+                final Handle<?> handler = handleMap.get(setting.getClass());
+                final String print = handler.encode(setValue);
+                if (print != null) {
+                    output.put(key, print);
                 }
             }
         }
@@ -233,7 +220,7 @@ public class SettingsController implements DomainAccess {
 
             for (final Setting<?> setting : settings) {
 
-                final String name = group.getGroupName() + "." + setting.getName();
+                final String name = setting.getName();
 
                 defaultsMap.put(name, setting);
             }
@@ -241,7 +228,7 @@ public class SettingsController implements DomainAccess {
         return defaultsMap;
     }
 
-    private HashMap<String, Object> loadSetSettings(final Set<Group> groups) {
+    private void loadSetSettings(final HashMap<String, Setting<?>> settings) {
 
         final Map<String, String> properties;
         try {
@@ -253,37 +240,30 @@ public class SettingsController implements DomainAccess {
                 if (!settingsFile.createNewFile()) {
                     Logger.getGlobal().log(Level.WARNING, "Failed to create settings file: " + settingsFile);
                 }
-                // return an empty hash map, as this technically didn't
-                // blow up in a ball of fire and smoke
-                return new HashMap<>();
+                return;
             }
 
         } catch (final IOException e) {
             Logger.getGlobal().log(Level.WARNING, "Failed to read settings.");
             Logger.getGlobal().log(Level.WARNING, e.getMessage(), e);
-            return new HashMap<>();
+            return;
         }
 
-        final HashMap<String, Object> settings = new HashMap<>();
-
-        for (final Group group : groups) {
-            for (final Setting<?> setting : group.getSettings()) {
-                final String key = group.getGroupName() + "." + setting.getName();
-                final String get = properties.get(key);
-                if (get == null) {
-                    continue;
-                }
-                final Object decoded = handleMap.get(setting.getClass()).decode(get);
-                if (decoded != null) {
-                    settings.put(key, decoded);
-                    final PropertyChangeListener listener = setting.getPropertyChangeListener();
-                    if (listener != null) {
-                        listener.propertyChange(new PropertyChangeEvent(setting, key, setting.getValue(), decoded));
-                    }
-                }
+        for (final Map.Entry<String, String> property : properties.entrySet()) {
+            final Setting<?> setting = settings.get(property.getKey());
+            if (setting == null) {
+                continue;
+            }
+            final Handle<?> handle = handleMap.get(setting.getClass());
+            if (handle == null) {
+                continue;
+            }
+            final String value = property.getValue();
+            final Object decoded = handle.decode(value);
+            if (decoded != null) {
+                setting.setValue(decoded);
             }
         }
-        return settings;
     }
 
     @Override

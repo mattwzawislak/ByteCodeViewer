@@ -15,7 +15,7 @@ public class ActionSetting extends Setting<Object> {
     }
 
     @Override
-    public Object getValue() {
+    public Object getDefaultValue() {
         return null;
     }
 

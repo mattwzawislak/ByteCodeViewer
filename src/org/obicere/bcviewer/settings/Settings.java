@@ -4,10 +4,8 @@ import org.obicere.bcviewer.settings.target.Setting;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
 
 /**
  */
@@ -15,54 +13,14 @@ public class Settings {
 
     private final HashMap<String, Setting<?>> settings;
 
-    private final HashMap<String, Object> currentMap;
+    private final HashMap<Setting<?>, Change> changeList = new HashMap<>();
 
-    private final LinkedList<Change> changeList = new LinkedList<>();
-
-    private PropertyChangeListener listener;
-
-    public Settings(final HashMap<String, Setting<?>> settings, final HashMap<String, Object> currentMap) {
+    public Settings(final HashMap<String, Setting<?>> settings) {
         this.settings = settings;
-        this.currentMap = currentMap;
     }
 
     HashMap<String, Setting<?>> getSettings() {
         return settings;
-    }
-
-    HashMap<String, Object> getCurrentMap() {
-        return currentMap;
-    }
-
-    public void addPropertyChangeListener(final PropertyChangeListener listener) {
-        if (listener == null) {
-            return;
-        }
-        this.listener = listener;
-    }
-
-    public PropertyChangeListener getPropertyChangeListener() {
-        return listener;
-    }
-
-    public void removePropertyChangeListener() {
-        listener = null;
-    }
-
-    private void firePropertyChangeEvent(final String key, final Object oldValue, final Object newValue) {
-        if (listener == null) {
-            return;
-        }
-        final Setting<?> setting = settings.get(key);
-        if (setting == null) {
-            return;
-        }
-        final PropertyChangeEvent event = new PropertyChangeEvent(setting, key, oldValue, newValue);
-        final PropertyChangeListener settingListener = setting.getPropertyChangeListener();
-        if (settingListener != null) {
-            settingListener.propertyChange(event);
-        }
-        listener.propertyChange(event);
     }
 
     public boolean hasChanges() {
@@ -74,25 +32,26 @@ public class Settings {
     }
 
     public void applyChanged() {
-        while (!changeList.isEmpty()) {
-            changeList.poll().apply();
+        for (final Change change : changeList.values()) {
+            change.apply();
         }
+        changeList.clear();
     }
 
     public boolean isPresent(final String name) {
-        return currentMap.get(name) != null || settings.get(name) != null;
+        return settings.get(name) != null;
     }
 
     public Object get(final String name) {
-        final Object value = currentMap.get(name);
-        if (value == null) {
-            final Setting<?> setting = settings.get(name);
-            if (setting == null) {
-                return null;
+        final Setting<?> setting = settings.get(name);
+        if (setting != null) {
+            final Object value = setting.getValue();
+            if (value != null) {
+                return value;
             }
-            return setting.getValue();
+            return setting.getDefaultValue();
         }
-        return value;
+        return null;
     }
 
     public Boolean getBoolean(final String name) {
@@ -115,17 +74,18 @@ public class Settings {
         return (Float) get(name);
     }
 
-    public Color getColor(final String name){
+    public Color getColor(final String name) {
         return (Color) get(name);
     }
 
-    public Font getFont(final String name){
+    public Font getFont(final String name) {
         return (Font) get(name);
     }
 
     public void set(final String name, final Object value) {
         if (isPresent(name)) {
-            changeList.add(new Change(name, value));
+            final Setting<?> setting = settings.get(name);
+            changeList.put(setting, new Change(name, value));
         }
     }
 
@@ -134,21 +94,19 @@ public class Settings {
         if (setting == null) {
             return;
         }
-        final Object defaultValue = setting.getValue();
+        final Object defaultValue = setting.getDefaultValue();
         if (defaultValue != null) {
             // remove the entry instead of setting it null
-            changeList.add(new Change(name, defaultValue));
+            changeList.put(setting, new Change(name, null));
         }
     }
 
     public void setAllToDefault() {
-        for (final String key : currentMap.keySet()) {
-            final Setting<?> setting = settings.get(key);
-            if (setting == null) {
-                continue;
-            }
-            final Object defaultValue = setting.getValue();
-            changeList.add(new Change(key, defaultValue));
+        for (final Map.Entry<String, Setting<?>> entry : settings.entrySet()) {
+            final String key = entry.getKey();
+            final Setting<?> setting = entry.getValue();
+            final Object defaultValue = setting.getDefaultValue();
+            changeList.put(setting, new Change(key, defaultValue));
         }
     }
 
@@ -163,8 +121,8 @@ public class Settings {
         }
 
         public void apply() {
-            final Object old = currentMap.put(key, value);
-            firePropertyChangeEvent(key, old, value);
+            final Setting<?> get = settings.get(key);
+            get.setValue(value);
         }
     }
 }

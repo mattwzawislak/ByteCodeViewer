@@ -63,6 +63,9 @@ public abstract class AbstractConstantMethodRef extends Constant {
         }
 
         final JavaTypeSignature[] types = methodSignature.getParameters();
+        // if there are less than 4 types, we can just inline and it
+        // puts it all on one line and looks a bit better I think
+        // TODO: toggleable
         final boolean inline = types.length < 4;
 
         builder.add("(");
@@ -70,11 +73,16 @@ public abstract class AbstractConstantMethodRef extends Constant {
             builder.indent();
         }
 
+        boolean first = true;
         for (final JavaTypeSignature type : types) {
+            if (!first) {
+                builder.comma();
+            }
             if (!inline) {
                 builder.newLine();
             }
             type.model(builder);
+            first = false;
         }
 
         // close the parameters
