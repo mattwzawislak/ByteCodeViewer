@@ -10,15 +10,22 @@ public abstract class Setting<T> {
 
     private final String name;
 
+    private final String descriptor;
+
     private T value;
 
-    public Setting(final String name, final T value) {
+    public Setting(final String name, final String descriptor, final T value) {
         this.name = name;
+        this.descriptor = descriptor;
         this.value = value;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDescriptor() {
+        return descriptor;
     }
 
     public T getValue() {
