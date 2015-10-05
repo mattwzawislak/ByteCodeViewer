@@ -17,9 +17,9 @@ import java.beans.PropertyChangeListener;
  */
 public class EditorGroup implements Group {
 
-    private static final String NAME = "editor";
+    private static final String NAME = "Editor Settings";
 
-    private static final String SUFFIX = NAME + ".";
+    private static final String SUFFIX = "editor.";
 
     private static final ColorSetting PLAIN_COLOR_SETTING      = new ColorSetting(SUFFIX + "plainColor", "Plain text color for editor", new Color(16, 16, 16));
     private static final ColorSetting ANNOTATION_COLOR_SETTING = new ColorSetting(SUFFIX + "annotationColor", "Annotation text color for editor", new Color(167, 185, 44));

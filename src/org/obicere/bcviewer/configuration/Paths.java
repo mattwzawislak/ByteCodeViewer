@@ -34,7 +34,7 @@ public class Paths {
     private final String FOLDER_HOME = APP_DATA + "BytecodeViewer" + File.separator;
     private final String PLUGINS     = FOLDER_HOME + "plugins" + File.separator;
 
-    private final String SETTINGS_FILE           = FOLDER_HOME + "settings.txt";
+    private final String SETTINGS_FILE           = FOLDER_HOME + "settings.ini";
     private final String PLUGINS_SETTINGS_GROUPS = PLUGINS + "groups.ini";
 
     // List of system folders to create and the order in which they should be created.
