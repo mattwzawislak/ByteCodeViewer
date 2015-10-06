@@ -73,6 +73,10 @@ public class SettingsController implements DomainAccess {
         handleMap.put(settingClass, handle);
     }
 
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
     public Settings getSettings() {
         try {
             readWriteLock.lock();
