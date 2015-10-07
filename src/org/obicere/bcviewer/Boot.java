@@ -66,7 +66,6 @@ public class Boot {
 
         setUpLogger();
         domain = new Domain();
-        domain.initialize();
     }
 
     private static void setUpLogger() {

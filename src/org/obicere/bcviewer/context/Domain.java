@@ -32,7 +32,7 @@ public final class Domain {
     private Paths              paths;
     private SettingsController settings;
 
-    public void initialize() {
+    public Domain() {
         this.classLoaderService = new ClassLoaderService(this);
         this.classModelerService = new ClassModelerService(this);
 
