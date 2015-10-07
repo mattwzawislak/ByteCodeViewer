@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class SettingModelFactory<C> {
 
-    private HashMap<Class<? extends Setting>, SettingModeler<?, C>> modelers;
+    private HashMap<Class<? extends Setting>, SettingModeler<?, C>> modelers = new HashMap<>();
 
     public <T> void addModeler(final Class<? extends Setting<T>> cls, final SettingModeler<T, C> modeler) {
         if (cls == null) {

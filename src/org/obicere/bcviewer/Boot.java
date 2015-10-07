@@ -95,5 +95,7 @@ public class Boot {
     private static void initializeSystem(final Domain domain) {
 
         domain.getSettingsController().loadSettings();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> domain.getSettingsController().saveSettings()));
     }
 }

@@ -54,7 +54,7 @@ public class StringSettingPanel extends SettingPanel<String> {
         });
 
         add(descriptor);
-        add(Box.createHorizontalBox());
+        add(Box.createHorizontalGlue());
         add(valueField);
     }
 

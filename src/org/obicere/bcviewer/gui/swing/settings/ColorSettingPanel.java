@@ -25,23 +25,31 @@ public class ColorSettingPanel extends SettingPanel<Color> {
 
     private final JButton colorChooser;
 
-    private volatile Color selected;
-
     public ColorSettingPanel(final Domain domain, final Setting<Color> setting) {
         super(setting);
 
         this.descriptor = new JLabel(setting.getDescriptor());
         this.colorChooser = new JButton();
 
+        final Color selected;
+        final Color color = setting.getValue();
+        if (color == null) {
+            selected = setting.getDefaultValue();
+        } else {
+            selected = color;
+        }
+
         colorChooser.addActionListener(e -> {
-            final Color color = JColorChooser.showDialog(ColorSettingPanel.this, "Pick new color", selected);
-            if (color == null) {
+            final Color newColor = JColorChooser.showDialog(ColorSettingPanel.this, "Pick new color", selected);
+            if (newColor == null) {
                 return;
             }
             final Settings settings = domain.getSettingsController().getSettings();
             final String name = setting.getName();
 
-            settings.set(name, color);
+            settings.set(name, newColor);
+
+            setValue(newColor);
         });
         final Dimension size = new Dimension(16, 16);
         colorChooser.setMinimumSize(size);
@@ -53,7 +61,7 @@ public class ColorSettingPanel extends SettingPanel<Color> {
         setLayout(layout);
 
         add(descriptor);
-        add(Box.createHorizontalBox());
+        add(Box.createHorizontalGlue());
         add(colorChooser);
     }
 
@@ -63,16 +71,16 @@ public class ColorSettingPanel extends SettingPanel<Color> {
         final Icon icon = new ImageIcon(buildImage(color));
 
         colorChooser.setIcon(icon);
-
-        this.selected = color;
     }
 
     private Image buildImage(final Color color) {
-        final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
         final Graphics g = image.getGraphics();
 
         g.setColor(color);
-        g.fillRect(0, 0, 1, 1);
+        g.fillRect(0, 0, 15, 15);
+        g.setColor(Color.GRAY);
+        g.drawRect(0, 0, 15, 15);
 
         g.dispose();
 

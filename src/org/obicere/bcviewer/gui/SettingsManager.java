@@ -7,6 +7,8 @@ import org.obicere.bcviewer.settings.target.Setting;
  */
 public interface SettingsManager<C> {
 
+    public void initialize();
+
     public boolean isVisible();
 
     public void setVisible(final boolean visible);

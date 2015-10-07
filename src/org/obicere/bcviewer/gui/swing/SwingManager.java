@@ -25,6 +25,8 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +50,7 @@ public class SwingManager implements FrameManager {
     public SwingManager(final Domain domain) {
         this.domain = domain;
         this.frame = new JFrame(domain.getApplicationName());
-        this.settings = new SwingSettingsManager(domain);
+        this.settings = new SwingSettingsManager(frame, domain);
         this.tabbedPane = new JTabbedPane();
 
         this.defaultLookAndFeel = new WebLookAndFeel();
@@ -133,9 +135,10 @@ public class SwingManager implements FrameManager {
         if (frame.isVisible()) {
             return;
         }
-        addComponents();
 
         loadDefaultTheme();
+        addComponents();
+        settings.initialize();
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();

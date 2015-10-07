@@ -7,18 +7,22 @@ import org.obicere.bcviewer.gui.settings.SettingModelFactory;
 import org.obicere.bcviewer.gui.settings.SettingModeler;
 import org.obicere.bcviewer.settings.Group;
 import org.obicere.bcviewer.settings.SettingsController;
+import org.obicere.bcviewer.settings.target.ColorSetting;
 import org.obicere.bcviewer.settings.target.Setting;
 import org.obicere.utility.swing.VerticalFlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.util.Set;
 
 /**
@@ -27,16 +31,18 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
     private final SettingModelFactory<JComponent> factory = new SettingModelFactory<>();
 
-    private final JFrame frame;
+    private final JDialog frame;
 
     private final Domain domain;
 
-    public SwingSettingsManager(final Domain domain) {
+    private volatile boolean built = false;
+
+    public SwingSettingsManager(final Frame owner, final Domain domain) {
         this.domain = domain;
 
-        this.frame = new JFrame("Settings");
+        this.frame = new JDialog(owner, "Settings");
 
-        buildComponents();
+        factory.addModeler(ColorSetting.class, new ColorSettingModeler(domain));
     }
 
     @Override
@@ -51,6 +57,7 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         frame.add(settings, BorderLayout.CENTER);
         frame.add(controls, BorderLayout.SOUTH);
+        frame.pack();
     }
 
     private JPanel buildSettings() {
@@ -61,6 +68,7 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
         final CardLayout layout = new CardLayout(5, 5);
 
         final JPanel selectedGroupPanel = new JPanel(layout);
+        final JScrollPane scrollPane = new JScrollPane(selectedGroupPanel);
 
         final Set<Group> groups = controller.getGroups();
         final String[] groupNames = groups.stream().map(Group::getGroupName).toArray(String[]::new);
@@ -94,7 +102,7 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
         }
 
         content.add(groupSelectorList, BorderLayout.WEST);
-        content.add(selectedGroupPanel, BorderLayout.CENTER);
+        content.add(scrollPane, BorderLayout.CENTER);
 
         return content;
     }
@@ -123,9 +131,15 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         cancel.addActionListener(e -> {
             controller.getSettings().discardChanges();
+            setVisible(false);
         });
 
         return controls;
+    }
+
+    @Override
+    public void initialize() {
+        buildComponents();
     }
 
     @Override

@@ -16,6 +16,19 @@ public abstract class SettingPanel<T> extends JPanel {
         setting.addPropertyChangeListener(evt -> setValue(evt.getNewValue()));
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+
+        // we need to set the initial value for the setting
+        final T value = setting.getValue();
+        if (value == null) {
+            setValue(setting.getDefaultValue());
+        } else {
+            setValue(value);
+        }
+    }
+
     public Setting<T> getSetting() {
         return setting;
     }
