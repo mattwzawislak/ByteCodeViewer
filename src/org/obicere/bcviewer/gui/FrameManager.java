@@ -46,4 +46,6 @@ public interface FrameManager {
     public EditorPanel createEditorPanel(final String className);
 
     public File[] promptForFiles(final String... extensions);
+
+    public SettingsManager<?> getSettingsManager();
 }

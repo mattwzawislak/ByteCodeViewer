@@ -2,7 +2,9 @@ package org.obicere.bcviewer.gui.swing.settings;
 
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
+import org.obicere.bcviewer.gui.SettingsManager;
 import org.obicere.bcviewer.gui.settings.SettingModelFactory;
+import org.obicere.bcviewer.gui.settings.SettingModeler;
 import org.obicere.bcviewer.settings.Group;
 import org.obicere.bcviewer.settings.SettingsController;
 import org.obicere.bcviewer.settings.target.Setting;
@@ -21,7 +23,7 @@ import java.util.Set;
 
 /**
  */
-public class SwingSettingsManager implements DomainAccess {
+public class SwingSettingsManager implements DomainAccess, SettingsManager<JComponent> {
 
     private final SettingModelFactory<JComponent> factory = new SettingModelFactory<>();
 
@@ -35,6 +37,11 @@ public class SwingSettingsManager implements DomainAccess {
         this.frame = new JFrame("Settings");
 
         buildComponents();
+    }
+
+    @Override
+    public <T> void addModeler(final Class<? extends Setting<T>> cls, final SettingModeler<T, JComponent> modeler) {
+        factory.addModeler(cls, modeler);
     }
 
     private void buildComponents() {
@@ -121,10 +128,17 @@ public class SwingSettingsManager implements DomainAccess {
         return controls;
     }
 
+    @Override
+    public boolean isVisible() {
+        return frame.isVisible();
+    }
+
+    @Override
     public void setVisible(final boolean visible) {
         frame.setVisible(visible);
     }
 
+    @Override
     public void dispose() {
         frame.dispose();
     }

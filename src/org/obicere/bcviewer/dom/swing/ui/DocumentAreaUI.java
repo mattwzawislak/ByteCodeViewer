@@ -127,6 +127,9 @@ public class DocumentAreaUI extends ComponentUI {
 
         final Rectangle visible = area.getVisibleRect();
 
+        g.setColor(area.getBackground());
+        g.fillRect(visible.x, visible.y, visible.width, visible.height);
+
         final int visibleTop = visible.y;
         // add fontHeight for integer division and ensuring last line
         // gets drawn - even if just partially

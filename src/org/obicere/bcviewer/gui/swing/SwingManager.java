@@ -4,9 +4,12 @@ import com.alee.laf.WebLookAndFeel;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.FrameManager;
+import org.obicere.bcviewer.gui.SettingsManager;
 import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
+import org.obicere.bcviewer.gui.swing.settings.SwingSettingsManager;
 
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -34,6 +37,8 @@ public class SwingManager implements FrameManager {
 
     private final JFrame frame;
 
+    private final SettingsManager<JComponent> settings;
+
     private final JTabbedPane tabbedPane;
 
     private final LookAndFeel defaultLookAndFeel;
@@ -43,6 +48,7 @@ public class SwingManager implements FrameManager {
     public SwingManager(final Domain domain) {
         this.domain = domain;
         this.frame = new JFrame(domain.getApplicationName());
+        this.settings = new SwingSettingsManager(domain);
         this.tabbedPane = new JTabbedPane();
 
         this.defaultLookAndFeel = new WebLookAndFeel();
@@ -319,5 +325,10 @@ public class SwingManager implements FrameManager {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public SettingsManager<?> getSettingsManager() {
+        return settings;
     }
 }
