@@ -2,6 +2,7 @@ package org.obicere.bcviewer.startup;
 
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.settings.SettingsController;
+import org.obicere.bcviewer.settings.application.CodeGroup;
 import org.obicere.bcviewer.settings.application.EditorGroup;
 
 import java.io.BufferedReader;
@@ -29,6 +30,7 @@ public class ProvideGroups implements StartUpTask {
         final List<String> groupClassNames = new LinkedList<>();
 
         groupClassNames.add(EditorGroup.class.getName());
+        groupClassNames.add(CodeGroup.class.getName());
 
         final String groupsFile = domain.getPaths().getSettingsGroupsFile();
         final File file = new File(groupsFile);

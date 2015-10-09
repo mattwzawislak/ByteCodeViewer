@@ -18,7 +18,7 @@ import java.beans.PropertyChangeListener;
  */
 public class EditorGroup implements Group {
 
-    private static final String NAME = "Editor Settings";
+    private static final String NAME = "Editor";
 
     private static final String SUFFIX = "editor.";
 

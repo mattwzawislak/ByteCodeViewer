@@ -33,7 +33,8 @@ public class DocumentBuilder implements DomainAccess {
 
     public List<Block> build(final ClassInformation classInformation, final ClassCallback callback) {
         try {
-            this.request = new DocumentBuildRequest(this, classInformation, callback);
+            final int tabSize = domain.getSettingsController().getSettings().getInteger("code.tabSize");
+            this.request = new DocumentBuildRequest(tabSize, this, classInformation, callback);
 
             // this utilizes the style constants, so we must lock on them
             // to avoid styles being changed half way through and looking

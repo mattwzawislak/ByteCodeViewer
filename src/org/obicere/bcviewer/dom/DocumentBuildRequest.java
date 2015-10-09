@@ -25,7 +25,7 @@ public class DocumentBuildRequest {
 
     private final ClassInformation classInformation;
 
-    private final int tabSize = 4;
+    private final int tabSize;
 
     private volatile ClassFile temporaryClass;
 
@@ -37,7 +37,8 @@ public class DocumentBuildRequest {
 
     private volatile StringBuilder line = new StringBuilder();
 
-    public DocumentBuildRequest(final DocumentBuilder builder, final ClassInformation classInformation, final ClassCallback callback) {
+    public DocumentBuildRequest(final int tabSize, final DocumentBuilder builder, final ClassInformation classInformation, final ClassCallback callback) {
+        this.tabSize = tabSize;
         this.builder = builder;
         this.classInformation = classInformation;
         this.callback = callback;
@@ -59,7 +60,7 @@ public class DocumentBuildRequest {
         return classFile;
     }
 
-    public ClassInformation getClassInformation(){
+    public ClassInformation getClassInformation() {
         return classInformation;
     }
 

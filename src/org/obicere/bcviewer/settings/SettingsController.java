@@ -114,7 +114,6 @@ public class SettingsController implements DomainAccess {
     }
 
     private void safelySaveSettings() {
-        final HashMap<String, Setting<?>> settings = loadedSettings.getSettings();
 
         final LinkedHashMap<String, String> output = new LinkedHashMap<>();
 
@@ -126,7 +125,7 @@ public class SettingsController implements DomainAccess {
 
                 final Object setValue = setting.getValue();
 
-                if (setValue == null) {
+                if (setValue == null || setValue.equals(setting.getDefaultValue())) {
                     continue;
                 }
 
