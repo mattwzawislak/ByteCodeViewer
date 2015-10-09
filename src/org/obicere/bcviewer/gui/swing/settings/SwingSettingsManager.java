@@ -1,6 +1,5 @@
 package org.obicere.bcviewer.gui.swing.settings;
 
-import com.alee.utils.laf.WeblafBorder;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.SettingsManager;
@@ -9,13 +8,14 @@ import org.obicere.bcviewer.gui.settings.SettingModeler;
 import org.obicere.bcviewer.settings.Group;
 import org.obicere.bcviewer.settings.SettingsController;
 import org.obicere.bcviewer.settings.target.ColorSetting;
+import org.obicere.bcviewer.settings.target.FontSetting;
 import org.obicere.bcviewer.settings.target.Setting;
+import org.obicere.bcviewer.settings.target.StringSetting;
 import org.obicere.utility.swing.VerticalFlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -43,6 +43,8 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
         this.frame = new JDialog(owner, "Settings");
 
         factory.addModeler(ColorSetting.class, new ColorSettingModeler(domain));
+        factory.addModeler(FontSetting.class, new FontSettingModeler(domain));
+        factory.addModeler(StringSetting.class, new StringSettingModeler(domain));
     }
 
     @Override

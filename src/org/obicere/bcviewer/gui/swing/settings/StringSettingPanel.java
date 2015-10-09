@@ -2,7 +2,7 @@ package org.obicere.bcviewer.gui.swing.settings;
 
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.settings.Settings;
-import org.obicere.bcviewer.settings.target.StringSetting;
+import org.obicere.bcviewer.settings.target.Setting;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,7 +18,7 @@ public class StringSettingPanel extends SettingPanel<String> {
     private final JLabel     descriptor;
     private final JTextField valueField;
 
-    public StringSettingPanel(final Domain domain, final StringSetting setting) {
+    public StringSettingPanel(final Domain domain, final Setting<String> setting) {
         super(setting);
 
         final BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);

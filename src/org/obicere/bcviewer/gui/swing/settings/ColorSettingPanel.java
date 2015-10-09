@@ -49,6 +49,7 @@ public class ColorSettingPanel extends SettingPanel<Color> {
             settings.set(name, newColor);
 
             setValue(newColor);
+            repaint();
         });
         final Dimension size = new Dimension(16, 16);
         colorChooser.setMinimumSize(size);
