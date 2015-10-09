@@ -10,10 +10,7 @@ public class MainMenuBar extends JMenuBar {
 
     public MainMenuBar(final Domain domain) {
 
-        setName("menubar");
-
         add(new FileMenu(domain));
         add(new ViewMenu(domain));
-        add(new ThemeMenu(domain));
     }
 }

@@ -7,10 +7,6 @@ import java.io.File;
  */
 public interface FrameManager {
 
-    public Object getWindow();
-
-    public Object getComponent(final String name);
-
     public void open();
 
     public void close();
@@ -28,14 +24,6 @@ public interface FrameManager {
     public void validate();
 
     public void pack();
-
-    public String getDefaultThemeName();
-
-    public String[] getAvailableThemeNames();
-
-    public void loadDefaultTheme();
-
-    public void loadTheme(final String name);
 
     public EditorPanel getEditorPanel(final String className);
 

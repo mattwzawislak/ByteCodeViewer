@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.gui.swing.settings;
 
+import com.alee.utils.laf.WeblafBorder;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.SettingsManager;
@@ -19,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
@@ -35,8 +37,6 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
     private final Domain domain;
 
-    private volatile boolean built = false;
-
     public SwingSettingsManager(final Frame owner, final Domain domain) {
         this.domain = domain;
 
@@ -51,12 +51,15 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
     }
 
     private void buildComponents() {
+        final JPanel content = new JPanel(new BorderLayout(10, 10));
 
         final JPanel settings = buildSettings();
         final JPanel controls = buildControls();
 
-        frame.add(settings, BorderLayout.CENTER);
-        frame.add(controls, BorderLayout.SOUTH);
+        content.add(settings, BorderLayout.CENTER);
+        content.add(controls, BorderLayout.SOUTH);
+
+        frame.add(content);
         frame.pack();
     }
 
@@ -101,6 +104,7 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
             selectedGroupPanel.add(settingPanel, name);
         }
 
+        content.setBorder(new EmptyBorder(5, 5, 5, 5));
         content.add(groupSelectorList, BorderLayout.WEST);
         content.add(scrollPane, BorderLayout.CENTER);
 

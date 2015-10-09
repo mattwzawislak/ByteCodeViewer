@@ -16,7 +16,6 @@ import javax.swing.JSplitPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * @author Obicere
@@ -37,8 +36,6 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     private volatile JLabel status = new JLabel("Loading...", JLabel.CENTER);
 
-    private volatile Future<List<Block>> request;
-
     public SwingEditorPanel(final Domain domain) {
         super(new BorderLayout(10, 10));
         this.domain = domain;
@@ -48,13 +45,8 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         this.documentArea = new JDocumentArea();
 
         final JScrollPane editorScroll = new JScrollPane(documentArea);
-        editorScroll.setName("editorScroll");
-        editorScroll.getViewport().setName("view");
-
-        documentArea.setName("document");
 
         split.setLeftComponent(editorScroll);
-        split.setName("split");
         split.setResizeWeight(0.5);
 
         add(status);

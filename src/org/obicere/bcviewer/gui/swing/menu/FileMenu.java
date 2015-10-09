@@ -20,10 +20,6 @@ public class FileMenu extends JMenu {
         final JMenuItem settings = new JMenuItem("Settings");
         final JMenuItem exit = new JMenuItem("Exit");
 
-        open.setName("open");
-        settings.setName("settings");
-        exit.setName("exit");
-
         open.setMnemonic('O');
         settings.setMnemonic('t');
         exit.setMnemonic('x');

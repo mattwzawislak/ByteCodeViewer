@@ -54,6 +54,7 @@ public class StringSettingPanel extends SettingPanel<String> {
         });
 
         add(descriptor);
+        add(Box.createHorizontalStrut(5)); // add 5 padding
         add(Box.createHorizontalGlue());
         add(valueField);
     }

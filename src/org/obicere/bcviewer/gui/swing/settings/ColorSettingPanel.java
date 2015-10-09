@@ -31,15 +31,14 @@ public class ColorSettingPanel extends SettingPanel<Color> {
         this.descriptor = new JLabel(setting.getDescriptor());
         this.colorChooser = new JButton();
 
-        final Color selected;
-        final Color color = setting.getValue();
-        if (color == null) {
-            selected = setting.getDefaultValue();
-        } else {
-            selected = color;
-        }
-
         colorChooser.addActionListener(e -> {
+            final Color selected;
+            final Color color = setting.getValue();
+            if (color == null) {
+                selected = setting.getDefaultValue();
+            } else {
+                selected = color;
+            }
             final Color newColor = JColorChooser.showDialog(ColorSettingPanel.this, "Pick new color", selected);
             if (newColor == null) {
                 return;
@@ -61,6 +60,7 @@ public class ColorSettingPanel extends SettingPanel<Color> {
         setLayout(layout);
 
         add(descriptor);
+        add(Box.createHorizontalStrut(5)); // add 5 padding
         add(Box.createHorizontalGlue());
         add(colorChooser);
     }
