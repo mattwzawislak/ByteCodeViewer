@@ -9,7 +9,11 @@ import org.obicere.bcviewer.settings.Group;
 import org.obicere.bcviewer.settings.SettingsController;
 import org.obicere.bcviewer.settings.target.BooleanSetting;
 import org.obicere.bcviewer.settings.target.ColorSetting;
+import org.obicere.bcviewer.settings.target.DoubleSetting;
+import org.obicere.bcviewer.settings.target.FloatSetting;
 import org.obicere.bcviewer.settings.target.FontSetting;
+import org.obicere.bcviewer.settings.target.IntegerSetting;
+import org.obicere.bcviewer.settings.target.LongSetting;
 import org.obicere.bcviewer.settings.target.Setting;
 import org.obicere.bcviewer.settings.target.StringSetting;
 import org.obicere.utility.swing.VerticalFlowLayout;
@@ -45,7 +49,11 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         factory.addModeler(BooleanSetting.MODELER_ID, new BooleanSettingModeler(domain));
         factory.addModeler(ColorSetting.MODELER_ID, new ColorSettingModeler(domain));
+        factory.addModeler(DoubleSetting.MODELER_ID, new DoubleSettingModeler(domain));
+        factory.addModeler(FloatSetting.MODELER_ID, new FloatSettingModeler(domain));
         factory.addModeler(FontSetting.MODELER_ID, new FontSettingModeler(domain));
+        factory.addModeler(IntegerSetting.MODELER_ID, new IntegerSettingModeler(domain));
+        factory.addModeler(LongSetting.MODELER_ID, new LongSettingModeler(domain));
         factory.addModeler(StringSetting.MODELER_ID, new StringSettingModeler(domain));
     }
 
