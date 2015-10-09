@@ -1,9 +1,11 @@
-package org.obicere.bcviewer.dom.swing;
+package org.obicere.bcviewer.dom.gui.swing;
 
+import org.obicere.bcviewer.context.Domain;
+import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.Line;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
-import org.obicere.bcviewer.dom.swing.ui.DocumentAreaUI;
+import org.obicere.bcviewer.dom.gui.swing.ui.DocumentAreaUI;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
@@ -16,12 +18,11 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  */
-public class JDocumentArea extends JComponent {
+public class JDocumentArea extends JComponent implements DomainAccess {
 
     private static final String uiClassID = "DocumentAreaUI";
 
@@ -36,12 +37,15 @@ public class JDocumentArea extends JComponent {
     private final Caret caret     = new Caret(this);
     private final Caret dropCaret = new Caret(this);
 
+    private final Domain domain;
+
     static {
         UIManager.put(uiClassID, DocumentAreaUI.class.getName());
     }
 
-    public JDocumentArea() {
+    public JDocumentArea(final Domain domain) {
         updateUI();
+        this.domain = domain;
     }
 
     @Override
@@ -293,5 +297,10 @@ public class JDocumentArea extends JComponent {
         }
         this.thinCarets = thinCarets;
         firePropertyChange("thinCarets", old, thinCarets);
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
     }
 }

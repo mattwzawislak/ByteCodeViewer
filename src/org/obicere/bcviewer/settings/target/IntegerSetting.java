@@ -4,6 +4,8 @@ package org.obicere.bcviewer.settings.target;
  */
 public class IntegerSetting extends Setting<Integer> {
 
+    public static final String MODELER_ID = "IntegerModeler";
+
     private final int minimum;
 
     private final int maximum;
@@ -16,6 +18,11 @@ public class IntegerSetting extends Setting<Integer> {
         super(name, descriptor, value);
         this.minimum = minimum;
         this.maximum = maximum;
+    }
+
+    @Override
+    public String getModelerID() {
+        return MODELER_ID;
     }
 
     public int getMinimum() {

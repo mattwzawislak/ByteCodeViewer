@@ -4,6 +4,8 @@ package org.obicere.bcviewer.settings.target;
  */
 public class LongSetting extends Setting<Long> {
 
+    public static final String MODELER_ID = "LongModeler";
+
     private final long minimum;
     private final long maximum;
 
@@ -15,6 +17,11 @@ public class LongSetting extends Setting<Long> {
         super(name, descriptor, value);
         this.minimum = minimum;
         this.maximum = maximum;
+    }
+
+    @Override
+    public String getModelerID() {
+        return MODELER_ID;
     }
 
     public long getMinimum() {

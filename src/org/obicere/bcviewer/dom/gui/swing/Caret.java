@@ -1,4 +1,4 @@
-package org.obicere.bcviewer.dom.swing;
+package org.obicere.bcviewer.dom.gui.swing;
 
 /**
  */

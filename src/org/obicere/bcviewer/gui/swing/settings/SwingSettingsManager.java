@@ -7,6 +7,7 @@ import org.obicere.bcviewer.gui.settings.SettingModelFactory;
 import org.obicere.bcviewer.gui.settings.SettingModeler;
 import org.obicere.bcviewer.settings.Group;
 import org.obicere.bcviewer.settings.SettingsController;
+import org.obicere.bcviewer.settings.target.BooleanSetting;
 import org.obicere.bcviewer.settings.target.ColorSetting;
 import org.obicere.bcviewer.settings.target.FontSetting;
 import org.obicere.bcviewer.settings.target.Setting;
@@ -42,14 +43,15 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         this.frame = new JDialog(owner, "Settings");
 
-        factory.addModeler(ColorSetting.class, new ColorSettingModeler(domain));
-        factory.addModeler(FontSetting.class, new FontSettingModeler(domain));
-        factory.addModeler(StringSetting.class, new StringSettingModeler(domain));
+        factory.addModeler(BooleanSetting.MODELER_ID, new BooleanSettingModeler(domain));
+        factory.addModeler(ColorSetting.MODELER_ID, new ColorSettingModeler(domain));
+        factory.addModeler(FontSetting.MODELER_ID, new FontSettingModeler(domain));
+        factory.addModeler(StringSetting.MODELER_ID, new StringSettingModeler(domain));
     }
 
     @Override
-    public <T> void addModeler(final Class<? extends Setting<T>> cls, final SettingModeler<T, JComponent> modeler) {
-        factory.addModeler(cls, modeler);
+    public void addModeler(final String id, final SettingModeler<?, JComponent> modeler) {
+        factory.addModeler(id, modeler);
     }
 
     private void buildComponents() {

@@ -6,7 +6,7 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.dom.swing.JDocumentArea;
+import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
 
 import javax.swing.JLabel;
@@ -42,7 +42,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         this.builder = new DocumentBuilder(domain);
 
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        this.documentArea = new JDocumentArea();
+        this.documentArea = new JDocumentArea(domain);
 
         final JScrollPane editorScroll = new JScrollPane(documentArea);
 

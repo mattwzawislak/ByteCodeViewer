@@ -8,17 +8,17 @@ import java.util.HashMap;
  */
 public class SettingModelFactory<C> {
 
-    private HashMap<Class<? extends Setting>, SettingModeler<?, C>> modelers = new HashMap<>();
+    private HashMap<String, SettingModeler<?, C>> modelers = new HashMap<>();
 
-    public <T> void addModeler(final Class<? extends Setting<T>> cls, final SettingModeler<T, C> modeler) {
-        if (cls == null) {
-            throw new NullPointerException("class must be non-null.");
+    public void addModeler(final String id, final SettingModeler<?, C> modeler) {
+        if (id == null) {
+            throw new NullPointerException("modeler id must be non-null.");
         }
 
         if (modeler == null) {
             throw new NullPointerException("modeler must be non-null.");
         }
-        modelers.put(cls, modeler);
+        modelers.put(id, modeler);
     }
 
     @SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class SettingModelFactory<C> {
         if (setting == null) {
             throw new NullPointerException("setting must be non-null.");
         }
-        final SettingModeler<T, C> modeler = (SettingModeler<T, C>) modelers.get(setting.getClass());
+        final SettingModeler<T, C> modeler = (SettingModeler<T, C>) modelers.get(setting.getModelerID());
         if (modeler == null) {
             return null;
         }

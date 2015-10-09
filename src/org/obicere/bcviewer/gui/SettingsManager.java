@@ -1,7 +1,6 @@
 package org.obicere.bcviewer.gui;
 
 import org.obicere.bcviewer.gui.settings.SettingModeler;
-import org.obicere.bcviewer.settings.target.Setting;
 
 /**
  */
@@ -15,6 +14,6 @@ public interface SettingsManager<C> {
 
     public void dispose();
 
-    public <T> void addModeler(final Class<? extends Setting<T>> cls, final SettingModeler<T, C> modeler);
+    public void addModeler(final String id, final SettingModeler<?, C> modeler);
 
 }

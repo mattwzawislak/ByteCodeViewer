@@ -1,4 +1,4 @@
-package org.obicere.bcviewer.dom.swing.ui;
+package org.obicere.bcviewer.dom.gui.swing.ui;
 
 import org.obicere.bcviewer.Boot;
 import org.obicere.bcviewer.dom.Block;
@@ -6,8 +6,9 @@ import org.obicere.bcviewer.dom.Line;
 import org.obicere.bcviewer.dom.style.Style;
 import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
-import org.obicere.bcviewer.dom.swing.Caret;
-import org.obicere.bcviewer.dom.swing.JDocumentArea;
+import org.obicere.bcviewer.dom.gui.swing.Caret;
+import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
+import org.obicere.bcviewer.settings.Settings;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -116,11 +117,20 @@ public class DocumentAreaUI extends ComponentUI {
     @Override
     public void paint(final Graphics g, final JComponent component) {
         checkComponentType(component);
+        final JDocumentArea area = (JDocumentArea) component;
 
         final Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
-        final JDocumentArea area = (JDocumentArea) component;
+        final Settings settings = area.getDomain().getSettingsController().getSettings();
+
+        if (settings.getBoolean("editor.textAA")) {
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        }
+
+        if (settings.getBoolean("editor.colorAA")) {
+            g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        }
+
         final QuickWidthFont font = (QuickWidthFont) area.getFont();
         final int fontHeight = font.getFixedHeight();
         final int fontWidth = font.getFixedWidth();
