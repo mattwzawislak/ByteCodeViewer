@@ -40,8 +40,8 @@ public class QuickWidthFont extends Font {
 
         if (thinRect.getWidth() == thickRect.getWidth()) {
 
-            width = (int) (thickRect.getWidth());
-            height = (int) (thickRect.getHeight());
+            width = (int) Math.round(thickRect.getWidth());
+            height = (int) Math.round(thickRect.getHeight());
             return true;
         } else {
             return false;
