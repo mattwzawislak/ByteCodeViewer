@@ -25,7 +25,7 @@ public abstract class Setting<T> {
         this.defaultValue = defaultValue;
     }
 
-    public abstract String getModelerID();
+    public abstract String getID();
 
     public String getName() {
         return name;

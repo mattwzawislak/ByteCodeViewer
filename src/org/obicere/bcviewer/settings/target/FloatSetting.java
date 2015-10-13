@@ -4,7 +4,7 @@ package org.obicere.bcviewer.settings.target;
  */
 public class FloatSetting extends NumberSetting<Float> {
 
-    public static final String MODELER_ID = "FloatModeler";
+    public static final String IDENTIFIER = "FloatModeler";
 
     public FloatSetting(final String name, final String descriptor, final Float value) {
         this(name, descriptor, value, Float.MIN_VALUE, Float.MAX_VALUE);
@@ -15,7 +15,7 @@ public class FloatSetting extends NumberSetting<Float> {
     }
 
     @Override
-    public String getModelerID() {
-        return MODELER_ID;
+    public String getID() {
+        return IDENTIFIER;
     }
 }

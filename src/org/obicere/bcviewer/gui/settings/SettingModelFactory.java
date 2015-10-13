@@ -26,7 +26,7 @@ public class SettingModelFactory<C> {
         if (setting == null) {
             throw new NullPointerException("setting must be non-null.");
         }
-        final SettingModeler<T, C> modeler = (SettingModeler<T, C>) modelers.get(setting.getModelerID());
+        final SettingModeler<T, C> modeler = (SettingModeler<T, C>) modelers.get(setting.getID());
         if (modeler == null) {
             return null;
         }

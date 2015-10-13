@@ -4,7 +4,7 @@ package org.obicere.bcviewer.settings.target;
  */
 public class DoubleSetting extends NumberSetting<Double> {
 
-    public static final String MODELER_ID = "DoubleModeler";
+    public static final String IDENTIFIER = "DoubleModeler";
 
     public DoubleSetting(final String name, final String descriptor, final Double value) {
         this(name, descriptor, value, Double.MIN_VALUE, Double.MAX_VALUE);
@@ -15,7 +15,7 @@ public class DoubleSetting extends NumberSetting<Double> {
     }
 
     @Override
-    public String getModelerID() {
-        return MODELER_ID;
+    public String getID() {
+        return IDENTIFIER;
     }
 }

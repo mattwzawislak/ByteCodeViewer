@@ -30,7 +30,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -48,14 +47,14 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         this.frame = new JDialog(owner, "Settings");
 
-        factory.addModeler(BooleanSetting.MODELER_ID, new BooleanSettingModeler(domain));
-        factory.addModeler(ColorSetting.MODELER_ID, new ColorSettingModeler(domain));
-        factory.addModeler(DoubleSetting.MODELER_ID, new DoubleSettingModeler(domain));
-        factory.addModeler(FloatSetting.MODELER_ID, new FloatSettingModeler(domain));
-        factory.addModeler(FontSetting.MODELER_ID, new FontSettingModeler(domain));
-        factory.addModeler(IntegerSetting.MODELER_ID, new IntegerSettingModeler(domain));
-        factory.addModeler(LongSetting.MODELER_ID, new LongSettingModeler(domain));
-        factory.addModeler(StringSetting.MODELER_ID, new StringSettingModeler(domain));
+        factory.addModeler(BooleanSetting.IDENTIFIER, new BooleanSettingModeler(domain));
+        factory.addModeler(ColorSetting.IDENTIFIER, new ColorSettingModeler(domain));
+        factory.addModeler(DoubleSetting.IDENTIFIER, new DoubleSettingModeler(domain));
+        factory.addModeler(FloatSetting.IDENTIFIER, new FloatSettingModeler(domain));
+        factory.addModeler(FontSetting.IDENTIFIER, new FontSettingModeler(domain));
+        factory.addModeler(IntegerSetting.IDENTIFIER, new IntegerSettingModeler(domain));
+        factory.addModeler(LongSetting.IDENTIFIER, new LongSettingModeler(domain));
+        factory.addModeler(StringSetting.IDENTIFIER, new StringSettingModeler(domain));
     }
 
     @Override

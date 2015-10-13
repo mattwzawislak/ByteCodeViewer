@@ -41,7 +41,7 @@ public class SettingsController implements DomainAccess {
 
     private final Domain domain;
 
-    private final Map<Class<?>, Handle<?>> handleMap = new HashMap<>();
+    private final Map<String, Handle<?>> handleMap = new HashMap<>();
 
     private final ReentrantLock readWriteLock = new ReentrantLock();
 
@@ -52,18 +52,17 @@ public class SettingsController implements DomainAccess {
     public SettingsController(final Domain domain) {
         this.domain = domain;
 
-        addHandle(BooleanSetting.class, new BooleanHandle());
-        addHandle(BooleanSetting.class, new BooleanHandle());
-        addHandle(ColorSetting.class, new ColorHandle());
-        addHandle(DoubleSetting.class, new DoubleHandle());
-        addHandle(FloatSetting.class, new FloatHandle());
-        addHandle(FontSetting.class, new FontHandle());
-        addHandle(IntegerSetting.class, new IntegerHandle());
-        addHandle(LongSetting.class, new LongHandle());
-        addHandle(StringSetting.class, new StringHandle());
+        addHandle(BooleanSetting.IDENTIFIER, new BooleanHandle());
+        addHandle(ColorSetting.IDENTIFIER, new ColorHandle());
+        addHandle(DoubleSetting.IDENTIFIER, new DoubleHandle());
+        addHandle(FloatSetting.IDENTIFIER, new FloatHandle());
+        addHandle(FontSetting.IDENTIFIER, new FontHandle());
+        addHandle(IntegerSetting.IDENTIFIER, new IntegerHandle());
+        addHandle(LongSetting.IDENTIFIER, new LongHandle());
+        addHandle(StringSetting.IDENTIFIER, new StringHandle());
     }
 
-    public <T, H extends Handle<T>> void addHandle(final Class<? extends Setting<T>> settingClass, final H handle) {
+    public void addHandle(final String settingClass, final Handle<?> handle) {
         if (settingClass == null) {
             throw new NullPointerException("setting class must be non-null.");
         }
