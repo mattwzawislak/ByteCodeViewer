@@ -33,10 +33,19 @@ public class QuickWidthFont extends Font {
     }
 
     private boolean checkFixedWidth() {
-        final String thinText = ";";
-        final Rectangle2D thinRect = super.getStringBounds(thinText, new FontRenderContext(null, true, true));
-        final String thickText = "@";
-        final Rectangle2D thickRect = super.getStringBounds(thickText, new FontRenderContext(null, true, true));
+
+        // this is a shitty test to be honest
+        // but it works!
+        final char thinText = 'i';
+        final char thickText = 'w';
+
+        if (!canDisplay(thinText) || !canDisplay(thickText)) {
+            // should be able to display ascii
+            return false;
+        }
+
+        final Rectangle2D thinRect = super.getStringBounds(new char[]{thinText}, 0, 1, new FontRenderContext(null, true, true));
+        final Rectangle2D thickRect = super.getStringBounds(new char[]{thickText}, 0, 1, new FontRenderContext(null, true, true));
 
         if (thinRect.getWidth() == thickRect.getWidth()) {
 
