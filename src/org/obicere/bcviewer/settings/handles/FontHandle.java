@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.settings.handles;
 
+import org.obicere.bcviewer.dom.awt.QuickWidthFont;
+
 import java.awt.Font;
 
 /**
@@ -18,7 +20,7 @@ public class FontHandle implements Handle<Font> {
             if (size <= 0) {
                 return null;
             }
-            return new Font(family, Font.PLAIN, size);
+            return new QuickWidthFont(family, Font.PLAIN, size);
         } catch (final NumberFormatException e) {
             e.printStackTrace();
             return null;
