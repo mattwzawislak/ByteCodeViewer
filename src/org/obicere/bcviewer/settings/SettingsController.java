@@ -128,7 +128,7 @@ public class SettingsController implements DomainAccess {
                     continue;
                 }
 
-                final Handle<?> handler = handleMap.get(setting.getClass());
+                final Handle<?> handler = handleMap.get(setting.getID());
                 final String print = handler.encode(setValue);
                 if (print != null) {
                     output.put(key, print);
@@ -256,7 +256,7 @@ public class SettingsController implements DomainAccess {
             if (setting == null) {
                 continue;
             }
-            final Handle<?> handle = handleMap.get(setting.getClass());
+            final Handle<?> handle = handleMap.get(setting.getID());
             if (handle == null) {
                 continue;
             }
