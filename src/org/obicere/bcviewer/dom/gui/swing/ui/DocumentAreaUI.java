@@ -15,6 +15,7 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -60,6 +61,8 @@ public class DocumentAreaUI extends ComponentUI {
     public void installUI(final JComponent component) {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
+        // use the textfield background color for this background
+        area.setBackground(UIManager.getColor("TextField.background"));
         area.setFocusable(true);
 
         final Font font = Boot.getGlobalDomain().getSettingsController().getSettings().getFont("editor.font");
