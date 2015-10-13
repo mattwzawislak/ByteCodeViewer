@@ -91,35 +91,6 @@ public class CodeAttribute extends Attribute {
         return block.getName();
     }
 
-    @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("// Max stack: ");
-        builder.append(maxStack);
-        builder.append('\n');
-        builder.append("// Max locals: ");
-        builder.append(maxLocals);
-        builder.append('\n');
-        for (final Instruction instruction : instructions) {
-            builder.append(instruction.toString(constantPool));
-            builder.append('\n');
-        }
-        for (final CodeException exception : exceptions) {
-            builder.append(exception.toString(constantPool));
-            builder.append('\n');
-        }
-        if (attributes.length > 0) {
-            builder.append('\n');
-            builder.append("Attributes: ");
-            builder.append('\n');
-            for (final Attribute attribute : attributes) {
-                builder.append(attribute.toString(constantPool));
-                builder.append('\n');
-            }
-        }
-        return builder.toString();
-    }
-
     // these two might be difficult to get 100% correct.
     // a simple association could be formed, possibly.
     // The 'simple association' would be just latching onto

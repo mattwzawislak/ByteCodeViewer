@@ -40,16 +40,6 @@ public class multianewarray extends Instruction implements Modeler {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder(MNEMONIC);
-        builder.append(' ');
-        builder.append(constantPool.getAsString(getIndex()));
-        builder.append(' ');
-        builder.append(dimensions);
-        return builder.toString();
-    }
-
-    @Override
     public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.newLine();

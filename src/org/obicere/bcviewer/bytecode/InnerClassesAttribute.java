@@ -19,15 +19,4 @@ public class InnerClassesAttribute extends Attribute {
     public InnerClass[] getInnerClasses() {
         return classes;
     }
-
-    @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("InnerClassesAttribute: ");
-        for (final InnerClass innerClass : classes) {
-            builder.append('\n');
-            builder.append(innerClass.toString(constantPool));
-        }
-        return builder.toString();
-    }
 }

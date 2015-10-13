@@ -23,14 +23,6 @@ public class ldc extends Instruction {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder(MNEMONIC);
-        builder.append(' ');
-        builder.append(constantPool.getAsString(getIndex()));
-        return builder.toString();
-    }
-
-    @Override
     public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.tab();

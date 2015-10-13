@@ -45,17 +45,6 @@ public class invokeinterface extends Instruction {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder(MNEMONIC);
-        builder.append(' ');
-        builder.append(constantPool.getAsString(getIndex()));
-        builder.append(' ');
-        builder.append(count);
-        builder.append(" 0"); // always a 0
-        return builder.toString();
-    }
-
-    @Override
     public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.tab();

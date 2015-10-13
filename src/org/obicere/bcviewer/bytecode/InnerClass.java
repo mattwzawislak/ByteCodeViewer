@@ -37,24 +37,6 @@ public class InnerClass extends BytecodeElement {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("InnerClass: innerClassInfo=");
-        builder.append(constantPool.getAsString(innerClassInfoIndex));
-        builder.append(", outerClassInfo=");
-        builder.append(constantPool.getAsString(outerClassInfoIndex));
-        builder.append(", innerName=");
-        builder.append(constantPool.getAsString(innerNameIndex));
-        builder.append(", access=");
-        for (final String access : BytecodeUtils.getClassAccessNames(innerClassAccessFlags)) {
-            builder.append(access);
-            builder.append(' ');
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        return builder.toString();
-    }
-
-    @Override
     public void model(final DocumentBuilder builder) {
         final String name = builder.getConstantPool().getAsString(innerClassInfoIndex);
 

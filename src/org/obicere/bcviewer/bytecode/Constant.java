@@ -26,10 +26,12 @@ public abstract class Constant extends BytecodeElement {
 
     public abstract String getName();
 
+    public abstract String toString(final ConstantPool constantPool);
+
     public abstract void modelValue(final DocumentBuilder builder);
 
     @Override
-    public void model(final DocumentBuilder builder){
+    public void model(final DocumentBuilder builder) {
         final String type = getName();
         builder.addKeyword(getName());
         builder.padTabbed(type.length(), MAX_NAME_LENGTH);

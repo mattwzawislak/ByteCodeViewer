@@ -67,20 +67,6 @@ public class wide extends Instruction {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder(MNEMONIC);
-        builder.append(' ');
-        builder.append(getInstruction());
-        builder.append(' ');
-        builder.append(getIndex());
-        if (instruction == InstructionReader.OPCODE_IINC) {
-            builder.append(' ');
-            builder.append(getConst());
-        }
-        return builder.toString();
-    }
-
-    @Override
     public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.tab();

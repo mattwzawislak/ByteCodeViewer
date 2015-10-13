@@ -32,17 +32,4 @@ public class CodeException extends BytecodeElement {
     public int getCatchType() {
         return catchType;
     }
-
-    @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(constantPool.getAsString(catchType));
-        builder.append(": start=");
-        builder.append(startPC);
-        builder.append(", end=");
-        builder.append(endPC);
-        builder.append(", handler=");
-        builder.append(handlerPC);
-        return builder.toString();
-    }
 }

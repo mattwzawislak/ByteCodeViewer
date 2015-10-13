@@ -41,17 +41,4 @@ public abstract class BytecodeElement implements Modeler {
         // TODO remove
     }
 
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder();
-
-        builder.append("default print: ");
-        builder.append(getClass().getSimpleName());
-        builder.append(": start=");
-        builder.append(start);
-        builder.append(", end=");
-        builder.append(end);
-
-        return builder.toString();
-    }
-
 }

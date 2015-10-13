@@ -46,27 +46,6 @@ public class Method extends BytecodeElement {
     }
 
     @Override
-    public String toString(final ConstantPool constantPool) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(constantPool.getAsString(nameIndex));
-        builder.append("; ");
-        builder.append(constantPool.getAsString(descriptorIndex));
-        builder.append('\n');
-        builder.append("Access: ");
-        for (final String access : BytecodeUtils.getMethodAccessNames(accessFlags)) {
-            builder.append(access);
-            builder.append(' ');
-        }
-        builder.append('\n');
-        for (final Attribute attribute : attributes) {
-            builder.append(attribute.toString(constantPool));
-            builder.append('\n');
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        return builder.toString();
-    }
-
-    @Override
     public void model(final DocumentBuilder builder) {
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
