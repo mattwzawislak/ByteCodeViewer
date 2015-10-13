@@ -26,8 +26,6 @@ public class JDocumentArea extends JComponent implements DomainAccess {
 
     private static final String uiClassID = "DocumentAreaUI";
 
-    private QuickWidthFont font;
-
     private final List<Block> content = new ArrayList<>();
 
     private boolean thinCarets = true;
@@ -66,14 +64,6 @@ public class JDocumentArea extends JComponent implements DomainAccess {
         return dropCaret;
     }
 
-    public void scrollToCaret() {
-        scrollTo(caret);
-    }
-
-    public void scrollToDropCaret() {
-        scrollTo(dropCaret);
-    }
-
     public Color getHighlightColor() {
         return highlightColor;
     }
@@ -85,12 +75,21 @@ public class JDocumentArea extends JComponent implements DomainAccess {
         this.highlightColor = color;
     }
 
+    public void scrollToCaret() {
+        scrollTo(caret);
+    }
+
+    public void scrollToDropCaret() {
+        scrollTo(dropCaret);
+    }
+
     private void scrollTo(final Caret caret) {
         final JScrollPane scrollPane = getScrollPaneParent();
         if (scrollPane == null) {
             return;
         }
 
+        final QuickWidthFont font = (QuickWidthFont) domain.getSettingsController().getSettings().getFont("editor.font");
         final JViewport viewport = scrollPane.getViewport();
         final int fontHeight = font.getFixedHeight();
         final int fontWidth = font.getFixedWidth();
@@ -106,11 +105,13 @@ public class JDocumentArea extends JComponent implements DomainAccess {
     }
 
     public void pageUp() {
+        final QuickWidthFont font = (QuickWidthFont) domain.getSettingsController().getSettings().getFont("editor.font");
         final int delta = -font.getFixedHeight() * 4;
         scroll(delta);
     }
 
     public void pageDown() {
+        final QuickWidthFont font = (QuickWidthFont) domain.getSettingsController().getSettings().getFont("editor.font");
         final int delta = font.getFixedHeight() * 4;
         scroll(delta);
     }
@@ -264,26 +265,6 @@ public class JDocumentArea extends JComponent implements DomainAccess {
             }
         }
         return max;
-    }
-
-    @Override
-    public void setFont(final Font font) {
-        if (!(font instanceof QuickWidthFont)) {
-            throw new IllegalArgumentException("only supported fonts for the JDocumentArea are QuickWidthFonts");
-        }
-        final QuickWidthFont qwFont = (QuickWidthFont) font;
-        if (!qwFont.isFixedWidth()) {
-            throw new IllegalArgumentException("only fixed width fonts are supported");
-        }
-        final Font oldFont = this.font;
-        firePropertyChange("font", oldFont, font);
-
-        this.font = qwFont;
-    }
-
-    @Override
-    public Font getFont() {
-        return font;
     }
 
     public boolean isThinCarets() {

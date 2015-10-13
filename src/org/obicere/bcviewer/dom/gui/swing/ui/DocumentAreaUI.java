@@ -131,7 +131,7 @@ public class DocumentAreaUI extends ComponentUI {
             g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         }
 
-        final QuickWidthFont font = (QuickWidthFont) area.getFont();
+        final QuickWidthFont font = (QuickWidthFont) settings.getFont("editor.font");
         final int fontHeight = font.getFixedHeight();
         final int fontWidth = font.getFixedWidth();
 
@@ -337,7 +337,7 @@ public class DocumentAreaUI extends ComponentUI {
     public Dimension getPreferredSize(final JComponent component) {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
-        final QuickWidthFont font = (QuickWidthFont) area.getFont();
+        final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
 
         final Dimension dimension = getDocumentSize(area, font.getFixedWidth(), font.getFixedHeight());
         final Insets insets = area.getInsets();
