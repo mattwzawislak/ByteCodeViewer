@@ -4,6 +4,7 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 
 import java.util.List;
 
@@ -24,4 +25,7 @@ public interface EditorPanel {
     public void setBlocks(final List<Block> blocks);
 
     public DocumentBuilder getBuilder();
+
+    public void setFont(final QuickWidthFont font);
+
 }

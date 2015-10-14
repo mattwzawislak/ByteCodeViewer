@@ -27,6 +27,8 @@ public interface FrameManager {
 
     public EditorPanel getEditorPanel(final String className);
 
+    public EditorPanel[] getEditorPanels();
+
     public boolean hasEditorPanel(final String className);
 
     public void displayEditorPanel(final String className);

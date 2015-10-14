@@ -4,6 +4,7 @@ import org.obicere.bcviewer.bytecode.Annotation;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.settings.Settings;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -108,10 +109,33 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
 
     @Override
     public void model(final DocumentBuilder builder) {
+        model(builder, false);
+    }
+
+    public void model(final DocumentBuilder builder, final boolean includeExtends) {
+        final Settings settings = builder.getDomain().getSettingsController().getSettings();
+        final boolean modelObject = settings.getBoolean("code.extendsObject");
+        if (simpleClassTypeSignature.getIdentifier().equals("Object") && !modelObject) {
+            // class name is "Object"
+            // need to check to see if the package is "java.lang"
+
+            final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
+            if (packageIdentifiers.length == 2) {
+                if (packageIdentifiers[0].equals("java") && packageIdentifiers[1].equals("lang")) {
+                    return;
+                }
+            }
+        }
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder);
         }
-        modelPackage(builder);
+
+        if(includeExtends) {
+            builder.addKeyword(" extends ");
+        }
+        if(!settings.getBoolean("code.importMode")){
+            modelPackage(builder);
+        }
         modelSignature(builder);
         modelSuffixes(builder);
     }

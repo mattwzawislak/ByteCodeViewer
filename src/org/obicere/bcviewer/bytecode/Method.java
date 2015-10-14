@@ -106,7 +106,12 @@ public class Method extends BytecodeElement {
 
         if (constructor) {
             // instead replace method name "<init>" with the class name
-            builder.add(BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
+            final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+            if (importMode) {
+                builder.add(BytecodeUtils.getClassName(builder.getClassFile().getName()));
+            } else {
+                builder.add(BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
+            }
         } else if (!staticInitializer) {
             // set the name to the method name otherwise - no name for clinit
             signature.modelReturnType(builder);

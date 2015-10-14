@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -134,6 +135,17 @@ public class SwingManager implements FrameManager {
     }
 
     @Override
+    public EditorPanel[] getEditorPanels() {
+        final ArrayList<EditorPanel> panels = new ArrayList<>(tabbedPane.getComponentCount());
+        for (final Component component : tabbedPane.getComponents()) {
+            if (component instanceof EditorPanel) {
+                panels.add((EditorPanel) component);
+            }
+        }
+        return panels.toArray(new EditorPanel[panels.size()]);
+    }
+
+    @Override
     public boolean hasEditorPanel(final String className) {
         return getEditorPanel(className) != null;
     }
@@ -168,7 +180,7 @@ public class SwingManager implements FrameManager {
         chooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(final File f) {
-                if(f.isDirectory()){
+                if (f.isDirectory()) {
                     return true;
                 }
                 final String name = f.getName();

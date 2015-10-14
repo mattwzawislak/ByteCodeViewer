@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author Obicere
@@ -175,7 +174,13 @@ public class CodeAttribute extends Attribute {
             } else {
                 catchType = constantPool.getAsString(exception.getCatchType());
             }
-            builder.add(BytecodeUtils.getQualifiedName(catchType));
+
+            final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+            if (importMode) {
+                builder.add(BytecodeUtils.getClassName(catchType));
+            } else {
+                builder.add(BytecodeUtils.getQualifiedName(catchType));
+            }
 
             final int handlerPC = exception.getHandlerPC();
             final String handler;

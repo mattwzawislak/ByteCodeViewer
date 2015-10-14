@@ -48,7 +48,7 @@ public class TypeVariableSignature extends ReferenceTypeSignature {
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder);
         }
-        builder.addType(identifier + " ");
+        builder.addType(identifier);
 
     }
 }

@@ -47,6 +47,13 @@ public class JDocumentArea extends JComponent implements DomainAccess {
     }
 
     @Override
+    public void setFont(final Font font) {
+        if (font instanceof QuickWidthFont) {
+            super.setFont(font);
+        }
+    }
+
+    @Override
     public void updateUI() {
         setUI(UIManager.getUI(this));
     }

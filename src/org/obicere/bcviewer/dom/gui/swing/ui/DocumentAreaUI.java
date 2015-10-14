@@ -135,7 +135,7 @@ public class DocumentAreaUI extends ComponentUI {
             g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         }
 
-        final QuickWidthFont font = (QuickWidthFont) settings.getFont("editor.font");
+        final QuickWidthFont font = (QuickWidthFont) area.getFont();
         final int fontHeight = font.getFixedHeight();
         final int fontWidth = font.getFixedWidth();
 
@@ -340,7 +340,7 @@ public class DocumentAreaUI extends ComponentUI {
     public Dimension getPreferredSize(final JComponent component) {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
-        final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+        final QuickWidthFont font = (QuickWidthFont) area.getFont();
 
         final Dimension dimension = getDocumentSize(area, font.getFixedWidth(), font.getFixedHeight());
         final Insets insets = area.getInsets();
@@ -350,7 +350,7 @@ public class DocumentAreaUI extends ComponentUI {
     }
 
     private Dimension getDocumentSize(final JDocumentArea area, final int fontWidth, final int fontHeight) {
-        return new Dimension(area.getMaxLineLength() * fontWidth, area.getLineCount() * fontHeight + fontHeight);
+        return new Dimension((area.getMaxLineLength() + 1) * fontWidth, (area.getLineCount() + 1) * fontHeight + fontHeight);
     }
 
     private class DocumentMouseListener extends MouseAdapter {
@@ -360,7 +360,7 @@ public class DocumentAreaUI extends ComponentUI {
             final int x = event.getX() - LEFT_MARGIN_WIDTH;
             final int y = event.getY();
 
-            final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+            final QuickWidthFont font = (QuickWidthFont) area.getFont();
 
             final int row = y / font.getFixedHeight();
             final int column = x / font.getFixedWidth();
@@ -399,7 +399,7 @@ public class DocumentAreaUI extends ComponentUI {
         @Override
         public void mouseClicked(final MouseEvent event) {
             if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2) {
-                final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+                final QuickWidthFont font = (QuickWidthFont) area.getFont();
                 final Caret caret = area.getCaret();
                 final Caret dropCaret = area.getDropCaret();
                 final int x = event.getX() - LEFT_MARGIN_WIDTH;
@@ -441,13 +441,13 @@ public class DocumentAreaUI extends ComponentUI {
         }
 
         private void handleCursorPlacement(final int x, final int y) {
-            final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+            final QuickWidthFont font = (QuickWidthFont) area.getFont();
             area.getCaret().setLocation(y / font.getFixedHeight(), x / font.getFixedWidth());
             area.repaint();
         }
 
         private void handleCloseBlock(final int y) {
-            final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+            final QuickWidthFont font = (QuickWidthFont) area.getFont();
             final int fontHeight = font.getFixedHeight();
             for (final Block block : area.getBlocks()) {
 

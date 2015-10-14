@@ -5,6 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Obicere
@@ -110,17 +111,25 @@ public class ClassFile extends BytecodeElement {
 
         // we use this override for InnerClass attributes to set the proper access flags
         final int accessFlags;
+        final boolean innerClass;
         final Object newAccessFlags = builder.getProperty("accessFlags");
         if (newAccessFlags != null) {
             accessFlags = (int) newAccessFlags;
+            innerClass = true;
         } else {
             accessFlags = getAccessFlags();
+            innerClass = false;
         }
         builder.openBlock();
 
         modelConstantPool(builder);
-        modelVersion(builder);
-        builder.newLine();
+
+        // only model version and imports for outer classes
+        if (!innerClass) {
+            modelImports(builder);
+            modelVersion(builder);
+            builder.newLine();
+        }
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
@@ -140,7 +149,6 @@ public class ClassFile extends BytecodeElement {
 
         builder.newLine();
         builder.add("}");
-        builder.newLine();
         builder.closeBlock();
     }
 
@@ -150,6 +158,70 @@ public class ClassFile extends BytecodeElement {
             return;
         }
         constantPool.model(builder);
+    }
+
+    private void modelImports(final DocumentBuilder builder) {
+        final boolean display = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+        if (!display) {
+            return;
+        }
+
+        final String thisName = BytecodeUtils.getQualifiedName(getName());
+        final int lastDot = thisName.lastIndexOf('.');
+
+        final String thisPackage;
+        if (lastDot > 0) {
+            thisPackage = thisName.substring(0, lastDot);
+        } else {
+            thisPackage = null;
+        }
+        final Set<String> imports = new TreeSet<>();
+        getImports(constantPool, imports, thisPackage);
+
+        final InnerClassesAttribute innerClassesAttribute = attributeSet.getAttribute(InnerClassesAttribute.class);
+        if (innerClassesAttribute != null) {
+            for (final InnerClass innerClass : innerClassesAttribute.getInnerClasses()) {
+                final ClassFile file = builder.getClassInformation().getClass(constantPool.getAsString(innerClass.getInnerClassInfoIndex()));
+                if (file == null) {
+                    continue;
+                }
+                getImports(file.getConstantPool(), imports, thisPackage);
+            }
+        }
+
+        for (final String next : imports) {
+            builder.addKeyword("import ");
+            builder.add(next);
+            builder.add(";");
+            builder.newLine();
+        }
+        builder.newLine();
+    }
+
+    private void getImports(final ConstantPool constantPool, final Set<String> imports, final String thisPackage) {
+
+        for (final Constant constant : constantPool.getConstants()) {
+            if (constant instanceof ConstantClass) {
+                final ConstantClass constantClass = (ConstantClass) constant;
+                final String name = constantClass.toString(constantPool);
+
+                // arrays are not imported
+                if(name.startsWith("[")){
+                    continue;
+                }
+
+                if (thisPackage != null) {
+                    final String nextPackage = BytecodeUtils.getPackage(name);
+                    if (nextPackage != null) {
+                        if (nextPackage.equals(thisPackage) || nextPackage.equals("java.lang")) {
+                            continue;
+                        }
+                    }
+                }
+
+                imports.add(BytecodeUtils.getQualifiedName(name));
+            }
+        }
     }
 
     private void addSynthetic(final DocumentBuilder builder) {
@@ -192,7 +264,12 @@ public class ClassFile extends BytecodeElement {
             builder.pad(1);
         }
 
-        builder.add(BytecodeUtils.getQualifiedName(getName()));
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+        if (importMode) {
+            builder.add(BytecodeUtils.getClassName(getName()));
+        } else {
+            builder.add(BytecodeUtils.getQualifiedName(getName()));
+        }
 
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
         final ClassSignature signature;
@@ -224,7 +301,11 @@ public class ClassFile extends BytecodeElement {
             ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
         }
 
-        signature.model(builder);
+        if (BytecodeUtils.isInterface(accessFlags)) {
+            signature.modelInterface(builder);
+        } else {
+            signature.modelClass(builder);
+        }
 
         builder.add(" {");
     }
@@ -280,7 +361,6 @@ public class ClassFile extends BytecodeElement {
                     continue;
                 }
 
-                builder.newLine();
                 builder.newLine();
                 innerClass.model(builder);
             }

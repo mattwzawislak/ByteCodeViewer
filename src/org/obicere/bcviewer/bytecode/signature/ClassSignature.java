@@ -132,7 +132,21 @@ public class ClassSignature extends AnnotationTarget {
 
     @Override
     public void model(final DocumentBuilder builder) {
+        modelClass(builder);
+    }
+
+    public void modelClass(final DocumentBuilder builder) {
         modelTypeParameters(builder);
+
+        modelSuperclass(builder);
+
+        modelSuperinterfaces(builder);
+    }
+
+    public void modelInterface(final DocumentBuilder builder) {
+        modelTypeParameters(builder);
+
+        modelSuperinterfaces(builder);
     }
 
     private void modelTypeParameters(final DocumentBuilder builder) {
@@ -142,9 +156,35 @@ public class ClassSignature extends AnnotationTarget {
             return;
         }
         builder.add("<");
+        boolean first = true;
         for (final TypeParameter type : types) {
+            if (!first) {
+                builder.comma();
+            }
             type.model(builder);
+            first = false;
         }
         builder.add(">");
+    }
+
+    private void modelSuperclass(final DocumentBuilder builder) {
+        final ClassTypeSignature signature = superclassSignature.getClassTypeSignature();
+
+        signature.model(builder, true);
+    }
+
+    private void modelSuperinterfaces(final DocumentBuilder builder) {
+        boolean first = true;
+
+        for (final SuperinterfaceSignature signature : superinterfaceSignatures) {
+            if (first) {
+                builder.addKeyword(" implements ");
+            } else {
+                builder.comma();
+            }
+
+            signature.model(builder);
+            first = false;
+        }
     }
 }
