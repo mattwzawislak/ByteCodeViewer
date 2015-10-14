@@ -100,8 +100,6 @@ public class CodeAttribute extends Attribute {
 
     @Override
     public void model(final DocumentBuilder builder) {
-        final ConstantPool constantPool = builder.getConstantPool();
-        // entire code block should be collapsible
 
         final LineNumber[] lines = getLines();
         for (final LineNumber line : lines) {
@@ -195,25 +193,33 @@ public class CodeAttribute extends Attribute {
     }
 
     private void modelLines(final DocumentBuilder builder, final Iterable<Block> blocks) {
+        builder.setProperty("code", this);
+
+        boolean first = true;
         for (final Block block : blocks) {
-            builder.newLine();
+            if(!first){
+                builder.newLine();
+            }
+
             builder.add(block.getName());
             builder.add(" {");
             builder.indent();
 
             block.model(builder);
 
-            builder.setProperty("code", this);
             for (final Instruction instruction : block.getInstructions()) {
                 builder.newLine();
                 instruction.model(builder);
             }
 
-            builder.setProperty("code", null);
             builder.unindent();
             builder.newLine();
             builder.add("}");
+
+            first = false;
         }
+
+        builder.setProperty("code", null);
     }
 
     private Map<Integer, FieldSignature> getLocalVariables(final ConstantPool constantPool) {

@@ -60,13 +60,12 @@ public class Method extends BytecodeElement {
         if (hasBody) {
 
             // allow methods to be collapsed
-            builder.openCollapsibleBlock();
             builder.indent();
+            builder.openCollapsibleBlock();
             code.model(builder);
             builder.unindent();
             builder.closeCollapsibleBlock();
 
-            builder.newLine();
             builder.add("}");
         }
     }
