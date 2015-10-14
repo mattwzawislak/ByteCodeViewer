@@ -79,14 +79,16 @@ public class DocumentBuildRequest {
             return;
         }
         constraints.close();
-        final Line line = new Line(constraints, this.line.toString().toCharArray());
+        final Line newLine = new Line(constraints, line.toString().toCharArray());
         if (workingBlock == null) {
             openBlock(new Block());
         }
-        workingBlock.addLine(line);
+        workingBlock.addLine(newLine);
 
         this.line = new StringBuilder();
         constraints = new StyleConstraints();
+
+        tab(indentLevel);
     }
 
     public void openBlock(final Block block) {
@@ -112,7 +114,6 @@ public class DocumentBuildRequest {
 
     public void newLine() {
         pushLine();
-        tab(indentLevel);
     }
 
     public void tab(final int count) {
