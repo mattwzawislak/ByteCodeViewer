@@ -116,9 +116,9 @@ public class ClassFile extends BytecodeElement {
         } else {
             accessFlags = getAccessFlags();
         }
-
         builder.openBlock();
 
+        modelConstantPool(builder);
         modelVersion(builder);
         builder.newLine();
 
@@ -142,6 +142,14 @@ public class ClassFile extends BytecodeElement {
         builder.add("}");
         builder.newLine();
         builder.closeBlock();
+    }
+
+    private void modelConstantPool(final DocumentBuilder builder) {
+        final boolean display = builder.getDomain().getSettingsController().getSettings().getBoolean("code.includeConstantPool");
+        if (!display) {
+            return;
+        }
+        constantPool.model(builder);
     }
 
     private void addSynthetic(final DocumentBuilder builder) {

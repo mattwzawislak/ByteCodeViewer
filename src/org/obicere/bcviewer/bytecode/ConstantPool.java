@@ -39,7 +39,8 @@ public class ConstantPool extends BytecodeElement {
 
         builder.add("Constant Pool:");
         builder.indent();
-        builder.newLine();
+        builder.openCollapsibleBlock();
+        //builder.newLine();
 
         // start at i=1 to avoid the always-null and never used constant
         for (int i = 1; i < constants.length; i++) {
@@ -54,5 +55,6 @@ public class ConstantPool extends BytecodeElement {
             builder.newLine();
         }
         builder.unindent();
+        builder.closeBlock();
     }
 }
