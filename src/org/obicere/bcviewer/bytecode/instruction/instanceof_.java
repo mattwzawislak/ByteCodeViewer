@@ -1,6 +1,5 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
-import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
@@ -36,6 +35,6 @@ public class instanceof_ extends Instruction {
     public void model(final DocumentBuilder builder) {
         super.model(builder);
         builder.tab();
-        builder.add(builder.getConstantPool().getAsString(getIndex()));
+        builder.getConstantPool().get(getIndex()).modelValue(builder);
     }
 }

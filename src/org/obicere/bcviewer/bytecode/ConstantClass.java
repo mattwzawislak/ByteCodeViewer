@@ -2,6 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
+import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
  * @author Obicere
@@ -34,6 +35,9 @@ public class ConstantClass extends Constant {
 
     @Override
     public void modelValue(final DocumentBuilder builder) {
-        builder.add(builder.getConstantPool().getAsString(getNameIndex()));
+        builder.indent();
+        builder.newLine();
+        builder.add(BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(getNameIndex())));
+        builder.unindent();
     }
 }
