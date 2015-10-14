@@ -168,6 +168,9 @@ public class SwingManager implements FrameManager {
         chooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(final File f) {
+                if(f.isDirectory()){
+                    return true;
+                }
                 final String name = f.getName();
                 final int lastIndex = name.lastIndexOf('.');
                 final String extension;
