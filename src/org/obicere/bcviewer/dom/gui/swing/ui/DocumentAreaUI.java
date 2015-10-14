@@ -396,6 +396,50 @@ public class DocumentAreaUI extends ComponentUI {
             }
         }
 
+        @Override
+        public void mouseClicked(final MouseEvent event) {
+            if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2) {
+                final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+                final Caret caret = area.getCaret();
+                final Caret dropCaret = area.getDropCaret();
+                final int x = event.getX() - LEFT_MARGIN_WIDTH;
+                final int y = event.getY();
+
+                final int column = x / font.getFixedWidth();
+                final int row = y / font.getFixedHeight();
+
+                final Line line = area.getLine(row);
+
+                int lower = column;
+                int higher = column + 1;
+                final char[] chars = line.getChars();
+
+                if (column > chars.length) {
+                    return;
+                }
+
+                while (lower > 0) {
+                    final char next = chars[lower - 1];
+                    if (!Character.isLetterOrDigit(next) && next != '_') {
+                        break;
+                    }
+                    lower--;
+                }
+
+                while (higher < chars.length) {
+                    final char next = chars[higher];
+                    if (!Character.isLetterOrDigit(next) && next != '_') {
+                        break;
+                    }
+                    higher++;
+                }
+
+                caret.setLocation(row, higher);
+                dropCaret.setLocation(row, lower);
+                area.repaint();
+            }
+        }
+
         private void handleCursorPlacement(final int x, final int y) {
             final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
             area.getCaret().setLocation(y / font.getFixedHeight(), x / font.getFixedWidth());
