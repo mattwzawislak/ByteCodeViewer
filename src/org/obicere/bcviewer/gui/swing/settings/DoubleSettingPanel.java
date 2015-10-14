@@ -42,7 +42,7 @@ public class DoubleSettingPanel extends SettingPanel<Double> {
 
         add(descriptor);
         add(Box.createHorizontalStrut(5));
-        add(Box.createVerticalGlue());
+        add(Box.createHorizontalGlue());
         add(spinner);
     }
 

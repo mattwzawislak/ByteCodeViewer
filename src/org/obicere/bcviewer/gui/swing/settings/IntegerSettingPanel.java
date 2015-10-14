@@ -2,7 +2,6 @@ package org.obicere.bcviewer.gui.swing.settings;
 
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.settings.SettingsController;
-import org.obicere.bcviewer.settings.target.IntegerSetting;
 import org.obicere.bcviewer.settings.target.NumberSetting;
 import org.obicere.bcviewer.settings.target.Setting;
 
@@ -43,7 +42,7 @@ public class IntegerSettingPanel extends SettingPanel<Integer> {
 
         add(descriptor);
         add(Box.createHorizontalStrut(5));
-        add(Box.createVerticalGlue());
+        add(Box.createHorizontalGlue());
         add(spinner);
     }
 

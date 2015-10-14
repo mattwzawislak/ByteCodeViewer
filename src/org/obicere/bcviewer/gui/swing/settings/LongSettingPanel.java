@@ -42,7 +42,7 @@ public class LongSettingPanel extends SettingPanel<Long> {
 
         add(descriptor);
         add(Box.createHorizontalStrut(5));
-        add(Box.createVerticalGlue());
+        add(Box.createHorizontalGlue());
         add(spinner);
     }
 

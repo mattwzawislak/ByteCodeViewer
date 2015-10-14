@@ -21,13 +21,10 @@ import org.obicere.utility.swing.VerticalFlowLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.util.Set;
@@ -80,24 +77,9 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         final SettingsController controller = domain.getSettingsController();
 
-        final CardLayout layout = new CardLayout(5, 5);
-
-        final JPanel selectedGroupPanel = new JPanel(layout);
-        final JScrollPane scrollPane = new JScrollPane(selectedGroupPanel);
+        final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 
         final Set<Group> groups = controller.getGroups();
-        final String[] groupNames = groups.stream().map(Group::getGroupName).toArray(String[]::new);
-
-        final JList<String> groupSelectorList = new JList<>(groupNames);
-
-        groupSelectorList.addListSelectionListener(e -> {
-            final String selectedGroup = groupSelectorList.getSelectedValue();
-            if (selectedGroup != null) {
-                layout.show(selectedGroupPanel, selectedGroup);
-            }
-        });
-
-        groupSelectorList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         for (final Group group : groups) {
             final String name = group.getGroupName();
@@ -113,12 +95,11 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
                 }
             }
 
-            selectedGroupPanel.add(settingPanel, name);
+            tabbedPane.add(name, settingPanel);
         }
 
         content.setBorder(new EmptyBorder(5, 5, 5, 5));
-        content.add(groupSelectorList, BorderLayout.WEST);
-        content.add(scrollPane, BorderLayout.CENTER);
+        content.add(tabbedPane, BorderLayout.CENTER);
 
         return content;
     }
