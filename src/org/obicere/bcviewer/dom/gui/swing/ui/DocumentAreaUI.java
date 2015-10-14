@@ -3,11 +3,11 @@ package org.obicere.bcviewer.dom.gui.swing.ui;
 import org.obicere.bcviewer.Boot;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.Line;
-import org.obicere.bcviewer.dom.style.Style;
-import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.Caret;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
+import org.obicere.bcviewer.dom.style.Style;
+import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.settings.Settings;
 
 import javax.swing.AbstractAction;
@@ -15,6 +15,7 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import java.awt.Dimension;
@@ -142,6 +143,7 @@ public class DocumentAreaUI extends ComponentUI {
 
         g.setColor(area.getBackground());
         g.fillRect(visible.x, visible.y, visible.width, visible.height);
+        g.setColor(area.getForeground());
 
         final int visibleTop = visible.y;
         // add fontHeight for integer division and ensuring last line
@@ -217,8 +219,6 @@ public class DocumentAreaUI extends ComponentUI {
             final int x = column * fontWidth + LEFT_MARGIN_WIDTH;
             final int y = row * fontHeight;
 
-            // lets just use an approximation of + 2 for the descent
-            // or whichever font metric is used to offset these damn things
             g.fillRect(x, y + metrics.getDescent(), thin ? 1 : 2, fontHeight);
         }
     }
@@ -359,9 +359,19 @@ public class DocumentAreaUI extends ComponentUI {
         public void mouseDragged(final MouseEvent event) {
             final int x = event.getX() - LEFT_MARGIN_WIDTH;
             final int y = event.getY();
-            final QuickWidthFont font = (QuickWidthFont) area.getFont();
-            area.getDropCaret().setLocation(y / font.getFixedHeight(), x / font.getFixedWidth());
-            area.scrollToDropCaret();
+
+            final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
+
+            final int row = y / font.getFixedHeight();
+            final int column = x / font.getFixedWidth();
+
+            if (SwingUtilities.isLeftMouseButton(event)) {
+                area.getDropCaret().setLocation(row, column);
+                area.scrollToDropCaret();
+            } else if (SwingUtilities.isMiddleMouseButton(event)) {
+                area.getCaret().setLocation(row, column);
+                area.scrollToCaret();
+            }
             area.repaint();
         }
 
@@ -387,13 +397,13 @@ public class DocumentAreaUI extends ComponentUI {
         }
 
         private void handleCursorPlacement(final int x, final int y) {
-            final QuickWidthFont font = (QuickWidthFont) area.getFont();
+            final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
             area.getCaret().setLocation(y / font.getFixedHeight(), x / font.getFixedWidth());
             area.repaint();
         }
 
         private void handleCloseBlock(final int y) {
-            final QuickWidthFont font = (QuickWidthFont) area.getFont();
+            final QuickWidthFont font = (QuickWidthFont) area.getDomain().getSettingsController().getSettings().getFont("editor.font");
             final int fontHeight = font.getFixedHeight();
             for (final Block block : area.getBlocks()) {
 
