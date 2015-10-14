@@ -6,6 +6,7 @@ import org.obicere.bcviewer.settings.target.NumberSetting;
 import org.obicere.bcviewer.settings.target.Setting;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -39,6 +40,9 @@ public class LongSettingPanel extends SettingPanel<Long> {
         this.spinner = new JSpinner(new SpinnerNumberModel((long) controller.getSettings().getLong(setting.getName()), minValue, maxValue, 1));
 
         spinner.addChangeListener(e -> controller.getSettings().set(setting.getName(), spinner.getValue()));
+
+        final BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);
+        setLayout(layout);
 
         add(descriptor);
         add(Box.createHorizontalStrut(5));
