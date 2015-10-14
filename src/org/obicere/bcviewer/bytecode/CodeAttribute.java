@@ -164,10 +164,8 @@ public class CodeAttribute extends Attribute {
             } else {
                 end = "?";
             }
-
-            builder.newLine();
             builder.addKeyword("try");
-            builder.add(": [" + start + "-" + end + "] ");
+            builder.add(" [" + start + "-" + end + "] ");
             builder.addKeyword("catch ");
 
             final String catchType;
@@ -185,10 +183,10 @@ public class CodeAttribute extends Attribute {
                 handler = startPCToLine.get(handlerPC).getName();
             } else {
                 Logger.getGlobal().log(Level.SEVERE, "Expected a target instruction in CA: " + getIdentifier() + ", target: " + handlerPC);
-                Logger.getGlobal().log(Level.SEVERE, "\tTargets: " + startPCToLine.entrySet().stream().map(Map.Entry::getValue).map(Block::getStartPC).sorted().collect(Collectors.toList()).toString());
                 handler = String.valueOf(handlerPC);
             }
-            builder.add(" Handler: " + handler);
+            builder.add(" " + handler);
+            builder.newLine();
         }
     }
 
@@ -197,7 +195,7 @@ public class CodeAttribute extends Attribute {
 
         boolean first = true;
         for (final Block block : blocks) {
-            if(!first){
+            if (!first) {
                 builder.newLine();
             }
 
