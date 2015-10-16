@@ -56,5 +56,6 @@ public class ConstantPool extends BytecodeElement {
         }
         builder.unindent();
         builder.closeBlock();
+        builder.newLine();
     }
 }

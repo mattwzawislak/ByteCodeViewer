@@ -16,8 +16,6 @@ public interface EditorPanel {
 
     public ClassFile getClassFile();
 
-    public byte[] getClassBytes();
-
     public void setClassInformation(final ClassInformation information);
 
     public void update(final String update);
@@ -27,5 +25,9 @@ public interface EditorPanel {
     public DocumentBuilder getBuilder();
 
     public void setFont(final QuickWidthFont font);
+
+    public void reload();
+
+    public void hardReload();
 
 }

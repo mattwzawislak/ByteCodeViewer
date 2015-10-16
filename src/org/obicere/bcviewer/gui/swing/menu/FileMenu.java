@@ -13,7 +13,6 @@ public class FileMenu extends JMenu {
 
     public FileMenu(final Domain domain) {
         super("File");
-        setName("file");
         setMnemonic('F');
 
         final JMenuItem open = new JMenuItem("Open");

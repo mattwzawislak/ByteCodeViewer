@@ -1,6 +1,9 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
+import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.concurrent.ClassLoaderService;
+import org.obicere.bcviewer.concurrent.ClassModelerService;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
@@ -9,6 +12,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
+import org.obicere.utility.io.FileSource;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -72,7 +76,6 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     public void setClassInformation(final ClassInformation classInformation) {
         this.classInformation = classInformation;
         setClassFile(classInformation.getRootClass());
-        setClassBytes(classInformation.getClassBytes());
     }
 
     @Override
@@ -85,16 +88,6 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
             return;
         }
         this.loadedClassFile = classFile;
-    }
-
-    private void setClassBytes(final byte[] bytes) {
-        //byteTextPane.setBytes(bytes);
-    }
-
-    @Override
-    public byte[] getClassBytes() {
-        return null;
-        //return byteTextPane.getBytes();
     }
 
     @Override
@@ -122,6 +115,27 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     @Override
     public void setFont(final QuickWidthFont font) {
         documentArea.setFont(font);
+    }
+
+    @Override
+    public void reload() {
+        final ClassModelerService service = domain.getClassModelerService();
+
+        final ClassCallback callback = new ClassCallback(this);
+
+        service.postRequest(callback, builder, classInformation);
+    }
+
+    @Override
+    public void hardReload() {
+        classInformation.clear();
+
+        final ClassLoaderService service = domain.getClassLoaderService();
+
+        final ClassCallback callback = new ClassCallback(this);
+        final FileSource fileSource = classInformation.getFileSource();
+
+        service.postRequest(callback, fileSource);
     }
 
     @Override

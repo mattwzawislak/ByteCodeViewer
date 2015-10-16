@@ -127,10 +127,8 @@ public class ClassFile extends BytecodeElement {
 
         // only model version and imports for outer classes
         if (!innerClass) {
-            builder.newLine();
             modelImports(builder);
             modelVersion(builder);
-            builder.newLine();
         }
 
         if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
@@ -252,6 +250,7 @@ public class ClassFile extends BytecodeElement {
         builder.add(majorVersion);
         builder.add(" Minor: ");
         builder.add(minorVersion);
+        builder.newLine();
         builder.newLine();
     }
 

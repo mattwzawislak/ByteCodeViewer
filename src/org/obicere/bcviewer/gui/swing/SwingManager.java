@@ -167,6 +167,11 @@ public class SwingManager implements FrameManager {
     }
 
     @Override
+    public EditorPanel getOpenEditorPanel() {
+        return (EditorPanel) tabbedPane.getSelectedComponent();
+    }
+
+    @Override
     public File[] promptForFiles(final String... extensions) {
 
         final List<String> listExtensions = Arrays.asList(extensions);

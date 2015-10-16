@@ -673,13 +673,7 @@ public class DocumentAreaUI extends ComponentUI {
             if (panel == null) {
                 return;
             }
-            final ClassModelerService service = area.getDomain().getClassModelerService();
-
-            final ClassCallback callback = new ClassCallback(panel);
-            final DocumentBuilder builder = panel.getBuilder();
-            final ClassInformation classInformation = panel.getClassInformation();
-
-            service.postRequest(callback, builder, classInformation);
+            panel.reload();
         }
     }
 
@@ -693,16 +687,7 @@ public class DocumentAreaUI extends ComponentUI {
             if (panel == null) {
                 return;
             }
-
-            final ClassInformation information = panel.getClassInformation();
-            information.clear();
-
-            final ClassLoaderService service = area.getDomain().getClassLoaderService();
-
-            final ClassCallback callback = new ClassCallback(panel);
-            final FileSource fileSource = information.getFileSource();
-
-            service.postRequest(callback, fileSource);
+            panel.hardReload();
         }
     }
 }
