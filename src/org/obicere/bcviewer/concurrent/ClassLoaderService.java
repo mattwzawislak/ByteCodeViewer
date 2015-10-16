@@ -24,7 +24,7 @@ public class ClassLoaderService implements DomainAccess {
 
     private final ExecutorService classLoaderExecutorService = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
 
-    public Future<ClassInformation> requestProcess(final ClassCallback callback, final FileSource file) {
+    public Future<ClassInformation> postRequest(final ClassCallback callback, final FileSource file) {
 
         final FileLoadRequest request = new FileLoadRequest(callback, file);
         return classLoaderExecutorService.submit(request);

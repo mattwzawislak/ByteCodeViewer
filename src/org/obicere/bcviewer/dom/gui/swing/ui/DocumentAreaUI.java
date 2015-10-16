@@ -2,6 +2,7 @@ package org.obicere.bcviewer.dom.gui.swing.ui;
 
 import org.obicere.bcviewer.Boot;
 import org.obicere.bcviewer.concurrent.ClassCallback;
+import org.obicere.bcviewer.concurrent.ClassLoaderService;
 import org.obicere.bcviewer.concurrent.ClassModelerService;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.dom.Block;
@@ -14,6 +15,7 @@ import org.obicere.bcviewer.dom.style.Style;
 import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.settings.Settings;
+import org.obicere.utility.io.FileSource;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -104,6 +106,7 @@ public class DocumentAreaUI extends ComponentUI {
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), PageUpAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), PageDownAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), ReloadAction.NAME);
+        inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.CTRL_DOWN_MASK), HardReloadAction.NAME);
 
         final ActionMap actions = area.getActionMap();
         actions.put(CaretRightAction.NAME, new CaretRightAction());
@@ -115,6 +118,7 @@ public class DocumentAreaUI extends ComponentUI {
         actions.put(PageUpAction.NAME, new PageUpAction());
         actions.put(PageDownAction.NAME, new PageDownAction());
         actions.put(ReloadAction.NAME, new ReloadAction());
+        actions.put(HardReloadAction.NAME, new HardReloadAction());
     }
 
     @Override
@@ -676,6 +680,29 @@ public class DocumentAreaUI extends ComponentUI {
             final ClassInformation classInformation = panel.getClassInformation();
 
             service.postRequest(callback, builder, classInformation);
+        }
+    }
+
+    private class HardReloadAction extends AbstractAction {
+
+        private static final String NAME = "HardReload";
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            final EditorPanel panel = (EditorPanel) SwingUtilities.getAncestorOfClass(EditorPanel.class, area);
+            if (panel == null) {
+                return;
+            }
+
+            final ClassInformation information = panel.getClassInformation();
+            information.clear();
+
+            final ClassLoaderService service = area.getDomain().getClassLoaderService();
+
+            final ClassCallback callback = new ClassCallback(panel);
+            final FileSource fileSource = information.getFileSource();
+
+            service.postRequest(callback, fileSource);
         }
     }
 }

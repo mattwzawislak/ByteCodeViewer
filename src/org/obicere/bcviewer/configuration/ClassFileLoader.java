@@ -92,7 +92,7 @@ public class ClassFileLoader implements DomainAccess {
             return;
         }
         final EditorPanel panel = frameManager.createEditorPanel(className);
-        service.requestProcess(new ClassCallback(panel), file);
+        service.postRequest(new ClassCallback(panel), file);
     }
 
     private void loadArchive(final FrameManager frameManager, final File file) {

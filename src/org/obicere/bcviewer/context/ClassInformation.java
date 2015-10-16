@@ -47,8 +47,11 @@ public class ClassInformation implements DomainAccess {
         return rootClass;
     }
 
+    public FileSource getFileSource() {
+        return fileSource;
+    }
+
     public void clear() {
-        fileSource = null;
         rootClass = null;
         classBytes = null;
 
