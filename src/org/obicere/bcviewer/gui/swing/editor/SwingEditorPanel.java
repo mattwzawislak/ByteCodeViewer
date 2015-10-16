@@ -6,6 +6,7 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
 import org.obicere.bcviewer.dom.DocumentBuilder;
+import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
 
@@ -116,6 +117,11 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     @Override
     public DocumentBuilder getBuilder() {
         return builder;
+    }
+
+    @Override
+    public void setFont(final QuickWidthFont font) {
+        documentArea.setFont(font);
     }
 
     @Override

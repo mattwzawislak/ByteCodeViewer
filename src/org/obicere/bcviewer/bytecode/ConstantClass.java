@@ -37,7 +37,13 @@ public class ConstantClass extends Constant {
     public void modelValue(final DocumentBuilder builder) {
         builder.indent();
         builder.newLine();
-        builder.add(BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(getNameIndex())));
+        final String name = builder.getConstantPool().getAsString(getNameIndex());
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+        if (importMode) {
+            builder.add(BytecodeUtils.getClassName(name));
+        } else {
+            builder.add(BytecodeUtils.getQualifiedName(name));
+        }
         builder.unindent();
     }
 }

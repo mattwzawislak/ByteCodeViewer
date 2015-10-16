@@ -101,8 +101,8 @@ public class TypeParameter extends AnnotationTarget {
         boolean classModeled = false;
         final ReferenceTypeSignature classReference = classBound.getReferenceTypeSignature();
         if (classReference != null) {
-            builder.addKeyword(" extends ");
-            classReference.model(builder);
+            final ClassTypeSignature signature = (ClassTypeSignature) classReference;
+            signature.model(builder, true);
             classModeled = true;
         }
 

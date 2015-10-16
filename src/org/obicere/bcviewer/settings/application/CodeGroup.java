@@ -16,10 +16,14 @@ public class CodeGroup implements Group {
     private static final IntegerSetting TAB_SIZE = new IntegerSetting(SUFFIX + "tabSize", "Tab size", 4, 1, Integer.MAX_VALUE);
 
     private static final BooleanSetting INCLUDE_CONSTANT_POOL = new BooleanSetting(SUFFIX + "includeConstantPool", "Include Constant Pool", false);
+    private static final BooleanSetting EXTENDS_OBJECT        = new BooleanSetting(SUFFIX + "extendsObject", "Show extends Object", false);
+    private static final BooleanSetting IMPORT_MODE           = new BooleanSetting(SUFFIX + "importMode", "Show imports instead of qualified names", true);
 
     private static final Setting<?>[] SETTINGS = new Setting[]{
             TAB_SIZE,
-            INCLUDE_CONSTANT_POOL
+            INCLUDE_CONSTANT_POOL,
+            EXTENDS_OBJECT,
+            IMPORT_MODE
     };
 
     @Override

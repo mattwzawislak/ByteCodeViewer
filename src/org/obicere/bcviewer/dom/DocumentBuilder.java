@@ -187,7 +187,7 @@ public class DocumentBuilder implements DomainAccess {
     }
 
     public void comma() {
-        request.submit(null, ", ");
+        request.submit(StyleConstants.PLAIN, ", ");
     }
 
     public void indent() {

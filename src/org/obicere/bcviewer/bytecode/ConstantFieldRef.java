@@ -51,9 +51,14 @@ public class ConstantFieldRef extends Constant {
         signature.model(builder);
         builder.add(" ");
 
-        builder.add(BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+        if (importMode) {
+            builder.add(BytecodeUtils.getClassName(constantPool.getAsString(getClassIndex())));
+        } else {
+            builder.add(BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
+        }
         builder.add("#");
-        builder.add(BytecodeUtils.getQualifiedName(constantPool.getAsString(nameAndType.getNameIndex())));
+        builder.add(constantPool.getAsString(nameAndType.getNameIndex()));
 
     }
 }

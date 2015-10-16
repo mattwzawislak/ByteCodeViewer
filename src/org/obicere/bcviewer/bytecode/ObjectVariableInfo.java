@@ -23,7 +23,12 @@ public class ObjectVariableInfo extends VerificationTypeInfo {
         if (fieldSignature != null) {
             fieldSignature.model(builder);
         } else {
-            builder.add(BytecodeUtils.getQualifiedName(signature));
+            final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+            if (importMode) {
+                builder.add(BytecodeUtils.getClassName(signature));
+            } else {
+                builder.add(BytecodeUtils.getQualifiedName(signature));
+            }
         }
     }
 }

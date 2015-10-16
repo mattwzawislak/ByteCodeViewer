@@ -214,8 +214,31 @@ public class BytecodeUtils {
         return list.toArray(new String[list.size()]);
     }
 
-    public static String getQualifiedName(final String className) {
+    public static String getQualifiedName(String className) {
+        if (className.startsWith("L") && className.endsWith(";")) {
+            className = className.substring(1, className.length() - 1);
+        }
         return className.replace('/', '.');
+    }
+
+    public static String getClassName(final String className) {
+        final String qualified = getQualifiedName(className);
+        final int index = qualified.lastIndexOf('.');
+        if (index > 0) {
+            return qualified.substring(index + 1);
+        } else {
+            return className;
+        }
+    }
+
+    public static String getPackage(final String className) {
+        final String qualified = getQualifiedName(className);
+        final int index = qualified.lastIndexOf('.');
+        if (index > 0) {
+            return qualified.substring(0, index);
+        } else {
+            return null;
+        }
     }
 
     public static boolean isPublic(final int access) {

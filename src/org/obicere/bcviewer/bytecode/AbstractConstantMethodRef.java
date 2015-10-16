@@ -34,7 +34,15 @@ public abstract class AbstractConstantMethodRef extends Constant {
     @Override
     public void modelValue(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final String className = BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex()));
+
+        final String rawName = constantPool.getAsString(getClassIndex());
+        final String className;
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+        if (importMode) {
+            className = BytecodeUtils.getClassName(rawName);
+        } else {
+            className = BytecodeUtils.getQualifiedName(rawName);
+        }
 
         final ConstantNameAndType nameAndType = (ConstantNameAndType) constantPool.get(getNameAndTypeIndex());
         final String name = constantPool.getAsString(nameAndType.getNameIndex());
