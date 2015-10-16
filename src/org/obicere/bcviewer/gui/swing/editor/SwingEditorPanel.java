@@ -107,6 +107,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         remove(status);
         revalidate();
         add(split);
+        documentArea.getBlocks().clear();
         blocks.forEach(documentArea::addBlock);
         revalidate();
         repaint();
