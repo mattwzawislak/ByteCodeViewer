@@ -1,12 +1,7 @@
 package org.obicere.bcviewer.dom.gui.swing.ui;
 
 import org.obicere.bcviewer.Boot;
-import org.obicere.bcviewer.concurrent.ClassCallback;
-import org.obicere.bcviewer.concurrent.ClassLoaderService;
-import org.obicere.bcviewer.concurrent.ClassModelerService;
-import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.dom.Block;
-import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.Line;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.Caret;
@@ -15,7 +10,6 @@ import org.obicere.bcviewer.dom.style.Style;
 import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.settings.Settings;
-import org.obicere.utility.io.FileSource;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -565,7 +559,7 @@ public class DocumentAreaUI extends ComponentUI {
 
     private class CopyAction extends AbstractAction {
 
-        private static final String COPY = "Copy";
+        private static final String NAME = "Copy";
 
         @Override
         public void actionPerformed(final ActionEvent e) {
