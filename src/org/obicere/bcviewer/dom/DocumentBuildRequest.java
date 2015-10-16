@@ -75,9 +75,6 @@ public class DocumentBuildRequest {
     }
 
     private void pushLine() {
-        if (line.length() == 0) {
-            return;
-        }
         constraints.close();
         final Line newLine = new Line(constraints, line.toString().toCharArray());
         if (workingBlock == null) {

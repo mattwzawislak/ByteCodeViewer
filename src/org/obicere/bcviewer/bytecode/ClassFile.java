@@ -4,6 +4,7 @@ import org.obicere.bcviewer.bytecode.signature.ClassSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -126,6 +127,7 @@ public class ClassFile extends BytecodeElement {
 
         // only model version and imports for outer classes
         if (!innerClass) {
+            builder.newLine();
             modelImports(builder);
             modelVersion(builder);
             builder.newLine();
@@ -206,17 +208,15 @@ public class ClassFile extends BytecodeElement {
                 final String name = constantClass.toString(constantPool);
 
                 // arrays are not imported
-                if(name.startsWith("[")){
+                if (name.startsWith("[")) {
                     continue;
                 }
 
-                if (thisPackage != null) {
-                    final String nextPackage = BytecodeUtils.getPackage(name);
-                    if (nextPackage != null) {
-                        if (nextPackage.equals(thisPackage) || nextPackage.equals("java.lang")) {
-                            continue;
-                        }
-                    }
+                final String nextPackage = BytecodeUtils.getPackage(name);
+                // check to see if they are both null or both equal
+                // and also exclude java.lang packages
+                if (Objects.equals(nextPackage, thisPackage) || nextPackage != null && nextPackage.equals("java.lang")) {
+                    continue;
                 }
 
                 imports.add(BytecodeUtils.getQualifiedName(name));
