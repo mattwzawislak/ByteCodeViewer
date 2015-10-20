@@ -8,17 +8,26 @@ import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 import org.obicere.bcviewer.gui.swing.settings.SwingSettingsManager;
 
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,9 +169,20 @@ public class SwingManager implements FrameManager {
 
     @Override
     public EditorPanel createEditorPanel(final String className) {
+        final int index = tabbedPane.getTabCount();
+
         final SwingEditorPanel panel = new SwingEditorPanel(domain);
         panel.setName(className);
-        tabbedPane.add(panel);
+        tabbedPane.add(className, panel);
+
+        final JPanel tabPanel = new JPanel();
+
+        tabPanel.setOpaque(false);
+        tabPanel.add(new JLabel(className));
+        tabPanel.add(new TabCloseButton(className));
+
+        tabbedPane.setTabComponentAt(index, tabPanel);
+
         return panel;
     }
 
@@ -170,7 +190,9 @@ public class SwingManager implements FrameManager {
     public EditorPanel removeEditorPanel(final String className) {
         final SwingEditorPanel component = (SwingEditorPanel) getEditorPanel(className);
         if (component != null) {
+            tabbedPane.removeTabAt(tabbedPane.indexOfTab(className));
             tabbedPane.remove(component);
+            System.out.println(Arrays.toString(tabbedPane.getComponents()));
             return component;
         }
         return null;
@@ -227,5 +249,41 @@ public class SwingManager implements FrameManager {
     @Override
     public SettingsManager<?> getSettingsManager() {
         return settings;
+    }
+
+    private class TabCloseButton extends JButton {
+
+        public TabCloseButton(final String className) {
+            setPreferredSize(new Dimension(17, 17));
+            setFocusable(false);
+            setBorderPainted(false);
+            setOpaque(false);
+            setContentAreaFilled(false);
+            addActionListener(e -> removeEditorPanel(className));
+        }
+
+        @Override
+        protected void paintComponent(final Graphics g) {
+
+            final ButtonModel model = getModel();
+            if (model.isRollover()) {
+                g.setColor(Color.DARK_GRAY);
+            } else {
+
+                g.setColor(Color.GRAY);
+            }
+            if (model.isPressed()) {
+                g.translate(1, 1);
+            }
+            final Graphics2D g2 = (Graphics2D) g;
+
+            final BasicStroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+
+            final int length = 3;
+            final int mid = 8;
+            g2.setStroke(stroke);
+            g2.drawLine(mid - length, mid - length, mid + length, mid + length);
+            g2.drawLine(mid + length, mid - length, mid - length, mid + length);
+        }
     }
 }
