@@ -12,6 +12,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
+import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.utility.io.FileSource;
 
 import javax.swing.JLabel;
@@ -136,6 +137,12 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         final FileSource fileSource = classInformation.getFileSource();
 
         service.postRequest(callback, fileSource);
+    }
+
+    @Override
+    public void close(){
+        final FrameManager manager = domain.getGUIManager().getFrameManager();
+        manager.removeEditorPanel(getName());
     }
 
     @Override

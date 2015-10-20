@@ -101,6 +101,7 @@ public class DocumentAreaUI extends ComponentUI {
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), PageDownAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), ReloadAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.CTRL_DOWN_MASK), HardReloadAction.NAME);
+        inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CloseAction.NAME);
 
         final ActionMap actions = area.getActionMap();
         actions.put(CaretRightAction.NAME, new CaretRightAction());
@@ -113,6 +114,7 @@ public class DocumentAreaUI extends ComponentUI {
         actions.put(PageDownAction.NAME, new PageDownAction());
         actions.put(ReloadAction.NAME, new ReloadAction());
         actions.put(HardReloadAction.NAME, new HardReloadAction());
+        actions.put(CloseAction.NAME, new CloseAction());
     }
 
     @Override
@@ -683,5 +685,20 @@ public class DocumentAreaUI extends ComponentUI {
             }
             panel.hardReload();
         }
+    }
+
+    private class CloseAction extends AbstractAction {
+
+        private static final String NAME = "Close";
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            final EditorPanel panel = (EditorPanel) SwingUtilities.getAncestorOfClass(EditorPanel.class, area);
+            if (panel == null) {
+                return;
+            }
+            panel.close();
+        }
+
     }
 }

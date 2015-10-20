@@ -167,6 +167,16 @@ public class SwingManager implements FrameManager {
     }
 
     @Override
+    public EditorPanel removeEditorPanel(final String className) {
+        final SwingEditorPanel component = (SwingEditorPanel) getEditorPanel(className);
+        if (component != null) {
+            tabbedPane.remove(component);
+            return component;
+        }
+        return null;
+    }
+
+    @Override
     public EditorPanel getOpenEditorPanel() {
         return (EditorPanel) tabbedPane.getSelectedComponent();
     }

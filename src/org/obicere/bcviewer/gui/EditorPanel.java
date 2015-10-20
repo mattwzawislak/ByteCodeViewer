@@ -30,4 +30,6 @@ public interface EditorPanel {
 
     public void hardReload();
 
+    public void close();
+
 }
