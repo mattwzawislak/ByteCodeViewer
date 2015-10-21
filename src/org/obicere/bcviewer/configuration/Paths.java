@@ -27,8 +27,8 @@ import java.util.logging.Level;
  */
 public class Paths {
 
-    private final String RESOURCES_HOME  = "resource" + File.separator;
-    private final String RESOURCES_ICONS = RESOURCES_HOME + "icons" + File.separator;
+    private final String RESOURCES_HOME  = "/resource/";
+    private final String RESOURCES_ICONS = RESOURCES_HOME + "icons/";
 
     private final String APP_DATA    = getAppData() + File.separator;
     private final String FOLDER_HOME = APP_DATA + "BytecodeViewer" + File.separator;

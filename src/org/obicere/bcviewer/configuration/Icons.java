@@ -2,13 +2,17 @@ package org.obicere.bcviewer.configuration;
 
 import org.obicere.bcviewer.context.Domain;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.AWTError;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.net.URL;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  * The configuration is meant for handling system-specific settings and
@@ -126,7 +130,6 @@ public class Icons {
     }
 
     private void load(final String name) {
-        // All icons need to be in a .gif format for now
         final String qualifiedName = domain.getPaths().getIconsDirectory() + name;
         final Image image = loadImage(qualifiedName);
         final ImageIcon icon = new ImageIcon(image);
@@ -156,16 +159,17 @@ public class Icons {
     private Image loadImage(final String url) {
         try {
             final Toolkit tk = Toolkit.getDefaultToolkit();
-            final URL path = Icons.class.getClassLoader().getResource(url);
-            final Image img = tk.createImage(path);
-            tk.prepareImage(img, -1, -1, null);
-            return img;
+            final InputStream path = getClass().getResourceAsStream(url);
+            final BufferedImage image = ImageIO.read(path);
+            tk.prepareImage(image, -1, -1, null);
+            return image;
+        } catch (final IOException e){
+            domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
         } catch (final SecurityException e) {
             domain.getLogger().severe("Insufficient permissions to load image.");
-            return null;
         } catch (final AWTError e) {
             domain.getLogger().severe("Could not instantiate default toolkit to load images.");
-            return null;
         }
+        return null;
     }
 }
