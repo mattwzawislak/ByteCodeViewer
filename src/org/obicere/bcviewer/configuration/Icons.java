@@ -26,67 +26,114 @@ import java.util.HashMap;
 
 public class Icons {
 
-    public static final String ICON_ANNOTATION_DEFAULT   = "annotation_default";
-    public static final String ICON_ANNOTATION_DISABLED  = "annotation_disabled";
-    public static final String ICON_ANNOTATION_PRIVATE   = "annotation_private";
-    public static final String ICON_ANNOTATION_PROTECTED = "annotation_protected";
-    public static final String ICON_ANNOTATION_PUBLIC    = "annotation_public";
-    public static final String ICON_CLASS_DEFAULT        = "class_default";
-    public static final String ICON_CLASS_DISABLED       = "class_disabled";
-    public static final String ICON_CLASS_PRIVATE        = "class_private";
-    public static final String ICON_CLASS_PROTECTED      = "class_protected";
-    public static final String ICON_CLASS_PUBLIC         = "class_public";
-    public static final String ICON_ENUM_DEFAULT         = "enum_default";
-    public static final String ICON_ENUM_DISABLED        = "enum_disabled";
-    public static final String ICON_ENUM_PRIVATE         = "enum_private";
-    public static final String ICON_ENUM_PROTECTED       = "enum_protected";
-    public static final String ICON_ENUM_PUBLIC          = "enum_public";
-    public static final String ICON_FIELD_DEFAULT        = "field_default";
-    public static final String ICON_FIELD_DISABLED       = "field_disabled";
-    public static final String ICON_FIELD_PRIVATE        = "field_private";
-    public static final String ICON_FIELD_PROTECTED      = "field_protected";
-    public static final String ICON_FIELD_PUBLIC         = "field_public";
-    public static final String ICON_INTERFACE_DEFAULT    = "interface_default";
-    public static final String ICON_INTERFACE_DISABLED   = "interface_disabled";
-    public static final String ICON_INTERFACE_PRIVATE    = "interface_private";
-    public static final String ICON_INTERFACE_PROTECTED  = "interface_protected";
-    public static final String ICON_INTERFACE_PUBLIC     = "interface_public";
-    public static final String ICON_METHOD_DEFAULT       = "method_default";
-    public static final String ICON_METHOD_DISABLED      = "method_disabled";
-    public static final String ICON_METHOD_PRIVATE       = "method_private";
-    public static final String ICON_METHOD_PROTECTED     = "method_protected";
-    public static final String ICON_METHOD_PUBLIC        = "method_public";
-    public static final String ICON_PACKAGE              = "package";
-    public static final String ICON_PACKAGE_DISABLED     = "package_disabled";
+    public static final String ICON_ANNOTATION_DEFAULT   = "annotation_default.gif";
+    public static final String ICON_ANNOTATION_DISABLED  = "annotation_disabled.gif";
+    public static final String ICON_ANNOTATION_PRIVATE   = "annotation_private.gif";
+    public static final String ICON_ANNOTATION_PROTECTED = "annotation_protected.gif";
+    public static final String ICON_ANNOTATION_PUBLIC    = "annotation_public.gif";
+    public static final String ICON_CLASS_DEFAULT        = "class_default.gif";
+    public static final String ICON_CLASS_DISABLED       = "class_disabled.gif";
+    public static final String ICON_CLASS_PRIVATE        = "class_private.gif";
+    public static final String ICON_CLASS_PROTECTED      = "class_protected.gif";
+    public static final String ICON_CLASS_PUBLIC         = "class_public.gif";
+    public static final String ICON_ENUM_DEFAULT         = "enum_default.gif";
+    public static final String ICON_ENUM_DISABLED        = "enum_disabled.gif";
+    public static final String ICON_ENUM_PRIVATE         = "enum_private.gif";
+    public static final String ICON_ENUM_PROTECTED       = "enum_protected.gif";
+    public static final String ICON_ENUM_PUBLIC          = "enum_public.gif";
+    public static final String ICON_FIELD_DEFAULT        = "field_default.gif";
+    public static final String ICON_FIELD_DISABLED       = "field_disabled.gif";
+    public static final String ICON_FIELD_PRIVATE        = "field_private.gif";
+    public static final String ICON_FIELD_PROTECTED      = "field_protected.gif";
+    public static final String ICON_FIELD_PUBLIC         = "field_public.gif";
+    public static final String ICON_INTERFACE_DEFAULT    = "interface_default.gif";
+    public static final String ICON_INTERFACE_DISABLED   = "interface_disabled.gif";
+    public static final String ICON_INTERFACE_PRIVATE    = "interface_private.gif";
+    public static final String ICON_INTERFACE_PROTECTED  = "interface_protected.gif";
+    public static final String ICON_INTERFACE_PUBLIC     = "interface_public.gif";
+    public static final String ICON_METHOD_DEFAULT       = "method_default.gif";
+    public static final String ICON_METHOD_DISABLED      = "method_disabled.gif";
+    public static final String ICON_METHOD_PRIVATE       = "method_private.gif";
+    public static final String ICON_METHOD_PROTECTED     = "method_protected.gif";
+    public static final String ICON_METHOD_PUBLIC        = "method_public.gif";
+    public static final String ICON_PACKAGE              = "package.gif";
+    public static final String ICON_PACKAGE_DISABLED     = "package_disabled.gif";
+
+    public static final String ICON_DARK_16  = "dark_16.png";
+    public static final String ICON_DARK_20  = "dark_20.png";
+    public static final String ICON_DARK_24  = "dark_24.png";
+    public static final String ICON_DARK_32  = "dark_32.png";
+    public static final String ICON_DARK_40  = "dark_40.png";
+    public static final String ICON_DARK_48  = "dark_48.png";
+    public static final String ICON_DARK_64  = "dark_64.png";
+    public static final String ICON_DARK_128 = "dark_128.png";
+    public static final String ICON_DARK_256 = "dark_256.png";
+    public static final String ICON_DARK_512 = "dark_512.png";
+
+    private static final String[] ICON_DARK_ARRAY = new String[]{
+            ICON_DARK_16,
+            ICON_DARK_20,
+            ICON_DARK_24,
+            ICON_DARK_32,
+            ICON_DARK_40,
+            ICON_DARK_48,
+            ICON_DARK_64,
+            ICON_DARK_128,
+            ICON_DARK_256,
+            ICON_DARK_512
+    };
 
     private final Domain domain;
 
-    private final HashMap<String, Icon> cache = new HashMap<>();
+    private final HashMap<String, Icon> iconCache = new HashMap<>();
+
+    private final HashMap<String, Image> imageCache = new HashMap<>();
 
     public Icons(final Domain domain) {
         this.domain = domain;
     }
 
-    public synchronized Icon getIcon(final String name){
-        final Icon get = cache.get(name);
-        if(get == null){
+    public Icon getIcon(final String name) {
+        final Icon get = iconCache.get(name);
+        if (get == null) {
             // Image is cached here
-            return load(name);
+            load(name);
+            return iconCache.get(name);
         } else {
             return get;
         }
     }
 
-    private Icon load(final String name) {
+    public Image getImage(final String name) {
+        final Image get = imageCache.get(name);
+        if (get == null) {
+            load(name);
+            return imageCache.get(name);
+        } else {
+            return get;
+        }
+    }
+
+    public Image[] getDarkApplicationImages() {
+        final String[] array = ICON_DARK_ARRAY;
+        final Image[] images = new Image[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+            final String element = array[i];
+            images[i] = getImage(element);
+        }
+        return images;
+    }
+
+    private void load(final String name) {
         // All icons need to be in a .gif format for now
-        final String qualifiedName = domain.getPaths().getIconsDirectory() + name + ".gif";
+        final String qualifiedName = domain.getPaths().getIconsDirectory() + name;
         final Image image = loadImage(qualifiedName);
         final ImageIcon icon = new ImageIcon(image);
 
         // Cache the image here
-        cache.put(name, icon);
-
-        return icon;
+        iconCache.put(name, icon);
+        imageCache.put(name, image);
     }
 
     /**

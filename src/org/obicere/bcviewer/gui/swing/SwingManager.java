@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.gui.swing;
 
+import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.configuration.OS;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.EditorPanel;
@@ -9,6 +10,7 @@ import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 import org.obicere.bcviewer.gui.swing.menu.MainMenuBar;
 import org.obicere.bcviewer.gui.swing.settings.SwingSettingsManager;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -20,12 +22,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.datatransfer.DataFlavor;
@@ -55,7 +60,7 @@ public class SwingManager implements FrameManager {
 
     private final String tabbedPaneName = "Tabbed";
 
-    private final DropTargetPanel dropPane;
+    private final JPanel dropPane;
 
     private final String dropPaneName = "Drop";
 
@@ -76,7 +81,7 @@ public class SwingManager implements FrameManager {
         this.contentLayout = new CardLayout();
         this.content = new JPanel(contentLayout);
         this.tabbedPane = new JTabbedPane();
-        this.dropPane = new DropTargetPanel(domain);
+        this.dropPane = new JPanel();
     }
 
     @Override
@@ -96,6 +101,12 @@ public class SwingManager implements FrameManager {
     private void addComponents() {
         final MainMenuBar menuBar = new MainMenuBar(domain);
 
+        dropPane.setLayout(new BorderLayout());
+        final JLabel icon = new JLabel(domain.getIcons().getIcon(Icons.ICON_DARK_256));
+        icon.setBorder(new EmptyBorder(128, 128, 128, 128));
+
+        dropPane.add(icon);
+
         content.add(tabbedPaneName, tabbedPane);
         content.add(dropPaneName, dropPane);
 
@@ -105,6 +116,7 @@ public class SwingManager implements FrameManager {
         frame.add(content);
 
         frame.setDropTarget(getDropTarget());
+        frame.setIconImages(Arrays.asList(domain.getIcons().getDarkApplicationImages()));
     }
 
     private DropTarget getDropTarget() {
@@ -223,7 +235,7 @@ public class SwingManager implements FrameManager {
 
         tabbedPane.addTab(className, panel);
 
-        final JPanel tabPanel = new JPanel();
+        final JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 0));
 
         tabPanel.setOpaque(false);
         tabPanel.add(new JLabel(className));
@@ -304,7 +316,7 @@ public class SwingManager implements FrameManager {
     private class TabCloseButton extends JButton {
 
         public TabCloseButton(final String className) {
-            setPreferredSize(new Dimension(17, 17));
+            setPreferredSize(new Dimension(7, 7));
             setFocusable(false);
             setBorderPainted(false);
             setOpaque(false);
@@ -330,7 +342,7 @@ public class SwingManager implements FrameManager {
             final BasicStroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 
             final int length = 3;
-            final int mid = 8;
+            final int mid = getWidth() / 2;
             g2.setStroke(stroke);
             g2.drawLine(mid - length, mid - length, mid + length, mid + length);
             g2.drawLine(mid - length, mid + length, mid + length, mid - length);
