@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.gui.swing;
 
+import org.obicere.bcviewer.configuration.OS;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.FrameManager;
@@ -21,17 +22,21 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Obicere
@@ -42,7 +47,17 @@ public class SwingManager implements FrameManager {
 
     private final SettingsManager<JComponent> settings;
 
+    private final JPanel content;
+
+    private final CardLayout contentLayout;
+
     private final JTabbedPane tabbedPane;
+
+    private final String tabbedPaneName = "Tabbed";
+
+    private final DropTargetPanel dropPane;
+
+    private final String dropPaneName = "Drop";
 
     private final Domain domain;
 
@@ -57,7 +72,11 @@ public class SwingManager implements FrameManager {
         this.domain = domain;
         this.frame = new JFrame(domain.getApplicationName());
         this.settings = new SwingSettingsManager(frame, domain);
+
+        this.contentLayout = new CardLayout();
+        this.content = new JPanel(contentLayout);
         this.tabbedPane = new JTabbedPane();
+        this.dropPane = new DropTargetPanel(domain);
     }
 
     @Override
@@ -76,15 +95,38 @@ public class SwingManager implements FrameManager {
 
     private void addComponents() {
         final MainMenuBar menuBar = new MainMenuBar(domain);
-        final JPanel content = new JPanel(new BorderLayout());
 
-        tabbedPane.setName("tabs");
+        content.add(tabbedPaneName, tabbedPane);
+        content.add(dropPaneName, dropPane);
 
-        content.setName("content");
-        content.add(tabbedPane);
+        contentLayout.show(content, dropPaneName);
 
         frame.setJMenuBar(menuBar);
         frame.add(content);
+
+        frame.setDropTarget(getDropTarget());
+    }
+
+    private DropTarget getDropTarget() {
+        switch (OS.getOS()) {
+            case WINDOWS:
+                return new DropTarget() {
+                    public synchronized void drop(final DropTargetDropEvent event) {
+                        try {
+                            event.acceptDrop(DnDConstants.ACTION_COPY);
+
+                            final List<File> droppedFiles = (List<File>) event.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                            final File[] files = droppedFiles.toArray(new File[droppedFiles.size()]);
+
+                            domain.getClassLoader().load(files);
+                        } catch (final Exception e) {
+                            domain.getLogger().log(Level.WARNING, e.getMessage(), e);
+                        }
+                    }
+                };
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -172,8 +214,14 @@ public class SwingManager implements FrameManager {
         final int index = tabbedPane.getTabCount();
 
         final SwingEditorPanel panel = new SwingEditorPanel(domain);
+
         panel.setName(className);
-        tabbedPane.add(className, panel);
+
+        if (tabbedPane.getTabCount() == 0) {
+            contentLayout.show(content, tabbedPaneName);
+        }
+
+        tabbedPane.addTab(className, panel);
 
         final JPanel tabPanel = new JPanel();
 
@@ -190,9 +238,12 @@ public class SwingManager implements FrameManager {
     public EditorPanel removeEditorPanel(final String className) {
         final SwingEditorPanel component = (SwingEditorPanel) getEditorPanel(className);
         if (component != null) {
-            tabbedPane.removeTabAt(tabbedPane.indexOfTab(className));
-            tabbedPane.remove(component);
-            System.out.println(Arrays.toString(tabbedPane.getComponents()));
+            final int index = tabbedPane.indexOfTab(className);
+            tabbedPane.removeTabAt(index);
+
+            if (tabbedPane.getTabCount() == 0) {
+                contentLayout.show(content, dropPaneName);
+            }
             return component;
         }
         return null;
@@ -206,9 +257,8 @@ public class SwingManager implements FrameManager {
     @Override
     public File[] promptForFiles(final String... extensions) {
 
-        final List<String> listExtensions = Arrays.asList(extensions);
-        final String description = listExtensions.toString();
-        final String trimmedDescription = description.substring(1, description.length() - 1);
+        final String description = String.join(", ", extensions);
+        final List<String> extensionList = Arrays.asList(extensions);
 
         final JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
@@ -228,12 +278,12 @@ public class SwingManager implements FrameManager {
                 } else {
                     return false;
                 }
-                return listExtensions.contains(extension);
+                return extensionList.contains(extension);
             }
 
             @Override
             public String getDescription() {
-                return trimmedDescription;
+                return description;
             }
         });
 
@@ -277,13 +327,13 @@ public class SwingManager implements FrameManager {
             }
             final Graphics2D g2 = (Graphics2D) g;
 
-            final BasicStroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+            final BasicStroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 
             final int length = 3;
             final int mid = 8;
             g2.setStroke(stroke);
             g2.drawLine(mid - length, mid - length, mid + length, mid + length);
-            g2.drawLine(mid + length, mid - length, mid - length, mid + length);
+            g2.drawLine(mid - length, mid + length, mid + length, mid - length);
         }
     }
 }

@@ -26,7 +26,7 @@ public class ClassElementValue extends ElementValue {
         final ConstantPool constantPool = builder.getConstantPool();
         final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(classInfoIndex));
         builder.tab();
-        builder.add(type.substring(1, type.length() - 1) + ".");
+        builder.add(type + ".");
         builder.addKeyword("class");
     }
 }

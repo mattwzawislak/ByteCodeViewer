@@ -53,13 +53,17 @@ public class ClassFileLoader implements DomainAccess {
     }
 
     public void load(final File... files) {
-        final GUIManager guiManager = domain.getGUIManager();
-        final FrameManager frameManager = guiManager.getFrameManager();
         if (files == null) {
             return;
         }
+        final GUIManager guiManager = domain.getGUIManager();
+        final FrameManager frameManager = guiManager.getFrameManager();
 
         for (final File file : files) {
+            if (file.isDirectory()) {
+                load(file.listFiles());
+                continue;
+            }
             final String extension = getExtension(file);
             if (extension == null) {
                 domain.getLogger().log(Level.WARNING, "Failed to retrieve extension for: " + file.getName());

@@ -14,8 +14,17 @@ public class ViewMenu extends JMenu {
         super("View");
         setMnemonic('V');
 
+        final JMenuItem close = new JMenuItem("Close Tab");
         final JMenuItem reload = new JMenuItem("Reload");
         final JMenuItem hardReload = new JMenuItem("Hard Reload");
+
+        close.addActionListener(e -> {
+            final EditorPanel panel = domain.getGUIManager().getFrameManager().getOpenEditorPanel();
+
+            if (panel != null) {
+                panel.close();
+            }
+        });
 
         reload.addActionListener(e -> {
             final EditorPanel panel = domain.getGUIManager().getFrameManager().getOpenEditorPanel();
@@ -31,6 +40,7 @@ public class ViewMenu extends JMenu {
             }
         });
 
+        add(close);
         add(reload);
         add(hardReload);
     }

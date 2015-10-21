@@ -32,7 +32,7 @@ public class Annotation extends BytecodeElement {
     @Override
     public void model(final DocumentBuilder builder) {
         final String identifier = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
-        builder.addAnnotation(identifier.substring(1, identifier.length() - 1));
+        builder.addAnnotation(identifier);
         if (elementValuePairs.length > 0) {
             builder.add("(");
             boolean first = true;

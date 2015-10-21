@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.configuration;
 
+import java.awt.dnd.DropTarget;
+
 /**
  * The set of possible operating systems supported by the program.
  * There is a default value: {@link #OTHER}. Apart from that, the
