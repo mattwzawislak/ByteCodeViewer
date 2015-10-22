@@ -166,7 +166,9 @@ public class ClassFile extends BytecodeElement {
             return;
         }
 
-        final String thisName = BytecodeUtils.getQualifiedName(getName());
+        final String name = getName();
+        final String packageName = BytecodeUtils.getPackage(name);
+        final String thisName = BytecodeUtils.getQualifiedName(name);
         final int lastDot = thisName.lastIndexOf('.');
 
         final String thisPackage;
@@ -187,6 +189,14 @@ public class ClassFile extends BytecodeElement {
                 }
                 getImports(file.getConstantPool(), imports, thisPackage);
             }
+        }
+
+        if(packageName != null){
+            builder.addKeyword("package ");
+            builder.add(packageName);
+            builder.add(";");
+            builder.newLine();
+            builder.newLine();
         }
 
         for (final String next : imports) {
