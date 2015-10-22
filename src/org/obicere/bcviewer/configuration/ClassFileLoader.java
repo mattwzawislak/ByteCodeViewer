@@ -5,6 +5,7 @@ import org.obicere.bcviewer.concurrent.ClassLoaderService;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.EditorPanel;
+import org.obicere.bcviewer.gui.EditorPanelManager;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.bcviewer.util.FileUtils;
@@ -58,6 +59,7 @@ public class ClassFileLoader implements DomainAccess {
         }
         final GUIManager guiManager = domain.getGUIManager();
         final FrameManager frameManager = guiManager.getFrameManager();
+        final EditorPanelManager editorPanels = frameManager.getEditorManager();
 
         for (final File file : files) {
             if (file.isDirectory()) {
@@ -66,40 +68,36 @@ public class ClassFileLoader implements DomainAccess {
             }
             final String extension = getExtension(file);
             if (extension == null) {
-                domain.getLogger().log(Level.WARNING, "Failed to retrieve extension for: " + file.getName());
                 continue;
             }
 
             switch (extension) {
                 case CLASS_EXTENSION:
-                    loadClass(frameManager, new BasicFileSource(file));
+                    loadClass(editorPanels, new BasicFileSource(file));
                     break;
                 case ZIP_EXTENSION:
                 case RAR_EXTENSION:
                 case JAR_EXTENSION:
-                    loadArchive(frameManager, file);
-                    break;
-                default:
-                    domain.getLogger().log(Level.WARNING, "Invalid extension passed into file loader: " + extension);
+                    loadArchive(editorPanels, file);
             }
         }
     }
 
-    private void loadClass(final FrameManager frameManager, final FileSource file) {
+    private void loadClass(final EditorPanelManager editorPanels, final FileSource file) {
         final ClassLoaderService service = domain.getClassLoaderService();
 
         final String path = file.getPath();
         final String className = FileUtils.getFileName(path);
 
-        if (frameManager.hasEditorPanel(className)) {
-            frameManager.displayEditorPanel(className);
+        if (editorPanels.hasEditorPanel(className)) {
+            editorPanels.displayEditorPanel(className);
             return;
         }
-        final EditorPanel panel = frameManager.createEditorPanel(className);
+        final EditorPanel panel = editorPanels.createEditorPanel(className);
         service.postRequest(new ClassCallback(panel), file);
     }
 
-    private void loadArchive(final FrameManager frameManager, final File file) {
+    private void loadArchive(final EditorPanelManager editorPanels, final File file) {
         try {
             final ZipFile zip = new ZipFile(file);
             final Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -108,7 +106,7 @@ public class ClassFileLoader implements DomainAccess {
                 final String name = entry.getName();
                 final String extension = getExtension(name);
                 if (extension != null && extension.equals(CLASS_EXTENSION)) {
-                    loadClass(frameManager, new ArchiveFileSource(zip, entry));
+                    loadClass(editorPanels, new ArchiveFileSource(zip, entry));
                 }
             }
         } catch (final IOException e) {

@@ -142,7 +142,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     @Override
     public void close(){
         final FrameManager manager = domain.getGUIManager().getFrameManager();
-        manager.removeEditorPanel(getName());
+        manager.getEditorManager().removeEditorPanel(getName());
     }
 
     @Override

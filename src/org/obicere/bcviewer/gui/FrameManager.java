@@ -25,19 +25,7 @@ public interface FrameManager {
 
     public void pack();
 
-    public EditorPanel getEditorPanel(final String className);
-
-    public EditorPanel[] getEditorPanels();
-
-    public boolean hasEditorPanel(final String className);
-
-    public void displayEditorPanel(final String className);
-
-    public EditorPanel createEditorPanel(final String className);
-
-    public EditorPanel removeEditorPanel(final String className);
-
-    public EditorPanel getOpenEditorPanel();
+    public EditorPanelManager getEditorManager();
 
     public File[] promptForFiles(final String... extensions);
 

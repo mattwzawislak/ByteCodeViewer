@@ -135,7 +135,8 @@ public class DocumentAreaUI extends ComponentUI {
         final Settings settings = area.getDomain().getSettingsController().getSettings();
 
         if (settings.getBoolean("editor.textAA")) {
-            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
         if (settings.getBoolean("editor.colorAA")) {

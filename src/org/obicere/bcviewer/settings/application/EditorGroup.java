@@ -70,7 +70,7 @@ public class EditorGroup implements Group {
         setFontPropertyListener(FONT_SETTING, StyleConstants.TYPE);
 
         FONT_SETTING.addPropertyChangeListener(e -> {
-            final EditorPanel[] panels = domain.getGUIManager().getFrameManager().getEditorPanels();
+            final EditorPanel[] panels = domain.getGUIManager().getFrameManager().getEditorManager().getEditorPanels();
             for (final EditorPanel panel : panels) {
                 panel.setFont((QuickWidthFont) e.getNewValue());
             }

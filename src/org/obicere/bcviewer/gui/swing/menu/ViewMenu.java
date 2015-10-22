@@ -19,7 +19,7 @@ public class ViewMenu extends JMenu {
         final JMenuItem hardReload = new JMenuItem("Hard Reload");
 
         close.addActionListener(e -> {
-            final EditorPanel panel = domain.getGUIManager().getFrameManager().getOpenEditorPanel();
+            final EditorPanel panel = domain.getGUIManager().getFrameManager().getEditorManager().getOpenEditorPanel();
 
             if (panel != null) {
                 panel.close();
@@ -27,14 +27,14 @@ public class ViewMenu extends JMenu {
         });
 
         reload.addActionListener(e -> {
-            final EditorPanel panel = domain.getGUIManager().getFrameManager().getOpenEditorPanel();
+            final EditorPanel panel = domain.getGUIManager().getFrameManager().getEditorManager().getOpenEditorPanel();
 
             if (panel != null) {
                 panel.reload();
             }
         });
         hardReload.addActionListener(e -> {
-            final EditorPanel panel = domain.getGUIManager().getFrameManager().getOpenEditorPanel();
+            final EditorPanel panel = domain.getGUIManager().getFrameManager().getEditorManager().getOpenEditorPanel();
             if (panel != null) {
                 panel.hardReload();
             }
