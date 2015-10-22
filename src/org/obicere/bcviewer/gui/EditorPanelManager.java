@@ -13,7 +13,9 @@ public interface EditorPanelManager {
 
     public EditorPanel displayEditorPanel(final String className);
 
-    public EditorPanel createEditorPanel(final String className);
+    public EditorPanel addEditorPanel(final EditorPanel panel, final String className);
+
+    public EditorPanel createEditorPanel();
 
     public EditorPanel removeEditorPanel(final String className);
 

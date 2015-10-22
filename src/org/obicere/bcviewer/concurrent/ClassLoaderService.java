@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.concurrent;
 
+import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
@@ -28,7 +29,6 @@ public class ClassLoaderService implements DomainAccess {
 
         final FileLoadRequest request = new FileLoadRequest(callback, file);
         return classLoaderExecutorService.submit(request);
-
     }
 
     @Override
@@ -51,6 +51,9 @@ public class ClassLoaderService implements DomainAccess {
             final ClassInformation classInformation = new ClassInformation(domain);
 
             classInformation.load(callback, file);
+
+            final ClassFile rootClass = classInformation.getRootClass();
+            domain.getGUIManager().getFrameManager().getEditorManager().addEditorPanel(callback.getEditorPanel(), rootClass.getName());
 
             final ClassModelerService service = domain.getClassModelerService();
             service.postRequest(callback, callback.getEditorPanel().getBuilder(), classInformation);

@@ -63,11 +63,6 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         return new Dimension(830, 620);
     }
 
-    public void setBytesPanelVisible(final boolean visible) {
-        //split.setRightComponent(visible ? bytesScroll : null);
-        split.revalidate();
-    }
-
     @Override
     public ClassFile getClassFile() {
         return loadedClassFile;

@@ -93,7 +93,7 @@ public class ClassFileLoader implements DomainAccess {
             editorPanels.displayEditorPanel(className);
             return;
         }
-        final EditorPanel panel = editorPanels.createEditorPanel(className);
+        final EditorPanel panel = editorPanels.createEditorPanel();
         service.postRequest(new ClassCallback(panel), file);
     }
 

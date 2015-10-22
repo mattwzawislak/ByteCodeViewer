@@ -5,6 +5,7 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.EditorPanelManager;
 import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
+import org.obicere.bcviewer.util.BytecodeUtils;
 
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
@@ -21,7 +22,6 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author Obicere
@@ -41,8 +41,6 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     private final String dropPaneName = "Drop";
 
     private final Domain domain;
-
-    private final HashMap<String, SwingEditorPanel> addedPanels = new HashMap<>();
 
     public SwingEditorPanelManager(final Domain domain) {
 
@@ -75,7 +73,14 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     @Override
     public EditorPanel getEditorPanel(final String className) {
-        return addedPanels.get(className);
+        for (final Component component : tabbedPane.getComponents()) {
+            if (component instanceof EditorPanel) {
+                if (component.getName().equals(className)) {
+                    return (EditorPanel) component;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -105,16 +110,10 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     }
 
     @Override
-    public EditorPanel createEditorPanel(final String className) {
-        if (addedPanels.containsKey(className)) {
-            return addedPanels.get(className);
-        }
+    public EditorPanel addEditorPanel(final EditorPanel panel, final String className) {
+        final String qualifiedName = BytecodeUtils.getQualifiedName(className);
 
-        final SwingEditorPanel panel = new SwingEditorPanel(domain);
-
-        display(panel, className);
-
-        addedPanels.put(className, panel);
+        display((SwingEditorPanel) panel, qualifiedName);
 
         return panel;
     }
@@ -145,6 +144,11 @@ public class SwingEditorPanelManager implements EditorPanelManager {
             tabbedPane.setTabComponentAt(index, tabPanel);
         }
         tabbedPane.setSelectedIndex(index);
+    }
+
+    @Override
+    public EditorPanel createEditorPanel() {
+        return new SwingEditorPanel(domain);
     }
 
     @Override
