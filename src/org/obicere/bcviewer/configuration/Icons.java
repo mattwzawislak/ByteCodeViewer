@@ -63,6 +63,9 @@ public class Icons {
     public static final String ICON_PACKAGE              = "package.gif";
     public static final String ICON_PACKAGE_DISABLED     = "package_disabled.gif";
 
+    public static final String ICON_CLOSE       = "close.gif";
+    public static final String ICON_CLOSE_HOVER = "close_hover.gif";
+
     public static final String ICON_DARK_16  = "dark_16.png";
     public static final String ICON_DARK_20  = "dark_20.png";
     public static final String ICON_DARK_24  = "dark_24.png";
@@ -163,7 +166,7 @@ public class Icons {
             final BufferedImage image = ImageIO.read(path);
             tk.prepareImage(image, -1, -1, null);
             return image;
-        } catch (final IOException e){
+        } catch (final IOException e) {
             domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
         } catch (final SecurityException e) {
             domain.getLogger().severe("Insufficient permissions to load image.");

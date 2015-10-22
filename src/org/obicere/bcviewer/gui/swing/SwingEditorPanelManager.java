@@ -13,18 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
@@ -128,7 +124,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
             return;
         }
         int index = tabbedPane.indexOfComponent(panel);
-        if(index < 0) {
+        if (index < 0) {
 
             index = tabbedPane.getTabCount();
 
@@ -149,17 +145,6 @@ public class SwingEditorPanelManager implements EditorPanelManager {
             tabbedPane.setTabComponentAt(index, tabPanel);
         }
         tabbedPane.setSelectedIndex(index);
-    }
-
-    private DefaultMutableTreeNode getNodeWithObject(final DefaultMutableTreeNode node, final String object){
-        final Enumeration enumeration = node.children();
-        while(enumeration.hasMoreElements()){
-            final DefaultMutableTreeNode child = (DefaultMutableTreeNode) enumeration.nextElement();
-            if(child.getUserObject().equals(object)){
-                return child;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -185,7 +170,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     private class TabCloseButton extends JButton {
 
         public TabCloseButton(final String className) {
-            setPreferredSize(new Dimension(7, 7));
+            setPreferredSize(new Dimension(9, 9));
             setFocusable(false);
             setBorderPainted(false);
             setOpaque(false);
@@ -195,26 +180,19 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
         @Override
         protected void paintComponent(final Graphics g) {
+            final Icons icons = domain.getIcons();
 
+            final Image image;
             final ButtonModel model = getModel();
             if (model.isRollover()) {
-                g.setColor(Color.DARK_GRAY);
+                image = icons.getImage(Icons.ICON_CLOSE_HOVER);
             } else {
-
-                g.setColor(Color.GRAY);
+                image = icons.getImage(Icons.ICON_CLOSE);
             }
             if (model.isPressed()) {
                 g.translate(1, 1);
             }
-            final Graphics2D g2 = (Graphics2D) g;
-
-            final BasicStroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-
-            final int length = 3;
-            final int mid = getWidth() / 2;
-            g2.setStroke(stroke);
-            g2.drawLine(mid - length, mid - length, mid + length, mid + length);
-            g2.drawLine(mid - length, mid + length, mid + length, mid - length);
+            g.drawImage(image, 0, 0, 8, 8, this);
         }
     }
 }
