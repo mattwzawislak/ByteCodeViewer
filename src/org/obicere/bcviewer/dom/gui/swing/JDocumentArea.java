@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -29,8 +28,6 @@ public class JDocumentArea extends JComponent implements DomainAccess {
     private final List<Block> content = new ArrayList<>();
 
     private boolean thinCarets = true;
-
-    private Color highlightColor = new Color(0, 77, 128);
 
     private final Caret caret     = new Caret(this);
     private final Caret dropCaret = new Caret(this);
@@ -69,17 +66,6 @@ public class JDocumentArea extends JComponent implements DomainAccess {
 
     public Caret getDropCaret() {
         return dropCaret;
-    }
-
-    public Color getHighlightColor() {
-        return highlightColor;
-    }
-
-    public void setHighlightColor(final Color color) {
-        if (color == null) {
-            return;
-        }
-        this.highlightColor = color;
     }
 
     public void scrollToCaret() {

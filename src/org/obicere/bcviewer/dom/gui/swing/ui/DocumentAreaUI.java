@@ -19,6 +19,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -232,6 +233,10 @@ public class DocumentAreaUI extends ComponentUI {
     }
 
     private void drawSelection(final Graphics g, final int startLine, final int endLine, final int fontWidth, final int fontHeight) {
+        final Color highlight = area.getDomain().getSettingsController().getSettings().getColor("editor.highlight");
+        if (highlight == null) {
+            return;
+        }
         final Caret caret = area.getCaret();
         final Caret dropCaret = area.getDropCaret();
 
@@ -253,7 +258,7 @@ public class DocumentAreaUI extends ComponentUI {
         final int caretColumn = caret.getColumn();
         final int dropCaretColumn = dropCaret.getColumn();
 
-        g.setColor(area.getHighlightColor());
+        g.setColor(highlight);
         if (caretRow == dropCaretRow) {
             final int start = Math.min(caretColumn, dropCaretColumn);
             final int end = Math.max(caretColumn, dropCaretColumn);

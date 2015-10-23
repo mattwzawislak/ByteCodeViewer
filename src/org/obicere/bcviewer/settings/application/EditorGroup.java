@@ -32,6 +32,8 @@ public class EditorGroup implements Group {
     private static final ColorSetting STRING_COLOR_SETTING     = new ColorSetting(SUFFIX + "stringColor", "String literals text color", new Color(0, 128, 52));
     private static final ColorSetting TYPE_COLOR_SETTING       = new ColorSetting(SUFFIX + "typeColor", "Generic type text color", new Color(86, 151, 250));
 
+    private static final ColorSetting HIGHLIGHT_SETTING = new ColorSetting(SUFFIX + "highlight", "Highlight color", new Color(0, 77, 128));
+
     private static final FontSetting FONT_SETTING = new FontSetting(SUFFIX + "font", "Standard font", new QuickWidthFont("Courier new", Font.PLAIN, 14));
 
     private static final BooleanSetting TEXT_ANTI_ALIASING  = new BooleanSetting(SUFFIX + "textAA", "Text anti-aliasing", true);
@@ -45,6 +47,8 @@ public class EditorGroup implements Group {
             NUMBER_COLOR_SETTING,
             STRING_COLOR_SETTING,
             TYPE_COLOR_SETTING,
+
+            HIGHLIGHT_SETTING,
 
             FONT_SETTING,
 
