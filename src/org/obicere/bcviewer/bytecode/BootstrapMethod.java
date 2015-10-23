@@ -47,7 +47,7 @@ public class BootstrapMethod extends BytecodeElement {
             constant.model(builder);
         }
         builder.unindent();
-        if(bootstrapArguments.length > 0){
+        if (bootstrapArguments.length > 0) {
             builder.newLine();
         }
         builder.add("}");
@@ -55,48 +55,58 @@ public class BootstrapMethod extends BytecodeElement {
 
     public void modelDeclaration(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
+
         final String bootstrap = constantPool.getAsString(bootstrapMethodRef);
-        final int signatureBegin = bootstrap.indexOf('(');
+
         final int pathBegin = bootstrap.indexOf('=');
+        final int signatureBegin = bootstrap.indexOf('(');
+
+        final boolean methodReference = (signatureBegin >= 0);
+
+        // the end of the name is either the end of the name and type or
+        // the start of the parameters listing - for methods only
+        final int nameEnd = methodReference ? signatureBegin : bootstrap.length();
 
         final String kind = bootstrap.substring(0, pathBegin);
-        final String path = bootstrap.substring(pathBegin + 1, signatureBegin);
-        final String signature = bootstrap.substring(signatureBegin);
+        final String path = bootstrap.substring(pathBegin + 1, nameEnd);
 
         final String[] pathElements = path.split(";");
         builder.newLine();
 
         builder.addKeyword(kind + " ");
 
-        boolean first = true;
-        for (final String pathElement : pathElements) {
-            if (!first) {
-                builder.add(".");
+        if (pathElements.length != 2) {
+            // signify unexpected path - needs further referencing
+            builder.add("!");
+            builder.add(path);
+        } else {
+            builder.add(BytecodeUtils.getClassName(pathElements[0]));
+            builder.add("#");
+            builder.add(pathElements[1]);
+        }
+
+        if (methodReference) {
+            final String signature = bootstrap.substring(signatureBegin);
+            final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
+            builder.add("(");
+            builder.indent();
+
+            final JavaTypeSignature[] types = methodSignature.getParameters();
+
+            for (final JavaTypeSignature type : types) {
+                builder.newLine();
+                type.model(builder);
             }
-            builder.add(BytecodeUtils.getQualifiedName(pathElement));
-            first = false;
+
+            // close the parameters
+            builder.unindent();
+
+            // only break the () if there was a parameter
+            if (types.length > 0) {
+                builder.newLine();
+            }
+            builder.add(")");
         }
-
-        final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
-        builder.add("(");
-        builder.indent();
-
-        final JavaTypeSignature[] types = methodSignature.getParameters();
-
-        for (final JavaTypeSignature type : types) {
-            builder.newLine();
-            type.model(builder);
-        }
-
-        // close the parameters
-        builder.unindent();
-
-        // only break the () if there was a parameter
-        if (types.length > 0) {
-            builder.newLine();
-        }
-        builder.add(") ");
-        methodSignature.modelReturnType(builder);
     }
 
 }
