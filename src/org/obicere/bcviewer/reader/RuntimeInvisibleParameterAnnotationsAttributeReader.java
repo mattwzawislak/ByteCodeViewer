@@ -20,13 +20,13 @@ public class RuntimeInvisibleParameterAnnotationsAttributeReader implements Read
 
     @Override
     public RuntimeInvisibleParameterAnnotationsAttribute read(final IndexedDataInputStream input) throws IOException {
-        final int numParameters = input.readUnsignedShort();
+        final int numParameters = input.readUnsignedByte();
         final Annotation[][] annotations = new Annotation[numParameters][];
 
         for (int i = 0; i < numParameters; i++) {
             final int numAnnotations = input.readUnsignedShort();
             annotations[i] = new Annotation[numAnnotations];
-            for(int j = 0; j < numAnnotations; j++){
+            for (int j = 0; j < numAnnotations; j++) {
                 annotations[i][j] = annotation.read(input);
             }
         }

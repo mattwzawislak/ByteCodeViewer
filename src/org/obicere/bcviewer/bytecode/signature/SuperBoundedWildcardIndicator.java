@@ -22,9 +22,10 @@ public class SuperBoundedWildcardIndicator extends WildcardIndicator {
     }
 
     public static SuperBoundedWildcardIndicator parse(final QueueString string) {
-        if (!string.hasNext() && string.next() != '-') {
+        if (!string.hasNext() && string.peek() != '-') {
             return null;
         }
+        string.next();
         final ReferenceTypeSignature referenceTypeSignature = ReferenceTypeSignature.parse(string);
         if (referenceTypeSignature == null) {
             return null;
@@ -49,7 +50,7 @@ public class SuperBoundedWildcardIndicator extends WildcardIndicator {
 
     @Override
     public void model(final DocumentBuilder builder) {
-        for(final Annotation annotation : getAnnotations()){
+        for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder);
         }
         builder.add("?");

@@ -80,29 +80,31 @@ public class Field extends BytecodeElement {
     }
 
     private void modelType(final DocumentBuilder builder, final ConstantPool constantPool) {
-        final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
+        final SignatureAttribute attribute = attributeSet.getAttribute(SignatureAttribute.class);
         final FieldSignature signature;
-        if (signatures != null && !signatures.isEmpty()) {
-            final SignatureAttribute attribute = signatures.iterator().next();
+        if (attribute != null) {
             signature = attribute.parseField(constantPool);
         } else {
             final String descriptor = constantPool.getAsString(descriptorIndex);
             signature = SignatureAttribute.parseField(descriptor);
         }
 
-        // add type annotations to the signature now
+        if (signature != null) {
 
-        final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
-        final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
+            // add type annotations to the signature now
 
-        if (rvtaAttributes != null) {
-            rvtaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+            final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
+            final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
+
+            if (rvtaAttributes != null) {
+                rvtaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+            }
+            if (ritaAttributes != null) {
+                ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
+            }
+
+            signature.model(builder);
         }
-        if (ritaAttributes != null) {
-            ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
-        }
-
-        signature.model(builder);
     }
 
     private void modelDeclaration(final DocumentBuilder builder) {
