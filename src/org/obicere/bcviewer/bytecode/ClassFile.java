@@ -191,7 +191,7 @@ public class ClassFile extends BytecodeElement {
             }
         }
 
-        if(packageName != null){
+        if (packageName != null) {
             builder.addKeyword("package ");
             builder.add(packageName);
             builder.add(";");
@@ -360,8 +360,14 @@ public class ClassFile extends BytecodeElement {
         for (final InnerClassesAttribute attribute : attributes) {
             final InnerClass[] innerClasses = attribute.getInnerClasses();
             for (final InnerClass innerClass : innerClasses) {
-                final String name = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
-                final String outer = constantPool.getAsString(innerClass.getOuterClassInfoIndex());
+                final int innerIndex = innerClass.getInnerClassInfoIndex();
+                final int outerIndex = innerClass.getOuterClassInfoIndex();
+                if (outerIndex == 0) {
+                    continue;
+                }
+
+                final String name = constantPool.getAsString(innerIndex);
+                final String outer = constantPool.getAsString(outerIndex);
 
                 if (name.equals(getName())) {
                     continue;

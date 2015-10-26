@@ -1,7 +1,6 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
  * @author Obicere
@@ -44,6 +43,10 @@ public class InnerClass extends BytecodeElement {
 
         final ClassFile file = builder.getClassInformation().getClass(name);
 
+        if (file == null) {
+            builder.addComment("Could not find inner class: " + name);
+            return;
+        }
         builder.setWorkingClass(file);
         file.model(builder);
         builder.clearWorkingClass();
