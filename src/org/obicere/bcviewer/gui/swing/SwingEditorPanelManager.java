@@ -119,31 +119,33 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     }
 
     private void display(final SwingEditorPanel panel, final String className) {
-        if (panel == null || className == null) {
-            return;
-        }
-        int index = tabbedPane.indexOfComponent(panel);
-        if (index < 0) {
-
-            index = tabbedPane.getTabCount();
-
-            panel.setName(className);
-
-            if (tabbedPane.getTabCount() == 0) {
-                contentLayout.show(editorArea, tabbedPaneName);
+        synchronized (tabbedPane.getTreeLock()) {
+            if (panel == null || className == null) {
+                return;
             }
+            int index = tabbedPane.indexOfComponent(panel);
+            if (index < 0) {
 
-            tabbedPane.addTab(className, panel);
+                index = tabbedPane.getTabCount();
 
-            final JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 0));
+                panel.setName(className);
 
-            tabPanel.setOpaque(false);
-            tabPanel.add(new JLabel(className));
-            tabPanel.add(new TabCloseButton(className));
+                if (tabbedPane.getTabCount() == 0) {
+                    contentLayout.show(editorArea, tabbedPaneName);
+                }
 
-            tabbedPane.setTabComponentAt(index, tabPanel);
+                tabbedPane.addTab(className, panel);
+
+                final JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 0));
+
+                tabPanel.setOpaque(false);
+                tabPanel.add(new JLabel(className));
+                tabPanel.add(new TabCloseButton(className));
+
+                tabbedPane.setTabComponentAt(index, tabPanel);
+            }
+            tabbedPane.setSelectedIndex(index);
         }
-        tabbedPane.setSelectedIndex(index);
     }
 
     @Override

@@ -56,6 +56,7 @@ public class ClassCallback {
         try {
             accessLock.lock();
             editorPanel.update("Error while loading: " + error.getMessage());
+            Logger.getGlobal().log(Level.WARNING, "Error while loading class: " + editorPanel.getClassInformation().getRootClass().getName());
             Logger.getGlobal().log(Level.WARNING, error.getMessage(), error);
         } finally {
             accessLock.unlock();

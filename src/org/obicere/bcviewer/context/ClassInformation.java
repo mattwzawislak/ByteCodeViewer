@@ -12,6 +12,7 @@ import org.obicere.utility.io.FileSource;
 import org.obicere.utility.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -113,6 +114,10 @@ public class ClassInformation implements DomainAccess {
     }
 
     private ClassFile loadFrom(final FileSource file) throws IOException {
+        final InputStream stream = file.openSource();
+        if(stream.available() <= 0){
+            throw new IOException("failed to open file source for inner class loading.");
+        }
         final byte[] bytes = IOUtils.readData(file.openSource());
         return domain.getClassReader().read(new IndexedDataInputStream(bytes));
     }

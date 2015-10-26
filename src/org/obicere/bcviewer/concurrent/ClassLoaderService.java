@@ -53,6 +53,7 @@ public class ClassLoaderService implements DomainAccess {
             classInformation.load(callback, file);
 
             final ClassFile rootClass = classInformation.getRootClass();
+
             domain.getGUIManager().getFrameManager().getEditorManager().addEditorPanel(callback.getEditorPanel(), rootClass.getName());
 
             final ClassModelerService service = domain.getClassModelerService();
