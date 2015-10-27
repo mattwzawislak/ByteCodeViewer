@@ -72,7 +72,7 @@ public class CodeAttribute extends Attribute {
     }
 
     public String getBlockName(final int startPC) {
-        return getBlockName(startPC, 0);
+        return getBlockName(startPC, 14);
     }
 
     public String getBlockName(final int startPC, final int offset) {
@@ -83,11 +83,33 @@ public class CodeAttribute extends Attribute {
         // the 14 bytes in their offset values
         final int pc = startPC + offset - 14;
         final int searchPC = pc - getStart();
-        final Block block = startPCToLine.get(searchPC);
-        if (block == null) {
-            return null;
+        if (searchPC == code.length) {
+            return "end";
         }
-        return block.getName();
+
+        Block block = startPCToLine.get(searchPC);
+
+        if (block != null) {
+            return block.getName();
+        }
+
+        // if the block is null, find the best fit
+        int closest = Integer.MAX_VALUE;
+        for (final Block nearest : startPCToLine.values()) {
+            final int delta = searchPC - nearest.getStartPC();
+            if (delta >= 0 && delta < closest) {
+                closest = delta;
+                block = nearest;
+            }
+        }
+
+        // if the best fit is null, then wtf happened here
+        if (block == null) {
+            return "?";
+        } else {
+            // include the offset
+            return block.getName() + "+" + closest;
+        }
     }
 
     // these two might be difficult to get 100% correct.
@@ -149,20 +171,10 @@ public class CodeAttribute extends Attribute {
     private void modelExceptions(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         for (final CodeException exception : exceptions) {
-            final Block startBlock = startPCToLine.get(exception.getStartPC());
-            final String start;
-            if (startBlock != null) {
-                start = startBlock.getName();
-            } else {
-                start = "?";
-            }
-            final String end;
-            final Block line = startPCToLine.get(exception.getEndPC());
-            if (line != null) {
-                end = line.getName();
-            } else {
-                end = "?";
-            }
+
+            final String start = getBlockName(getStart() + exception.getStartPC());
+            final String end = getBlockName(getStart() + exception.getEndPC());
+
             builder.addKeyword("try");
             builder.add(" [" + start + "-" + end + "] ");
             builder.addKeyword("catch ");
@@ -170,7 +182,13 @@ public class CodeAttribute extends Attribute {
             final String catchType;
             final int catchTypeValue = exception.getCatchType();
             if (catchTypeValue == 0) {
-                catchType = "java.lang.Throwable"; // 0 catches all exceptions
+                // 0 catches all exceptions
+                final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+                if (importMode) {
+                    catchType = "Throwable";
+                } else {
+                    catchType = "java.lang.Throwable";
+                }
             } else {
                 catchType = constantPool.getAsString(exception.getCatchType());
             }
@@ -183,13 +201,7 @@ public class CodeAttribute extends Attribute {
             }
 
             final int handlerPC = exception.getHandlerPC();
-            final String handler;
-            if (startPCToLine.get(handlerPC) != null) {
-                handler = startPCToLine.get(handlerPC).getName();
-            } else {
-                Logger.getGlobal().log(Level.SEVERE, "Expected a target instruction in CA: " + getIdentifier() + ", target: " + handlerPC);
-                handler = String.valueOf(handlerPC);
-            }
+            final String handler = getBlockName(getStart() + handlerPC);
             builder.add(" " + handler);
             builder.newLine();
         }
