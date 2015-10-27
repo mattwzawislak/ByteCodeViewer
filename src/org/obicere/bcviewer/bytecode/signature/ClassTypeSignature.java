@@ -115,24 +115,26 @@ public class ClassTypeSignature extends ReferenceTypeSignature {
     public void model(final DocumentBuilder builder, final boolean includeExtends) {
         final Settings settings = builder.getDomain().getSettingsController().getSettings();
         final boolean modelObject = settings.getBoolean("code.extendsObject");
-        if (simpleClassTypeSignature.getIdentifier().equals("Object") && !modelObject) {
-            // class name is "Object"
-            // need to check to see if the package is "java.lang"
 
-            final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
-            if (packageIdentifiers.length == 2) {
-                if (packageIdentifiers[0].equals("java") && packageIdentifiers[1].equals("lang")) {
-                    return;
-                }
-            }
-        }
         for (final Annotation annotation : getAnnotations()) {
             annotation.model(builder);
         }
 
         if(includeExtends) {
+            if (simpleClassTypeSignature.getIdentifier().equals("Object") && !modelObject) {
+                // class name is "Object"
+                // need to check to see if the package is "java.lang"
+
+                final String[] packageIdentifiers = packageSpecifier.getIdentifiers();
+                if (packageIdentifiers.length == 2) {
+                    if (packageIdentifiers[0].equals("java") && packageIdentifiers[1].equals("lang")) {
+                        return;
+                    }
+                }
+            }
             builder.addKeyword(" extends ");
         }
+
         if(!settings.getBoolean("code.importMode")){
             modelPackage(builder);
         }
