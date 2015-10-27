@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -119,7 +120,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     }
 
     private void display(final SwingEditorPanel panel, final String className) {
-        synchronized (tabbedPane.getTreeLock()) {
+        SwingUtilities.invokeLater(() -> {
             if (panel == null || className == null) {
                 return;
             }
@@ -145,7 +146,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
                 tabbedPane.setTabComponentAt(index, tabPanel);
             }
             tabbedPane.setSelectedIndex(index);
-        }
+        });
     }
 
     @Override
