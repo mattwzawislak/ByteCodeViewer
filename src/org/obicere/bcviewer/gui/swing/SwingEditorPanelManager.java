@@ -5,6 +5,7 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.EditorPanelManager;
 import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
+import org.obicere.bcviewer.gui.swing.tree.BytecodeTree;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import javax.swing.ButtonModel;
@@ -12,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -23,11 +26,14 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Obicere
  */
 public class SwingEditorPanelManager implements EditorPanelManager {
+
+    private final BytecodeTree tree;
 
     private final JPanel editorArea;
 
@@ -43,9 +49,13 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     private final Domain domain;
 
+    private final HashMap<String, SwingEditorPanel> editorPanels = new HashMap<>();
+
     public SwingEditorPanelManager(final Domain domain) {
 
         this.domain = domain;
+
+        this.tree = new BytecodeTree(domain);
         this.contentLayout = new CardLayout();
         this.editorArea = new JPanel(contentLayout);
         this.tabbedPane = new JTabbedPane();
@@ -62,7 +72,13 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         dropPane.setLayout(new BorderLayout());
         dropPane.add(icon);
 
-        editorArea.add(tabbedPaneName, tabbedPane);
+        final JSplitPane displayArea = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        final JScrollPane treeScrollPane = new JScrollPane(tree);
+
+        displayArea.setRightComponent(tabbedPane);
+        displayArea.setLeftComponent(treeScrollPane);
+
+        editorArea.add(tabbedPaneName, displayArea);
         editorArea.add(dropPaneName, dropPane);
 
         contentLayout.show(editorArea, dropPaneName);
@@ -104,8 +120,12 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     public EditorPanel displayEditorPanel(final String className) {
         final SwingEditorPanel panel = (SwingEditorPanel) getEditorPanel(className);
         if (panel != null) {
-            display(panel, className);
+            tabbedPane.setSelectedComponent(panel);
             return panel;
+        }
+        final SwingEditorPanel cached = editorPanels.get(className);
+        if (cached != null) {
+            display(cached, className);
         }
         return null;
     }
@@ -114,7 +134,12 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     public EditorPanel addEditorPanel(final EditorPanel panel, final String className) {
         final String qualifiedName = BytecodeUtils.getQualifiedName(className);
 
-        display((SwingEditorPanel) panel, qualifiedName);
+        editorPanels.put(qualifiedName, (SwingEditorPanel) panel);
+        tree.addClass(panel.getClassFile());
+
+        if (tabbedPane.getTabCount() == 0) {
+            contentLayout.show(editorArea, tabbedPaneName);
+        }
 
         return panel;
     }
@@ -130,10 +155,6 @@ public class SwingEditorPanelManager implements EditorPanelManager {
                 index = tabbedPane.getTabCount();
 
                 panel.setName(className);
-
-                if (tabbedPane.getTabCount() == 0) {
-                    contentLayout.show(editorArea, tabbedPaneName);
-                }
 
                 tabbedPane.addTab(className, panel);
 
@@ -155,13 +176,13 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     }
 
     @Override
-    public EditorPanel removeEditorPanel(final String className) {
+    public EditorPanel closeEditorPanel(final String className) {
         final SwingEditorPanel component = (SwingEditorPanel) getEditorPanel(className);
         if (component != null) {
             final int index = tabbedPane.indexOfTab(className);
             tabbedPane.removeTabAt(index);
 
-            if (tabbedPane.getTabCount() == 0) {
+            if (editorPanels.size() == 0) {
                 contentLayout.show(editorArea, dropPaneName);
             }
             return component;
@@ -182,7 +203,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
             setBorderPainted(false);
             setOpaque(false);
             setContentAreaFilled(false);
-            addActionListener(e -> removeEditorPanel(className));
+            addActionListener(e -> closeEditorPanel(className));
         }
 
         @Override

@@ -70,6 +70,9 @@ public class QueueString {
         final StringBuilder identifier = new StringBuilder();
         while (Character.isJavaIdentifierPart(next)) {
             identifier.append(next());
+            if (!hasNext()) {
+                return null;
+            }
             next = peek();
         }
         if (next != '.' && next != '<' && next != ':' && next != '/' && next != ';') {

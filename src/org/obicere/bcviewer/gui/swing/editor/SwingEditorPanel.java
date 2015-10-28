@@ -22,6 +22,7 @@ import javax.swing.JSplitPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Obicere
@@ -94,6 +95,11 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     @Override
     public void setBlocks(final List<Block> blocks) {
+        if (blocks == null) {
+            final String className = classInformation.getRootClass().getName();
+            domain.getLogger().log(Level.WARNING, "Failed to load class: " + className);
+            return;
+        }
         remove(status);
         revalidate();
         add(split);
@@ -135,9 +141,9 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     @Override
-    public void close(){
+    public void close() {
         final FrameManager manager = domain.getGUIManager().getFrameManager();
-        manager.getEditorManager().removeEditorPanel(getName());
+        manager.getEditorManager().closeEditorPanel(getName());
     }
 
     @Override

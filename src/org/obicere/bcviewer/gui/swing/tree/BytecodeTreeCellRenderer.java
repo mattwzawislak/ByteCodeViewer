@@ -11,8 +11,8 @@ public class BytecodeTreeCellRenderer extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel, final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
         final JLabel component = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-        if (value instanceof BytecodeNode) {
-            final BytecodeNode node = (BytecodeNode) value;
+        if (value instanceof BytecodeTreeNode) {
+            final BytecodeTreeNode node = (BytecodeTreeNode) value;
             component.setIcon(node.getIcon());
             component.setDisabledIcon(node.getDisabledIcon());
         }

@@ -245,6 +245,10 @@ public class BytecodeUtils {
         return (access & ACCESS_PUBLIC) != 0;
     }
 
+    public static boolean isPrivate(final int access){
+        return (access & ACCESS_PRIVATE) != 0;
+    }
+
     public static boolean isProtected(final int access) {
         return (access & ACCESS_PROTECTED) != 0;
     }
