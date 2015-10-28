@@ -15,8 +15,6 @@ import javax.swing.SpinnerNumberModel;
  */
 public class FloatSettingPanel extends SettingPanel<Float> {
 
-    private final JLabel descriptor;
-
     private final JSpinner spinner;
 
     public FloatSettingPanel(final Domain domain, final Setting<Float> setting) {
@@ -36,7 +34,7 @@ public class FloatSettingPanel extends SettingPanel<Float> {
             maxValue = Float.MAX_VALUE;
         }
 
-        this.descriptor = new JLabel(setting.getDescriptor());
+        final JLabel descriptor = new JLabel(setting.getDescriptor());
         this.spinner = new JSpinner(new SpinnerNumberModel((float) controller.getSettings().getFloat(setting.getName()), minValue, maxValue, 1));
 
         spinner.addChangeListener(e -> controller.getSettings().set(setting.getName(), spinner.getValue()));

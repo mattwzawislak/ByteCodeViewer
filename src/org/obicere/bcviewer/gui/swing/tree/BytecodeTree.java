@@ -6,7 +6,6 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.util.Enumeration;
@@ -18,9 +17,9 @@ public class BytecodeTree extends JTree {
 
     private BytecodeTreeNode root;
 
-    private DefaultTreeModel model;
+    private final DefaultTreeModel model;
 
-    private ReentrantLock addRemoveLock = new ReentrantLock();
+    private final ReentrantLock addRemoveLock = new ReentrantLock();
 
     private final Domain domain;
 

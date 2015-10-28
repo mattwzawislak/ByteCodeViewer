@@ -5,7 +5,6 @@ import org.obicere.bcviewer.context.Domain;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Obicere

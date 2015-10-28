@@ -2,7 +2,6 @@ package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
-import org.obicere.bcviewer.concurrent.ClassCallback;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
@@ -31,10 +30,10 @@ public class DocumentBuilder implements DomainAccess {
         return domain;
     }
 
-    public List<Block> build(final ClassInformation classInformation, final ClassCallback callback) {
+    public List<Block> build(final ClassInformation classInformation) {
         try {
             final int tabSize = domain.getSettingsController().getSettings().getInteger("code.tabSize");
-            this.request = new DocumentBuildRequest(tabSize, this, classInformation, callback);
+            this.request = new DocumentBuildRequest(tabSize, this, classInformation);
 
             // this utilizes the style constants, so we must lock on them
             // to avoid styles being changed half way through and looking

@@ -21,14 +21,12 @@ import java.awt.image.BufferedImage;
  */
 public class ColorSettingPanel extends SettingPanel<Color> {
 
-    private final JLabel descriptor;
-
     private final JButton colorChooser;
 
     public ColorSettingPanel(final Domain domain, final Setting<Color> setting) {
         super(setting);
 
-        this.descriptor = new JLabel(setting.getDescriptor());
+        final JLabel descriptor = new JLabel(setting.getDescriptor());
         this.colorChooser = new JButton();
 
         colorChooser.addActionListener(e -> {

@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.gui.swing.tree;
 
+import com.sun.istack.internal.NotNull;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.context.Domain;
@@ -138,7 +139,7 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
     }
 
     @Override
-    public int compareTo(final BytecodeTreeNode o) {
+    public int compareTo(final @NotNull BytecodeTreeNode o) {
         if (o == null) {
             return 1;
         }

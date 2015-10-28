@@ -5,7 +5,6 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.bytecode.Field;
 import org.obicere.bcviewer.bytecode.Method;
-import org.obicere.bcviewer.concurrent.ClassCallback;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
 import org.obicere.bcviewer.util.Reader;
 
@@ -22,10 +21,6 @@ public class ClassFileReader implements Reader<ClassFile> {
 
     @Override
     public ClassFile read(final IndexedDataInputStream input) throws IOException {
-        return read(null, input);
-    }
-
-    public ClassFile read(final ClassCallback callback, final IndexedDataInputStream input) throws IOException {
         final int start = input.getOffsetIndex();
         final int magic = input.readInt();
         if (magic != MAGIC_NUMBER) {
@@ -39,8 +34,6 @@ public class ClassFileReader implements Reader<ClassFile> {
         final int accessFlags = input.readUnsignedShort();
         final int thisClass = input.readUnsignedShort();
         final int superClass = input.readUnsignedShort();
-
-        final String className = constantPool.getAsString(thisClass);
 
         // read all the interfaces
         final int interfacesCount = input.readUnsignedShort();

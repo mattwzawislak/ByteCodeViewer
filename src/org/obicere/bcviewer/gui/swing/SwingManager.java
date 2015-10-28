@@ -84,10 +84,17 @@ public class SwingManager implements FrameManager {
                         try {
                             event.acceptDrop(DnDConstants.ACTION_COPY);
 
-                            final List<File> droppedFiles = (List<File>) event.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                            final File[] files = droppedFiles.toArray(new File[droppedFiles.size()]);
+                            final Object dropped = event.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                            if (dropped instanceof List) {
 
-                            domain.getClassLoader().load(files);
+                                // we ca suppress this warning as this data
+                                // flavor returns a List<File>
+                                @SuppressWarnings("unchecked")
+                                final List<File> droppedFiles = (List<File>) dropped;
+                                final File[] files = droppedFiles.toArray(new File[droppedFiles.size()]);
+
+                                domain.getClassLoader().load(files);
+                            }
                         } catch (final Exception e) {
                             domain.getLogger().log(Level.WARNING, e.getMessage(), e);
                         }

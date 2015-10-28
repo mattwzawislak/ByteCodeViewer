@@ -7,7 +7,7 @@ import java.io.DataInputStream;
  */
 public class IndexedDataInputStream extends DataInputStream {
 
-    private int offset;
+    private final int offset;
 
     private final IndexedByteArrayInputStream input;
 

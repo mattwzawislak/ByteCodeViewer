@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class SettingModelFactory<C> {
 
-    private HashMap<String, SettingModeler<?, C>> modelers = new HashMap<>();
+    private final HashMap<String, SettingModeler<?, C>> modelers = new HashMap<>();
 
     public void addModeler(final String id, final SettingModeler<?, C> modeler) {
         if (id == null) {

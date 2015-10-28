@@ -17,8 +17,6 @@ import java.awt.Font;
  */
 public class FontSettingPanel extends SettingPanel<Font> {
 
-    private final JLabel descriptor;
-
     private final JSpinner spinner;
 
     private final JComboBox<String> fontNames;
@@ -31,7 +29,7 @@ public class FontSettingPanel extends SettingPanel<Font> {
         final Font font = domain.getSettingsController().getSettings().getFont(setting.getName());
 
         this.domain = domain;
-        this.descriptor = new JLabel(setting.getDescriptor());
+        final JLabel descriptor = new JLabel(setting.getDescriptor());
         this.spinner = new JSpinner(new SpinnerNumberModel(font.getSize(), 1, 70, 1));
         this.fontNames = new JComboBox<>(FontUtils.getFixedWidthFontNames());
 

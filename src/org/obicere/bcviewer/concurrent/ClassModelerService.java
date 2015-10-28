@@ -52,7 +52,7 @@ public class ClassModelerService implements DomainAccess {
         @Override
         public List<Block> call() throws Exception {
             try {
-                final List<Block> blocks = builder.build(information, callback);
+                final List<Block> blocks = builder.build(information);
 
                 callback.notifyCompletion(blocks);
                 return blocks;

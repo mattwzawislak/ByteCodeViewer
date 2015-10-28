@@ -15,8 +15,6 @@ import javax.swing.SpinnerNumberModel;
  */
 public class DoubleSettingPanel extends SettingPanel<Double> {
 
-    private final JLabel descriptor;
-
     private final JSpinner spinner;
 
     public DoubleSettingPanel(final Domain domain, final Setting<Double> setting) {
@@ -36,7 +34,7 @@ public class DoubleSettingPanel extends SettingPanel<Double> {
             maxValue = Double.MAX_VALUE;
         }
 
-        this.descriptor = new JLabel(setting.getDescriptor());
+        final JLabel descriptor = new JLabel(setting.getDescriptor());
         this.spinner = new JSpinner(new SpinnerNumberModel((double) controller.getSettings().getDouble(setting.getName()), minValue, maxValue, 1));
 
         spinner.addChangeListener(e -> controller.getSettings().set(setting.getName(), spinner.getValue()));

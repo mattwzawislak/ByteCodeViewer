@@ -9,13 +9,13 @@ import java.util.Set;
  */
 public abstract class Setting<T> {
 
-    private Set<PropertyChangeListener> listeners = new LinkedHashSet<>();
+    private final Set<PropertyChangeListener> listeners = new LinkedHashSet<>();
 
     private final String name;
 
     private final String descriptor;
 
-    private T defaultValue;
+    private final T defaultValue;
 
     private T value;
 

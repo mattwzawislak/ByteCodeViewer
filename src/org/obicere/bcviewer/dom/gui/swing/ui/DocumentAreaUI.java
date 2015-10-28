@@ -305,40 +305,39 @@ public class DocumentAreaUI extends ComponentUI {
 
     private void drawCollapsibleMarkers(final Graphics g, final JDocumentArea area, final int startLine, final int endLine, final int fontHeight) {
 
-        for (final Block block : area.getBlocks()) {
-            if (block.isCollapsible()) {
-                final boolean blockVisible = block.isVisible();
-                final int start = block.getLineStart();
-                final int end = block.getLineEnd();
-                final int yStart = start * fontHeight;
-                final int yEnd = end * fontHeight;
+        area.getBlocks().stream().filter(Block::isCollapsible).forEach(block -> {
 
-                final int visibleTop = startLine * fontHeight;
-                final int visibleMiddle = endLine * fontHeight;
-                if ((startLine <= start && start <= endLine) || (startLine <= end && end <= endLine)) {
-                    // find the appropriate line and subtract the invisible
-                    // top of the document
-                    // draw the top box
-                    if (visibleTop <= yStart && yStart <= visibleMiddle) {
-                        drawPlusMinusBox(g, yStart + fontHeight, !blockVisible);
-                    }
-                    if (blockVisible) {
-                        if (visibleTop <= yEnd && yEnd <= visibleMiddle) {
-                            drawPlusMinusBox(g, yEnd, false);
-                        }
-                    }
+            final boolean blockVisible = block.isVisible();
+            final int start = block.getLineStart();
+            final int end = block.getLineEnd();
+            final int yStart = start * fontHeight;
+            final int yEnd = end * fontHeight;
+
+            final int visibleTop = startLine * fontHeight;
+            final int visibleMiddle = endLine * fontHeight;
+            if ((startLine <= start && start <= endLine) || (startLine <= end && end <= endLine)) {
+                // find the appropriate line and subtract the invisible
+                // top of the document
+                // draw the top box
+                if (visibleTop <= yStart && yStart <= visibleMiddle) {
+                    drawPlusMinusBox(g, yStart + fontHeight, !blockVisible);
                 }
                 if (blockVisible) {
-
-                    final int lineStart = yStart + fontHeight;
-                    final int clippedLineStart = Math.max(lineStart, visibleTop);
-                    final int lineEnd = yEnd - 8; // - box height
-                    final int clippedLineEnd = Math.min(lineEnd, visibleMiddle);
-
-                    g.drawLine(5, clippedLineStart, 5, clippedLineEnd);
+                    if (visibleTop <= yEnd && yEnd <= visibleMiddle) {
+                        drawPlusMinusBox(g, yEnd, false);
+                    }
                 }
             }
-        }
+            if (blockVisible) {
+
+                final int lineStart = yStart + fontHeight;
+                final int clippedLineStart = Math.max(lineStart, visibleTop);
+                final int lineEnd = yEnd - 8; // - box height
+                final int clippedLineEnd = Math.min(lineEnd, visibleMiddle);
+
+                g.drawLine(5, clippedLineStart, 5, clippedLineEnd);
+            }
+        });
     }
 
     private void drawPlusMinusBox(final Graphics g, final int baseline, final boolean plus) {

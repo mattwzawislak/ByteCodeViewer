@@ -1,7 +1,6 @@
 package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.bytecode.ClassFile;
-import org.obicere.bcviewer.concurrent.ClassCallback;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.dom.style.Style;
 import org.obicere.bcviewer.dom.style.StyleConstraints;
@@ -21,8 +20,6 @@ public class DocumentBuildRequest {
 
     private final List<Block> blocks;
 
-    private final ClassCallback callback;
-
     private final ClassInformation classInformation;
 
     private final int tabSize;
@@ -37,11 +34,10 @@ public class DocumentBuildRequest {
 
     private volatile StringBuilder line = new StringBuilder();
 
-    public DocumentBuildRequest(final int tabSize, final DocumentBuilder builder, final ClassInformation classInformation, final ClassCallback callback) {
+    public DocumentBuildRequest(final int tabSize, final DocumentBuilder builder, final ClassInformation classInformation) {
         this.tabSize = tabSize;
         this.builder = builder;
         this.classInformation = classInformation;
-        this.callback = callback;
 
         this.classFile = classInformation.getRootClass();
         this.blocks = new LinkedList<>();

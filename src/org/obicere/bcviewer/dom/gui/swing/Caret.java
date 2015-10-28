@@ -9,7 +9,7 @@ public class Caret {
 
     private boolean isPlaced = false;
 
-    private JDocumentArea owner;
+    private final JDocumentArea owner;
 
     public Caret(final JDocumentArea owner) {
         this.owner = owner;

@@ -63,7 +63,7 @@ public class ClassInformation implements DomainAccess {
         try {
             this.fileSource = fileSource;
             this.classBytes = IOUtils.readData(fileSource.openSource());
-            this.rootClass = domain.getClassReader().read(callback, new IndexedDataInputStream(classBytes));
+            this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
             classes.put(rootClass.getName(), rootClass);
 
             loadInnerClasses(rootClass);

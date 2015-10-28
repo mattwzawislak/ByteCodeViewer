@@ -16,7 +16,7 @@ public class ColorHandle implements Handle<Color> {
             final int red = Integer.parseInt(parts[0]);
             final int green = Integer.parseInt(parts[1]);
             final int blue = Integer.parseInt(parts[2]);
-            if (!inRange(red) || !inRange(green) || !inRange(blue)) {
+            if (outOfRange(red) || outOfRange(green) || outOfRange(blue)) {
                 return null;
             }
             return new Color(red, green, blue);
@@ -26,8 +26,8 @@ public class ColorHandle implements Handle<Color> {
         }
     }
 
-    private boolean inRange(final int value) {
-        return 0 <= value && value <= 255;
+    private boolean outOfRange(final int value) {
+        return 0 > value || value > 255;
     }
 
     @Override

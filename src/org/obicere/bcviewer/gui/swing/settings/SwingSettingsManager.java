@@ -117,9 +117,7 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
         controls.add(accept);
         controls.add(cancel);
 
-        apply.addActionListener(e -> {
-            controller.getSettings().applyChanged();
-        });
+        apply.addActionListener(e -> controller.getSettings().applyChanged());
 
         accept.addActionListener(e -> {
             controller.getSettings().applyChanged();

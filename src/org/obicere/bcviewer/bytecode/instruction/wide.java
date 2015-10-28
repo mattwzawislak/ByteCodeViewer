@@ -1,6 +1,5 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
-import org.obicere.bcviewer.bytecode.ConstantPool;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.reader.instruction.InstructionReader;
 

@@ -419,7 +419,7 @@ public class InstructionReader extends MultiReader<Integer, Instruction> {
         add(OPCODE_INSTANCEOF, new instanceofReader());
         add(OPCODE_MONITORENTER, new monitorenterReader());
         add(OPCODE_MONITOREXIT, new monitorexitReader());
-        add(OPCODE_WIDE, new wideReader(this));
+        add(OPCODE_WIDE, new wideReader());
         add(OPCODE_MULTIANEWARRAY, new multianewarrayReader());
         add(OPCODE_IFNULL, new ifnullReader());
         add(OPCODE_IFNONNULL, new ifnonnullReader());

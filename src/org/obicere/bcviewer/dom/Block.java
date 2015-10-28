@@ -15,7 +15,7 @@ public class Block {
 
     private int lineStart = 0;
 
-    private boolean collapsible;
+    private final boolean collapsible;
 
     public int getLineCount() {
         return lines.size();

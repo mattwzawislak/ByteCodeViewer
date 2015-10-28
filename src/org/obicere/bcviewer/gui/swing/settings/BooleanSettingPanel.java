@@ -13,15 +13,13 @@ import javax.swing.JLabel;
  */
 public class BooleanSettingPanel extends SettingPanel<Boolean> {
 
-    private final JLabel descriptor;
-
     private final JCheckBox checkBox;
 
     public BooleanSettingPanel(final Domain domain, final Setting<Boolean> setting) {
         super(setting);
         final SettingsController settings = domain.getSettingsController();
 
-        this.descriptor = new JLabel(setting.getDescriptor());
+        final JLabel descriptor = new JLabel(setting.getDescriptor());
         this.checkBox = new JCheckBox("", settings.getSettings().getBoolean(setting.getName()));
 
         checkBox.addChangeListener(e -> settings.getSettings().set(setting.getName(), checkBox.isSelected()));

@@ -11,24 +11,34 @@ import java.io.IOException;
  */
 public class wideReader implements Reader<wide> {
 
-    private final InstructionReader instructionReader;
-
-    public wideReader(final InstructionReader instructionReader) {
-        this.instructionReader = instructionReader;
-    }
-
     @Override
     public wide read(final IndexedDataInputStream input) throws IOException {
         final int opcode = input.readUnsignedByte();
-        if (opcode == InstructionReader.OPCODE_IINC) { // iinc opcode
-            return new wide(opcode, input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
-        } else if (opcode == InstructionReader.OPCODE_ILOAD || opcode == InstructionReader.OPCODE_FLOAD || opcode == InstructionReader.OPCODE_LLOAD ||
-                   opcode == InstructionReader.OPCODE_DLOAD || opcode == InstructionReader.OPCODE_ISTORE || opcode == InstructionReader.OPCODE_ASTORE ||
-                   opcode == InstructionReader.OPCODE_LSTORE || opcode == InstructionReader.OPCODE_DSTORE || opcode == InstructionReader.OPCODE_RET) {
-            // Check to ensure this is a valid wide instruction for a wide instruction
-            return new wide(opcode, input.readUnsignedByte(), input.readUnsignedByte());
-        } else {
+        if (!isValidWideTag(opcode)) {
             throw new ClassFormatError("invalid operation after a wide instruction listing: " + opcode);
+        }
+        if (opcode == InstructionReader.OPCODE_IINC) { // need to read two extra bytes
+            return new wide(opcode, input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte(), input.readUnsignedByte());
+        } else {
+            return new wide(opcode, input.readUnsignedByte(), input.readUnsignedByte());
+        }
+    }
+
+    private boolean isValidWideTag(final int opcode) {
+        switch (opcode) {
+            case InstructionReader.OPCODE_IINC:
+            case InstructionReader.OPCODE_ILOAD:
+            case InstructionReader.OPCODE_FLOAD:
+            case InstructionReader.OPCODE_LLOAD:
+            case InstructionReader.OPCODE_DLOAD:
+            case InstructionReader.OPCODE_ISTORE:
+            case InstructionReader.OPCODE_ASTORE:
+            case InstructionReader.OPCODE_LSTORE:
+            case InstructionReader.OPCODE_DSTORE:
+            case InstructionReader.OPCODE_RET:
+                return true;
+            default:
+                return false;
         }
     }
 }
