@@ -28,6 +28,8 @@ public class DocumentBuildRequest {
 
     private volatile int indentLevel;
 
+    private volatile int lineCount = 0;
+
     private volatile Block workingBlock;
 
     private volatile StyleConstraints constraints = new StyleConstraints();
@@ -76,6 +78,7 @@ public class DocumentBuildRequest {
         constraints = new StyleConstraints();
 
         tab(indentLevel);
+        lineCount++;
     }
 
     public void openBlock(final Block block) {
@@ -83,15 +86,16 @@ public class DocumentBuildRequest {
             closeBlock();
         }
         workingBlock = block;
+        workingBlock.setLineStart(lineCount);
     }
 
     public void closeBlock() {
-        if (workingBlock == null) {
-            return;
+        if (workingBlock != null) {
+            pushLine();
+            blocks.add(workingBlock);
+
+            workingBlock = null;
         }
-        pushLine();
-        blocks.add(workingBlock);
-        workingBlock = null;
     }
 
     public void submit(final Style style, final String text) {
