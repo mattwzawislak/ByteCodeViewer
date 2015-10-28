@@ -625,10 +625,13 @@ public class DocumentAreaUI extends ComponentUI {
                 }
                 builder.append(lineSeparator);
 
-                final List<Line> lines = area.getLines(startRow + 1, endRow - 1);
-                for (final Line line : lines) {
-                    builder.append(line.getText());
-                    builder.append(lineSeparator);
+                // if there are full lines between the start and end
+                if (startRow + 1 != endRow) {
+                    final List<Line> lines = area.getLines(startRow + 1, endRow - 1);
+                    for (final Line line : lines) {
+                        builder.append(line.getText());
+                        builder.append(lineSeparator);
+                    }
                 }
                 final Line lastLine = area.getLine(endRow);
                 final int end = Math.min(endColumn, lastLine.length());

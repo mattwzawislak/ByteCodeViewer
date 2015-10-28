@@ -17,7 +17,6 @@ import org.obicere.utility.io.FileSource;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
@@ -43,14 +42,11 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         this.domain = domain;
         this.builder = new DocumentBuilder(domain);
 
-        final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         this.documentArea = new JDocumentArea(domain);
 
         final JScrollPane editorScroll = new JScrollPane(documentArea);
 
-        split.setLeftComponent(editorScroll);
-        split.setResizeWeight(0.5);
-        add(split);
+        add(editorScroll);
     }
 
     @Override
