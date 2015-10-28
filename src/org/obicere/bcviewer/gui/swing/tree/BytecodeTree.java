@@ -30,6 +30,7 @@ public class BytecodeTree extends JTree {
 
         setCellRenderer(new BytecodeTreeCellRenderer());
         addTreeSelectionListener(e -> {
+
             final TreePath path = e.getPath();
             final Object[] userPath = path.getPath();
             final StringBuilder className = new StringBuilder();
@@ -59,7 +60,7 @@ public class BytecodeTree extends JTree {
 
         try {
             if (root == null) {
-                root = createPackagePart("");
+                root = createPackagePart("Classes");
 
                 model.setRoot(root);
             }

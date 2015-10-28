@@ -2,6 +2,7 @@ package org.obicere.bcviewer.context;
 
 import org.obicere.bcviewer.concurrent.ClassLoaderService;
 import org.obicere.bcviewer.concurrent.ClassModelerService;
+import org.obicere.bcviewer.concurrent.FileLoaderService;
 import org.obicere.bcviewer.configuration.ClassFileLoader;
 import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.configuration.Paths;
@@ -22,21 +23,24 @@ public final class Domain {
 
     private final Logger logger = Logger.getGlobal();
 
-    private ClassLoaderService  classLoaderService;
-    private ClassModelerService classModelerService;
+    private final ClassLoaderService  classLoaderService;
+    private final ClassModelerService classModelerService;
+    private final FileLoaderService   fileLoaderService;
 
-    private ClassFileLoader classLoader;
-    private ClassFileReader classReader = new ClassFileReader();
-    private GUIManager         guiManager;
-    private Icons              icons;
-    private Paths              paths;
-    private SettingsController settings;
+    private final ClassFileLoader    classLoader;
+    private final ClassFileReader    classReader;
+    private final GUIManager         guiManager;
+    private final Icons              icons;
+    private final Paths              paths;
+    private final SettingsController settings;
 
     public Domain() {
         this.classLoaderService = new ClassLoaderService(this);
         this.classModelerService = new ClassModelerService(this);
+        this.fileLoaderService = new FileLoaderService(this);
 
         this.classLoader = new ClassFileLoader(this);
+        this.classReader = new ClassFileReader();
         this.guiManager = new GUIManager(this);
         this.icons = new Icons(this);
         this.paths = new Paths(this);
@@ -49,6 +53,10 @@ public final class Domain {
 
     public ClassModelerService getClassModelerService() {
         return classModelerService;
+    }
+
+    public FileLoaderService getFileLoaderService() {
+        return fileLoaderService;
     }
 
     public ClassFileLoader getClassLoader() {
