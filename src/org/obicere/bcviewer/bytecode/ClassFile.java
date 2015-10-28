@@ -108,8 +108,6 @@ public class ClassFile extends BytecodeElement {
     @Override
     public void model(final DocumentBuilder builder) {
 
-        builder.update("Modelling class: " + getName());
-
         // we use this override for InnerClass attributes to set the proper access flags
         final int accessFlags;
         final boolean innerClass;
@@ -324,15 +322,11 @@ public class ClassFile extends BytecodeElement {
         if (fields.length == 0) {
             return;
         }
-        int current = 1;
         for (final Field field : fields) {
             builder.newLine();
             builder.newLine();
 
-            builder.update("Modelling field: (" + current + " / " + fields.length + ")");
-
             field.model(builder);
-            current++;
         }
     }
 
@@ -341,14 +335,11 @@ public class ClassFile extends BytecodeElement {
         if (methods.length == 0) {
             return;
         }
-        int current = 1;
         for (final Method method : methods) {
             builder.newLine();
             builder.newLine();
 
-            builder.update("Modelling method: (" + current + " / " + methods.length + ")");
             method.model(builder);
-            current++;
         }
     }
 

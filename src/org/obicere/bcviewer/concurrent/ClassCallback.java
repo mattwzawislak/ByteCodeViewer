@@ -25,15 +25,6 @@ public class ClassCallback {
         return editorPanel;
     }
 
-    public void update(final String latestUpdate) {
-        try {
-            accessLock.lock();
-            editorPanel.update(latestUpdate);
-        } finally {
-            accessLock.unlock();
-        }
-    }
-
     public void notifyCompletion(final List<Block> blocks) {
         try {
             accessLock.lock();
@@ -55,7 +46,6 @@ public class ClassCallback {
     public void notifyThrowable(final Throwable error) {
         try {
             accessLock.lock();
-            editorPanel.update("Error while loading: " + error.getMessage());
             Logger.getGlobal().log(Level.WARNING, "Error while loading class: " + editorPanel.getClassInformation().getRootClass().getName());
             Logger.getGlobal().log(Level.WARNING, error.getMessage(), error);
         } finally {

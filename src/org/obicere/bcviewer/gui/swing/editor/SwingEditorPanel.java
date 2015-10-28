@@ -15,7 +15,6 @@ import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.utility.io.FileSource;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -33,30 +32,25 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     private final JDocumentArea documentArea;
 
-    private final JSplitPane split;
-
     private final DocumentBuilder builder;
 
     private volatile ClassInformation classInformation;
 
     private volatile ClassFile loadedClassFile;
 
-    private volatile JLabel status = new JLabel("Loading...", JLabel.CENTER);
-
     public SwingEditorPanel(final Domain domain) {
         super(new BorderLayout(10, 10));
         this.domain = domain;
         this.builder = new DocumentBuilder(domain);
 
-        this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         this.documentArea = new JDocumentArea(domain);
 
         final JScrollPane editorScroll = new JScrollPane(documentArea);
 
         split.setLeftComponent(editorScroll);
         split.setResizeWeight(0.5);
-
-        add(status);
+        add(split);
     }
 
     @Override
@@ -88,24 +82,14 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     @Override
-    public void update(final String update) {
-        status.setText(update);
-        repaint();
-    }
-
-    @Override
     public void setBlocks(final List<Block> blocks) {
         if (blocks == null) {
             final String className = classInformation.getRootClass().getName();
             domain.getLogger().log(Level.WARNING, "Failed to load class: " + className);
             return;
         }
-        remove(status);
-        revalidate();
-        add(split);
         documentArea.getBlocks().clear();
         blocks.forEach(documentArea::addBlock);
-        revalidate();
         repaint();
     }
 

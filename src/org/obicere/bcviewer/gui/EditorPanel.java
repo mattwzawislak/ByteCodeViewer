@@ -18,8 +18,6 @@ public interface EditorPanel {
 
     public void setClassInformation(final ClassInformation information);
 
-    public void update(final String update);
-
     public void setBlocks(final List<Block> blocks);
 
     public DocumentBuilder getBuilder();

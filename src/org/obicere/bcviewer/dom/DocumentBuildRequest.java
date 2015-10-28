@@ -68,12 +68,6 @@ public class DocumentBuildRequest {
         this.temporaryClass = file;
     }
 
-    public void update(final String update) {
-        if (callback != null) {
-            callback.update(update);
-        }
-    }
-
     private void pushLine() {
         constraints.close();
         final Line newLine = new Line(constraints, line.toString().toCharArray());

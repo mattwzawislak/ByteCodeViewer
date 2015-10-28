@@ -74,10 +74,6 @@ public class DocumentBuilder implements DomainAccess {
         return properties.get(key);
     }
 
-    public void update(final String update) {
-        request.update(update);
-    }
-
     public void openBlock() {
         request.openBlock(new Block());
     }

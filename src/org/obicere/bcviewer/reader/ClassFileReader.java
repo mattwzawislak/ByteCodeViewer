@@ -35,18 +35,12 @@ public class ClassFileReader implements Reader<ClassFile> {
         final int minor = input.readUnsignedShort();
         final int major = input.readUnsignedShort();
 
-        if (callback != null) {
-            callback.update("Loading Constant Pool");
-        }
         final ConstantPool constantPool = constantPoolReader.read(input);
         final int accessFlags = input.readUnsignedShort();
         final int thisClass = input.readUnsignedShort();
         final int superClass = input.readUnsignedShort();
 
         final String className = constantPool.getAsString(thisClass);
-        if (callback != null) {
-            callback.update("Loading Class: " + className);
-        }
 
         // read all the interfaces
         final int interfacesCount = input.readUnsignedShort();
@@ -63,9 +57,6 @@ public class ClassFileReader implements Reader<ClassFile> {
         final int fieldsCount = input.readUnsignedShort();
         final Field[] fields = new Field[fieldsCount];
         for (int i = 0; i < fieldsCount; i++) {
-            if (callback != null) {
-                callback.update("Loading Field (" + i + "/" + fieldsCount + ") of " + className);
-            }
             fields[i] = fieldReader.read(input);
         }
 
@@ -75,9 +66,6 @@ public class ClassFileReader implements Reader<ClassFile> {
         final int methodsCount = input.readUnsignedShort();
         final Method[] methods = new Method[methodsCount];
         for (int i = 0; i < methodsCount; i++) {
-            if (callback != null) {
-                callback.update("Loading Method (" + i + "/" + methodsCount + ") of " + className);
-            }
             methods[i] = methodReader.read(input);
         }
 
@@ -87,9 +75,6 @@ public class ClassFileReader implements Reader<ClassFile> {
         final int attributesCount = input.readUnsignedShort();
         final Attribute[] attributes = new Attribute[attributesCount];
         for (int i = 0; i < attributesCount; i++) {
-            if (callback != null) {
-                callback.update("Loading Attribute (" + i + "/" + attributesCount + ") of " + className);
-            }
             attributes[i] = attributeReader.read(input);
         }
 
@@ -98,9 +83,6 @@ public class ClassFileReader implements Reader<ClassFile> {
         final int end = input.getOffsetIndex();
         file.setBounds(start, end);
 
-        if (callback != null) {
-            callback.update("Done loading: " + className);
-        }
         return file;
     }
 
