@@ -1,15 +1,18 @@
 package org.obicere.bcviewer.dom.style;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
  */
 public class StyleConstraints {
 
-    private final LinkedList<Style> styles = new LinkedList<>();
+    private LinkedList<Style> styles = new LinkedList<>();
 
-    private final LinkedList<Integer> bounds = new LinkedList<>();
+    private LinkedList<Integer> bounds = new LinkedList<>();
+
+    private Style[] styleArray;
+
+    private int[] boundsArray;
 
     private boolean open = true;
 
@@ -42,14 +45,20 @@ public class StyleConstraints {
     public void close() {
         this.open = false;
         publishLast();
+
+        this.styleArray = styles.toArray(new Style[styles.size()]);
+        this.boundsArray = bounds.stream().mapToInt(e -> e).toArray();
+
+        styles = null;
+        bounds = null;
     }
 
-    public Iterator<Integer> boundsIterator() {
-        return bounds.iterator();
+    public Style[] getStyles() {
+        return styleArray;
     }
 
-    public Iterator<Style> styleIterator() {
-        return styles.iterator();
+    public int[] getBounds() {
+        return boundsArray;
     }
 
 }

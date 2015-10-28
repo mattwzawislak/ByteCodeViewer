@@ -36,7 +36,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -122,12 +121,18 @@ public class DocumentAreaUI extends ComponentUI {
         actions.put(ToggleSearchAction.NAME, new ToggleSearchAction());
     }
 
+    private void uninstallKeys(final JDocumentArea area) {
+        area.getActionMap().clear();
+        area.getInputMap().clear();
+    }
+
     @Override
     public void uninstallUI(final JComponent component) {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
 
         uninstallMouse(area);
+        uninstallKeys(area);
     }
 
     @Override
@@ -200,14 +205,15 @@ public class DocumentAreaUI extends ComponentUI {
 
             final StyleConstraints constraints = line.getConstraints();
 
-            final Iterator<Integer> bounds = constraints.boundsIterator();
-            final Iterator<Style> styles = constraints.styleIterator();
+            final Style[] styles = constraints.getStyles();
+            final int[] bounds = constraints.getBounds();
 
-            int start = bounds.next();
+            int start = bounds[0];
             int x = LEFT_MARGIN_WIDTH;
-            while (bounds.hasNext()) {
-                final Style style = styles.next();
-                final int length = bounds.next() - start;
+
+            for (int i = 0; i < styles.length; i++) {
+                final Style style = styles[i];
+                final int length = bounds[i + 1] - start;
 
                 if (style != null) {
                     g.setColor(style.getColor());
