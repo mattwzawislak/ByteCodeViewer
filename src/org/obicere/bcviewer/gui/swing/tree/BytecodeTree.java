@@ -79,7 +79,8 @@ public class BytecodeTree extends JTree {
             }
             final BytecodeTreeNode node = BytecodeTreeNode.buildNode(domain, file, accessFlags);
 
-            SwingUtilities.invokeLater(() -> model.insertNodeInto(node, absolutePackage, absolutePackage.getIndexFor(node)));
+            model.insertNodeInto(node, absolutePackage, absolutePackage.getIndexFor(node));
+            expandPath(new TreePath(root.getPath()));
         } finally {
             addRemoveLock.unlock();
         }
