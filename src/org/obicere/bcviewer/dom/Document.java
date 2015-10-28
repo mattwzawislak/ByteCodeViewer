@@ -6,6 +6,9 @@ import org.obicere.bcviewer.dom.awt.QueryResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  */
@@ -23,7 +26,7 @@ public class Document {
         this.content = content;
     }
 
-    public Query query(String input, final boolean ignoreCase) {
+    public Query query(String input, final boolean ignoreCase, final boolean regex) {
         try {
             queryLock.lock();
             if (query != null) {
@@ -32,6 +35,7 @@ public class Document {
             processor.result = new Query();
             processor.input = input;
             processor.ignoreCase = ignoreCase;
+            processor.regex = regex;
 
             query = new Thread(processor);
             query.start();
@@ -169,20 +173,49 @@ public class Document {
         private volatile Query   result;
         private volatile String  input;
         private volatile boolean ignoreCase;
+        private volatile boolean regex;
 
         @Override
         public void run() {
             if (input == null || input.length() == 0) {
                 return;
             }
+            final List<Line> lines = getLines();
+            if (regex) {
+                queryRegex(lines, input, ignoreCase);
+            }
             if (ignoreCase) {
                 input = input.toLowerCase();
             }
-            final List<Line> lines = getLines();
             if (input.contains("\n")) {
                 queryWithLineBreaks(lines, input, ignoreCase);
             } else {
                 queryNoLineBreaks(lines, input, ignoreCase);
+            }
+        }
+
+        private void queryRegex(final List<Line> lines, final String input, final boolean ignoreCase) {
+            final Pattern pattern;
+            try {
+                pattern = Pattern.compile(input);
+            } catch (final PatternSyntaxException e) {
+                return;
+            }
+            final int size = lines.size();
+            for (int i = 0; i < size; i++) {
+                if (Thread.interrupted()) {
+                    return;
+                }
+                final Line line = lines.get(i);
+                String text = line.getText();
+                if (ignoreCase) {
+                    text = text.toLowerCase();
+                }
+                final Matcher matcher = pattern.matcher(text);
+
+                while (matcher.find()) {
+                    addResult(i, i, matcher.start(), matcher.end());
+                }
             }
         }
 
