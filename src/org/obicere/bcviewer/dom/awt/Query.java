@@ -1,17 +1,45 @@
 package org.obicere.bcviewer.dom.awt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  */
-public class SearchQuery {
+public class Query {
+
+    private QueryResultListener listener;
 
     private int index;
 
     private final List<QueryResult> results;
 
-    public SearchQuery(final List<QueryResult> results) {
+    public Query() {
+        this(new ArrayList<>());
+    }
+
+    public Query(final List<QueryResult> results) {
         this.results = results;
+    }
+
+    public void addQueryResultListener(final QueryResultListener listener) {
+        if (listener == null) {
+            return;
+        }
+        this.listener = listener;
+    }
+
+    public QueryResultListener removeQueryResultListener() {
+        final QueryResultListener old = listener;
+        this.listener = null;
+        return old;
+    }
+
+    public void addResult(final QueryResult result) {
+        if (listener != null) {
+            final QueryResultEvent event = new QueryResultEvent(result, this);
+            listener.queryResultAdded(event);
+        }
+        results.add(result);
     }
 
     public List<QueryResult> getResults() {
@@ -19,6 +47,9 @@ public class SearchQuery {
     }
 
     public QueryResult current() {
+        if (isEmpty()) {
+            return null;
+        }
         return results.get(index);
     }
 

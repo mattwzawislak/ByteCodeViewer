@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
 import org.obicere.bcviewer.dom.Document;
-import org.obicere.bcviewer.dom.awt.SearchQuery;
+import org.obicere.bcviewer.dom.awt.Query;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.swing.CloseButton;
 
@@ -10,7 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,7 +19,7 @@ import javax.swing.event.DocumentListener;
  */
 public class SearchPanel extends JPanel {
 
-    private final JTextField textField;
+    private final JTextArea textField;
 
     private final JCheckBox ignoreCase;
 
@@ -27,7 +27,7 @@ public class SearchPanel extends JPanel {
         final BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);
         setLayout(layout);
 
-        this.textField = new JTextField(20);
+        this.textField = new JTextArea();
         this.ignoreCase = new JCheckBox("Ignore Case");
 
         final JButton next = new JButton("Next");
@@ -54,7 +54,7 @@ public class SearchPanel extends JPanel {
         ignoreCase.addItemListener(e -> updateQuery(area));
 
         next.addActionListener(e -> {
-            final SearchQuery query = area.getSearchQuery();
+            final Query query = area.getSearchQuery();
             if (query != null) {
                 query.next();
                 area.scrollToQuery();
@@ -62,7 +62,7 @@ public class SearchPanel extends JPanel {
         });
 
         previous.addActionListener(e -> {
-            final SearchQuery query = area.getSearchQuery();
+            final Query query = area.getSearchQuery();
             if (query != null) {
                 query.previous();
                 area.scrollToQuery();
@@ -91,8 +91,13 @@ public class SearchPanel extends JPanel {
             if (document == null) {
                 return;
             }
-            area.setSearchQuery(document.query(textField.getText(), ignoreCase.isSelected()));
-            area.scrollToQuery();
+            final Query query = document.query(textField.getText(), ignoreCase.isSelected());
+
+            query.addQueryResultListener(e -> {
+                area.scrollToQuery();
+                area.repaint();
+            });
+            area.setSearchQuery(query);
         });
     }
 
