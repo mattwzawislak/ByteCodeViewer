@@ -18,6 +18,10 @@ public class SearchQuery {
         return results;
     }
 
+    public QueryResult current() {
+        return results.get(index);
+    }
+
     public QueryResult next() {
         if (isEmpty()) {
             return null;

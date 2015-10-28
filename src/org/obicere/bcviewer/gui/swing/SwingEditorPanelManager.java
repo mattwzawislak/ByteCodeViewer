@@ -8,8 +8,6 @@ import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 import org.obicere.bcviewer.gui.swing.tree.BytecodeTree;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,10 +19,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -160,10 +155,12 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
                 final JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 0));
                 final String shortName = BytecodeUtils.getClassName(className);
+                final CloseButton button = new CloseButton(domain);
+                button.addActionListener(e -> closeEditorPanel(className));
 
                 tabPanel.setOpaque(false);
                 tabPanel.add(new JLabel(shortName));
-                tabPanel.add(new TabCloseButton(className));
+                tabPanel.add(button);
 
                 tabbedPane.setTabComponentAt(index, tabPanel);
             }
@@ -194,34 +191,5 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     @Override
     public EditorPanel getOpenEditorPanel() {
         return (EditorPanel) tabbedPane.getSelectedComponent();
-    }
-
-    private class TabCloseButton extends JButton {
-
-        public TabCloseButton(final String className) {
-            setPreferredSize(new Dimension(9, 9));
-            setFocusable(false);
-            setBorderPainted(false);
-            setOpaque(false);
-            setContentAreaFilled(false);
-            addActionListener(e -> closeEditorPanel(className));
-        }
-
-        @Override
-        protected void paintComponent(final Graphics g) {
-            final Icons icons = domain.getIcons();
-
-            final Image image;
-            final ButtonModel model = getModel();
-            if (model.isRollover()) {
-                image = icons.getImage(Icons.ICON_CLOSE_HOVER);
-            } else {
-                image = icons.getImage(Icons.ICON_CLOSE);
-            }
-            if (model.isPressed()) {
-                g.translate(1, 1);
-            }
-            g.drawImage(image, 0, 0, 8, 8, this);
-        }
     }
 }

@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.dom.awt.QueryResult;
+import org.obicere.bcviewer.dom.awt.SearchQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,30 @@ public class Document {
         this.content = content;
     }
 
-    public QueryResult query(final String input, final boolean ignoreCase) {
+    public SearchQuery query(String input, final boolean ignoreCase) {
         if (input == null || input.length() == 0) {
             return null;
         }
-        return null;
+        if (ignoreCase) {
+            input = input.toLowerCase();
+        }
+        final List<QueryResult> result = new ArrayList<>();
+        final List<Line> lines = getLines();
+        final int size = lines.size();
+        for (int i = 0; i < size; i++) {
+            final Line line = lines.get(i);
+            String text = line.getText();
+            if (ignoreCase) {
+                text = text.toLowerCase();
+            }
+
+            int index = 0;
+            while ((index = text.indexOf(input, index)) >= 0) {
+                result.add(new QueryResult(i, i, index, index + input.length()));
+                index++;
+            }
+        }
+        return new SearchQuery(result);
     }
 
     public List<Block> getBlocks() {
@@ -30,6 +50,10 @@ public class Document {
         final Block containing = getBlockContaining(count);
         final int offset = count - containing.getLineStart();
         return containing.getLine(offset);
+    }
+
+    public List<Line> getLines() {
+        return getLines(0, getLineCount());
     }
 
     public List<Line> getLines(final int start, final int end) {

@@ -10,6 +10,7 @@ import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.dom.style.Style;
 import org.obicere.bcviewer.dom.style.StyleConstraints;
 import org.obicere.bcviewer.gui.EditorPanel;
+import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
 import org.obicere.bcviewer.settings.Settings;
 
 import javax.swing.AbstractAction;
@@ -104,6 +105,7 @@ public class DocumentAreaUI extends ComponentUI {
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), ReloadAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.CTRL_DOWN_MASK), HardReloadAction.NAME);
         inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CloseAction.NAME);
+        inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK), ToggleSearchAction.NAME);
 
         final ActionMap actions = area.getActionMap();
         actions.put(CaretRightAction.NAME, new CaretRightAction());
@@ -117,6 +119,7 @@ public class DocumentAreaUI extends ComponentUI {
         actions.put(ReloadAction.NAME, new ReloadAction());
         actions.put(HardReloadAction.NAME, new HardReloadAction());
         actions.put(CloseAction.NAME, new CloseAction());
+        actions.put(ToggleSearchAction.NAME, new ToggleSearchAction());
     }
 
     @Override
@@ -473,6 +476,9 @@ public class DocumentAreaUI extends ComponentUI {
         }
 
         private void handleCloseBlock(final int y) {
+            // remove the search query as results may be invalid
+            area.setSearchQuery(null);
+
             final Document document = area.getDocument();
             final QuickWidthFont font = (QuickWidthFont) area.getFont();
             final int fontHeight = font.getFixedHeight();
@@ -724,6 +730,21 @@ public class DocumentAreaUI extends ComponentUI {
                 return;
             }
             panel.close();
+        }
+
+    }
+
+    private class ToggleSearchAction extends AbstractAction {
+
+        private static final String NAME = "ToggleSearch";
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            final SwingEditorPanel panel = (SwingEditorPanel) SwingUtilities.getAncestorOfClass(EditorPanel.class, area);
+            if (panel == null) {
+                return;
+            }
+            panel.setSearchVisible(!panel.isSearchVisible());
         }
 
     }

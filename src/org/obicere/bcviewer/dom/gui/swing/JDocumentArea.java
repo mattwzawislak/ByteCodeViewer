@@ -3,7 +3,9 @@ package org.obicere.bcviewer.dom.gui.swing;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Document;
+import org.obicere.bcviewer.dom.awt.QueryResult;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
+import org.obicere.bcviewer.dom.awt.SearchQuery;
 import org.obicere.bcviewer.dom.gui.swing.ui.DocumentAreaUI;
 
 import javax.swing.JComponent;
@@ -30,6 +32,8 @@ public class JDocumentArea extends JComponent implements DomainAccess {
     private final Caret dropCaret = new Caret(this);
 
     private final Domain domain;
+
+    private volatile SearchQuery query;
 
     static {
         UIManager.put(uiClassID, DocumentAreaUI.class.getName());
@@ -70,6 +74,18 @@ public class JDocumentArea extends JComponent implements DomainAccess {
         return dropCaret;
     }
 
+    public void scrollToQuery() {
+        if (query == null) {
+            return;
+        }
+        final QueryResult result = query.current();
+        if (result != null) {
+            caret.setLocation(result.getStartLine(), result.getStart());
+            dropCaret.setLocation(result.getEndLine(), result.getEnd());
+            scrollTo(result.getStart(), result.getStartLine());
+        }
+    }
+
     public void scrollToCaret() {
         scrollTo(caret);
     }
@@ -79,19 +95,23 @@ public class JDocumentArea extends JComponent implements DomainAccess {
     }
 
     private void scrollTo(final Caret caret) {
+        scrollTo(caret.getColumn(), caret.getRow());
+    }
+
+    private void scrollTo(final int column, final int row) {
         final JScrollPane scrollPane = getScrollPaneParent();
         if (scrollPane == null) {
             return;
         }
 
-        final QuickWidthFont font = (QuickWidthFont) domain.getSettingsController().getSettings().getFont("editor.font");
+        final QuickWidthFont font = (QuickWidthFont) getFont();
         final JViewport viewport = scrollPane.getViewport();
         final int fontHeight = font.getFixedHeight();
         final int fontWidth = font.getFixedWidth();
         final Point offset = viewport.getViewPosition();
 
-        final int x = caret.getColumn() * fontWidth;
-        final int y = caret.getRow() * fontHeight;
+        final int x = column * fontWidth;
+        final int y = row * fontHeight;
         final Rectangle caretRectangle = new Rectangle(x - offset.x, y - offset.y, 1, fontHeight);
 
         viewport.scrollRectToVisible(caretRectangle);
@@ -100,7 +120,7 @@ public class JDocumentArea extends JComponent implements DomainAccess {
     }
 
     public void pageUp() {
-        final QuickWidthFont font = (QuickWidthFont) domain.getSettingsController().getSettings().getFont("editor.font");
+        final QuickWidthFont font = (QuickWidthFont) getFont();
         final int delta = -font.getFixedHeight() * 4;
         scroll(delta);
     }
@@ -150,6 +170,14 @@ public class JDocumentArea extends JComponent implements DomainAccess {
         }
         this.thinCarets = thinCarets;
         firePropertyChange("thinCarets", old, thinCarets);
+    }
+
+    public void setSearchQuery(final SearchQuery query) {
+        this.query = query;
+    }
+
+    public SearchQuery getSearchQuery() {
+        return query;
     }
 
     @Override

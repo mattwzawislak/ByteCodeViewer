@@ -32,11 +32,15 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     private final JDocumentArea documentArea;
 
+    private final JPanel searchPanel;
+
     private final DocumentBuilder builder;
 
     private volatile ClassInformation classInformation;
 
     private volatile ClassFile loadedClassFile;
+
+    private boolean searchVisible;
 
     public SwingEditorPanel(final Domain domain) {
         super(new BorderLayout(10, 10));
@@ -44,10 +48,16 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         this.builder = new DocumentBuilder(domain);
 
         this.documentArea = new JDocumentArea(domain);
+        this.searchPanel = new SearchPanel(documentArea);
 
+        final JPanel displayArea = new JPanel(new BorderLayout(0, 0));
         final JScrollPane editorScroll = new JScrollPane(documentArea);
 
-        add(editorScroll);
+        displayArea.add(editorScroll, BorderLayout.CENTER);
+        displayArea.add(searchPanel, BorderLayout.SOUTH);
+        setSearchVisible(false);
+
+        add(displayArea);
     }
 
     @Override
@@ -124,6 +134,22 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     public void close() {
         final FrameManager manager = domain.getGUIManager().getFrameManager();
         manager.getEditorManager().closeEditorPanel(getName());
+    }
+
+    public void setSearchVisible(final boolean searchVisible) {
+        this.searchVisible = searchVisible;
+        searchPanel.setVisible(searchVisible);
+
+        if(searchVisible){
+            searchPanel.requestFocus();
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    public boolean isSearchVisible() {
+        return searchVisible;
     }
 
     @Override
