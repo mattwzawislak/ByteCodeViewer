@@ -65,6 +65,8 @@ public class Icons {
 
     public static final String ICON_CLOSE       = "close.gif";
     public static final String ICON_CLOSE_HOVER = "close_hover.gif";
+    public static final String ICON_FORWARD_NAV = "forward_nav.gif";
+    public static final String ICON_BACKWARD_NAV = "backward_nav.gif";
 
     public static final String ICON_DARK_16  = "dark_16.png";
     public static final String ICON_DARK_20  = "dark_20.png";

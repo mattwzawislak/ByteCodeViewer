@@ -1,12 +1,13 @@
 package org.obicere.bcviewer.gui.swing.editor;
 
+import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.dom.Document;
 import org.obicere.bcviewer.dom.awt.Query;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.swing.CloseButton;
+import org.obicere.bcviewer.gui.swing.NextButton;
+import org.obicere.bcviewer.gui.swing.PreviousButton;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -14,6 +15,8 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 /**
  */
@@ -24,15 +27,17 @@ public class SearchPanel extends JPanel {
     private final JCheckBox ignoreCase;
 
     public SearchPanel(final JDocumentArea area) {
-        final BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);
-        setLayout(layout);
+        super(new BorderLayout(5, 5));
+        final Domain domain = area.getDomain();
+        final JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        final JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 
-        this.textField = new JTextArea();
+        this.textField = new JTextArea(1, 20);
         this.ignoreCase = new JCheckBox("Ignore Case");
 
-        final JButton next = new JButton("Next");
-        final JButton previous = new JButton("Previous");
-        final CloseButton close = new CloseButton(area.getDomain());
+        final JButton previous = new PreviousButton(domain);
+        final JButton next = new NextButton(domain);
+        final CloseButton close = new CloseButton(domain);
 
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -77,12 +82,15 @@ public class SearchPanel extends JPanel {
             panel.setSearchVisible(false);
         });
 
-        add(textField);
-        add(ignoreCase);
-        add(next);
-        add(previous);
-        add(Box.createHorizontalGlue());
-        add(close);
+
+        leftPanel.add(textField);
+        leftPanel.add(ignoreCase);
+        leftPanel.add(previous);
+        leftPanel.add(next);
+        rightPanel.add(close);
+
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.EAST);
     }
 
     private void updateQuery(final JDocumentArea area) {

@@ -7,16 +7,14 @@ import java.awt.Dimension;
 
 /**
  */
+public class PreviousButton extends IconButton {
 
-public class CloseButton extends IconButton {
+    public PreviousButton(final Domain domain) {
+        super(domain, Icons.ICON_BACKWARD_NAV, Icons.ICON_BACKWARD_NAV);
 
-    public CloseButton(final Domain domain) {
-        super(domain, Icons.ICON_CLOSE, Icons.ICON_CLOSE_HOVER);
-
-        final Dimension dimension = new Dimension(9, 9);
+        final Dimension dimension = new Dimension(17, 17);
         setPreferredSize(dimension);
         setMinimumSize(dimension);
         setMaximumSize(dimension);
     }
-
 }
