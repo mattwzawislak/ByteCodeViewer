@@ -3,9 +3,9 @@ package org.obicere.bcviewer.dom.gui.swing;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Document;
+import org.obicere.bcviewer.dom.awt.Query;
 import org.obicere.bcviewer.dom.awt.QueryResult;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
-import org.obicere.bcviewer.dom.awt.SearchQuery;
 import org.obicere.bcviewer.dom.gui.swing.ui.DocumentAreaUI;
 
 import javax.swing.JComponent;
@@ -33,7 +33,7 @@ public class JDocumentArea extends JComponent implements DomainAccess {
 
     private final Domain domain;
 
-    private volatile SearchQuery query;
+    private volatile Query query;
 
     static {
         UIManager.put(uiClassID, DocumentAreaUI.class.getName());
@@ -172,11 +172,11 @@ public class JDocumentArea extends JComponent implements DomainAccess {
         firePropertyChange("thinCarets", old, thinCarets);
     }
 
-    public void setSearchQuery(final SearchQuery query) {
+    public void setSearchQuery(final Query query) {
         this.query = query;
     }
 
-    public SearchQuery getSearchQuery() {
+    public Query getSearchQuery() {
         return query;
     }
 

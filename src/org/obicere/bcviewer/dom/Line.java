@@ -8,15 +8,15 @@ public class Line {
 
     private final StyleConstraints constraints;
 
-    private final char[] chars;
+    private final String chars;
 
-    public Line(final StyleConstraints constraints, final char[] chars) {
+    public Line(final StyleConstraints constraints, final String chars) {
         this.constraints = constraints;
         this.chars = chars;
     }
 
     public char[] getChars() {
-        return getChars(0, chars.length);
+        return chars.toCharArray();
     }
 
     public char[] getChars(final int start, final int end) {
@@ -28,12 +28,12 @@ public class Line {
         }
         final int length = (end - start);
         final char[] copy = new char[length];
-        System.arraycopy(chars, start, copy, 0, length);
+        chars.getChars(start, end, copy, 0);
         return copy;
     }
 
     public String getText() {
-        return new String(chars);
+        return chars;
     }
 
     public StyleConstraints getConstraints() {
@@ -41,6 +41,6 @@ public class Line {
     }
 
     public int length() {
-        return chars.length;
+        return chars.length();
     }
 }

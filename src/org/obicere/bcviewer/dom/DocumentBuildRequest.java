@@ -68,7 +68,7 @@ public class DocumentBuildRequest {
 
     private void pushLine() {
         constraints.close();
-        final Line newLine = new Line(constraints, line.toString().toCharArray());
+        final Line newLine = new Line(constraints, line.toString());
         if (workingBlock == null) {
             openBlock(new Block());
         }
