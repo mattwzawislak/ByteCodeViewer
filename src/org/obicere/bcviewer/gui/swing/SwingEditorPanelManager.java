@@ -159,9 +159,10 @@ public class SwingEditorPanelManager implements EditorPanelManager {
                 tabbedPane.addTab(className, panel);
 
                 final JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 0));
+                final String shortName = BytecodeUtils.getClassName(className);
 
                 tabPanel.setOpaque(false);
-                tabPanel.add(new JLabel(className));
+                tabPanel.add(new JLabel(shortName));
                 tabPanel.add(new TabCloseButton(className));
 
                 tabbedPane.setTabComponentAt(index, tabPanel);
