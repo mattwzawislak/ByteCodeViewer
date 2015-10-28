@@ -1,5 +1,7 @@
 package org.obicere.bcviewer.dom.gui.swing;
 
+import org.obicere.bcviewer.dom.Document;
+
 /**
  */
 public class Caret {
@@ -35,7 +37,11 @@ public class Caret {
 
     public void setRow(final int row) {
 
-        final int max = owner.getLineCount();
+        final Document document = owner.getDocument();
+        if (document == null) {
+            return;
+        }
+        final int max = document.getLineCount();
         if (row < 0) {
             this.row = 0;
         } else if (row >= max) {
@@ -47,7 +53,11 @@ public class Caret {
 
     public void setColumn(final int column) {
 
-        final int max = owner.getMaxLineLength();
+        final Document document = owner.getDocument();
+        if (document == null) {
+            return;
+        }
+        final int max = document.getMaxLineLength();
         if (column < 0) {
             this.column = 0;
         } else if (column >= max) {
@@ -57,7 +67,7 @@ public class Caret {
         }
     }
 
-    public void remove(){
+    public void remove() {
         isPlaced = false;
     }
 
@@ -73,11 +83,11 @@ public class Caret {
         setRow(row + 1);
     }
 
-    public void moveLeft(){
+    public void moveLeft() {
         setColumn(column - 1);
     }
 
-    public void moveRight(){
+    public void moveRight() {
         setColumn(column + 1);
     }
 

@@ -8,6 +8,7 @@ import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.dom.Block;
+import org.obicere.bcviewer.dom.Document;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
@@ -84,8 +85,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
             domain.getLogger().log(Level.WARNING, "Failed to load class: " + className);
             return;
         }
-        documentArea.getBlocks().clear();
-        blocks.forEach(documentArea::addBlock);
+        documentArea.setDocument(new Document(blocks));
         repaint();
     }
 

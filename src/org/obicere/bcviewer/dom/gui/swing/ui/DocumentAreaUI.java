@@ -2,6 +2,7 @@ package org.obicere.bcviewer.dom.gui.swing.ui;
 
 import org.obicere.bcviewer.Boot;
 import org.obicere.bcviewer.dom.Block;
+import org.obicere.bcviewer.dom.Document;
 import org.obicere.bcviewer.dom.Line;
 import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.Caret;
@@ -130,6 +131,10 @@ public class DocumentAreaUI extends ComponentUI {
     public void paint(final Graphics g, final JComponent component) {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
+        final Document document = area.getDocument();
+        if (document == null) {
+            return;
+        }
 
         final Graphics2D g2 = (Graphics2D) g;
 
@@ -162,21 +167,20 @@ public class DocumentAreaUI extends ComponentUI {
         final int startLine = visibleTop / fontHeight;
         final int unboundedEndLine = visibleMiddle / fontHeight;
 
-        final int endLine = Math.min(unboundedEndLine, area.getLineCount());
+        final int endLine = Math.min(unboundedEndLine, document.getLineCount());
 
-        drawCollapsibleMarkers(g, area, startLine, endLine, fontHeight);
+        drawCollapsibleMarkers(document, g, area, startLine, endLine, fontHeight);
 
         drawCaret(g, area.getCaret(), startLine, endLine, fontWidth, fontHeight, area.isThinCarets());
         drawCaret(g, area.getDropCaret(), startLine, endLine, fontWidth, fontHeight, area.isThinCarets());
         drawSelection(g, startLine, endLine, fontWidth, fontHeight);
 
-        final List<Line> lines = area.getLines(startLine, endLine);
-
-        drawLines(g, lines, fontWidth, fontHeight, startLine);
+        drawLines(g, document, fontWidth, fontHeight, startLine, endLine);
 
     }
 
-    private void drawLines(final Graphics g, final List<Line> lines, final int fontWidth, final int fontHeight, int startLine) {
+    private void drawLines(final Graphics g, Document document, final int fontWidth, final int fontHeight, int startLine, final int endLine) {
+        final List<Line> lines = document.getLines(startLine, endLine);
         int y = fontHeight + startLine * fontHeight;
         for (final Line line : lines) {
             if (line == null) {
@@ -258,6 +262,8 @@ public class DocumentAreaUI extends ComponentUI {
         final int caretColumn = caret.getColumn();
         final int dropCaretColumn = dropCaret.getColumn();
 
+        final Document document = area.getDocument();
+
         g.setColor(highlight);
         if (caretRow == dropCaretRow) {
             final int start = Math.min(caretColumn, dropCaretColumn);
@@ -278,13 +284,13 @@ public class DocumentAreaUI extends ComponentUI {
             }
 
             if (startRow >= startLine) {
-                drawHighlightOnLine(g, startColumn, area.getLine(startRow).length(), startRow, fontWidth, fontHeight);
+                drawHighlightOnLine(g, startColumn, document.getLine(startRow).length(), startRow, fontWidth, fontHeight);
             }
 
             final int clippedStartLine = Math.max(startLine, startRow + 1);
             final int clippedEndLine = Math.min(endRow, endLine);
             for (int i = clippedStartLine; i < clippedEndLine; i++) {
-                drawHighlightOnLine(g, 0, area.getLine(i).length(), i, fontWidth, fontHeight);
+                drawHighlightOnLine(g, 0, document.getLine(i).length(), i, fontWidth, fontHeight);
             }
 
             drawHighlightOnLine(g, 0, endColumn, endRow, fontWidth, fontHeight);
@@ -303,9 +309,9 @@ public class DocumentAreaUI extends ComponentUI {
         g.fillRect(startX, startY, width, fontHeight);
     }
 
-    private void drawCollapsibleMarkers(final Graphics g, final JDocumentArea area, final int startLine, final int endLine, final int fontHeight) {
+    private void drawCollapsibleMarkers(final Document document, final Graphics g, final JDocumentArea area, final int startLine, final int endLine, final int fontHeight) {
 
-        area.getBlocks().stream().filter(Block::isCollapsible).forEach(block -> {
+        document.getBlocks().stream().filter(Block::isCollapsible).forEach(block -> {
 
             final boolean blockVisible = block.isVisible();
             final int start = block.getLineStart();
@@ -352,17 +358,21 @@ public class DocumentAreaUI extends ComponentUI {
     public Dimension getPreferredSize(final JComponent component) {
         checkComponentType(component);
         final JDocumentArea area = (JDocumentArea) component;
+        final Document document = area.getDocument();
+        if (document == null) {
+            return new Dimension(0, 0);
+        }
         final QuickWidthFont font = (QuickWidthFont) area.getFont();
 
-        final Dimension dimension = getDocumentSize(area, font.getFixedWidth(), font.getFixedHeight());
+        final Dimension dimension = getDocumentSize(document, font.getFixedWidth(), font.getFixedHeight());
         final Insets insets = area.getInsets();
         dimension.width -= insets.left + insets.right;
         dimension.height -= insets.top + insets.bottom;
         return dimension;
     }
 
-    private Dimension getDocumentSize(final JDocumentArea area, final int fontWidth, final int fontHeight) {
-        return new Dimension((area.getMaxLineLength() + 1) * fontWidth, (area.getLineCount() + 1) * fontHeight + fontHeight);
+    private Dimension getDocumentSize(final Document document, final int fontWidth, final int fontHeight) {
+        return new Dimension((document.getMaxLineLength() + 1) * fontWidth, (document.getLineCount() + 1) * fontHeight + fontHeight);
     }
 
     private class DocumentMouseListener extends MouseAdapter {
@@ -410,6 +420,10 @@ public class DocumentAreaUI extends ComponentUI {
 
         @Override
         public void mouseClicked(final MouseEvent event) {
+            final Document document = area.getDocument();
+            if (document == null) {
+                return;
+            }
             if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2) {
                 final QuickWidthFont font = (QuickWidthFont) area.getFont();
                 final Caret caret = area.getCaret();
@@ -420,7 +434,7 @@ public class DocumentAreaUI extends ComponentUI {
                 final int column = x / font.getFixedWidth();
                 final int row = y / font.getFixedHeight();
 
-                final Line line = area.getLine(row);
+                final Line line = document.getLine(row);
 
                 int lower = column;
                 int higher = column + 1;
@@ -459,9 +473,10 @@ public class DocumentAreaUI extends ComponentUI {
         }
 
         private void handleCloseBlock(final int y) {
+            final Document document = area.getDocument();
             final QuickWidthFont font = (QuickWidthFont) area.getFont();
             final int fontHeight = font.getFixedHeight();
-            for (final Block block : area.getBlocks()) {
+            for (final Block block : document.getBlocks()) {
 
                 // ensure the block is collapsible before any calculation
                 // on its marker's locations
@@ -486,7 +501,8 @@ public class DocumentAreaUI extends ComponentUI {
         }
 
         private void markerPressed(final Block block, final boolean visible) {
-            area.setBlockVisible(block, visible);
+            final Document document = area.getDocument();
+            document.setBlockVisible(block, visible);
             area.revalidate();
             area.repaint();
         }
@@ -556,10 +572,11 @@ public class DocumentAreaUI extends ComponentUI {
         public void actionPerformed(final ActionEvent e) {
             final Caret caret = area.getCaret();
             final Caret dropCaret = area.getDropCaret();
+            final Document document = area.getDocument();
 
             caret.setLocation(0, 0);
-            final int lastLine = area.getLineCount() - 1;
-            dropCaret.setLocation(lastLine, area.getLine(lastLine).length());
+            final int lastLine = document.getLineCount() - 1;
+            dropCaret.setLocation(lastLine, document.getLine(lastLine).length());
             area.repaint();
         }
     }
@@ -576,6 +593,7 @@ public class DocumentAreaUI extends ComponentUI {
             if (!caret.isPlaced() || !dropCaret.isPlaced()) {
                 return;
             }
+            final Document document = area.getDocument();
 
             final int caretRow = caret.getRow();
             final int caretColumn = caret.getColumn();
@@ -609,7 +627,7 @@ public class DocumentAreaUI extends ComponentUI {
                 if (startColumn == endColumn) {
                     return;
                 }
-                final Line line = area.getLine(startRow);
+                final Line line = document.getLine(startRow);
                 if (startColumn > line.length()) {
                     text = "";
                 } else {
@@ -619,23 +637,23 @@ public class DocumentAreaUI extends ComponentUI {
                 final StringBuilder builder = new StringBuilder();
                 final String lineSeparator = System.getProperty("line.separator");
 
-                final Line firstLine = area.getLine(startRow);
+                final Line firstLine = document.getLine(startRow);
                 if (firstLine.length() > startColumn) {
-                    builder.append(area.getLine(startRow).getText().substring(startColumn));
+                    builder.append(document.getLine(startRow).getText().substring(startColumn));
                 }
                 builder.append(lineSeparator);
 
                 // if there are full lines between the start and end
                 if (startRow + 1 != endRow) {
-                    final List<Line> lines = area.getLines(startRow + 1, endRow - 1);
+                    final List<Line> lines = document.getLines(startRow + 1, endRow - 1);
                     for (final Line line : lines) {
                         builder.append(line.getText());
                         builder.append(lineSeparator);
                     }
                 }
-                final Line lastLine = area.getLine(endRow);
+                final Line lastLine = document.getLine(endRow);
                 final int end = Math.min(endColumn, lastLine.length());
-                builder.append(area.getLine(endRow).getText().substring(0, end));
+                builder.append(document.getLine(endRow).getText().substring(0, end));
                 text = builder.toString();
             }
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
