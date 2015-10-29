@@ -128,13 +128,21 @@ public class SearchPanel extends JPanel {
             if (document == null) {
                 return;
             }
-            final Query query = document.query(textField.getText(), ignoreCase.isSelected(), regex.isSelected());
+            final Query query = document.createQuery(textField.getText(), ignoreCase.isSelected(), regex.isSelected());
 
+            // areas are allowed a null query. This clears previous search
+            area.setSearchQuery(query);
+
+            if (query == null) {
+                return;
+            }
             query.addQueryResultListener(e -> {
                 area.scrollToQuery();
                 area.repaint();
+                query.removeQueryResultListener();
             });
-            area.setSearchQuery(query);
+
+            document.startQuery();
         });
     }
 

@@ -26,20 +26,41 @@ public class Document {
         this.content = content;
     }
 
-    public Query query(String input, final boolean ignoreCase, final boolean regex) {
+    public Query createQuery(String input, final boolean ignoreCase, final boolean regex) {
+        if (input == null || input.isEmpty()) {
+            return null;
+        }
         try {
             queryLock.lock();
             if (query != null) {
                 query.interrupt();
+                final Query staleResult = processor.result;
+                if (staleResult != null) {
+                    staleResult.dispose();
+                }
             }
-            processor.result = new Query();
+            final Query result = new Query();
+
+            processor.result = result;
             processor.input = input;
             processor.ignoreCase = ignoreCase;
             processor.regex = regex;
 
             query = new Thread(processor);
-            query.start();
 
+            return result;
+        } finally {
+            queryLock.unlock();
+        }
+    }
+
+    public Query startQuery() {
+        try {
+            if (query == null) {
+                return null;
+            }
+            queryLock.lock();
+            query.start();
             return processor.result;
         } finally {
             queryLock.unlock();
@@ -143,8 +164,7 @@ public class Document {
         return content.get(index);
     }
 
-    // can be accessed during building for calculating sizes
-    public synchronized int getLineCount() {
+    public int getLineCount() {
         int lines = 0;
         for (final Block block : content) {
             if (block.isVisible()) {
@@ -154,8 +174,7 @@ public class Document {
         return lines;
     }
 
-    // can be accessed during building for calculating sizes
-    public synchronized int getMaxLineLength() {
+    public int getMaxLineLength() {
         int max = 0;
         for (final Block block : content) {
             if (block.isVisible()) {

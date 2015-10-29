@@ -8,15 +8,15 @@ public class QueryResult {
 
     private final int endLine;
 
-    private final int start;
+    private final short start;
 
-    private final int end;
+    private final short end;
 
     public QueryResult(final int startLine, final int endLine, final int start, final int end) {
         this.startLine = startLine;
         this.endLine = endLine;
-        this.start = start;
-        this.end = end;
+        this.start = (short) start;
+        this.end = (short) end;
     }
 
     public int getStartLine() {

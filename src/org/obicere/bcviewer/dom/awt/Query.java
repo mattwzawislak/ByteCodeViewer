@@ -9,7 +9,7 @@ public class Query {
 
     private QueryResultListener listener;
 
-    private int index;
+    private int index = 0;
 
     private final List<QueryResult> results;
 
@@ -35,11 +35,11 @@ public class Query {
     }
 
     public void addResult(final QueryResult result) {
+        results.add(result);
         if (listener != null) {
             final QueryResultEvent event = new QueryResultEvent(result, this);
             listener.queryResultAdded(event);
         }
-        results.add(result);
     }
 
     public List<QueryResult> getResults() {
@@ -83,6 +83,15 @@ public class Query {
         }
         index = results.size() - 1;
         return results.get(index);
+    }
+
+    public void dispose() {
+        results.clear();
+        listener = null;
+        index = 0;
+
+        // request the garbage collector to clear the results
+        System.gc();
     }
 
     public boolean isEmpty() {

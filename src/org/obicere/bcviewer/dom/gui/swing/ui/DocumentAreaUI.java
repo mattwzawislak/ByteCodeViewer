@@ -482,7 +482,7 @@ public class DocumentAreaUI extends ComponentUI {
         }
 
         private void handleCloseBlock(final int y) {
-            // remove the search query as results may be invalid
+            // remove the search createQuery as results may be invalid
             area.setSearchQuery(null);
 
             final Document document = area.getDocument();
