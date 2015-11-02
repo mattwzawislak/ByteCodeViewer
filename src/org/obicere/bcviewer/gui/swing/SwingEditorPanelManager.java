@@ -70,6 +70,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         final JSplitPane displayArea = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         final JScrollPane treeScrollPane = new JScrollPane(tree);
 
+        displayArea.setDividerLocation(128);
         displayArea.setRightComponent(tabbedPane);
         displayArea.setLeftComponent(treeScrollPane);
 

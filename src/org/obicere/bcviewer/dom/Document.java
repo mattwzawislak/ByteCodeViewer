@@ -1,14 +1,9 @@
 package org.obicere.bcviewer.dom;
 
 import org.obicere.bcviewer.dom.awt.Query;
-import org.obicere.bcviewer.dom.awt.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  */
@@ -16,55 +11,12 @@ public class Document {
 
     private final List<Block> content;
 
-    private QueryProcessor processor = new QueryProcessor();
-
-    private Thread query;
-
-    private ReentrantLock queryLock = new ReentrantLock();
-
     public Document(final List<Block> content) {
         this.content = content;
     }
 
-    public Query createQuery(String input, final boolean ignoreCase, final boolean regex) {
-        if (input == null || input.isEmpty()) {
-            return null;
-        }
-        try {
-            queryLock.lock();
-            if (query != null) {
-                query.interrupt();
-                final Query staleResult = processor.result;
-                if (staleResult != null) {
-                    staleResult.dispose();
-                }
-            }
-            final Query result = new Query();
-
-            processor.result = result;
-            processor.input = input;
-            processor.ignoreCase = ignoreCase;
-            processor.regex = regex;
-
-            query = new Thread(processor);
-
-            return result;
-        } finally {
-            queryLock.unlock();
-        }
-    }
-
-    public Query startQuery() {
-        try {
-            if (query == null) {
-                return null;
-            }
-            queryLock.lock();
-            query.start();
-            return processor.result;
-        } finally {
-            queryLock.unlock();
-        }
+    public Query query(final String input, final boolean ignoreCase, final boolean regex) {
+        return new Query(this, input, ignoreCase, regex);
     }
 
     public List<Block> getBlocks() {
@@ -185,136 +137,5 @@ public class Document {
             }
         }
         return max;
-    }
-
-    private class QueryProcessor implements Runnable {
-
-        private volatile Query   result;
-        private volatile String  input;
-        private volatile boolean ignoreCase;
-        private volatile boolean regex;
-
-        @Override
-        public void run() {
-            if (input == null || input.length() == 0) {
-                return;
-            }
-            final List<Line> lines = getLines();
-            if (regex) {
-                queryRegex(lines, input, ignoreCase);
-            }
-            if (ignoreCase) {
-                input = input.toLowerCase();
-            }
-            if (input.contains("\n")) {
-                queryWithLineBreaks(lines, input, ignoreCase);
-            } else {
-                queryNoLineBreaks(lines, input, ignoreCase);
-            }
-        }
-
-        private void queryRegex(final List<Line> lines, final String input, final boolean ignoreCase) {
-            final Pattern pattern;
-            try {
-                pattern = Pattern.compile(input);
-            } catch (final PatternSyntaxException e) {
-                return;
-            }
-            final int size = lines.size();
-            for (int i = 0; i < size; i++) {
-                if (Thread.interrupted()) {
-                    return;
-                }
-                final Line line = lines.get(i);
-                String text = line.getText();
-                if (ignoreCase) {
-                    text = text.toLowerCase();
-                }
-                final Matcher matcher = pattern.matcher(text);
-
-                while (matcher.find()) {
-                    addResult(i, i, matcher.start(), matcher.end());
-                }
-            }
-        }
-
-        private void queryNoLineBreaks(final List<Line> lines, String input, final boolean ignoreCase) {
-            final int size = lines.size();
-            for (int i = 0; i < size; i++) {
-                if (Thread.interrupted()) {
-                    return;
-                }
-                final Line line = lines.get(i);
-                String text = line.getText();
-                if (ignoreCase) {
-                    text = text.toLowerCase();
-                }
-
-                int index = 0;
-                while ((index = text.indexOf(input, index)) >= 0) {
-                    addResult(i, i, index, index + input.length());
-                    index++;
-                }
-            }
-        }
-
-        private void queryWithLineBreaks(final List<Line> lines, String input, final boolean ignoreCase) {
-            final int size = lines.size();
-
-            final String[] parts = input.split("\n");
-            if (parts.length == 0) {
-                return;
-            }
-
-            for (int i = 0; i < size - 1; i++) {
-                if (Thread.interrupted()) {
-                    return;
-                }
-                String text = lines.get(i).getText();
-                if (ignoreCase) {
-                    text = text.toLowerCase();
-                }
-
-                if (!text.endsWith(parts[0])) {
-                    continue;
-                }
-                final int start = text.length() - parts[0].length();
-
-                int j = 1;
-                boolean valid = true;
-                for (; j < parts.length - 1 && (j + i) < size; j++) {
-                    if (Thread.interrupted()) {
-                        return;
-                    }
-                    text = lines.get(j + i).getText();
-                    if (ignoreCase) {
-                        text = text.toLowerCase();
-                    }
-                    if (!parts[j].equals(text)) {
-                        valid = false;
-                        break;
-                    }
-
-                }
-                if (!valid) {
-                    continue;
-                }
-
-                text = lines.get(i + j).getText();
-                if (ignoreCase) {
-                    text = text.toLowerCase();
-                }
-
-                final String last = parts[parts.length - 1];
-                if (text.startsWith(last)) {
-                    final int end = last.length();
-                    addResult(i, i + j, start, end);
-                }
-            }
-        }
-
-        private void addResult(final int startLine, final int endLine, final int start, final int end) {
-            result.addResult(new QueryResult(startLine, endLine, start, end));
-        }
     }
 }
