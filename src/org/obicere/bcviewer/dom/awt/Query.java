@@ -24,6 +24,8 @@ public class Query {
 
     private final NextQuerySearcher nextQuerySearcher = new NextQuerySearcher();
 
+    private final PreviousQuerySearcher previousQuerySearcher = new PreviousQuerySearcher();
+
     public Query(final Document content, final String input) {
         this(content, input, false, false);
     }
@@ -95,8 +97,7 @@ public class Query {
                 // RegexPreviousQuerySearcher
                 next = null;
             } else {
-                // PreviousQuerySearcher
-                next = null;
+                next = previousQuerySearcher.search(content, this);
             }
         }
         current = next;

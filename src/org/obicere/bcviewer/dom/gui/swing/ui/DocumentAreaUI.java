@@ -515,6 +515,8 @@ public class DocumentAreaUI extends ComponentUI {
         private void markerPressed(final Block block, final boolean visible) {
             final Document document = area.getDocument();
             document.setBlockVisible(block, visible);
+            // invalidate the search query
+            area.setSearchQuery(null);
             area.revalidate();
             area.repaint();
         }

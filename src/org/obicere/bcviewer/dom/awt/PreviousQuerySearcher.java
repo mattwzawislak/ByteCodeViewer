@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  */
-public class NextQuerySearcher implements QuerySearcher {
+public class PreviousQuerySearcher implements QuerySearcher {
 
     @Override
     public QueryResult search(final Document document, final Query query) {
@@ -22,42 +22,45 @@ public class NextQuerySearcher implements QuerySearcher {
 
         // first check the line of the previous result for more results
         final Line thisLine = document.getLine(start);
-        final int searchIndex = findInLine(thisLine, search, ignoreCase, minimumIndex + 1);
+        final int searchIndex = findInLine(thisLine, search, ignoreCase, minimumIndex - 1);
         if (searchIndex >= 0) {
             return new QueryResult(start, start, searchIndex, searchIndex + search.length());
         }
 
-        // scan the remaining lines past the starting line
-        final List<Line> lines = document.getLines(start + 1, maxCount);
-        final QueryResult result = scan(lines, search, ignoreCase, start + 1);
+        // scan the remaining lines before the starting line
+        final List<Line> lines = document.getLines(0, start);
+        final QueryResult result = scan(lines, search, ignoreCase, 0);
         if (result != null) {
             return result;
         }
 
-        // loop back and start from the top of the document, this will
+        // loop back and start from the bottom of the document, this will
         // contain the previous result if it is indeed still valid
-        final List<Line> loopBackLines = document.getLines(0, start);
-        return scan(loopBackLines, search, ignoreCase, 0);
+        final List<Line> loopBackLines = document.getLines(start, maxCount);
+        return scan(loopBackLines, search, ignoreCase, start);
     }
 
-    private QueryResult scan(final List<Line> lines, final String search, final boolean ignoreCase, final int lineStart) {
-        for (int i = 0; i < lines.size(); i++) {
+    private QueryResult scan(final List<Line> lines, final String search, final boolean ignoreCase, final int startLine) {
+        for (int i = lines.size() - 1; i >= 0; i--) {
             final Line line = lines.get(i);
-            final int index = findInLine(line, search, ignoreCase, 0);
+            final int index = findInLine(line, search, ignoreCase, -1);
             if (index >= 0) {
-                final int lineIndex = lineStart + i;
+                final int lineIndex = i + startLine;
                 return new QueryResult(lineIndex, lineIndex, index, index + search.length());
             }
         }
         return null;
     }
 
-    private int findInLine(final Line line, final String search, final boolean ignoreCase, final int start) {
+    private int findInLine(final Line line, final String search, final boolean ignoreCase, final int end) {
         String nextText = line.getText();
         if (ignoreCase) {
             nextText = nextText.toLowerCase();
         }
 
-        return nextText.indexOf(search, start);
+        if (end == -1) {
+            return nextText.lastIndexOf(search);
+        }
+        return nextText.lastIndexOf(search, end);
     }
 }
