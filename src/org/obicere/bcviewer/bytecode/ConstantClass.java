@@ -44,6 +44,8 @@ public class ConstantClass extends Constant {
         } else {
             builder.add(BytecodeUtils.getQualifiedName(name));
         }
+        builder.add(".");
+        builder.addKeyword("class");
         builder.unindent();
     }
 }
