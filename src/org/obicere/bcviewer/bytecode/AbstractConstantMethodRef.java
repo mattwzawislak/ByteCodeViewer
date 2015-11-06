@@ -1,9 +1,9 @@
 package org.obicere.bcviewer.bytecode;
 
+import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.bytecode.signature.JavaTypeSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
 
 /**
  */
@@ -36,12 +36,13 @@ public abstract class AbstractConstantMethodRef extends Constant {
         final ConstantPool constantPool = builder.getConstantPool();
 
         final String rawName = constantPool.getAsString(getClassIndex());
-        final String className;
-        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
-        if (importMode) {
-            className = BytecodeUtils.getClassName(rawName);
+        final FieldSignature parsed = SignatureAttribute.parseField(rawName);
+        final FieldSignature classSignature;
+
+        if (parsed == null) {
+            classSignature = SignatureAttribute.parseField("L" + rawName + ";");
         } else {
-            className = BytecodeUtils.getQualifiedName(rawName);
+            classSignature = parsed;
         }
 
         final ConstantNameAndType nameAndType = (ConstantNameAndType) constantPool.get(getNameAndTypeIndex());
@@ -65,9 +66,13 @@ public abstract class AbstractConstantMethodRef extends Constant {
             builder.addKeyword("static");
         } else if (isConstructor) {
             builder.addKeyword("new ");
-            builder.add(className);
+            classSignature.model(builder);
+            //builder.add(className);
         } else {
-            builder.add(className + "#" + name);
+
+            classSignature.model(builder);
+            builder.add("#");
+            builder.add(name);
         }
 
         final JavaTypeSignature[] types = methodSignature.getParameters();
