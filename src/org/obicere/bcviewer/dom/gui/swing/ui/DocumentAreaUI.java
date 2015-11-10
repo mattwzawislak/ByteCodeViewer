@@ -659,7 +659,7 @@ public class DocumentAreaUI extends ComponentUI {
 
                 // if there are full lines between the start and end
                 if (startRow + 1 != endRow) {
-                    final List<Line> lines = document.getLines(startRow + 1, endRow - 1);
+                    final List<Line> lines = document.getLines(startRow + 1, endRow);
                     for (final Line line : lines) {
                         builder.append(line.getText());
                         builder.append(lineSeparator);
