@@ -50,7 +50,7 @@ public abstract class AbstractConstantMethodRef extends Constant {
         final String descriptor = constantPool.getAsString(nameAndType.getDescriptorIndex());
 
         final boolean isConstructor = name.equals("<init>");
-        final boolean isStatic = name.equals("<static>");
+        final boolean isStatic = name.equals("<clinit>");
 
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(descriptor);
 
