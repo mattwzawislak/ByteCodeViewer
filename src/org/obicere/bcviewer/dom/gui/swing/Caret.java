@@ -44,8 +44,8 @@ public class Caret {
         final int max = document.getLineCount();
         if (row < 0) {
             this.row = 0;
-        } else if (row >= max) {
-            this.row = max - 1;
+        } else if (row > max) {
+            this.row = max;
         } else {
             this.row = row;
         }
@@ -60,8 +60,8 @@ public class Caret {
         final int max = document.getMaxLineLength();
         if (column < 0) {
             this.column = 0;
-        } else if (column >= max) {
-            this.column = max - 1;
+        } else if (column > max) {
+            this.column = max;
         } else {
             this.column = column;
         }
