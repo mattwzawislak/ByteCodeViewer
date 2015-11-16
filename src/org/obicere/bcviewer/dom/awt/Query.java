@@ -23,8 +23,10 @@ public class Query {
     private volatile QueryResult current;
 
     private final NextQuerySearcher nextQuerySearcher = new NextQuerySearcher();
+    private final NextRegexSearcher nextRegexSearcher = new NextRegexSearcher();
 
     private final PreviousQuerySearcher previousQuerySearcher = new PreviousQuerySearcher();
+    private final PreviousRegexSearcher previousRegexSearcher = new PreviousRegexSearcher();
 
     public Query(final Document content, final String input) {
         this(content, input, false, false);
@@ -74,8 +76,7 @@ public class Query {
             next = null;
         } else {
             if (regex) {
-                // RegexNextQuerySearcher
-                next = null;
+                next = nextRegexSearcher.search(content, this);
             } else {
                 next = nextQuerySearcher.search(content, this);
             }
@@ -94,8 +95,7 @@ public class Query {
             next = null;
         } else {
             if (regex) {
-                // RegexPreviousQuerySearcher
-                next = null;
+                next = previousRegexSearcher.search(content, this);
             } else {
                 next = previousQuerySearcher.search(content, this);
             }
