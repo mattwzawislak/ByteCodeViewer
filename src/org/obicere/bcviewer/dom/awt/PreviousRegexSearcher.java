@@ -39,8 +39,7 @@ public class PreviousRegexSearcher implements QuerySearcher {
             return result;
         }
 
-        // loop back and start from the top of the document, this will
-        // contain the previous result if it is indeed still valid
+        // loop back and start from the bottom of the document
         final List<Line> loopBackLines = document.getLines(start + 1, maxCount);
         return scan(loopBackLines, pattern, ignoreCase, start + 1);
     }

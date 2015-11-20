@@ -34,8 +34,7 @@ public class PreviousQuerySearcher implements QuerySearcher {
             return result;
         }
 
-        // loop back and start from the bottom of the document, this will
-        // contain the previous result if it is indeed still valid
+        // loop back and start from the bottom of the document
         final List<Line> loopBackLines = document.getLines(start, maxCount);
         return scan(loopBackLines, search, ignoreCase, start);
     }
