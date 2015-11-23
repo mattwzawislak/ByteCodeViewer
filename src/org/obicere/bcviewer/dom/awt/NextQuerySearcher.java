@@ -15,7 +15,7 @@ public class NextQuerySearcher implements QuerySearcher {
         final String search = query.getInput();
 
         final int start = (current != null ? current.getStartLine() : 0);
-        final int minimumIndex = (current != null ? current.getStart() : 0);
+        final int minimumIndex = (current != null ? current.getStart() : -1);
         final int maxCount = document.getLineCount();
 
         final boolean ignoreCase = query.isIgnoreCase();

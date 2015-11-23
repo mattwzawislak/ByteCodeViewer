@@ -131,13 +131,12 @@ public class SearchPanel extends JPanel {
 
             final Query query = document.query(textField.getText(), ignoreCase.isSelected(), regex.isSelected());
 
-            // areas are allowed a null query. This clears previous search
             area.setSearchQuery(query);
-
-            if (query == null) {
-                return;
+            if (query != null) {
+                query.next();
+                area.scrollToQuery();
             }
-            area.setSearchQuery(query);
+            area.repaint();
         });
     }
 
