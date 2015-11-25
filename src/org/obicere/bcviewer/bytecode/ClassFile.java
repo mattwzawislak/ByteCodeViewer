@@ -353,9 +353,6 @@ public class ClassFile extends BytecodeElement {
             for (final InnerClass innerClass : innerClasses) {
                 final int innerIndex = innerClass.getInnerClassInfoIndex();
                 final int outerIndex = innerClass.getOuterClassInfoIndex();
-                if (outerIndex == 0) {
-                    continue;
-                }
 
                 final String name = constantPool.getAsString(innerIndex);
                 final String outer = constantPool.getAsString(outerIndex);
@@ -363,7 +360,7 @@ public class ClassFile extends BytecodeElement {
                 if (name.equals(getName())) {
                     continue;
                 }
-                if (!outer.equals("<null entry>") && !getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
+                if (!outer.equals("<null entry>") && !getName().equals(outer)) {
                     continue;
                 }
 

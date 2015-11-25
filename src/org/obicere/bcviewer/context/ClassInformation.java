@@ -97,7 +97,7 @@ public class ClassInformation implements DomainAccess {
                     // method enclosed classes have outer be a null entry
                     // otherwise, this class should be within the file
                     // and ensure it isn't a Lookup
-                    if (!outer.equals("<null entry>") && !file.getName().equals(outer) || "java/lang/invoke/MethodHandles$Lookup".equals(name)) {
+                    if (!outer.equals("<null entry>") && !file.getName().equals(outer)) {
                         continue;
                     }
 
