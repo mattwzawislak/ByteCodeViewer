@@ -1,14 +1,15 @@
 package org.obicere.bcviewer.dom.style;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  */
 public class StyleConstraints {
 
-    private LinkedList<Style> styles = new LinkedList<>();
+    private List<Style> styles = new LinkedList<>();
 
-    private LinkedList<Integer> bounds = new LinkedList<>();
+    private List<Integer> bounds = new LinkedList<>();
 
     private Style[] styleArray;
 

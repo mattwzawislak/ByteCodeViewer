@@ -2,16 +2,17 @@ package org.obicere.bcviewer.bytecode;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  */
 public class AttributeSet {
 
-    private final HashMap<Class<? extends Attribute>, Set<Attribute>> map;
+    private final Map<Class<? extends Attribute>, Set<Attribute>> map;
 
     public AttributeSet(final Attribute[] attributes) {
-        final HashMap<Class<? extends Attribute>, Set<Attribute>> map = new HashMap<>();
+        final Map<Class<? extends Attribute>, Set<Attribute>> map = new HashMap<>();
         for (final Attribute attribute : attributes) {
             final Class<? extends Attribute> cls = attribute.getClass();
             final Set<Attribute> set = map.get(cls);

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Block {
 
-    private final ArrayList<Line> lines = new ArrayList<>();
+    private final List<Line> lines = new ArrayList<>();
 
     private volatile int maxLineLength = 0;
 

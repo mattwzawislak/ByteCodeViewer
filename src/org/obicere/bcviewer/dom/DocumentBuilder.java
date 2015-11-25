@@ -9,6 +9,7 @@ import org.obicere.bcviewer.dom.style.StyleConstants;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Obicere
@@ -17,7 +18,7 @@ public class DocumentBuilder implements DomainAccess {
 
     private final Domain domain;
 
-    private final HashMap<String, Object> properties = new HashMap<>();
+    private final Map<String, Object> properties = new HashMap<>();
 
     private volatile DocumentBuildRequest request;
 

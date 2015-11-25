@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Obicere
@@ -44,7 +45,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     private final Domain domain;
 
-    private final HashMap<String, SwingEditorPanel> editorPanels = new HashMap<>();
+    private final Map<String, SwingEditorPanel> editorPanels = new HashMap<>();
 
     public SwingEditorPanelManager(final Domain domain) {
 

@@ -2,12 +2,13 @@ package org.obicere.bcviewer.dom;
 
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  */
 public class PaddingCache {
 
-    private final HashMap<Integer, SoftReference<String>> usedPads = new HashMap<>();
+    private final Map<Integer, SoftReference<String>> usedPads = new HashMap<>();
 
     private static final PaddingCache INSTANCE = new PaddingCache();
 

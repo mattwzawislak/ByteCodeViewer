@@ -11,15 +11,15 @@ import java.util.Map;
  */
 public class Settings {
 
-    private final HashMap<String, Setting<?>> settings;
+    private final Map<String, Setting<?>> settings;
 
-    private final HashMap<Setting<?>, Change> changeList = new HashMap<>();
+    private final Map<Setting<?>, Change> changeList = new HashMap<>();
 
-    public Settings(final HashMap<String, Setting<?>> settings) {
+    public Settings(final Map<String, Setting<?>> settings) {
         this.settings = settings;
     }
 
-    HashMap<String, Setting<?>> getSettings() {
+    protected Map<String, Setting<?>> getSettings() {
         return settings;
     }
 

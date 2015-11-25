@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -63,9 +64,9 @@ public class Icons {
     public static final String ICON_PACKAGE              = "package.gif";
     public static final String ICON_PACKAGE_DISABLED     = "package_disabled.gif";
 
-    public static final String ICON_CLOSE       = "close.gif";
-    public static final String ICON_CLOSE_HOVER = "close_hover.gif";
-    public static final String ICON_FORWARD_NAV = "forward_nav.gif";
+    public static final String ICON_CLOSE        = "close.gif";
+    public static final String ICON_CLOSE_HOVER  = "close_hover.gif";
+    public static final String ICON_FORWARD_NAV  = "forward_nav.gif";
     public static final String ICON_BACKWARD_NAV = "backward_nav.gif";
 
     public static final String ICON_DARK_16  = "dark_16.png";
@@ -94,9 +95,9 @@ public class Icons {
 
     private final Domain domain;
 
-    private final HashMap<String, Icon> iconCache = new HashMap<>();
+    private final Map<String, Icon> iconCache = new HashMap<>();
 
-    private final HashMap<String, Image> imageCache = new HashMap<>();
+    private final Map<String, Image> imageCache = new HashMap<>();
 
     public Icons(final Domain domain) {
         this.domain = domain;

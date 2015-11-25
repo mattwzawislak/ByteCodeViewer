@@ -3,12 +3,13 @@ package org.obicere.bcviewer.gui.settings;
 import org.obicere.bcviewer.settings.target.Setting;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  */
 public class SettingModelFactory<C> {
 
-    private final HashMap<String, SettingModeler<?, C>> modelers = new HashMap<>();
+    private final Map<String, SettingModeler<?, C>> modelers = new HashMap<>();
 
     public void addModeler(final String id, final SettingModeler<?, C> modeler) {
         if (id == null) {
