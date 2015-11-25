@@ -62,6 +62,9 @@ public class FileLoaderService implements DomainAccess {
             final FrameManager frameManager = guiManager.getFrameManager();
             final EditorPanelManager editorPanels = frameManager.getEditorManager();
             for (final File file : files) {
+                if (!file.exists() || !file.canRead()) {
+                    continue;
+                }
                 if (file.isDirectory()) {
                     postRequest(file.listFiles());
                     continue;

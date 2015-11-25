@@ -1,5 +1,6 @@
 package org.obicere.bcviewer;
 
+import org.obicere.bcviewer.configuration.ClassFileLoader;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
@@ -8,7 +9,9 @@ import org.obicere.bcviewer.startup.StartUpTaskLoader;
 import org.obicere.utility.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
+import java.io.File;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -52,6 +55,8 @@ public class Boot {
         });
 
         logger.info("Boot time took (ms): " + (System.currentTimeMillis() - start));
+
+        openFiles(args);
     }
 
     public static Domain getGlobalDomain() {
@@ -96,5 +101,31 @@ public class Boot {
         domain.getSettingsController().loadSettings();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> domain.getSettingsController().saveSettings()));
+    }
+
+    private static void openFiles(final String[] args) {
+
+        final ClassFileLoader loader = domain.getClassLoader();
+        final Logger logger = domain.getLogger();
+
+        for (int i = 0; i < args.length; i++) {
+            final String argument = args[i];
+            if (argument == null || argument.length() == 0) {
+                logger.log(Level.CONFIG, "Skipped file argument: " + (i + 1) + " as it was empty.");
+                continue;
+            }
+            final File file = new File(argument);
+            if (!file.exists()) {
+                logger.log(Level.CONFIG, "File argument: \"" + argument + "\" does not exist.");
+                continue;
+            }
+
+            if (!file.canRead()) {
+                logger.log(Level.CONFIG, "File argument: \"" + argument + "\" cannot be read from.");
+                continue;
+            }
+
+            loader.load(file);
+        }
     }
 }
