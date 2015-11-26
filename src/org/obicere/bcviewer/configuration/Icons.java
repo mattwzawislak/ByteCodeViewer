@@ -12,7 +12,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -99,6 +101,8 @@ public class Icons {
 
     private final Map<String, Image> imageCache = new HashMap<>();
 
+    private final Set<String> invalidImages = new HashSet<>();
+
     public Icons(final Domain domain) {
         this.domain = domain;
     }
@@ -138,6 +142,9 @@ public class Icons {
     private void load(final String name) {
         final String qualifiedName = domain.getPaths().getIconsDirectory() + name;
         final Image image = loadImage(qualifiedName);
+        if(image == null){
+            return;
+        }
         final ImageIcon icon = new ImageIcon(image);
 
         // Cache the image here
@@ -163,9 +170,17 @@ public class Icons {
      */
 
     private Image loadImage(final String url) {
+        if(invalidImages.contains(url)){
+            return null;
+        }
         try {
             final Toolkit tk = Toolkit.getDefaultToolkit();
             final InputStream path = getClass().getResourceAsStream(url);
+            if(path == null){
+                domain.getLogger().log(Level.WARNING, "Could not locate icon: " + url);
+                invalidImages.add(url);
+                return null;
+            }
             final BufferedImage image = ImageIO.read(path);
             tk.prepareImage(image, -1, -1, null);
             return image;

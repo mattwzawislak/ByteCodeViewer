@@ -44,6 +44,14 @@ public class IconButton extends JButton {
         if (model.isPressed()) {
             g.translate(1, 1);
         }
-        g.drawImage(image, 0, 0, getWidth() - 1, getHeight() - 1, this);
+        if (image == null) {
+            final int width = getWidth() - 1;
+            final int height = getHeight() - 1;
+            g.drawRect(0, 0, width, height);
+            g.drawLine(0, 0, width, height);
+            g.drawLine(0, height, width, 0);
+        } else {
+            g.drawImage(image, 0, 0, getWidth() - 1, getHeight() - 1, this);
+        }
     }
 }
