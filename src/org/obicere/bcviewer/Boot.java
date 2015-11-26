@@ -16,7 +16,37 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
+ * The main entry point of the Bytecode Viewer. This is responsible for
+ * setting up the domain of the application, the logging handlers and
+ * settings loading.
+ *
+ * Any arguments passed in must follow the given format:
+ * <ul>
+ * <li><code>&lt;filename&gt;</code>
+ * <p>
+ *     Where the <code>filename</code> is the location of a class file,
+ *     archive, jar, or any other form of file this program is capable of
+ *     opening. The most up-to-date and complete list will be found in the
+ *     {@link org.obicere.bcviewer.configuration.ClassFileLoader}
+ *     documentation as well as any known errors.
+ *
+ *     Files that have spaces in the name should be wrapped with double
+ *     quotes. Such as <code>/user/main user/Test.class</code> should be
+ *     <code>"/user/main user/Test.class"</code>.
+ * </p>
+ * </ul>
+ * The order of operations is:
+ * <ul>
+ * <li> Setting up logger and domain
+ * <li> Running startup tasks
+ * <li> Settings are loaded
+ * <li> Window is initialized and started
+ * <li> All files passed in as arguments are loaded
+ * </ul>
+ *
  * @author Obicere
+ * @since 0.0
+ * @see org.obicere.bcviewer.context.Domain
  */
 public class Boot {
 
