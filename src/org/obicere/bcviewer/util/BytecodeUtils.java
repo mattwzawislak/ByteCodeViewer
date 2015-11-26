@@ -120,32 +120,31 @@ public class BytecodeUtils {
      * declaration. The ordering of the flags is set by the jls-8.1.1
      * standard.
      * <p>
-     * The last value will be the type of the class. This will default to a
-     * <code>class</code> value, in the case that none of the
-     * <code>annotation</code>, <code>interface</code> or <code>enum</code>
+     * The last value will be the type of the class. This will default to
+     * a <code>class</code> value, in the case that none of the
+     * <code>annotation</code>, <code>interface</code> or
+     * <code>enum</code>
      * flags are set. Otherwise, the respective type will be applied. In
      * the case that the type is of type <code>annotation</code> or
      * <code>interface</code>, the <code>abstract</code> flag will be
-     * removed. In the case that the type is of type <code>enum</code>, the
-     * <code>final</code> flag will be removed. This may be due to change,
-     * based off of user-based settings.
+     * removed. In the case that the type is of type <code>enum</code>,
+     * the <code>final</code> flag will be removed. This may be due to
+     * change, based off of user-based settings.
      * <p>
      * The possible flags for this class, in order of the specification
      * are:
-     * <pre>
      * <ul>
-     *     <li> public
-     *     <li> protected
-     *     <li> private
-     *     <li> abstract
-     *     <li> static
-     *     <li> final
-     *     <li> annotation
-     *     <li> interface
-     *     <li> enum
-     *     <li> class
+     * <li> public
+     * <li> protected
+     * <li> private
+     * <li> abstract
+     * <li> static
+     * <li> final
+     * <li> annotation
+     * <li> interface
+     * <li> enum
+     * <li> class
      * </ul>
-     * </pre>
      * <p>
      * There is a known issue with inner classes, specifically with the
      * <code>protected</code>/<code>private</code>/<code>static</code>
@@ -155,12 +154,15 @@ public class BytecodeUtils {
      * displayed as <code>package-access</code> visibility and
      * <code>protected</code> as <code>public</code> visibility.
      * <code>static</code> will not be included. The true nature of the
-     * flags is held in {@link org.obicere.bcviewer.bytecode.InnerClassesAttribute},
-     * which is currently inaccessible at this time.
+     * flags is held in
+     * {@link org.obicere.bcviewer.bytecode.InnerClassesAttribute}, which
+     * is currently inaccessible at this time.
      *
      * @param access The access flags for the class.
      * @return The access flags in order specified by the JLS standard, in
      * an array for easy manipulation.
+     * @see <a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-8.html#jls-8.1.1">JLS
+     * 8.1.1</a>
      */
 
     public static String[] getClassAccessNames(final int access) {
@@ -192,6 +194,43 @@ public class BytecodeUtils {
         return list.toArray(new String[list.size()]);
     }
 
+    /**
+     * Retrieves the method access named based off of the given access
+     * flags. This can be used to generated a valid 'decompiled' method
+     * declaration. The ordering of the flags is set by the jls-8.4.3
+     * standard.
+     *
+     * There is a case where the access flags may be seen as 'incorrect' is
+     * if the containing class is declared as an <code>interface</code>.
+     * In which case, the method flags will redundantly contain the
+     * <code>abstract</code> tag.
+     *
+     * The possible flags for this method, in order of this specification
+     * are:
+     *
+     * <ul>
+     * <li> public
+     * <li> protected
+     * <li> private
+     * <li> abstract
+     * <li> static
+     * <li> final
+     * <li> synchronized
+     * <li> native
+     * <li> strictfp
+     * </ul>
+     * Only one of the <code>public</code>, <code>protected</code>,
+     * <code>private</code> will be listed, if any. In the case the field
+     * has <code>package-access</code>, none of visibility modifiers will
+     * be returned.
+     *
+     * @param access The access flags for the method.
+     * @return The access flags in order specified by the JLS standard, in
+     * an array for easy manipulation.
+     * @see <a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-8.html#jls-8.4.3">JLS
+     * 8.4.3</a>
+     */
+
     public static String[] getMethodAccessNames(final int access) {
         final int length = METHOD_ORDERED_ACCESS_FLAGS.length; // same length as names
         final List<String> list = new ArrayList<>(length);
@@ -203,6 +242,36 @@ public class BytecodeUtils {
         return list.toArray(new String[list.size()]);
     }
 
+    /**
+     * Retrieves the field access names based off of the given access
+     * flags. This can be used to generate a valid 'decompiled' field
+     * declaration. The ordering of the flags is set by the jls-8.3.1
+     * standard.
+     *
+     * The possible flags for this field, in order of the specification
+     * are:
+     * <p>
+     * <ul>
+     * <li> public
+     * <li> protected
+     * <li> private
+     * <li> static
+     * <li> final
+     * <li> transient
+     * <li> volatile
+     * </ul>
+     * <p>
+     * Only one of the <code>public</code>, <code>protected</code>,
+     * <code>private</code> will be listed, if any. In the case the field
+     * has <code>package-access</code>, none of visibility modifiers will
+     * be returned.
+     *
+     * @param access The access flags for the field.
+     * @return The access flags in order specified by the JLS standard, in
+     * an array for easy manipulation.
+     * @see <a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-8.html#jls-8.3.1">JLS
+     * 8.3.1</a>
+     */
     public static String[] getFieldAccessNames(final int access) {
         final int length = FIELD_ORDERED_ACCESS_FLAGS.length; // same length as names
         final List<String> list = new ArrayList<>(length);
@@ -245,7 +314,7 @@ public class BytecodeUtils {
         return (access & ACCESS_PUBLIC) != 0;
     }
 
-    public static boolean isPrivate(final int access){
+    public static boolean isPrivate(final int access) {
         return (access & ACCESS_PRIVATE) != 0;
     }
 
@@ -282,7 +351,8 @@ public class BytecodeUtils {
     }
 
     /**
-     * Indicates whether or not the given method takes a variable amount of
+     * Indicates whether or not the given method takes a variable amount
+     * of
      * arguments at the source code level. This should be applied to the
      * last type available, if such a type is present.
      *
