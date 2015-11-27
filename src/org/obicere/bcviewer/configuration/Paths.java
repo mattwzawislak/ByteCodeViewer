@@ -78,7 +78,6 @@ public class Paths {
     /**
      * Retrieves the default application storage folder for programs. This
      * is based off of the current operating system.
-     * <p>
      * <pre>
      *     For Windows machines:    <code>%APPDATA%</code>
      *     For other machines:      <code>user.home</code>

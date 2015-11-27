@@ -577,6 +577,9 @@ public class BytecodeUtils {
             NAME_VOLATILE
     };
 
+    /**
+     * Illegal operation. Cannot be instantiated.
+     */
     private BytecodeUtils() {
         throw new AssertionError();
     }
@@ -674,7 +677,6 @@ public class BytecodeUtils {
      * <p>
      * The possible flags for this method, in order of this specification
      * are:
-     * <p>
      * <ul>
      * <li> public
      * <li> protected
@@ -716,7 +718,6 @@ public class BytecodeUtils {
      * <p>
      * The possible flags for this field, in order of the specification
      * are:
-     * <p>
      * <ul>
      * <li> public
      * <li> protected
@@ -943,10 +944,10 @@ public class BytecodeUtils {
      * both characters need to be present for either to be removed. So for
      * example:
      * <ul>
-     * <li><code>"Bar"</code>      -> <code>"Bar"</code>
-     * <li><code>"Language"</code> -> <code>"Language"</code>
-     * <li><code>"Foo;"</code>     -> <code>"Foo;"</code>
-     * <li><code>"LTee;"</code>    -> <code>"Tee"</code>
+     * <li><code>"Bar"</code>      -&gt; <code>"Bar"</code>
+     * <li><code>"Language"</code> -&gt; <code>"Language"</code>
+     * <li><code>"Foo;"</code>     -&gt; <code>"Foo;"</code>
+     * <li><code>"LTee;"</code>    -&gt; <code>"Tee"</code>
      * </ul>
      *
      * @param className A non-<code>null</code> class name.
