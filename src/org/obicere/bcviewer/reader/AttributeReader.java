@@ -74,7 +74,7 @@ public class AttributeReader extends MultiReader<String, Attribute> {
 
     @Override
     public Attribute read(final IndexedDataInputStream input) throws IOException {
-        final int start = input.getOffsetIndex();
+        final int start = input.getLogicalIndex();
         final int attributeNameIndex = input.readUnsignedShort();
         input.readInt(); // Read the attribute length. This is ignored generally
         final String attributeName = constantPool.getAsString(attributeNameIndex);
@@ -83,7 +83,7 @@ public class AttributeReader extends MultiReader<String, Attribute> {
             throw new ClassFormatError("unknown attribute reached and no way to handle it available.");
         }
         final Attribute attribute = reader.read(input);
-        final int end = input.getOffsetIndex();
+        final int end = input.getLogicalIndex();
 
         attribute.setBounds(start, end);
         return attribute;

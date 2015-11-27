@@ -432,7 +432,7 @@ public class InstructionReader extends MultiReader<Integer, Instruction> {
 
     @Override
     public Instruction read(final IndexedDataInputStream input) throws IOException {
-        final int start = input.getOffsetIndex();
+        final int start = input.getLogicalIndex();
         final int next = input.readUnsignedByte();
         final Reader<? extends Instruction> reader = get(next);
         // if there is no reader associated to this opcode we have an unknown op
@@ -445,7 +445,7 @@ public class InstructionReader extends MultiReader<Integer, Instruction> {
         }
 
         // make sure to set start and end indices
-        final int end = input.getOffsetIndex();
+        final int end = input.getLogicalIndex();
         instruction.setBounds(start, end);
         return instruction;
     }

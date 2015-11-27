@@ -12,7 +12,7 @@ import java.io.IOException;
 public class SourceDebugExtensionAttributeReader implements Reader<SourceDebugExtensionAttribute> {
     @Override
     public SourceDebugExtensionAttribute read(final IndexedDataInputStream input) throws IOException {
-        input.stepBack(4);
+        input.step(4);
         final int attributeLength = input.readInt();
         final byte[] debugExtension = new byte[attributeLength];
         if (input.read(debugExtension) < 0) {

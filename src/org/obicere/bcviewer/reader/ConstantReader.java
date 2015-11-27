@@ -47,13 +47,13 @@ public class ConstantReader extends MultiReader<Integer, Constant> {
     @Override
     public Constant read(final IndexedDataInputStream input) throws IOException {
         final int next = input.readUnsignedByte();
-        final int start = input.getOffsetIndex();
+        final int start = input.getLogicalIndex();
         final Reader<? extends Constant> reader = get(next);
         if (reader == null) {
             throw new ClassFormatError("invalid constant tag: " + next);
         }
         final Constant constant = reader.read(input);
-        final int end = input.getOffsetIndex();
+        final int end = input.getLogicalIndex();
         constant.setBounds(start, end);
         return constant;
     }

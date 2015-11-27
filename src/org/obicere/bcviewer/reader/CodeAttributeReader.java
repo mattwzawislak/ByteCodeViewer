@@ -29,7 +29,7 @@ public class CodeAttributeReader implements Reader<CodeAttribute> {
         final int maxLocals = input.readUnsignedShort();
         final int codeLength = input.readInt();
 
-        final int codeOffset = input.getOffsetIndex();
+        final int codeOffset = input.getLogicalIndex();
 
         final byte[] code = new byte[codeLength];
         if (input.read(code) < 0) {
@@ -52,13 +52,13 @@ public class CodeAttributeReader implements Reader<CodeAttribute> {
         final CodeException[] exceptionTable = new CodeException[exceptionTableLength];
 
         for (int i = 0; i < exceptionTableLength; i++) {
-            final int startIndex = input.getOffsetIndex();
+            final int startIndex = input.getLogicalIndex();
             final int startPC = input.readUnsignedShort();
             final int endPC = input.readUnsignedShort();
             final int handlerPC = input.readUnsignedShort();
             final int catchType = input.readUnsignedShort();
             final CodeException exception = new CodeException(startPC, endPC, handlerPC, catchType);
-            final int endIndex = input.getOffsetIndex();
+            final int endIndex = input.getLogicalIndex();
 
             exception.setBounds(startIndex, endIndex);
             exceptionTable[i] = exception;

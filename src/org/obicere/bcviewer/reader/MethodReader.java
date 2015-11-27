@@ -20,7 +20,7 @@ public class MethodReader implements Reader<Method> {
 
     @Override
     public Method read(final IndexedDataInputStream input) throws IOException {
-        final int startIndex = input.getOffsetIndex();
+        final int startIndex = input.getLogicalIndex();
 
         final int accessFlags = input.readUnsignedShort();
         final int nameIndex = input.readUnsignedShort();
@@ -32,7 +32,7 @@ public class MethodReader implements Reader<Method> {
             attributes[i] = attributeReader.read(input);
         }
         final Method method = new Method(accessFlags, nameIndex, descriptorIndex, attributes);
-        final int endIndex = input.getOffsetIndex();
+        final int endIndex = input.getLogicalIndex();
 
         method.setBounds(startIndex, endIndex);
 
