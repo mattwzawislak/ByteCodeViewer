@@ -55,7 +55,9 @@ public class BytecodeTree extends JTree {
 
     public void addClass(final ClassFile file, final int accessFlags) {
         final String className = BytecodeUtils.getClassName(file.getName());
-        final String packageName = BytecodeUtils.getPackage(file.getName());
+        final String rawPackageName = BytecodeUtils.getPackage(file.getName());
+        // be sure to remove the forward slashes
+        final String packageName = BytecodeUtils.getQualifiedName(rawPackageName);
 
         try {
             if (root == null) {
