@@ -932,7 +932,7 @@ public class BytecodeUtils {
         // check to see if the slash is available and we can avoid
         // ambiguity
         if (slashIndex > 0) {
-            return clean.substring(0, slashIndex);
+            return clean.substring(0, slashIndex).replace('/', '.');
         } else {
             return "";
         }
