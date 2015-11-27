@@ -5,9 +5,9 @@ import java.io.ByteArrayInputStream;
 /**
  * A modified instance of a {@link java.io.ByteArrayInputStream} that
  * provides access to the current index of the stream. This also allows
- * stepping back a <code>byte</code> during reading. They may provide
- * useful in situations where two separate formats overlap and the
- * required information cannot be easily transmitted.
+ * step operations in both directions (forwards and backwards). These
+ * operations may provide useful in situations where two separate formats
+ * overlap and the required information cannot be easily transmitted.
  * <p>
  * The intent of this class is to be used in the
  * {@link org.obicere.bcviewer.util.IndexedDataInputStream} to provide
@@ -69,7 +69,7 @@ public class IndexedByteArrayInputStream extends ByteArrayInputStream {
      *
      * @param offset The offset to move, either forward or backward.
      */
-    public void stepBack(final int offset) {
+    public void step(final int offset) {
         if (pos >= offset) {
             pos -= offset;
         } else {
