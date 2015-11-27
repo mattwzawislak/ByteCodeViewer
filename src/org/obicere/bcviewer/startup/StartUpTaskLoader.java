@@ -1,6 +1,7 @@
 package org.obicere.bcviewer.startup;
 
 import org.obicere.bcviewer.Boot;
+import org.obicere.bcviewer.startup.application.ProvideGroups;
 
 /**
  */

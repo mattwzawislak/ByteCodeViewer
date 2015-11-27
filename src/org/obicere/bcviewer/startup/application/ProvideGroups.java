@@ -1,9 +1,10 @@
-package org.obicere.bcviewer.startup;
+package org.obicere.bcviewer.startup.application;
 
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.settings.SettingsController;
 import org.obicere.bcviewer.settings.application.CodeGroup;
 import org.obicere.bcviewer.settings.application.EditorGroup;
+import org.obicere.bcviewer.startup.StartUpTask;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,12 +18,6 @@ import java.util.logging.Logger;
 /**
  */
 public class ProvideGroups implements StartUpTask {
-
-    @Override
-    public int getPriority() {
-        return StartUpQueue.STANDARD_PRIORITY;
-    }
-
     @Override
     public void call(final Domain domain) {
         final Logger logger = domain.getLogger();

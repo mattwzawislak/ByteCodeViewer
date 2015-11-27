@@ -2,8 +2,10 @@ package org.obicere.bcviewer.startup;
 
 import org.obicere.bcviewer.context.Domain;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -11,54 +13,46 @@ import java.util.logging.Level;
  */
 public class StartUpQueue {
 
-    public static final int HIGHEST_PRIORITY = Integer.MIN_VALUE;
-
-    public static final int HIGH_PRIORITY = Short.MIN_VALUE;
-
-    public static final int STANDARD_PRIORITY = 0;
-
-    public static final int LOW_PRIORITY = Short.MAX_VALUE;
-
-    public static final int LOWEST_PRIORITY = Integer.MAX_VALUE;
-
-    private final PriorityQueue<StartUpTask> queue = new PriorityQueue<>(new TaskComparator());
+    private final Map<Priority, List<StartUpTask>> priorityMap = new HashMap<>();
 
     public void runTasks(final Domain domain) {
-        queue.forEach(task -> {
-            try {
-                task.call(domain);
-            } catch (final Throwable e) {
-                domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
+        final Priority[] priorities = Priority.values();
+
+        for (final Priority priority : priorities) {
+            final List<StartUpTask> tasks = priorityMap.get(priority);
+            if (tasks == null) {
+                continue;
             }
-        });
-        queue.clear();
+            tasks.forEach(task -> {
+                try {
+                    task.call(domain);
+                } catch (final Throwable e) {
+                    domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
+                }
+            });
+            tasks.clear();
+            priorityMap.remove(priority);
+        }
     }
 
     public void provide(final StartUpTask task) {
         if (task == null) {
-            throw new NullPointerException("Cannot run a null task.");
+            throw new NullPointerException("task must be non-null.");
         }
-        queue.offer(task);
-    }
+        final Priority priority = task.getPriority();
+        if (priority == null) {
+            throw new NullPointerException("tasks must have a non-null priority.");
+        }
+        final List<StartUpTask> tasks = priorityMap.get(priority);
+        // if the bucket hasn't been created yet
+        if (tasks == null) {
+            // initialize the bucket for this priority
+            final List<StartUpTask> newTasks = new LinkedList<>();
 
-    private class TaskComparator implements Comparator<StartUpTask> {
-
-        @Override
-        public int compare(final StartUpTask o1, final StartUpTask o2) {
-            if (o1 == null) {
-                if (o2 == null) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            } else {
-                if (o2 == null) {
-                    return -1;
-                } else {
-                    return Integer.compare(o1.getPriority(), o2.getPriority());
-                }
-            }
+            newTasks.add(task);
+            priorityMap.put(priority, newTasks);
+        } else {
+            tasks.add(task);
         }
     }
-
 }
