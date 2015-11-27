@@ -4,7 +4,6 @@ import org.obicere.bcviewer.bytecode.signature.ClassSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -165,16 +164,10 @@ public class ClassFile extends BytecodeElement {
         }
 
         final String name = getName();
-        final String packageName = BytecodeUtils.getPackage(name);
-        final String thisName = BytecodeUtils.getQualifiedName(name);
-        final int lastDot = thisName.lastIndexOf('.');
 
-        final String thisPackage;
-        if (lastDot > 0) {
-            thisPackage = thisName.substring(0, lastDot);
-        } else {
-            thisPackage = null;
-        }
+        final String thisName = BytecodeUtils.getQualifiedName(name);
+        final String thisPackage = BytecodeUtils.getPackage(thisName);
+
         final Set<String> imports = new TreeSet<>();
         getImports(constantPool, imports, thisPackage);
 
@@ -189,9 +182,9 @@ public class ClassFile extends BytecodeElement {
             }
         }
 
-        if (packageName != null) {
+        if (!thisPackage.equals("")) {
             builder.addKeyword("package ");
-            builder.add(packageName);
+            builder.add(thisPackage);
             builder.add(";");
             builder.newLine();
             builder.newLine();
@@ -221,7 +214,7 @@ public class ClassFile extends BytecodeElement {
                 final String nextPackage = BytecodeUtils.getPackage(name);
                 // check to see if they are both null or both equal
                 // and also exclude java.lang packages
-                if (Objects.equals(nextPackage, thisPackage) || nextPackage != null && nextPackage.equals("java.lang")) {
+                if (nextPackage.equals(thisPackage) || nextPackage.equals("java.lang")) {
                     continue;
                 }
 

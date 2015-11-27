@@ -45,6 +45,7 @@ import java.util.logging.Logger;
  * </ul>
  *
  * @author Obicere
+ * @version 0.0
  * @see org.obicere.bcviewer.context.Domain
  * @since 0.0
  */
