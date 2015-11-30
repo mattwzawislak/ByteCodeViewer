@@ -1,11 +1,11 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
-import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.util.BytecodeUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -145,6 +145,7 @@ public class CodeAttribute extends Attribute {
 
         modelExceptions(builder);
         modelLines(builder, startPCToLine.values());
+        modelLocalVariables(builder);
     }
 
     private StackMapFrame[] getFrames() {
@@ -237,22 +238,35 @@ public class CodeAttribute extends Attribute {
         builder.setProperty("code", null);
     }
 
-    private Map<Integer, FieldSignature> getLocalVariables(final ConstantPool constantPool) {
+    private void modelLocalVariables(final DocumentBuilder builder){
+        final Collection<LocalVariable> locals = getLocalVariables();
+
+        for(final LocalVariable local : locals){
+            builder.newLine();
+            builder.add('[');
+            builder.add(getBlockName(getStart() + local.getStartPC()));
+            builder.add(',');
+            builder.add(getBlockName(getStart() + local.getStartPC() + local.getIntervalLength()));
+            builder.add("] ");
+            local.model(builder);
+        }
+
+    }
+
+    private Collection<LocalVariable> getLocalVariables() {
         final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
         final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
 
         // this assumes that shared local variables between lvtt and lvt
         // share the same startPC value (same index in total class file)
-        final Map<Integer, FieldSignature> signatureSet = new TreeMap<>();
+        final Map<Integer, LocalVariable> variables = new TreeMap<>();
         if (lvttAttributes != null) {
             for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
                 final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
                 for (final LocalVariableType type : table) {
+                    final int name = type.getNameIndex();
 
-                    final int startPC = type.getStartPC();
-                    final String name = constantPool.getAsString(type.getSignatureIndex());
-                    final FieldSignature signature = SignatureAttribute.parseField(name);
-                    signatureSet.put(startPC, signature);
+                    variables.put(name, type);
                 }
             }
         }
@@ -260,18 +274,16 @@ public class CodeAttribute extends Attribute {
             for (final LocalVariableTableAttribute lvt : lvtAttributes) {
                 final LocalVariable[] table = lvt.getLocalVariableTable();
                 for (final LocalVariable type : table) {
-                    final int startPC = type.getStartPC();
+                    final int name = type.getNameIndex();
                     // check to see if we already processed the startPC value
-                    if (signatureSet.get(startPC) != null) {
+                    if (variables.get(name) != null) {
                         continue;
                     }
-                    final String name = constantPool.getAsString(type.getDescriptorIndex());
-                    final FieldSignature signature = SignatureAttribute.parseField(name);
-                    signatureSet.put(startPC, signature);
+                    variables.put(name, type);
                 }
             }
         }
-        return signatureSet;
+        return variables.values();
     }
 
     private List<Block> distributeInstructions(final Iterable<Block> staggeredMap) {

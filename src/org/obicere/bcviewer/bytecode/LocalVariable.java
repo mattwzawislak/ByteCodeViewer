@@ -48,6 +48,7 @@ public class LocalVariable extends BytecodeElement {
         final FieldSignature signature = SignatureAttribute.parseField(constantPool.getAsString(descriptorIndex));
 
         signature.model(builder);
+        builder.add(" ");
         builder.add(constantPool.getAsString(nameIndex));
     }
 }
