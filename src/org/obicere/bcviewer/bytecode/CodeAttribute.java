@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Obicere
@@ -171,6 +169,7 @@ public class CodeAttribute extends Attribute {
 
     private void modelExceptions(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
         for (final CodeException exception : exceptions) {
 
             final String start = getBlockName(getStart() + exception.getStartPC());
@@ -184,7 +183,6 @@ public class CodeAttribute extends Attribute {
             final int catchTypeValue = exception.getCatchType();
             if (catchTypeValue == 0) {
                 // 0 catches all exceptions
-                final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
                 if (importMode) {
                     catchType = "Throwable";
                 } else {
@@ -194,7 +192,6 @@ public class CodeAttribute extends Attribute {
                 catchType = constantPool.getAsString(exception.getCatchType());
             }
 
-            final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
             if (importMode) {
                 builder.add(BytecodeUtils.getClassName(catchType));
             } else {
@@ -238,10 +235,10 @@ public class CodeAttribute extends Attribute {
         builder.setProperty("code", null);
     }
 
-    private void modelLocalVariables(final DocumentBuilder builder){
+    private void modelLocalVariables(final DocumentBuilder builder) {
         final Collection<LocalVariable> locals = getLocalVariables();
 
-        for(final LocalVariable local : locals){
+        for (final LocalVariable local : locals) {
             builder.newLine();
             builder.add('[');
             builder.add(getBlockName(getStart() + local.getStartPC()));
@@ -258,7 +255,7 @@ public class CodeAttribute extends Attribute {
         final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
 
         // this assumes that shared local variables between lvtt and lvt
-        // share the same startPC value (same index in total class file)
+        // share the same name value - as far as I can tell they always do
         final Map<Integer, LocalVariable> variables = new TreeMap<>();
         if (lvttAttributes != null) {
             for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
@@ -295,9 +292,6 @@ public class CodeAttribute extends Attribute {
         int instruction = 0;
         Block currentBlock = iterator.next();
 
-        // we do -1 so we can dump remaining instructions into last line
-        final Logger logger = Logger.getGlobal();
-        top:
         while (iterator.hasNext()) {
             final Block nextBlock = iterator.next();
             int start = currentBlock.getStartPC();
@@ -306,21 +300,11 @@ public class CodeAttribute extends Attribute {
             final List<Instruction> lineInstructions = currentBlock.getInstructions();
 
             while (start < endPC) {
-                try {
-                    final Instruction next = instructions[instruction++];
+                final Instruction next = instructions[instruction++];
 
-                    lineInstructions.add(next);
-                    //System.out.print("\tAdded instruction: start=" + start + ", insLength=" + next.getLength() + ", name" + next.getMnemonic());
-                    start += next.getLength();
-                    //System.out.println(", end=" + start);
-                    //logger.log(Level.INFO, "\tAdded instruction: start=" + start + ", insLength=" + next.getLength());
-                } catch (final ArrayIndexOutOfBoundsException e) {
-                    logger.log(Level.SEVERE, "Instruction distribution error. start = " + start + ", endPC = " + endPC + " within CA: " + getIdentifier());
-                    final int lastInsStart = instructions[instruction - 2].getStart() - 14 - getStart();
-                    final int lastInsEnd = instructions[instruction - 2].getEnd() - 14 - getStart();
-                    logger.log(Level.SEVERE, "\tLast Instruction [startPC=" + lastInsStart + ", " + lastInsEnd + "]");
-                    break top;
-                }
+                lineInstructions.add(next);
+
+                start += next.getLength();
             }
             currentBlock = nextBlock;
             blocks.add(currentBlock);

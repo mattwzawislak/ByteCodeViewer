@@ -1,5 +1,6 @@
 package org.obicere.bcviewer.settings;
 
+import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.settings.target.Setting;
 
 import java.awt.Color;
@@ -54,32 +55,69 @@ public class Settings {
         return null;
     }
 
-    public Boolean getBoolean(final String name) {
-        return (Boolean) get(name);
+    public Object get(final String name, final Object defaultValue) {
+        final Object contained = get(name);
+        if (contained != null) {
+            return contained;
+        } else {
+            return defaultValue;
+        }
     }
 
-    public Integer getInteger(final String name) {
-        return (Integer) get(name);
+    public boolean getBoolean(final String name) {
+        return (boolean) get(name, false);
     }
 
-    public Long getLong(final String name) {
-        return (Long) get(name);
+    public boolean getBoolean(final String name, final boolean defaultValue){
+        return (boolean) get(name, defaultValue);
     }
 
-    public Double getDouble(final String name) {
-        return (Double) get(name);
+    public int getInteger(final String name) {
+        return (int) get(name, 0);
     }
 
-    public Float getFloat(final String name) {
-        return (Float) get(name);
+    public int getInteger(final String name, final int defaultValue) {
+        return (int) get(name, defaultValue);
+    }
+
+    public long getLong(final String name) {
+        return (long) get(name, 0);
+    }
+
+    public long getLong(final String name, final long defaultValue) {
+        return (long) get(name, defaultValue);
+    }
+
+    public double getDouble(final String name) {
+        return (double) get(name, 0);
+    }
+
+    public double getDouble(final String name, final double defaultValue) {
+        return (double) get(name, defaultValue);
+    }
+
+    public float getFloat(final String name) {
+        return (float) get(name, 0);
+    }
+
+    public float getFloat(final String name, final float defaultValue) {
+        return (float) get(name, defaultValue);
     }
 
     public Color getColor(final String name) {
-        return (Color) get(name);
+        return (Color) get(name, Color.BLACK);
+    }
+
+    public Color getColor(final String name, final Color defaultValue) {
+        return (Color) get(name, defaultValue);
     }
 
     public Font getFont(final String name) {
-        return (Font) get(name);
+        return (Font) get(name, new QuickWidthFont(Font.MONOSPACED, Font.PLAIN, 14));
+    }
+
+    public Font getFont(final String name, final Font defaultValue) {
+        return (Font) get(name, defaultValue);
     }
 
     public void set(final String name, final Object value) {
