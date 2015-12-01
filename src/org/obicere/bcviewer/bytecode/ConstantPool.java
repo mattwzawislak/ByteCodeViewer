@@ -14,6 +14,9 @@ public class ConstantPool extends BytecodeElement {
     }
 
     public Constant get(final int index) {
+        if(index >= constants.length) {
+            return null;
+        }
         return constants[index];
     }
 
