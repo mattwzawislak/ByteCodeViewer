@@ -64,7 +64,7 @@ public class QueueString {
             return null;
         }
         char next = peek();
-        if (!Character.isJavaIdentifierStart(next)) {
+        if (!Character.isJavaIdentifierPart(next)) {
             return null;
         }
         final StringBuilder identifier = new StringBuilder();
