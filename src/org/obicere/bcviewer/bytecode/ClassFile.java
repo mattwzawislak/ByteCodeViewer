@@ -165,8 +165,7 @@ public class ClassFile extends BytecodeElement {
 
         final String name = getName();
 
-        final String thisName = BytecodeUtils.getQualifiedName(name);
-        final String thisPackage = BytecodeUtils.getPackage(thisName);
+        final String thisPackage = BytecodeUtils.getPackage(name);
 
         final Set<String> imports = new TreeSet<>();
         getImports(constantPool, imports, thisPackage);
