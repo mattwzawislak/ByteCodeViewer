@@ -7,12 +7,12 @@ import org.obicere.bcviewer.gui.EditorPanelManager;
 import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.bcviewer.util.FileUtils;
-import org.obicere.utility.io.ArchiveFileSource;
-import org.obicere.utility.io.BasicFileSource;
-import org.obicere.utility.io.FileSource;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +35,7 @@ public class FileLoaderService implements DomainAccess {
         this.domain = domain;
     }
 
-    public void postRequest(final File... files) {
+    public void postRequest(final Path... files) {
         if (files == null) {
             return;
         }
@@ -50,10 +50,10 @@ public class FileLoaderService implements DomainAccess {
 
     private class FileLoadRequest implements Callable<Void> {
 
-        private final File[] files;
+        private final Path[] paths;
 
-        public FileLoadRequest(final File[] files) {
-            this.files = files;
+        public FileLoadRequest(final Path[] paths) {
+            this.paths = paths;
         }
 
         @Override
@@ -61,27 +61,36 @@ public class FileLoaderService implements DomainAccess {
             final GUIManager guiManager = domain.getGUIManager();
             final FrameManager frameManager = guiManager.getFrameManager();
             final EditorPanelManager editorPanels = frameManager.getEditorManager();
-            for (final File file : files) {
+            for (final Path path : paths) {
+                final File file = path.toFile();
                 if (!file.exists() || !file.canRead()) {
                     continue;
                 }
                 if (file.isDirectory()) {
-                    postRequest(file.listFiles());
+                    final File[] files = file.listFiles();
+                    if(files == null){
+                        continue;
+                    }
+                    final Path[] paths = new Path[files.length];
+
+                    for(int i =0; i < files.length; i++){
+                        paths[i] = files[i].toPath();
+                    }
+                    postRequest(paths);
                     continue;
                 }
-                final String extension = FileUtils.getFileExtension(file);
+                final String extension = FileUtils.getFileExtension(path.toString());
                 if (extension == null) {
                     continue;
                 }
 
                 switch (extension) {
                     case ".class":
-                        loadClass(editorPanels, new BasicFileSource(file));
+                        loadClass(editorPanels, path);
                         break;
                     case ".zip":
-                    case ".rar":
                     case ".jar":
-                        loadArchive(editorPanels, file);
+                        loadArchive(editorPanels, path);
                 }
             }
 
@@ -89,32 +98,38 @@ public class FileLoaderService implements DomainAccess {
         }
     }
 
-    private void loadClass(final EditorPanelManager editorPanels, final FileSource file) {
+    private void loadClass(final EditorPanelManager editorPanels, final Path path) {
         final ClassLoaderService service = domain.getClassLoaderService();
 
-        final String path = file.getPath();
-        final String className = FileUtils.getFileName(path);
+        final String name = path.toString();
+        final String className = FileUtils.getFileName(name);
 
         if (editorPanels.hasEditorPanel(className)) {
             editorPanels.displayEditorPanel(className);
             return;
         }
         final EditorPanel panel = editorPanels.createEditorPanel();
-        service.postRequest(new ClassCallback(panel), file);
+        service.postRequest(new ClassCallback(panel), path);
     }
 
-    private void loadArchive(final EditorPanelManager editorPanels, final File file) {
+    private void loadArchive(final EditorPanelManager editorPanels, final Path path) {
         try {
-            final ZipFile zip = new ZipFile(file);
+            final FileSystem system = FileSystems.newFileSystem(path, null);
+
+            final ZipFile zip = new ZipFile(path.toFile());
             final Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 final ZipEntry entry = entries.nextElement();
                 final String name = entry.getName();
                 final String extension = FileUtils.getFileExtension(name);
                 if (extension != null && extension.equals(".class")) {
-                    loadClass(editorPanels, new ArchiveFileSource(zip, entry));
+
+                    final Path newPath = system.getPath(name);
+                    loadClass(editorPanels, newPath);
                 }
             }
+
+            system.close();
         } catch (final IOException e) {
             domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }

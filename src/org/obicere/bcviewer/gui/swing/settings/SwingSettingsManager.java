@@ -5,6 +5,7 @@ import org.obicere.bcviewer.context.DomainAccess;
 import org.obicere.bcviewer.gui.SettingsManager;
 import org.obicere.bcviewer.gui.settings.SettingModelFactory;
 import org.obicere.bcviewer.gui.settings.SettingModeler;
+import org.obicere.bcviewer.gui.swing.VerticalFlowLayout;
 import org.obicere.bcviewer.settings.Group;
 import org.obicere.bcviewer.settings.SettingsController;
 import org.obicere.bcviewer.settings.target.BooleanSetting;
@@ -16,7 +17,6 @@ import org.obicere.bcviewer.settings.target.IntegerSetting;
 import org.obicere.bcviewer.settings.target.LongSetting;
 import org.obicere.bcviewer.settings.target.Setting;
 import org.obicere.bcviewer.settings.target.StringSetting;
-import org.obicere.utility.swing.VerticalFlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;

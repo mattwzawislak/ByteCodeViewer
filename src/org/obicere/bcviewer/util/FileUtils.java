@@ -1,9 +1,5 @@
 package org.obicere.bcviewer.util;
 
-import org.obicere.utility.io.ArchiveFileSource;
-import org.obicere.utility.io.BasicFileSource;
-import org.obicere.utility.io.FileSource;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -241,6 +237,7 @@ public class FileUtils {
      * @return The approximate file source of the requested file. This
      * will be non-<code>null</code>, yet might not exist.
      */
+    /*
     public static FileSource getFileInSameDirectory(final FileSource fileSource, final String otherName) {
         if (fileSource == null) {
             throw new NullPointerException("fileSource must be non-null.");
@@ -263,7 +260,7 @@ public class FileUtils {
             final String parent = getParentName(path);
             return new BasicFileSource(new File(parent, otherName));
         }
-    }
+    }*/
 
     /**
      * Writes the properties into the specified file. The format for the

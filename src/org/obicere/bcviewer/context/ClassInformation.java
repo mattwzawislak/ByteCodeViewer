@@ -8,11 +8,10 @@ import org.obicere.bcviewer.bytecode.InnerClassesAttribute;
 import org.obicere.bcviewer.concurrent.ClassCallback;
 import org.obicere.bcviewer.util.FileUtils;
 import org.obicere.bcviewer.util.IndexedDataInputStream;
-import org.obicere.utility.io.FileSource;
-import org.obicere.utility.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class ClassInformation implements DomainAccess {
 
     private final Map<String, ClassFile> classes = new HashMap<>();
 
-    private FileSource fileSource;
+    private Path fileSource;
 
     private ClassFile rootClass;
 
@@ -48,7 +47,7 @@ public class ClassInformation implements DomainAccess {
         return rootClass;
     }
 
-    public FileSource getFileSource() {
+    public Path getFileSource() {
         return fileSource;
     }
 
@@ -59,10 +58,10 @@ public class ClassInformation implements DomainAccess {
         classes.clear();
     }
 
-    public ClassFile load(final ClassCallback callback, final FileSource fileSource) {
+    public ClassFile load(final ClassCallback callback, final Path fileSource) {
         try {
             this.fileSource = fileSource;
-            this.classBytes = IOUtils.readData(fileSource.openSource());
+            this.classBytes = Files.readAllBytes(fileSource);
             this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
             classes.put(rootClass.getName(), rootClass);
 
@@ -103,7 +102,7 @@ public class ClassInformation implements DomainAccess {
 
                     final String simpleName = FileUtils.getFileName(name);
 
-                    final FileSource innerFile = FileUtils.getFileInSameDirectory(fileSource, simpleName + ".class");
+                    final Path innerFile = fileSource.resolveSibling(simpleName + ".class");
                     final ClassFile innerClassFile = loadFrom(innerFile);
                     classes.put(name, innerClassFile);
 
@@ -113,12 +112,8 @@ public class ClassInformation implements DomainAccess {
         }
     }
 
-    private ClassFile loadFrom(final FileSource file) throws IOException {
-        final InputStream stream = file.openSource();
-        if(stream.available() <= 0){
-            throw new IOException("failed to open file source for inner class loading.");
-        }
-        final byte[] bytes = IOUtils.readData(file.openSource());
+    private ClassFile loadFrom(final Path file) throws IOException {
+        final byte[] bytes = Files.readAllBytes(file);
         return domain.getClassReader().read(new IndexedDataInputStream(bytes));
     }
 

@@ -4,8 +4,8 @@ import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.context.ClassInformation;
 import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.context.DomainAccess;
-import org.obicere.utility.io.FileSource;
 
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +25,7 @@ public class ClassLoaderService implements DomainAccess {
 
     private final ExecutorService classLoaderExecutorService = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
 
-    public Future<ClassInformation> postRequest(final ClassCallback callback, final FileSource file) {
+    public Future<ClassInformation> postRequest(final ClassCallback callback, final Path file) {
 
         final FileLoadRequest request = new FileLoadRequest(callback, file);
         return classLoaderExecutorService.submit(request);
@@ -39,9 +39,9 @@ public class ClassLoaderService implements DomainAccess {
     private class FileLoadRequest implements Callable<ClassInformation> {
 
         private final ClassCallback callback;
-        private final FileSource    file;
+        private final Path    file;
 
-        public FileLoadRequest(final ClassCallback callback, final FileSource file) {
+        public FileLoadRequest(final ClassCallback callback, final Path file) {
             this.callback = callback;
             this.file = file;
         }

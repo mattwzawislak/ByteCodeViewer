@@ -14,12 +14,12 @@ import org.obicere.bcviewer.dom.awt.QuickWidthFont;
 import org.obicere.bcviewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.FrameManager;
-import org.obicere.utility.io.FileSource;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -125,7 +125,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         final ClassLoaderService service = domain.getClassLoaderService();
 
         final ClassCallback callback = new ClassCallback(this);
-        final FileSource fileSource = classInformation.getFileSource();
+        final Path fileSource = classInformation.getFileSource();
 
         service.postRequest(callback, fileSource);
     }

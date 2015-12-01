@@ -6,6 +6,7 @@ import org.obicere.bcviewer.gui.FrameManager;
 import org.obicere.bcviewer.gui.GUIManager;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  */
@@ -17,13 +18,10 @@ public class ClassFileLoader implements DomainAccess {
 
     private static final String ZIP_EXTENSION = ".zip";
 
-    private static final String RAR_EXTENSION = ".rar";
-
     private static final String[] EXTENSIONS = new String[]{
             CLASS_EXTENSION,
             JAR_EXTENSION,
-            ZIP_EXTENSION,
-            RAR_EXTENSION
+            ZIP_EXTENSION
     };
 
     private final Domain domain;
@@ -44,7 +42,11 @@ public class ClassFileLoader implements DomainAccess {
         if (files == null) {
             return;
         }
-        domain.getFileLoaderService().postRequest(files);
+        final Path[] paths = new Path[files.length];
+        for(int i = 0; i < files.length; i++){
+            paths[i] = files[i].toPath();
+        }
+        domain.getFileLoaderService().postRequest(paths);
     }
 
 

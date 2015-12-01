@@ -7,7 +7,7 @@ import org.obicere.bcviewer.gui.GUIManager;
 import org.obicere.bcviewer.settings.SettingsController;
 import org.obicere.bcviewer.startup.StartUpQueue;
 import org.obicere.bcviewer.startup.StartUpTaskLoader;
-import org.obicere.utility.util.PrintFormatter;
+import org.obicere.bcviewer.util.PrintFormatter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
@@ -153,7 +153,7 @@ public class Boot {
 
     /**
      * Sets up the logger. This currently supports console support using
-     * the {@link org.obicere.utility.util.PrintFormatter} format:
+     * the {@link org.obicere.bcviewer.util.PrintFormatter} format:
      * <p>
      * <code>Month/Day/Year Hour:Minutes:Seconds <i>level</i>:
      * <i>message</i></code>
@@ -165,6 +165,7 @@ public class Boot {
      */
 
     private static void setUpLogger() {
+
         LogManager.getLogManager().reset();
 
         final PrintFormatter formatter = new PrintFormatter();
