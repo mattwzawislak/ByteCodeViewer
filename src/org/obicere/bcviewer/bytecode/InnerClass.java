@@ -39,6 +39,10 @@ public class InnerClass extends BytecodeElement {
     public void model(final DocumentBuilder builder) {
         final String name = builder.getConstantPool().getAsString(innerClassInfoIndex);
 
+        final String modelledProperty = name + ".modelled";
+        if(builder.getProperty(modelledProperty) != null){
+            return;
+        }
         builder.setProperty("accessFlags", innerClassAccessFlags);
 
         final ClassFile file = builder.getClassInformation().getClass(name);
@@ -47,6 +51,7 @@ public class InnerClass extends BytecodeElement {
             builder.addComment("Could not find inner class: " + name);
             return;
         }
+        builder.setProperty(modelledProperty, "true");
         builder.setWorkingClass(file);
         file.model(builder);
         builder.clearWorkingClass();
