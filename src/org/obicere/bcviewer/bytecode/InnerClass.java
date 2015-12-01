@@ -5,7 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 /**
  * @author Obicere
  */
-public class InnerClass extends BytecodeElement {
+public class InnerClass extends ByteCodeElement {
 
     private final int innerClassInfoIndex;
     private final int outerClassInfoIndex;

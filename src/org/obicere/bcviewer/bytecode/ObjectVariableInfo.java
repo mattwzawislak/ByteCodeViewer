@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  */
@@ -25,9 +25,9 @@ public class ObjectVariableInfo extends VerificationTypeInfo {
         } else {
             final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
             if (importMode) {
-                builder.add(BytecodeUtils.getClassName(signature));
+                builder.add(ByteCodeUtils.getClassName(signature));
             } else {
-                builder.add(BytecodeUtils.getQualifiedName(signature));
+                builder.add(ByteCodeUtils.getQualifiedName(signature));
             }
         }
     }

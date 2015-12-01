@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  * @author Obicere
@@ -30,9 +30,9 @@ public class EnumElementValue extends ElementValue {
     @Override
     public void model(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(typeNameIndex));
+        final String type = ByteCodeUtils.getQualifiedName(constantPool.getAsString(typeNameIndex));
 
-        builder.add(BytecodeUtils.getQualifiedName(type));
+        builder.add(ByteCodeUtils.getQualifiedName(type));
         builder.add(".");
         builder.add(constantPool.getAsString(getConstNameIndex()));
     }

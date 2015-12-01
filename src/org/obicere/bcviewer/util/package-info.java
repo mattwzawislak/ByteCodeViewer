@@ -2,7 +2,7 @@
  * Utilities corresponding to the functionality of the application. These
  * include I/O processing and data modification.
  * <p>
- * The {@link org.obicere.bcviewer.util.BytecodeUtils} is responsible for
+ * The {@link org.obicere.bcviewer.util.ByteCodeUtils} is responsible for
  * modifying the data of the class file to allow smart changes to be made.
  * This includes, but is not limited to, the parsing of class names,
  * package names, access flags and checking for the existence of an access

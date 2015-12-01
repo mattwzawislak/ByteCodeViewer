@@ -6,7 +6,7 @@ import org.obicere.bcviewer.dom.Modeler;
 /**
  * @author Obicere
  */
-public abstract class BytecodeElement implements Modeler {
+public abstract class ByteCodeElement implements Modeler {
 
     private int start;
     private int end;

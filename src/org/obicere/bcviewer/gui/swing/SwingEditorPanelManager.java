@@ -5,8 +5,8 @@ import org.obicere.bcviewer.context.Domain;
 import org.obicere.bcviewer.gui.EditorPanel;
 import org.obicere.bcviewer.gui.EditorPanelManager;
 import org.obicere.bcviewer.gui.swing.editor.SwingEditorPanel;
-import org.obicere.bcviewer.gui.swing.tree.BytecodeTree;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.gui.swing.tree.ByteCodeTree;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class SwingEditorPanelManager implements EditorPanelManager {
 
-    private final BytecodeTree tree;
+    private final ByteCodeTree tree;
 
     private final JPanel editorArea;
 
@@ -51,7 +51,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
         this.domain = domain;
 
-        this.tree = new BytecodeTree(domain);
+        this.tree = new ByteCodeTree(domain);
         this.contentLayout = new CardLayout();
         this.editorArea = new JPanel(contentLayout);
         this.tabbedPane = new JTabbedPane();
@@ -129,7 +129,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     @Override
     public EditorPanel addEditorPanel(final EditorPanel panel, final String className) {
-        final String qualifiedName = BytecodeUtils.getQualifiedName(className);
+        final String qualifiedName = ByteCodeUtils.getQualifiedName(className);
 
         editorPanels.put(qualifiedName, (SwingEditorPanel) panel);
         tree.addClass(panel.getClassFile());
@@ -156,7 +156,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
                 tabbedPane.addTab(className, panel);
 
                 final JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 0));
-                final String shortName = BytecodeUtils.getClassName(className);
+                final String shortName = ByteCodeUtils.getClassName(className);
                 final CloseButton button = new CloseButton(domain);
                 button.addActionListener(e -> closeEditorPanel(className));
 

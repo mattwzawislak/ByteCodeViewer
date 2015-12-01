@@ -5,7 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 /**
  * @author Obicere
  */
-public class ElementValuePair extends BytecodeElement{
+public class ElementValuePair extends ByteCodeElement {
 
     private final int          elementNameIndex;
     private final ElementValue value;

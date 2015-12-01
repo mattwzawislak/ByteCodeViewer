@@ -31,7 +31,7 @@ public class Paths {
     private final String RESOURCES_ICONS = RESOURCES_HOME + "icons/";
 
     private final String APP_DATA    = getAppData() + File.separator;
-    private final String FOLDER_HOME = APP_DATA + "BytecodeViewer" + File.separator;
+    private final String FOLDER_HOME = APP_DATA + "ByteCodeViewer" + File.separator;
     private final String PLUGINS     = FOLDER_HOME + "plugins" + File.separator;
 
     private final String SETTINGS_FILE           = FOLDER_HOME + "settings.ini";

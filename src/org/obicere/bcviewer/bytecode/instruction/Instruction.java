@@ -1,12 +1,12 @@
 package org.obicere.bcviewer.bytecode.instruction;
 
-import org.obicere.bcviewer.bytecode.BytecodeElement;
+import org.obicere.bcviewer.bytecode.ByteCodeElement;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
  */
-public abstract class Instruction extends BytecodeElement {
+public abstract class Instruction extends ByteCodeElement {
 
     private static final int MAX_NAME_LENGTH = 14;
 

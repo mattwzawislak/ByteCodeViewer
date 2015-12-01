@@ -17,7 +17,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
- * The main entry point of the Bytecode Viewer. This is responsible for
+ * The main entry point of the ByteCode Viewer. This is responsible for
  * setting up the domain of the application, the logging handlers and
  * settings loading. <p> Any arguments passed in must follow the given
  * format:

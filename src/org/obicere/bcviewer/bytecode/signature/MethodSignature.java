@@ -10,7 +10,7 @@ import org.obicere.bcviewer.bytecode.TypeAnnotation;
 import org.obicere.bcviewer.bytecode.TypeParameterBoundTarget;
 import org.obicere.bcviewer.bytecode.TypeParameterTarget;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -219,7 +219,7 @@ public class MethodSignature extends AnnotationTarget {
             }
             final JavaTypeSignature parameter = parameters[i];
             final Parameter methodParameter = methodParameters[i];
-            final String[] accessNames = BytecodeUtils.getFieldAccessNames(methodParameter.getAccessFlags());
+            final String[] accessNames = ByteCodeUtils.getFieldAccessNames(methodParameter.getAccessFlags());
             for (final String accessName : accessNames) {
                 builder.addKeyword(accessName + " ");
             }

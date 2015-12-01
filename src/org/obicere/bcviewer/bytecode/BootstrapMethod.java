@@ -3,12 +3,12 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.bytecode.signature.JavaTypeSignature;
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  * @author Obicere
  */
-public class BootstrapMethod extends BytecodeElement {
+public class BootstrapMethod extends ByteCodeElement {
 
     private final int   bootstrapMethodRef;
     private final int[] bootstrapArguments;
@@ -80,7 +80,7 @@ public class BootstrapMethod extends BytecodeElement {
             builder.add("!");
             builder.add(path);
         } else {
-            builder.add(BytecodeUtils.getClassName(pathElements[0]));
+            builder.add(ByteCodeUtils.getClassName(pathElements[0]));
             builder.add("#");
             builder.add(pathElements[1]);
         }

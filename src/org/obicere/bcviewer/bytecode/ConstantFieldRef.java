@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  * @author Obicere
@@ -53,9 +53,9 @@ public class ConstantFieldRef extends Constant {
 
         final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
         if (importMode) {
-            builder.add(BytecodeUtils.getClassName(constantPool.getAsString(getClassIndex())));
+            builder.add(ByteCodeUtils.getClassName(constantPool.getAsString(getClassIndex())));
         } else {
-            builder.add(BytecodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
+            builder.add(ByteCodeUtils.getQualifiedName(constantPool.getAsString(getClassIndex())));
         }
         builder.add("#");
         builder.add(constantPool.getAsString(nameAndType.getNameIndex()));

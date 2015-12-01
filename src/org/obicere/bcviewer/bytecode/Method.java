@@ -2,14 +2,14 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.MethodSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import java.util.Set;
 
 /**
  * @author Obicere
  */
-public class Method extends BytecodeElement {
+public class Method extends ByteCodeElement {
 
     private final int accessFlags;
 
@@ -47,7 +47,7 @@ public class Method extends BytecodeElement {
 
     @Override
     public void model(final DocumentBuilder builder) {
-        if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
+        if (ByteCodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
         }
 
@@ -78,11 +78,11 @@ public class Method extends BytecodeElement {
     private void modelDeclaration(final DocumentBuilder builder, final boolean hasBody) {
         final ConstantPool constantPool = builder.getConstantPool();
 
-        final String[] accessNames = BytecodeUtils.getMethodAccessNames(accessFlags);
+        final String[] accessNames = ByteCodeUtils.getMethodAccessNames(accessFlags);
 
         // make sure to add the default flag if the method has a body
         // and its containing class is an interface
-        if (hasBody && BytecodeUtils.isInterface(builder.getClassFile().getAccessFlags())) {
+        if (hasBody && ByteCodeUtils.isInterface(builder.getClassFile().getAccessFlags())) {
             builder.addKeyword("default ");
         }
 
@@ -108,9 +108,9 @@ public class Method extends BytecodeElement {
             // instead replace method name "<init>" with the class name
             final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
             if (importMode) {
-                builder.add(BytecodeUtils.getClassName(builder.getClassFile().getName()));
+                builder.add(ByteCodeUtils.getClassName(builder.getClassFile().getName()));
             } else {
-                builder.add(BytecodeUtils.getQualifiedName(builder.getClassFile().getName()));
+                builder.add(ByteCodeUtils.getQualifiedName(builder.getClassFile().getName()));
             }
         } else if (!staticInitializer) {
             // set the name to the method name otherwise - no name for clinit
@@ -141,7 +141,7 @@ public class Method extends BytecodeElement {
                         builder.comma();
                     }
                     final String name = constantPool.getAsString(index);
-                    builder.add(BytecodeUtils.getQualifiedName(name));
+                    builder.add(ByteCodeUtils.getQualifiedName(name));
                 }
             }
         }

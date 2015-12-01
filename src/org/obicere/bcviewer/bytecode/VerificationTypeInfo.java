@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public abstract class VerificationTypeInfo extends BytecodeElement {
+public abstract class VerificationTypeInfo extends ByteCodeElement {
 
     private final int tag;
 

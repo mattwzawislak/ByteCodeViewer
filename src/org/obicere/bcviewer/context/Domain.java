@@ -19,7 +19,7 @@ public final class Domain {
 
     private static final double CURRENT_VERSION = 0.00;
 
-    private static final String APPLICATION_NAME = "Bytecode Viewer v" + CURRENT_VERSION;
+    private static final String APPLICATION_NAME = "ByteCode Viewer v" + CURRENT_VERSION;
 
     private final Logger logger = Logger.getGlobal();
 

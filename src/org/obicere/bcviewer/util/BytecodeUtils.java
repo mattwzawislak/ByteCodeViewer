@@ -16,9 +16,9 @@ import java.util.List;
  * well as removing the class signature start and end characters:
  * <code>L</code> and <code>;</code> respectively. The full system is
  * described at
- * {@link org.obicere.bcviewer.util.BytecodeUtils#getQualifiedName(String)}
+ * {@link org.obicere.bcviewer.util.ByteCodeUtils#getQualifiedName(String)}
  * as well as
- * {@link org.obicere.bcviewer.util.BytecodeUtils#getClassName(String)},
+ * {@link org.obicere.bcviewer.util.ByteCodeUtils#getClassName(String)},
  * including usages and pitfalls. There is also utility to retrieve
  * package names. This of course just being an approximation at best.
  * <p>
@@ -30,7 +30,7 @@ import java.util.List;
  * @version 0.0
  * @since 0.0
  */
-public class BytecodeUtils {
+public class ByteCodeUtils {
 
     /**
      * The access flag mask for the <code>public</code> keyword. Only one
@@ -39,11 +39,11 @@ public class BytecodeUtils {
      * <p>
      * The list of other visibility access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED}
      * </ul>
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isPublic(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isPublic(int)
      */
     private static final int ACCESS_PUBLIC = 0x0001;
 
@@ -55,11 +55,11 @@ public class BytecodeUtils {
      * <p>
      * The list of other visibility access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED}
      * </ul>
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isPrivate(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isPrivate(int)
      */
     private static final int ACCESS_PRIVATE = 0x0002;
 
@@ -71,11 +71,11 @@ public class BytecodeUtils {
      * <p>
      * The list of other visibility access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE}
      * </ul>
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isProtected(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isProtected(int)
      */
     private static final int ACCESS_PROTECTED = 0x0004;
 
@@ -85,7 +85,7 @@ public class BytecodeUtils {
      * <code>class</code> declarations and inner <code>interface</code>
      * declarations.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isStatic(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isStatic(int)
      */
     private static final int ACCESS_STATIC = 0x0008;
 
@@ -94,7 +94,7 @@ public class BytecodeUtils {
      * be removed from redundant cases, such as in <code>enum</code>
      * <code>class</code> declarations.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isFinal(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isFinal(int)
      */
     private static final int ACCESS_FINAL = 0x0010;
 
@@ -105,7 +105,7 @@ public class BytecodeUtils {
      * declaration, this will not be present in the access flag names and
      * therefore should have no <code>String</code> representation.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isSuper(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isSuper(int)
      */
     private static final int ACCESS_SUPER = 0x0020;
 
@@ -114,7 +114,7 @@ public class BytecodeUtils {
      * This will only be present in method access flags. Otherwise it is
      * ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isSynchronized(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isSynchronized(int)
      */
     private static final int ACCESS_SYNCHRONIZED = 0x0020;
 
@@ -123,7 +123,7 @@ public class BytecodeUtils {
      * present in the access flag names and therefore should have no
      * <code>String</code> representation.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isBridge(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isBridge(int)
      */
     private static final int ACCESS_BRIDGE = 0x0040;
 
@@ -132,7 +132,7 @@ public class BytecodeUtils {
      * will only be present in field access flags. Otherwise it is
      * ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isVolatile(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isVolatile(int)
      */
     private static final int ACCESS_VOLATILE = 0x0040;
 
@@ -141,7 +141,7 @@ public class BytecodeUtils {
      * will only be present in field access flags. Otherwise it is
      * ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isTransient(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isTransient(int)
      */
     private static final int ACCESS_TRANSIENT = 0x0080;
 
@@ -152,7 +152,7 @@ public class BytecodeUtils {
      * present in the access flag names and therefore should have no
      * <code>String</code> representation.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isVarargs(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isVarargs(int)
      */
     private static final int ACCESS_VARARGS = 0x0080;
 
@@ -161,32 +161,32 @@ public class BytecodeUtils {
      * only be present in the method access flags. Otherwise it is
      * ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isNative(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isNative(int)
      */
     private static final int ACCESS_NATIVE = 0x0100;
 
     /**
      * The access flag mask for the <code>interface</code> keyword. This
      * keyword is usually also present with the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ABSTRACT}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ABSTRACT}
      * keyword. This will only be present in the class access flags.
      * Otherwise it is ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isInterface(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isInterface(int)
      */
     private static final int ACCESS_INTERFACE = 0x0200;
 
     /**
      * The access flag mask for the <code>abstract</code> keyword. This
      * keyword is usually also present with the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE}
      * and
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION}
      * flags for classes. In both of these cases, this flag will be
      * ignored as both of those types infer <code>abstract</code>. This
      * will only be present in method and class access flags.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isAbstract(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isAbstract(int)
      */
     private static final int ACCESS_ABSTRACT = 0x0400;
 
@@ -197,7 +197,7 @@ public class BytecodeUtils {
      * access flag. Therefore, this will only be present on method access
      * flags. Otherwise it is ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isStrict(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isStrict(int)
      */
     private static final int ACCESS_STRICT = 0x0800;
 
@@ -208,29 +208,29 @@ public class BytecodeUtils {
      * not be present in the access flag names and therefore should have
      * no <code>String</code> representation.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isSynthetic(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isSynthetic(int)
      */
     private static final int ACCESS_SYNTHETIC = 0x1000;
 
     /**
      * The access flag mask for the <code>@interface</code> keyword. This
      * keyword is usually also present with the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ABSTRACT}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ABSTRACT}
      * keyword. This will only be present in class access flags. Otherwise
      * it is ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isAnnotation(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isAnnotation(int)
      */
     private static final int ACCESS_ANNOTATION = 0x2000;
 
     /**
      * The access flag mask for the <code>enum</code> keyword. This
      * keyword is usually also present with the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_FINAL}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_FINAL}
      * keyword. This will only be present in class access flags. Otherwise
      * it is ignored.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isEnum(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isEnum(int)
      */
     private static final int ACCESS_ENUM = 0x4000;
 
@@ -244,64 +244,64 @@ public class BytecodeUtils {
      * will not be present in the access flag names and therefore should
      * have no <code>String</code> representation.
      *
-     * @see org.obicere.bcviewer.util.BytecodeUtils#isMandated(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#isMandated(int)
      */
     private static final int ACCESS_MANDATED = 0x8000;
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC} flag.
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC} flag.
      * This will only be present in class, method and field declarations.
      * Only one of the visibility names should be present in a valid
      * access flags value.
      * <p>
      * The list of other visibility names are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PRIVATE}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PROTECTED}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PRIVATE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PROTECTED}
      * </ul>
      */
     private static final String NAME_PUBLIC = "public";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE}
      * flag. This will only be present in class, method and field
      * declarations. Only one of the visibility names should be present in
      * a valid access flags value.
      * <p>
      * The list of other visibility names are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PUBLIC}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PROTECTED}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PUBLIC}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PROTECTED}
      * </ul>
      */
     private static final String NAME_PRIVATE = "private";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED}
      * flag. This will only be present in class, method and field
      * declarations. Only one of the visibility names should be present in
      * a valid access flags value.
      * <p>
      * The list of other visibility names are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PUBLIC}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PRIVATE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PUBLIC}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PRIVATE}
      * </ul>
      */
     private static final String NAME_PROTECTED = "protected";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STATIC} flag.
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STATIC} flag.
      */
     private static final String NAME_STATIC = "static";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_FINAL} flag.
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_FINAL} flag.
      */
     private static final String NAME_FINAL = "final";
 
@@ -309,7 +309,7 @@ public class BytecodeUtils {
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_SYNCHRONIZED}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_SYNCHRONIZED}
      * flag.
      */
     private static final String NAME_SYNCHRONIZED = "synchronized";
@@ -318,14 +318,14 @@ public class BytecodeUtils {
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_VOLATILE}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_VOLATILE}
      * flag.
      */
     private static final String NAME_VOLATILE = "volatile";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_TRANSIENT}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_TRANSIENT}
      * flag.
      */
     private static final String NAME_TRANSIENT = "transient";
@@ -334,32 +334,32 @@ public class BytecodeUtils {
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_NATIVE} flag.
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_NATIVE} flag.
      */
     private static final String NAME_NATIVE = "native";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE}
      * flag. Only one of the class type access flags will be present. The
      * list of other class access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE}
      * </ul>
      */
     private static final String NAME_INTERFACE = "interface";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ABSTRACT}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ABSTRACT}
      * flag.
      */
     private static final String NAME_ABSTRACT = "abstract";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STRICT} flag.
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STRICT} flag.
      */
     private static final String NAME_STRICT = "strictfp";
 
@@ -367,24 +367,24 @@ public class BytecodeUtils {
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION}
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION}
      * flag. Only one of the class type access flags will be present. The
      * list of other class access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE}
      * </ul>
      */
     private static final String NAME_ANNOTATION = "@interface";
 
     /**
      * The <code>String</code> representation of the
-     * {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ENUM} flag.
+     * {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ENUM} flag.
      * Only one of the class type access flags will be present. The list
      * of other class access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE}
      * </ul>
      */
     private static final String NAME_ENUM = "enum";
@@ -396,9 +396,9 @@ public class BytecodeUtils {
      * access flags when no other representations are available. The list
      * of other class access flags are:
      * <ul>
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ENUM}
-     * <li>{@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ENUM}
+     * <li>{@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE}
      * </ul>
      */
     private static final String NAME_CLASS = "class";
@@ -408,16 +408,16 @@ public class BytecodeUtils {
      * are ordered in accordance to the jls-8.1.1 specification. The
      * ordering of these flags are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ABSTRACT}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STATIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_FINAL}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ABSTRACT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STATIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_FINAL}
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.1.1">jls-8.1.1</a>
-     * @see org.obicere.bcviewer.util.BytecodeUtils#getClassAccessNames(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#getClassAccessNames(int)
      */
 
     private static final int[] CLASS_ORDERED_ACCESS_FLAGS = new int[]{
@@ -435,16 +435,16 @@ public class BytecodeUtils {
      * ordered in accordance to the jls-8.1.1 specification. The ordering
      * of these names are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PUBLIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PROTECTED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PRIVATE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_ABSTRACT}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_STATIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_FINAL}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PUBLIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PROTECTED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PRIVATE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_ABSTRACT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_STATIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_FINAL}
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.1.1">jls-8.1.1</a>
-     * @see org.obicere.bcviewer.util.BytecodeUtils#getClassAccessNames(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#getClassAccessNames(int)
      */
 
     private static final String[] CLASS_ORDERED_ACCESS_NAMES = new String[]{
@@ -462,19 +462,19 @@ public class BytecodeUtils {
      * are ordered in accordance to the jls-8.4.3 specification. The
      * ordering of these flags are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ABSTRACT}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STATIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_FINAL}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_SYNCHRONIZED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_NATIVE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STRICT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ABSTRACT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STATIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_FINAL}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_SYNCHRONIZED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_NATIVE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STRICT}
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.3">jls-8.4.3</a>
-     * @see org.obicere.bcviewer.util.BytecodeUtils#getMethodAccessNames(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#getMethodAccessNames(int)
      */
 
     private static final int[] METHOD_ORDERED_ACCESS_FLAGS = new int[]{
@@ -494,19 +494,19 @@ public class BytecodeUtils {
      * ordered in accordance to the jls-8.4.3 specification. The ordering
      * of these names are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PUBLIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PROTECTED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PRIVATE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_ABSTRACT}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_STATIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_FINAL}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_SYNCHRONIZED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_NATIVE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_STRICT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PUBLIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PROTECTED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PRIVATE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_ABSTRACT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_STATIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_FINAL}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_SYNCHRONIZED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_NATIVE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_STRICT}
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.3">jls-8.4.3</a>
-     * @see org.obicere.bcviewer.util.BytecodeUtils#getMethodAccessNames(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#getMethodAccessNames(int)
      */
 
     private static final String[] METHOD_ORDERED_ACCESS_NAMES = new String[]{
@@ -526,17 +526,17 @@ public class BytecodeUtils {
      * are ordered in accordance to the jls-8.3.1 specification. The
      * ordering of these flags are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STATIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_FINAL}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_TRANSIENT}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#ACCESS_VOLATILE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STATIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_FINAL}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_TRANSIENT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_VOLATILE}
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.3.1">jls-8.3.1</a>
-     * @see org.obicere.bcviewer.util.BytecodeUtils#getFieldAccessNames(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#getFieldAccessNames(int)
      */
 
     private static final int[] FIELD_ORDERED_ACCESS_FLAGS = new int[]{
@@ -554,17 +554,17 @@ public class BytecodeUtils {
      * ordered in accordance to the jls-8.3.1 specification. The ordering
      * of these names are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PUBLIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PROTECTED}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_PRIVATE}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_STATIC}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_FINAL}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_TRANSIENT}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#NAME_VOLATILE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PUBLIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PROTECTED}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_PRIVATE}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_STATIC}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_FINAL}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_TRANSIENT}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#NAME_VOLATILE}
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.3.1">jls-8.3.1</a>
-     * @see org.obicere.bcviewer.util.BytecodeUtils#getFieldAccessNames(int)
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#getFieldAccessNames(int)
      */
 
     private static final String[] FIELD_ORDERED_ACCESS_NAMES = new String[]{
@@ -580,7 +580,7 @@ public class BytecodeUtils {
     /**
      * Illegal operation. Cannot be instantiated.
      */
-    private BytecodeUtils() {
+    private ByteCodeUtils() {
         throw new AssertionError();
     }
 
@@ -971,14 +971,14 @@ public class BytecodeUtils {
      * <p>
      * The other visibility checks are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isPrivate(int)}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isProtected(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isPrivate(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isProtected(int)}
      * </ul>
      *
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
      * <code>public</code> visibility.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PUBLIC
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PUBLIC
      */
 
     public static boolean isPublic(final int access) {
@@ -995,14 +995,14 @@ public class BytecodeUtils {
      * <p>
      * The other visibility checks are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isPublic(int)}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isProtected(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isPublic(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isProtected(int)}
      * </ul>
      *
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
      * <code>private</code> visibility.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PRIVATE
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PRIVATE
      */
 
     public static boolean isPrivate(final int access) {
@@ -1019,14 +1019,14 @@ public class BytecodeUtils {
      * <p>
      * The other visibility checks are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isPublic(int)}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isPrivate(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isPublic(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isPrivate(int)}
      * </ul>
      *
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
      * <code>protected</code> visibility.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_PROTECTED
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_PROTECTED
      */
 
     public static boolean isProtected(final int access) {
@@ -1044,7 +1044,7 @@ public class BytecodeUtils {
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
      * <code>static</code> accessibility.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STATIC
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STATIC
      */
 
     public static boolean isStatic(final int access) {
@@ -1061,7 +1061,7 @@ public class BytecodeUtils {
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
      * the element is <code>final</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_FINAL
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_FINAL
      */
 
     public static boolean isFinal(final int access) {
@@ -1077,7 +1077,7 @@ public class BytecodeUtils {
      * @param access The access flags for the class.
      * @return <code>true</code> if and only if the access flags indicate
      * the class uses the alternative semantic.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_SUPER
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_SUPER
      */
 
     public static boolean isSuper(final int access) {
@@ -1091,7 +1091,7 @@ public class BytecodeUtils {
      * @param access The access flags for the method.
      * @return <code>true</code> if and only if the access flags indicate
      * the method is <code>synchronized</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_SYNCHRONIZED
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_SYNCHRONIZED
      */
 
     public static boolean isSynchronized(final int access) {
@@ -1105,7 +1105,7 @@ public class BytecodeUtils {
      * @param access The access flags for the method.
      * @return <code>true</code> if and only if the access flags indicate
      * the method is a bridge.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_BRIDGE
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_BRIDGE
      */
     public static boolean isBridge(final int access) {
         return (access & ACCESS_BRIDGE) != 0;
@@ -1117,7 +1117,7 @@ public class BytecodeUtils {
      * @param access The access flags for the field.
      * @return <code>true</code> if and only if the access flags indicate
      * the field is <code>volatile</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_VOLATILE
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_VOLATILE
      */
     public static boolean isVolatile(final int access) {
         return (access & ACCESS_VOLATILE) != 0;
@@ -1129,7 +1129,7 @@ public class BytecodeUtils {
      * @param access The access flags for the field.
      * @return <code>true</code> if and only if the access flags indicate
      * the field is <code>transient</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_TRANSIENT
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_TRANSIENT
      */
 
     public static boolean isTransient(final int access) {
@@ -1145,7 +1145,7 @@ public class BytecodeUtils {
      * @param access The access flags for the method.
      * @return <code>true</code> if and only if the access flags indicate
      * the method takes variable arguments.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_VARARGS
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_VARARGS
      */
 
     public static boolean isVarargs(final int access) {
@@ -1161,7 +1161,7 @@ public class BytecodeUtils {
      * @param access The access flags for the method.
      * @return <code>true</code> if and only if the access flags indicate
      * the method is <code>native</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_NATIVE
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_NATIVE
      */
     public static boolean isNative(final int access) {
         return (access & ACCESS_NATIVE) != 0;
@@ -1177,14 +1177,14 @@ public class BytecodeUtils {
      * <p>
      * The other class type checks are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isAnnotation(int)}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isEnum(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isAnnotation(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isEnum(int)}
      * </ul>
      *
      * @param access The access flags for the class.
      * @return <code>true</code> if and only if the access flags indicate
      * the class type is an <code>interface</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_INTERFACE
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_INTERFACE
      */
 
     public static boolean isInterface(final int access) {
@@ -1207,7 +1207,7 @@ public class BytecodeUtils {
      * @param access The access flags for the class or method.
      * @return <code>true</code> if and only if the access flags indicate
      * the class or method is <code>abstract</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ABSTRACT
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ABSTRACT
      */
 
     public static boolean isAbstract(final int access) {
@@ -1225,7 +1225,7 @@ public class BytecodeUtils {
      * @param access The access flags for the method.
      * @return <code>true</code> if and only if the access flags indicate
      * the method is <code>strictfp</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_STRICT
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_STRICT
      */
 
     public static boolean isStrict(final int access) {
@@ -1242,7 +1242,7 @@ public class BytecodeUtils {
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
      * the class, method or field is synthetic.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_SYNTHETIC
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_SYNTHETIC
      */
 
     public static boolean isSynthetic(final int access) {
@@ -1259,14 +1259,14 @@ public class BytecodeUtils {
      * <p>
      * The other class type checks are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isInterface(int)}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isEnum(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isInterface(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isEnum(int)}
      * </ul>
      *
      * @param access The access flags for the class.
      * @return <code>true</code> if and only if the access flags indicate
      * the class type is an <code>annotation</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ANNOTATION
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ANNOTATION
      */
 
     public static boolean isAnnotation(final int access) {
@@ -1283,14 +1283,14 @@ public class BytecodeUtils {
      * <p>
      * The other class type checks are:
      * <ul>
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isInterface(int)}
-     * <li> {@link org.obicere.bcviewer.util.BytecodeUtils#isAnnotation(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isInterface(int)}
+     * <li> {@link org.obicere.bcviewer.util.ByteCodeUtils#isAnnotation(int)}
      * </ul>
      *
      * @param access The access flags for the class.
      * @return <code>true</code> if and only if the access flags indicate
      * the class type is an <code>enum</code>.
-     * @see org.obicere.bcviewer.util.BytecodeUtils#ACCESS_ENUM
+     * @see org.obicere.bcviewer.util.ByteCodeUtils#ACCESS_ENUM
      */
 
     public static boolean isEnum(final int access) {

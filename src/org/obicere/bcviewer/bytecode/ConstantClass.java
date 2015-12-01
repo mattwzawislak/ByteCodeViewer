@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
 import org.obicere.bcviewer.reader.ConstantReader;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  * @author Obicere
@@ -40,9 +40,9 @@ public class ConstantClass extends Constant {
         final String name = builder.getConstantPool().getAsString(getNameIndex());
         final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
         if (importMode) {
-            builder.add(BytecodeUtils.getClassName(name));
+            builder.add(ByteCodeUtils.getClassName(name));
         } else {
-            builder.add(BytecodeUtils.getQualifiedName(name));
+            builder.add(ByteCodeUtils.getQualifiedName(name));
         }
         builder.add(".");
         builder.addKeyword("class");

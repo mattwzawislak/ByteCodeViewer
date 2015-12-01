@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode.signature;
 
 import org.obicere.bcviewer.bytecode.Annotation;
-import org.obicere.bcviewer.bytecode.BytecodeElement;
+import org.obicere.bcviewer.bytecode.ByteCodeElement;
 import org.obicere.bcviewer.bytecode.Path;
 import org.obicere.bcviewer.bytecode.TypeAnnotation;
 
@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  */
-public abstract class AnnotationTarget extends BytecodeElement {
+public abstract class AnnotationTarget extends ByteCodeElement {
 
     private final Set<Annotation> annotations = new LinkedHashSet<>();
 

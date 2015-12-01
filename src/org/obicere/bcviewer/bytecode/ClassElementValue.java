@@ -1,7 +1,7 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  * @author Obicere
@@ -24,7 +24,7 @@ public class ClassElementValue extends ElementValue {
     @Override
     public void model(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final String type = BytecodeUtils.getQualifiedName(constantPool.getAsString(classInfoIndex));
+        final String type = ByteCodeUtils.getQualifiedName(constantPool.getAsString(classInfoIndex));
         builder.tab();
         builder.add(type + ".");
         builder.addKeyword("class");

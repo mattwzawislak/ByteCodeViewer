@@ -5,7 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 /**
  * @author Obicere
  */
-public abstract class StackMapFrame extends BytecodeElement {
+public abstract class StackMapFrame extends ByteCodeElement {
 
     private final int frameType;
 

@@ -5,7 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 /**
  * @author Obicere
  */
-public abstract class Constant extends BytecodeElement {
+public abstract class Constant extends ByteCodeElement {
 
     private static final int MAX_NAME_LENGTH = 11;
 

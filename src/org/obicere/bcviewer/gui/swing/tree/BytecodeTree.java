@@ -3,7 +3,7 @@ package org.obicere.bcviewer.gui.swing.tree;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.context.Domain;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
@@ -13,9 +13,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  */
-public class BytecodeTree extends JTree {
+public class ByteCodeTree extends JTree {
 
-    private BytecodeTreeNode root;
+    private ByteCodeTreeNode root;
 
     private final DefaultTreeModel model;
 
@@ -23,11 +23,11 @@ public class BytecodeTree extends JTree {
 
     private final Domain domain;
 
-    public BytecodeTree(final Domain domain) {
+    public ByteCodeTree(final Domain domain) {
         this.domain = domain;
         this.model = (DefaultTreeModel) getModel();
 
-        setCellRenderer(new BytecodeTreeCellRenderer());
+        setCellRenderer(new ByteCodeTreeCellRenderer());
         addTreeSelectionListener(e -> {
 
             final TreePath path = e.getPath();
@@ -54,8 +54,8 @@ public class BytecodeTree extends JTree {
     }
 
     public void addClass(final ClassFile file, final int accessFlags) {
-        final String className = BytecodeUtils.getClassName(file.getName());
-        final String packageName = BytecodeUtils.getPackage(file.getName());
+        final String className = ByteCodeUtils.getClassName(file.getName());
+        final String packageName = ByteCodeUtils.getPackage(file.getName());
 
         try {
             if (root == null) {
@@ -65,8 +65,8 @@ public class BytecodeTree extends JTree {
             }
 
             addRemoveLock.lock();
-            final BytecodeTreeNode possiblePackage = getPackage(packageName);
-            final BytecodeTreeNode absolutePackage;
+            final ByteCodeTreeNode possiblePackage = getPackage(packageName);
+            final ByteCodeTreeNode absolutePackage;
             if (possiblePackage == null) {
                 absolutePackage = addPackage(packageName);
             } else {
@@ -76,7 +76,7 @@ public class BytecodeTree extends JTree {
             if (hasChildByName(absolutePackage, className)) {
                 return;
             }
-            final BytecodeTreeNode node = BytecodeTreeNode.buildNode(domain, file, accessFlags);
+            final ByteCodeTreeNode node = ByteCodeTreeNode.buildNode(domain, file, accessFlags);
 
             model.insertNodeInto(node, absolutePackage, absolutePackage.getIndexFor(node));
             expandPath(new TreePath(root.getPath()));
@@ -85,13 +85,13 @@ public class BytecodeTree extends JTree {
         }
     }
 
-    private BytecodeTreeNode addPackage(final String name) {
+    private ByteCodeTreeNode addPackage(final String name) {
         final String[] split = name.split("\\.");
-        BytecodeTreeNode root = this.root;
+        ByteCodeTreeNode root = this.root;
 
         int i = 0;
         while (i < split.length) {
-            final BytecodeTreeNode node = getPackagePart(root, split[i]);
+            final ByteCodeTreeNode node = getPackagePart(root, split[i]);
             if (node == null) {
                 break;
             }
@@ -104,26 +104,26 @@ public class BytecodeTree extends JTree {
         return root;
     }
 
-    private BytecodeTreeNode addPackagePart(final BytecodeTreeNode node, final String name) {
+    private ByteCodeTreeNode addPackagePart(final ByteCodeTreeNode node, final String name) {
         if (hasChildByName(node, name)) {
             return null;
         }
-        final BytecodeTreeNode packageNode = createPackagePart(name);
+        final ByteCodeTreeNode packageNode = createPackagePart(name);
 
         model.insertNodeInto(packageNode, node, node.getIndexFor(packageNode));
 
         return packageNode;
     }
 
-    private BytecodeTreeNode createPackagePart(final String name) {
+    private ByteCodeTreeNode createPackagePart(final String name) {
         final Icons icons = domain.getIcons();
-        return new BytecodeTreeNode(icons.getIcon(Icons.ICON_PACKAGE), icons.getIcon(Icons.ICON_PACKAGE_DISABLED), name, true);
+        return new ByteCodeTreeNode(icons.getIcon(Icons.ICON_PACKAGE), icons.getIcon(Icons.ICON_PACKAGE_DISABLED), name, true);
     }
 
-    private boolean hasChildByName(final BytecodeTreeNode node, final String name) {
+    private boolean hasChildByName(final ByteCodeTreeNode node, final String name) {
         final Enumeration children = node.children();
         while (children.hasMoreElements()) {
-            final BytecodeTreeNode next = (BytecodeTreeNode) children.nextElement();
+            final ByteCodeTreeNode next = (ByteCodeTreeNode) children.nextElement();
             if (name.equals(next.getUserObject())) {
                 return true;
             }
@@ -131,7 +131,7 @@ public class BytecodeTree extends JTree {
         return false;
     }
 
-    public BytecodeTreeNode getPackage(final String name) {
+    public ByteCodeTreeNode getPackage(final String name) {
         try {
             addRemoveLock.lock();
             if (root == null) {
@@ -141,9 +141,9 @@ public class BytecodeTree extends JTree {
                 return root;
             }
             final String[] split = name.split("\\.");
-            BytecodeTreeNode root = this.root;
+            ByteCodeTreeNode root = this.root;
             for (final String item : split) {
-                final BytecodeTreeNode node = getPackagePart(root, item);
+                final ByteCodeTreeNode node = getPackagePart(root, item);
                 if (node == null) {
                     return null;
                 }
@@ -155,10 +155,10 @@ public class BytecodeTree extends JTree {
         }
     }
 
-    private BytecodeTreeNode getPackagePart(final BytecodeTreeNode node, final String name) {
+    private ByteCodeTreeNode getPackagePart(final ByteCodeTreeNode node, final String name) {
         final Enumeration children = node.children();
         while (children.hasMoreElements()) {
-            final BytecodeTreeNode next = (BytecodeTreeNode) children.nextElement();
+            final ByteCodeTreeNode next = (ByteCodeTreeNode) children.nextElement();
             if (name.equals(next.getUserObject())) {
                 return next;
             }

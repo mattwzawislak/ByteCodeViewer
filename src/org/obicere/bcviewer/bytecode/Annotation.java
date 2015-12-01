@@ -1,12 +1,12 @@
 package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 /**
  * @author Obicere
  */
-public class Annotation extends BytecodeElement {
+public class Annotation extends ByteCodeElement {
 
     private final int typeIndex;
 
@@ -31,7 +31,7 @@ public class Annotation extends BytecodeElement {
 
     @Override
     public void model(final DocumentBuilder builder) {
-        final String identifier = BytecodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
+        final String identifier = ByteCodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
         builder.addAnnotation(identifier);
         if (elementValuePairs.length > 0) {
             builder.add("(");

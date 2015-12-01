@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.ClassSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,7 +10,7 @@ import java.util.TreeSet;
 /**
  * @author Obicere
  */
-public class ClassFile extends BytecodeElement {
+public class ClassFile extends ByteCodeElement {
 
     private final int minorVersion;
 
@@ -128,7 +128,7 @@ public class ClassFile extends BytecodeElement {
             modelVersion(builder);
         }
 
-        if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
+        if (ByteCodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
         }
 
@@ -165,7 +165,7 @@ public class ClassFile extends BytecodeElement {
 
         final String name = getName();
 
-        final String thisPackage = BytecodeUtils.getPackage(name);
+        final String thisPackage = ByteCodeUtils.getPackage(name);
 
         final Set<String> imports = new TreeSet<>();
         getImports(constantPool, imports, thisPackage);
@@ -210,14 +210,14 @@ public class ClassFile extends BytecodeElement {
                     continue;
                 }
 
-                final String nextPackage = BytecodeUtils.getPackage(name);
+                final String nextPackage = ByteCodeUtils.getPackage(name);
                 // check to see if they are both null or both equal
                 // and also exclude java.lang packages
                 if (nextPackage.equals(thisPackage) || nextPackage.equals("java.lang")) {
                     continue;
                 }
 
-                imports.add(BytecodeUtils.getQualifiedName(name));
+                imports.add(ByteCodeUtils.getQualifiedName(name));
             }
         }
     }
@@ -256,7 +256,7 @@ public class ClassFile extends BytecodeElement {
 
     private void modelClassDeclaration(final DocumentBuilder builder, final int accessFlags) {
 
-        final String[] names = BytecodeUtils.getClassAccessNames(accessFlags);
+        final String[] names = ByteCodeUtils.getClassAccessNames(accessFlags);
 
         for (final String name : names) {
             builder.addKeyword(name);
@@ -265,9 +265,9 @@ public class ClassFile extends BytecodeElement {
 
         final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
         if (importMode) {
-            builder.add(BytecodeUtils.getClassName(getName()));
+            builder.add(ByteCodeUtils.getClassName(getName()));
         } else {
-            builder.add(BytecodeUtils.getQualifiedName(getName()));
+            builder.add(ByteCodeUtils.getQualifiedName(getName()));
         }
 
         final Set<SignatureAttribute> signatures = attributeSet.getAttributes(SignatureAttribute.class);
@@ -300,7 +300,7 @@ public class ClassFile extends BytecodeElement {
             ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
         }
 
-        if (BytecodeUtils.isInterface(accessFlags)) {
+        if (ByteCodeUtils.isInterface(accessFlags)) {
             signature.modelInterface(builder);
         } else {
             signature.modelClass(builder);

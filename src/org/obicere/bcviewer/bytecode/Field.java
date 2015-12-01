@@ -2,14 +2,14 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.signature.FieldSignature;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import java.util.Set;
 
 /**
  * @author Obicere
  */
-public class Field extends BytecodeElement {
+public class Field extends ByteCodeElement {
 
     private final int accessFlags;
 
@@ -48,7 +48,7 @@ public class Field extends BytecodeElement {
     @Override
     public void model(final DocumentBuilder builder) {
 
-        if (BytecodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
+        if (ByteCodeUtils.isSynthetic(accessFlags) || attributeSet.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
             builder.newLine();
         }
@@ -109,7 +109,7 @@ public class Field extends BytecodeElement {
 
     private void modelDeclaration(final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final String[] names = BytecodeUtils.getFieldAccessNames(accessFlags);
+        final String[] names = ByteCodeUtils.getFieldAccessNames(accessFlags);
 
         for (final String name : names) {
             builder.addKeyword(name + " ");

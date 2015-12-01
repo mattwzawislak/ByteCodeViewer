@@ -6,7 +6,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 /**
  * @author Obicere
  */
-public class LocalVariable extends BytecodeElement {
+public class LocalVariable extends ByteCodeElement {
 
     private final int startPC;
     private final int length;

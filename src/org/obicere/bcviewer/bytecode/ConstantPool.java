@@ -5,7 +5,7 @@ import org.obicere.bcviewer.dom.DocumentBuilder;
 /**
  * @author Obicere
  */
-public class ConstantPool extends BytecodeElement {
+public class ConstantPool extends ByteCodeElement {
 
     private final Constant[] constants;
 

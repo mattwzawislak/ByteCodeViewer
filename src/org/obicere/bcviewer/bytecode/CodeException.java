@@ -3,7 +3,7 @@ package org.obicere.bcviewer.bytecode;
 /**
  * @author Obicere
  */
-public class CodeException extends BytecodeElement {
+public class CodeException extends ByteCodeElement {
 
     private final int startPC;
     private final int endPC;

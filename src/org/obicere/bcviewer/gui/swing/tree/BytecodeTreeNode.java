@@ -4,7 +4,7 @@ import com.sun.istack.internal.NotNull;
 import org.obicere.bcviewer.bytecode.ClassFile;
 import org.obicere.bcviewer.configuration.Icons;
 import org.obicere.bcviewer.context.Domain;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -13,7 +13,7 @@ import java.util.Enumeration;
 /**
  * @author Obicere
  */
-public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparable<BytecodeTreeNode> {
+public class ByteCodeTreeNode extends DefaultMutableTreeNode implements Comparable<ByteCodeTreeNode> {
 
     private static final String[] ANNOTATION_ICONS = new String[]{
             Icons.ICON_ANNOTATION_DEFAULT,
@@ -48,11 +48,11 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
 
     private final boolean isPackage;
 
-    public BytecodeTreeNode(final Icon icon, final Icon disabledIcon, final Object object) {
+    public ByteCodeTreeNode(final Icon icon, final Icon disabledIcon, final Object object) {
         this(icon, disabledIcon, object, false);
     }
 
-    public BytecodeTreeNode(final Icon icon, final Icon disabledIcon, final Object object, final boolean isPackage) {
+    public ByteCodeTreeNode(final Icon icon, final Icon disabledIcon, final Object object, final boolean isPackage) {
         super(object);
         this.icon = icon;
         this.disabledIcon = disabledIcon;
@@ -71,13 +71,13 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
         return isPackage;
     }
 
-    public int getIndexFor(final BytecodeTreeNode node) {
+    public int getIndexFor(final ByteCodeTreeNode node) {
 
         final Enumeration children = children();
 
         int index = 0;
         while (children.hasMoreElements()) {
-            final BytecodeTreeNode child = (BytecodeTreeNode) children.nextElement();
+            final ByteCodeTreeNode child = (ByteCodeTreeNode) children.nextElement();
             if (node.compareTo(child) <= 0) {
                 return index;
             }
@@ -86,11 +86,11 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
         return index;
     }
 
-    public static BytecodeTreeNode buildNode(final Domain domain, final ClassFile classFile) {
+    public static ByteCodeTreeNode buildNode(final Domain domain, final ClassFile classFile) {
         return buildNode(domain, classFile, classFile.getAccessFlags());
     }
 
-    public static BytecodeTreeNode buildNode(final Domain domain, final ClassFile classFile, final int accessFlags) {
+    public static ByteCodeTreeNode buildNode(final Domain domain, final ClassFile classFile, final int accessFlags) {
         final String[] group = getIconsGroup(accessFlags);
         final int index = getVisibilityIndex(accessFlags);
         final String other = getDisabledIcon(accessFlags);
@@ -99,15 +99,15 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
         final Icon icon = icons.getIcon(group[index]);
         final Icon disabledIcon = icons.getIcon(other);
 
-        return new BytecodeTreeNode(icon, disabledIcon, BytecodeUtils.getClassName(classFile.getName()));
+        return new ByteCodeTreeNode(icon, disabledIcon, ByteCodeUtils.getClassName(classFile.getName()));
     }
 
     private static int getVisibilityIndex(final int accessFlags) {
-        if (BytecodeUtils.isPublic(accessFlags)) {
+        if (ByteCodeUtils.isPublic(accessFlags)) {
             return 1;
-        } else if (BytecodeUtils.isProtected(accessFlags)) {
+        } else if (ByteCodeUtils.isProtected(accessFlags)) {
             return 2;
-        } else if (BytecodeUtils.isPrivate(accessFlags)) {
+        } else if (ByteCodeUtils.isPrivate(accessFlags)) {
             return 3;
         } else {
             return 0;
@@ -115,11 +115,11 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
     }
 
     private static String getDisabledIcon(final int accessFlags) {
-        if (BytecodeUtils.isAnnotation(accessFlags)) {
+        if (ByteCodeUtils.isAnnotation(accessFlags)) {
             return Icons.ICON_ANNOTATION_DISABLED;
-        } else if (BytecodeUtils.isInterface(accessFlags)) {
+        } else if (ByteCodeUtils.isInterface(accessFlags)) {
             return Icons.ICON_INTERFACE_DISABLED;
-        } else if (BytecodeUtils.isEnum(accessFlags)) {
+        } else if (ByteCodeUtils.isEnum(accessFlags)) {
             return Icons.ICON_ENUM_DISABLED;
         } else {
             return Icons.ICON_CLASS_DISABLED;
@@ -127,11 +127,11 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
     }
 
     private static String[] getIconsGroup(final int accessFlags) {
-        if (BytecodeUtils.isAnnotation(accessFlags)) {
+        if (ByteCodeUtils.isAnnotation(accessFlags)) {
             return ANNOTATION_ICONS;
-        } else if (BytecodeUtils.isInterface(accessFlags)) {
+        } else if (ByteCodeUtils.isInterface(accessFlags)) {
             return INTERFACE_ICONS;
-        } else if (BytecodeUtils.isEnum(accessFlags)) {
+        } else if (ByteCodeUtils.isEnum(accessFlags)) {
             return ENUM_ICONS;
         } else {
             return CLASS_ICONS;
@@ -139,7 +139,7 @@ public class BytecodeTreeNode extends DefaultMutableTreeNode implements Comparab
     }
 
     @Override
-    public int compareTo(final @NotNull BytecodeTreeNode o) {
+    public int compareTo(final @NotNull ByteCodeTreeNode o) {
         if (o == null) {
             return 1;
         }

@@ -2,7 +2,7 @@ package org.obicere.bcviewer.bytecode;
 
 import org.obicere.bcviewer.bytecode.instruction.Instruction;
 import org.obicere.bcviewer.dom.DocumentBuilder;
-import org.obicere.bcviewer.util.BytecodeUtils;
+import org.obicere.bcviewer.util.ByteCodeUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -193,9 +193,9 @@ public class CodeAttribute extends Attribute {
             }
 
             if (importMode) {
-                builder.add(BytecodeUtils.getClassName(catchType));
+                builder.add(ByteCodeUtils.getClassName(catchType));
             } else {
-                builder.add(BytecodeUtils.getQualifiedName(catchType));
+                builder.add(ByteCodeUtils.getQualifiedName(catchType));
             }
 
             final int handlerPC = exception.getHandlerPC();
