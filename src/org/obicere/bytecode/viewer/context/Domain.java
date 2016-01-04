@@ -1,5 +1,6 @@
 package org.obicere.bytecode.viewer.context;
 
+import org.obicere.bytecode.core.reader.ClassFileReader;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.FileLoaderService;
@@ -7,7 +8,7 @@ import org.obicere.bytecode.viewer.configuration.ClassFileLoader;
 import org.obicere.bytecode.viewer.configuration.Icons;
 import org.obicere.bytecode.viewer.configuration.Paths;
 import org.obicere.bytecode.viewer.gui.GUIManager;
-import org.obicere.bytecode.core.reader.ClassFileReader;
+import org.obicere.bytecode.viewer.modeler.ModelerSet;
 import org.obicere.bytecode.viewer.settings.SettingsController;
 
 import java.util.logging.Logger;
@@ -27,8 +28,10 @@ public final class Domain {
     private final ClassModelerService classModelerService;
     private final FileLoaderService   fileLoaderService;
 
-    private final ClassFileLoader    classLoader;
-    private final ClassFileReader    classReader;
+    private final ClassFileLoader classLoader;
+    private final ClassFileReader classReader;
+    private final ModelerSet      modelers;
+
     private final GUIManager         guiManager;
     private final Icons              icons;
     private final Paths              paths;
@@ -41,6 +44,8 @@ public final class Domain {
 
         this.classLoader = new ClassFileLoader(this);
         this.classReader = new ClassFileReader();
+        this.modelers = new ModelerSet();
+
         this.guiManager = new GUIManager(this);
         this.icons = new Icons(this);
         this.paths = new Paths(this);
@@ -65,6 +70,10 @@ public final class Domain {
 
     public ClassFileReader getClassReader() {
         return classReader;
+    }
+
+    public ModelerSet getModelers() {
+        return modelers;
     }
 
     public GUIManager getGUIManager() {

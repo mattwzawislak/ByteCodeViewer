@@ -1,11 +1,14 @@
 package org.obicere.bytecode.viewer.dom;
 
+import org.obicere.bytecode.core.objects.ByteCodeElement;
 import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.dom.style.StyleConstants;
+import org.obicere.bytecode.viewer.modeler.Modeler;
+import org.obicere.bytecode.viewer.modeler.ModelerSet;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +36,7 @@ public class DocumentBuilder implements DomainAccess {
 
     public List<Block> build(final ClassInformation classInformation) {
         try {
-            final int tabSize = domain.getSettingsController().getSettings().getInteger("code.tabSize");
+            final int tabSize = domain.getSettingsController().getSettings().getInteger("code.tabSize", 4);
             this.request = new DocumentBuildRequest(tabSize, this, classInformation);
 
             // this utilizes the style constants, so we must lock on them
@@ -43,6 +46,14 @@ public class DocumentBuilder implements DomainAccess {
         } finally {
             properties.clear();
             request = null;
+        }
+    }
+
+    public <T extends ByteCodeElement> void model(final T element){
+        final ModelerSet modelers = domain.getModelers();
+        final Modeler<T> modeler = modelers.get(element.getIdentifier());
+        if(modeler != null){
+            modeler.model(element, this);
         }
     }
 
