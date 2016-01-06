@@ -9,6 +9,8 @@ import org.obicere.bytecode.core.objects.BooleanElementValue;
 import org.obicere.bytecode.core.objects.BootstrapMethod;
 import org.obicere.bytecode.core.objects.BootstrapMethodsAttribute;
 import org.obicere.bytecode.core.objects.ByteCodeElement;
+import org.obicere.bytecode.core.objects.ByteElementValue;
+import org.obicere.bytecode.core.objects.CharacterElementValue;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,6 +40,8 @@ public class ModelerSet {
         add(AnnotationElementValue.IDENTIFIER, new AnnotationElementValueModeler());
         add(ArrayElementValue.IDENTIFIER, new ArrayElementValueModeler());
         add(BooleanElementValue.IDENTIFIER, new BooleanElementValueModeler());
+        add(ByteElementValue.IDENTIFIER, new ByteElementValueModeler());
+        add(CharacterElementValue.IDENTIFIER, new CharacterElementValueModeler());
     }
 
     public void add(final String identifier, final Modeler<?> modeler) {
