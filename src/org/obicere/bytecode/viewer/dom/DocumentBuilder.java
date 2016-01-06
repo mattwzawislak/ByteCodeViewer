@@ -49,10 +49,10 @@ public class DocumentBuilder implements DomainAccess {
         }
     }
 
-    public <T extends ByteCodeElement> void model(final T element){
+    public <T extends ByteCodeElement> void model(final T element) {
         final ModelerSet modelers = domain.getModelers();
         final Modeler<T> modeler = modelers.get(element.getIdentifier());
-        if(modeler != null){
+        if (modeler != null) {
             modeler.model(element, this);
         }
     }
@@ -154,7 +154,7 @@ public class DocumentBuilder implements DomainAccess {
     }
 
     public void add(final char value) {
-        request.submit(StyleConstants.STRING, Character.toString(value));
+        request.submit(StyleConstants.STRING, "'" + Character.toString(value) + "'");
     }
 
     public void add(final int value) {
