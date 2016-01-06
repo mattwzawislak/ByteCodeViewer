@@ -1,5 +1,13 @@
 package org.obicere.bytecode.viewer.modeler;
 
+import org.obicere.bytecode.core.objects.Annotation;
+import org.obicere.bytecode.core.objects.AnnotationDefaultAttribute;
+import org.obicere.bytecode.core.objects.AnnotationElementValue;
+import org.obicere.bytecode.core.objects.AppendFrame;
+import org.obicere.bytecode.core.objects.ArrayElementValue;
+import org.obicere.bytecode.core.objects.BooleanElementValue;
+import org.obicere.bytecode.core.objects.BootstrapMethod;
+import org.obicere.bytecode.core.objects.BootstrapMethodsAttribute;
 import org.obicere.bytecode.core.objects.ByteCodeElement;
 
 import java.util.Collection;
@@ -12,12 +20,24 @@ import java.util.logging.Logger;
  */
 public class ModelerSet {
 
-    public static final String ANNOTATION_IDENTIFIER = "Annotation";
-
     private final HashMap<String, Modeler<?>> modelers = new HashMap<>();
 
     public ModelerSet() {
-        add(ANNOTATION_IDENTIFIER, new AnnotationModeler());
+        // Types
+        add(Annotation.IDENTIFIER, new AnnotationModeler());
+        add(BootstrapMethod.IDENTIFIER, new BootstrapMethodModeler());
+
+        // Attributes
+        add(AnnotationDefaultAttribute.IDENTIFIER, new AnnotationDefaultAttributeModeler());
+        add(BootstrapMethodsAttribute.IDENTIFIER, new BootstrapMethodsAttributeModeler());
+
+        // Frames
+        add(AppendFrame.IDENTIFIER, new AppendFrameModeler());
+
+        // Annotation element value pair types
+        add(AnnotationElementValue.IDENTIFIER, new AnnotationElementValueModeler());
+        add(ArrayElementValue.IDENTIFIER, new ArrayElementValueModeler());
+        add(BooleanElementValue.IDENTIFIER, new BooleanElementValueModeler());
     }
 
     public void add(final String identifier, final Modeler<?> modeler) {
