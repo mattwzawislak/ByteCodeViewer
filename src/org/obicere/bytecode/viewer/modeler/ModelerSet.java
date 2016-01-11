@@ -11,6 +11,9 @@ import org.obicere.bytecode.core.objects.BootstrapMethodsAttribute;
 import org.obicere.bytecode.core.objects.ByteCodeElement;
 import org.obicere.bytecode.core.objects.ByteElementValue;
 import org.obicere.bytecode.core.objects.CharacterElementValue;
+import org.obicere.bytecode.core.objects.ChopFrame;
+import org.obicere.bytecode.core.objects.ClassElementValue;
+import org.obicere.bytecode.core.objects.ClassFile;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,22 +29,25 @@ public class ModelerSet {
 
     public ModelerSet() {
         // Types
-        add(Annotation.IDENTIFIER, new AnnotationModeler());
-        add(BootstrapMethod.IDENTIFIER, new BootstrapMethodModeler());
+        addSafe(Annotation.IDENTIFIER, new AnnotationModeler());
+        addSafe(BootstrapMethod.IDENTIFIER, new BootstrapMethodModeler());
+        addSafe(ClassFile.IDENTIFIER, new ClassFileModeler());
 
         // Attributes
-        add(AnnotationDefaultAttribute.IDENTIFIER, new AnnotationDefaultAttributeModeler());
-        add(BootstrapMethodsAttribute.IDENTIFIER, new BootstrapMethodsAttributeModeler());
+        addSafe(AnnotationDefaultAttribute.IDENTIFIER, new AnnotationDefaultAttributeModeler());
+        addSafe(BootstrapMethodsAttribute.IDENTIFIER, new BootstrapMethodsAttributeModeler());
 
         // Frames
-        add(AppendFrame.IDENTIFIER, new AppendFrameModeler());
+        addSafe(AppendFrame.IDENTIFIER, new AppendFrameModeler());
+        addSafe(ChopFrame.IDENTIFIER, new ChopFrameModeler());
 
         // Annotation element value pair types
-        add(AnnotationElementValue.IDENTIFIER, new AnnotationElementValueModeler());
-        add(ArrayElementValue.IDENTIFIER, new ArrayElementValueModeler());
-        add(BooleanElementValue.IDENTIFIER, new BooleanElementValueModeler());
-        add(ByteElementValue.IDENTIFIER, new ByteElementValueModeler());
-        add(CharacterElementValue.IDENTIFIER, new CharacterElementValueModeler());
+        addSafe(AnnotationElementValue.IDENTIFIER, new AnnotationElementValueModeler());
+        addSafe(ArrayElementValue.IDENTIFIER, new ArrayElementValueModeler());
+        addSafe(BooleanElementValue.IDENTIFIER, new BooleanElementValueModeler());
+        addSafe(ByteElementValue.IDENTIFIER, new ByteElementValueModeler());
+        addSafe(CharacterElementValue.IDENTIFIER, new CharacterElementValueModeler());
+        addSafe(ClassElementValue.IDENTIFIER, new ClassElementValueModeler());
     }
 
     public void add(final String identifier, final Modeler<?> modeler) {
