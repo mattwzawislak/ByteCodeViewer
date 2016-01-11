@@ -14,6 +14,7 @@ import org.obicere.bytecode.core.objects.CharacterElementValue;
 import org.obicere.bytecode.core.objects.ChopFrame;
 import org.obicere.bytecode.core.objects.ClassElementValue;
 import org.obicere.bytecode.core.objects.ClassFile;
+import org.obicere.bytecode.core.objects.CodeAttribute;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class ModelerSet {
         // Attributes
         addSafe(AnnotationDefaultAttribute.IDENTIFIER, new AnnotationDefaultAttributeModeler());
         addSafe(BootstrapMethodsAttribute.IDENTIFIER, new BootstrapMethodsAttributeModeler());
+        addSafe(CodeAttribute.IDENTIFIER, new CodeAttributeModeler());
 
         // Frames
         addSafe(AppendFrame.IDENTIFIER, new AppendFrameModeler());
