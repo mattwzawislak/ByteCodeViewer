@@ -5,7 +5,7 @@ import org.obicere.bytecode.core.objects.ByteCodeElement;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Logger;   
+import java.util.logging.Logger;
 
 /**
  * @author Obicere
