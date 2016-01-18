@@ -10,6 +10,9 @@ import org.obicere.bytecode.core.objects.ConstantLong;
 import org.obicere.bytecode.core.objects.ConstantMethodHandle;
 import org.obicere.bytecode.core.objects.ConstantMethodType;
 import org.obicere.bytecode.core.objects.ConstantNameAndType;
+import org.obicere.bytecode.core.objects.ConstantPool;
+import org.obicere.bytecode.core.objects.ConstantString;
+import org.obicere.bytecode.core.objects.ConstantUtf8;
 import org.obicere.bytecode.core.objects.MethodRef;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.ConstantClassModeler;
@@ -22,6 +25,9 @@ import org.obicere.bytecode.viewer.modeler.ConstantLongModeler;
 import org.obicere.bytecode.viewer.modeler.ConstantMethodHandleModeler;
 import org.obicere.bytecode.viewer.modeler.ConstantMethodTypeModeler;
 import org.obicere.bytecode.viewer.modeler.ConstantNameAndTypeModeler;
+import org.obicere.bytecode.viewer.modeler.ConstantPoolModeler;
+import org.obicere.bytecode.viewer.modeler.ConstantStringModeler;
+import org.obicere.bytecode.viewer.modeler.ConstantUtf8Modeler;
 import org.obicere.bytecode.viewer.modeler.MethodRefModeler;
 import org.obicere.bytecode.viewer.modeler.ModelerSet;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
@@ -33,6 +39,8 @@ public class ProvideConstantModelers implements StartUpTask {
     public void call(final Domain domain) {
         final ModelerSet modelerSet = domain.getModelers();
 
+        modelerSet.add(ConstantPool.IDENTIFIER, new ConstantPoolModeler());
+
         modelerSet.add(ConstantClass.IDENTIFIER, new ConstantClassModeler());
         modelerSet.add(ConstantDouble.IDENTIFIER, new ConstantDoubleModeler());
         modelerSet.add(ConstantFieldRef.IDENTIFIER, new ConstantFieldRefModeler());
@@ -43,6 +51,8 @@ public class ProvideConstantModelers implements StartUpTask {
         modelerSet.add(ConstantMethodHandle.IDENTIFIER, new ConstantMethodHandleModeler());
         modelerSet.add(ConstantMethodType.IDENTIFIER, new ConstantMethodTypeModeler());
         modelerSet.add(ConstantNameAndType.IDENTIFIER, new ConstantNameAndTypeModeler());
+        modelerSet.add(ConstantString.IDENTIFIER, new ConstantStringModeler());
+        modelerSet.add(ConstantUtf8.IDENTIFIER, new ConstantUtf8Modeler());
 
         // ConstantMethodRef and ConstantInterfaceMethodRef are identical
         // and can be reused with a single modeler
