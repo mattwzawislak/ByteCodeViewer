@@ -109,38 +109,36 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
     }
 
     private void modelLocalVariables(final CodeAttribute element, final DocumentBuilder builder) {
-        final Collection<LocalVariable> locals = getLocalVariables(element);
+        final Collection<LocalVariableType> variableTypes = getLocalVariableTypes(element);
 
-        for (final LocalVariable local : locals) {
+        for (final LocalVariableType variableType : variableTypes) {
             builder.newLine();
             builder.add('[');
-            builder.add(element.getBlockName(element.getStart() + local.getStartPC()));
+            builder.add(element.getBlockName(element.getStart() + variableType.getStartPC()));
             builder.add(',');
-            builder.add(element.getBlockName(element.getStart() + local.getStartPC() + local.getIntervalLength()));
+            builder.add(element.getBlockName(element.getStart() + variableType.getStartPC() + variableType.getIntervalLength()));
             builder.add("] ");
-            builder.model(local);
+            builder.model(variableType);
         }
 
+        final Collection<LocalVariable> variables = getLocalVariables(element);
+
+        for (final LocalVariable variable : variables) {
+            builder.newLine();
+            builder.add('[');
+            builder.add(element.getBlockName(element.getStart() + variable.getStartPC()));
+            builder.add(',');
+            builder.add(element.getBlockName(element.getStart() + variable.getStartPC() + variable.getIntervalLength()));
+            builder.add("] ");
+            builder.model(variable);
+        }
     }
 
     private Collection<LocalVariable> getLocalVariables(final CodeAttribute element) {
         final AttributeSet attributeSet = element.getAttributeSet();
-        final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
         final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
 
-        // this assumes that shared local variables between lvtt and lvt
-        // share the same name value - as far as I can tell they always do
         final Map<Integer, LocalVariable> variables = new TreeMap<>();
-        if (lvttAttributes != null) {
-            for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
-                final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
-                for (final LocalVariableType type : table) {
-                    final int name = type.getNameIndex();
-
-                    variables.put(name, type);
-                }
-            }
-        }
         if (lvtAttributes != null) {
             for (final LocalVariableTableAttribute lvt : lvtAttributes) {
                 final LocalVariable[] table = lvt.getLocalVariableTable();
@@ -150,6 +148,24 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
                     if (variables.get(name) != null) {
                         continue;
                     }
+                    variables.put(name, type);
+                }
+            }
+        }
+        return variables.values();
+    }
+
+    private Collection<LocalVariableType> getLocalVariableTypes(final CodeAttribute element) {
+        final AttributeSet attributeSet = element.getAttributeSet();
+        final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
+
+        final Map<Integer, LocalVariableType> variables = new TreeMap<>();
+        if (lvttAttributes != null) {
+            for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
+                final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
+                for (final LocalVariableType type : table) {
+                    final int name = type.getNameIndex();
+
                     variables.put(name, type);
                 }
             }
