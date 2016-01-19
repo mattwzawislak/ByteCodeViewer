@@ -29,15 +29,16 @@ public class FieldModeler implements Modeler<Field> {
         modelDeclaration(element, builder);
     }
 
-    private void modelSynthetic(final Field field, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = field.getAttributeSet();
+    private void modelSynthetic(final Field element, final DocumentBuilder builder) {
+        final AttributeSet attributeSet = element.getAttributeSet();
         final SyntheticAttribute syntheticAttribute = attributeSet.getAttribute(SyntheticAttribute.class);
 
         if (syntheticAttribute != null) {
             builder.model(syntheticAttribute);
-        } else if (ByteCodeUtils.isSynthetic(field.getAccessFlags())) {
+        } else if (ByteCodeUtils.isSynthetic(element.getAccessFlags())) {
             builder.model(new SyntheticAttribute(0));
         }
+        builder.newLine();
     }
 
     private void modelAnnotations(final Field element, final DocumentBuilder builder) {

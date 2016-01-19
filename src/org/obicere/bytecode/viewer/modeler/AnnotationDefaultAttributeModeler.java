@@ -9,6 +9,7 @@ public class AnnotationDefaultAttributeModeler implements Modeler<AnnotationDefa
 
     @Override
     public void model(final AnnotationDefaultAttribute element, final DocumentBuilder builder) {
-        // do nothing
+        builder.addKeyword(" default ");
+        builder.model(element.getDefaultValue());
     }
 }

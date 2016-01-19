@@ -10,6 +10,8 @@ import org.obicere.bytecode.core.objects.InnerClassesAttribute;
 import org.obicere.bytecode.core.objects.LineNumberTableAttribute;
 import org.obicere.bytecode.core.objects.LocalVariableTableAttribute;
 import org.obicere.bytecode.core.objects.LocalVariableTypeTableAttribute;
+import org.obicere.bytecode.core.objects.RuntimeInvisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.RuntimeInvisibleParameterAnnotationsAttribute;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationDefaultAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.BootstrapMethodsAttributeModeler;
@@ -22,6 +24,8 @@ import org.obicere.bytecode.viewer.modeler.LineNumberTableAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.LocalVariableTableAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.LocalVariableTypeTableAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.ModelerSet;
+import org.obicere.bytecode.viewer.modeler.RuntimeInvisibleAnnotationsAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.RuntimeInvisibleParameterAnnotationsAttributeModeler;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
 
 /**
@@ -41,5 +45,7 @@ public class ProvideAttributeModelers implements StartUpTask {
         modelerSet.add(LineNumberTableAttribute.IDENTIFIER, new LineNumberTableAttributeModeler());
         modelerSet.add(LocalVariableTableAttribute.IDENTIFIER, new LocalVariableTableAttributeModeler());
         modelerSet.add(LocalVariableTypeTableAttribute.IDENTIFIER, new LocalVariableTypeTableAttributeModeler());
+        modelerSet.add(RuntimeInvisibleAnnotationsAttribute.IDENTIFIER, new RuntimeInvisibleAnnotationsAttributeModeler());
+        modelerSet.add(RuntimeInvisibleParameterAnnotationsAttribute.IDENTIFIER, new RuntimeInvisibleParameterAnnotationsAttributeModeler());
     }
 }
