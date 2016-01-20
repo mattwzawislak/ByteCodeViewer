@@ -12,6 +12,10 @@ import org.obicere.bytecode.core.objects.LocalVariableTableAttribute;
 import org.obicere.bytecode.core.objects.LocalVariableTypeTableAttribute;
 import org.obicere.bytecode.core.objects.RuntimeInvisibleAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.RuntimeInvisibleParameterAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.RuntimeInvisibleTypeAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.RuntimeVisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.RuntimeVisibleParameterAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationDefaultAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.BootstrapMethodsAttributeModeler;
@@ -26,6 +30,10 @@ import org.obicere.bytecode.viewer.modeler.LocalVariableTypeTableAttributeModele
 import org.obicere.bytecode.viewer.modeler.ModelerSet;
 import org.obicere.bytecode.viewer.modeler.RuntimeInvisibleAnnotationsAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.RuntimeInvisibleParameterAnnotationsAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.RuntimeInvisibleTypeAnnotationsAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.RuntimeVisibleAnnotationsAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.RuntimeVisibleParameterAnnotationsAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.RuntimeVisibleTypeAnnotationsAttributeModeler;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
 
 /**
@@ -47,5 +55,9 @@ public class ProvideAttributeModelers implements StartUpTask {
         modelerSet.add(LocalVariableTypeTableAttribute.IDENTIFIER, new LocalVariableTypeTableAttributeModeler());
         modelerSet.add(RuntimeInvisibleAnnotationsAttribute.IDENTIFIER, new RuntimeInvisibleAnnotationsAttributeModeler());
         modelerSet.add(RuntimeInvisibleParameterAnnotationsAttribute.IDENTIFIER, new RuntimeInvisibleParameterAnnotationsAttributeModeler());
+        modelerSet.add(RuntimeInvisibleTypeAnnotationsAttribute.IDENTIFIER, new RuntimeInvisibleTypeAnnotationsAttributeModeler());
+        modelerSet.add(RuntimeVisibleAnnotationsAttribute.IDENTIFIER, new RuntimeVisibleAnnotationsAttributeModeler());
+        modelerSet.add(RuntimeVisibleParameterAnnotationsAttribute.IDENTIFIER, new RuntimeVisibleParameterAnnotationsAttributeModeler());
+        modelerSet.add(RuntimeVisibleTypeAnnotationsAttribute.IDENTIFIER, new RuntimeVisibleTypeAnnotationsAttributeModeler());
     }
 }
