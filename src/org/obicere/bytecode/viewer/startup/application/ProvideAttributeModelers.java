@@ -20,6 +20,7 @@ import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.SourceDebugExtensionAttribute;
 import org.obicere.bytecode.core.objects.SourceFileAttribute;
 import org.obicere.bytecode.core.objects.StackMapTableAttribute;
+import org.obicere.bytecode.core.objects.SyntheticAttribute;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationDefaultAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.BootstrapMethodsAttributeModeler;
@@ -42,6 +43,7 @@ import org.obicere.bytecode.viewer.modeler.SignatureAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.SourceDebugExtensionAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.SourceFileAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.StackMapTableAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.SyntheticAttributeModeler;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
 
 /**
@@ -71,5 +73,6 @@ public class ProvideAttributeModelers implements StartUpTask {
         modelerSet.add(SourceDebugExtensionAttribute.IDENTIFIER, new SourceDebugExtensionAttributeModeler());
         modelerSet.add(SourceFileAttribute.IDENTIFIER, new SourceFileAttributeModeler());
         modelerSet.add(StackMapTableAttribute.IDENTIFIER, new StackMapTableAttributeModeler());
+        modelerSet.add(SyntheticAttribute.IDENTIFIER, new SyntheticAttributeModeler());
     }
 }
