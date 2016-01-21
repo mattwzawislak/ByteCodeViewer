@@ -12,6 +12,7 @@ import org.obicere.bytecode.core.objects.EnumElementValue;
 import org.obicere.bytecode.core.objects.FloatElementValue;
 import org.obicere.bytecode.core.objects.IntegerElementValue;
 import org.obicere.bytecode.core.objects.LongElementValue;
+import org.obicere.bytecode.core.objects.ShortElementValue;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationElementValueModeler;
 import org.obicere.bytecode.viewer.modeler.ArrayElementValueModeler;
@@ -26,6 +27,7 @@ import org.obicere.bytecode.viewer.modeler.FloatElementValueModeler;
 import org.obicere.bytecode.viewer.modeler.IntegerElementValueModeler;
 import org.obicere.bytecode.viewer.modeler.LongElementValueModeler;
 import org.obicere.bytecode.viewer.modeler.ModelerSet;
+import org.obicere.bytecode.viewer.modeler.ShortElementValueModeler;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
 
 /**
@@ -48,5 +50,6 @@ public class ProvideElementValueModelers implements StartUpTask {
         modelerSet.add(FloatElementValue.IDENTIFIER, new FloatElementValueModeler());
         modelerSet.add(IntegerElementValue.IDENTIFIER, new IntegerElementValueModeler());
         modelerSet.add(LongElementValue.IDENTIFIER, new LongElementValueModeler());
+        modelerSet.add(ShortElementValue.IDENTIFIER, new ShortElementValueModeler());
     }
 }

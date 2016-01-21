@@ -16,6 +16,10 @@ import org.obicere.bytecode.core.objects.RuntimeInvisibleTypeAnnotationsAttribut
 import org.obicere.bytecode.core.objects.RuntimeVisibleAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.RuntimeVisibleParameterAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.SignatureAttribute;
+import org.obicere.bytecode.core.objects.SourceDebugExtensionAttribute;
+import org.obicere.bytecode.core.objects.SourceFileAttribute;
+import org.obicere.bytecode.core.objects.StackMapTableAttribute;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationDefaultAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.BootstrapMethodsAttributeModeler;
@@ -34,6 +38,10 @@ import org.obicere.bytecode.viewer.modeler.RuntimeInvisibleTypeAnnotationsAttrib
 import org.obicere.bytecode.viewer.modeler.RuntimeVisibleAnnotationsAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.RuntimeVisibleParameterAnnotationsAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.RuntimeVisibleTypeAnnotationsAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.SignatureAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.SourceDebugExtensionAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.SourceFileAttributeModeler;
+import org.obicere.bytecode.viewer.modeler.StackMapTableAttributeModeler;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
 
 /**
@@ -59,5 +67,9 @@ public class ProvideAttributeModelers implements StartUpTask {
         modelerSet.add(RuntimeVisibleAnnotationsAttribute.IDENTIFIER, new RuntimeVisibleAnnotationsAttributeModeler());
         modelerSet.add(RuntimeVisibleParameterAnnotationsAttribute.IDENTIFIER, new RuntimeVisibleParameterAnnotationsAttributeModeler());
         modelerSet.add(RuntimeVisibleTypeAnnotationsAttribute.IDENTIFIER, new RuntimeVisibleTypeAnnotationsAttributeModeler());
+        modelerSet.add(SignatureAttribute.IDENTIFIER, new SignatureAttributeModeler());
+        modelerSet.add(SourceDebugExtensionAttribute.IDENTIFIER, new SourceDebugExtensionAttributeModeler());
+        modelerSet.add(SourceFileAttribute.IDENTIFIER, new SourceFileAttributeModeler());
+        modelerSet.add(StackMapTableAttribute.IDENTIFIER, new StackMapTableAttributeModeler());
     }
 }
