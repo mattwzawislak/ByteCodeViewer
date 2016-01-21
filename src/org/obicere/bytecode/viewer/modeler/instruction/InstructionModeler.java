@@ -7,7 +7,7 @@ import org.obicere.bytecode.viewer.modeler.Modeler;
 /**
  * @author Obicere
  */
-public class InstructionModeler<T extends Instruction> implements Modeler<T> {
+public abstract class InstructionModeler<T extends Instruction> implements Modeler<T> {
 
     private static final int MAX_NAME_LENGTH = 14;
 
@@ -17,4 +17,6 @@ public class InstructionModeler<T extends Instruction> implements Modeler<T> {
         builder.add(mnemonic);
         builder.padTabbed(mnemonic.length(), MAX_NAME_LENGTH);
     }
+
+    protected abstract void modelValue(final T element, final DocumentBuilder builder);
 }
