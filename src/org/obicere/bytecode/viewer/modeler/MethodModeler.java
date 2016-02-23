@@ -17,6 +17,10 @@ import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.SyntheticAttribute;
 import org.obicere.bytecode.core.objects.signature.MethodSignature;
+import org.obicere.bytecode.core.objects.signature.Parameters;
+import org.obicere.bytecode.core.objects.signature.Result;
+import org.obicere.bytecode.core.objects.signature.ThrowsSignatures;
+import org.obicere.bytecode.core.objects.signature.TypeParameters;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
@@ -89,15 +93,18 @@ public class MethodModeler implements Modeler<Method> {
             signature = SignatureAttribute.parseMethod(name);
         }
 
-        // TODO signature refactor
-        signature.modelTypeParameters(builder);
-        // static initializer has 'static' access flag which is the name
-        modelMethodName(element, methodName, signature, builder);
+        modelTypeParameters(signature, builder);
+        modelMethodName(methodName, signature, builder);
         modelParameters(element, signature, builder);
         modelExceptions(element, signature, builder);
     }
 
-    private void modelMethodName(final Method element, final String methodName, final MethodSignature signature, final DocumentBuilder builder) {
+    private void modelTypeParameters(final MethodSignature signature, final DocumentBuilder builder) {
+        final TypeParameters typeParameters = signature.getTypeParameters();
+        builder.model(typeParameters);
+    }
+
+    private void modelMethodName(final String methodName, final MethodSignature signature, final DocumentBuilder builder) {
 
         if (methodName.equals("<init>")) {
             // instead replace method name "<init>" with the class name
@@ -108,9 +115,10 @@ public class MethodModeler implements Modeler<Method> {
                 builder.add(ByteCodeUtils.getQualifiedName(builder.getClassFile().getName()));
             }
         } else {
-            // TODO signature refactor
             // set the name to the method name otherwise - no name for clinit
-            signature.modelReturnType(builder);
+            // static initializer has 'static' access flag which is the name
+            final Result result = signature.getResult();
+            builder.model(result);
             builder.add(" ");
             builder.add(methodName);
         }
@@ -120,28 +128,25 @@ public class MethodModeler implements Modeler<Method> {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         addAnnotationsSignature(element, signature);
+        final Parameters parameters = signature.getParameters();
+
         final MethodParametersAttribute parameterAttribute = attributeSet.getAttribute(MethodParametersAttribute.class);
         if (parameterAttribute != null) {
-            final Parameter[] parameters = parameterAttribute.getParameters();
-            // TODO signature refactor
-            signature.modelParameters(builder, parameters);
-        } else {
-            // TODO signature refactor
-            // otherwise, model un-named and unknown access parameters
-            signature.modelParameters(builder);
+            final Parameter[] names = parameterAttribute.getParameters();
+            parameters.setParameters(names);
         }
+        builder.model(parameters);
     }
 
     private void modelExceptions(final Method element, final MethodSignature signature, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final ConstantPool constantPool = builder.getConstantPool();
 
-        // TODO signature refactor
-        final boolean throwsSet = signature.modelThrowsSignatures(element, builder);
+        final ThrowsSignatures signatures = signature.getThrowsSignatures();
         final ExceptionsAttribute exceptionsAttribute = attributeSet.getAttribute(ExceptionsAttribute.class);
 
+        boolean first = true;
         if (exceptionsAttribute != null) {
-            boolean first = !throwsSet;
             for (final int index : exceptionsAttribute.getIndexTable()) {
                 if (first) {
                     builder.addKeyword(" throws ");
@@ -152,6 +157,15 @@ public class MethodModeler implements Modeler<Method> {
                 final String name = constantPool.getAsString(index);
                 builder.add(ByteCodeUtils.getQualifiedName(name));
             }
+        }
+
+        if (signatures.size() != 0) {
+            if (first) {
+                builder.addKeyword(" throws ");
+            } else {
+                builder.comma();
+            }
+            builder.model(signatures);
         }
     }
 

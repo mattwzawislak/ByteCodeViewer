@@ -5,8 +5,8 @@ import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.MethodRef;
 import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
-import org.obicere.bytecode.core.objects.signature.JavaTypeSignature;
 import org.obicere.bytecode.core.objects.signature.MethodSignature;
+import org.obicere.bytecode.core.objects.signature.Parameters;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
@@ -56,6 +56,9 @@ public class MethodRefModeler implements Modeler<MethodRef> {
             builder.add(name);
         }
 
+        final Parameters parameters = methodSignature.getParameters();
+        builder.model(parameters);
+        /*
         final JavaTypeSignature[] types = methodSignature.getParameters();
         // if there are less than 4 types, we can just inline and it
         // puts it all on one line and looks a bit better I think
@@ -89,6 +92,7 @@ public class MethodRefModeler implements Modeler<MethodRef> {
             builder.newLine();
         }
         builder.add(") ");
+        */
 
         // close the method
         builder.unindent();
