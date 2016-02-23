@@ -67,7 +67,8 @@ public class MethodModeler implements Modeler<Method> {
         }
 
         for (final String accessName : accessNames) {
-            builder.addKeyword(accessName + " ");
+            builder.addKeyword(accessName);
+            builder.pad(1);
         }
     }
 
@@ -216,8 +217,8 @@ public class MethodModeler implements Modeler<Method> {
         final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
         if (hasDefault != null) {
             builder.model(hasDefault);
+            builder.add(";");
         }
-        builder.add(";");
     }
 
     private void modelCodeBody(final Method element, final DocumentBuilder builder) {

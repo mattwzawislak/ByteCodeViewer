@@ -46,7 +46,7 @@ public class DocumentBuildRequest {
     }
 
     public List<Block> get() {
-        classFile.model(builder);
+        builder.model(classFile);
 
         return blocks;
     }

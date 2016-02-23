@@ -14,7 +14,7 @@ public abstract class InstructionModeler<T extends Instruction> implements Model
     @Override
     public void model(final T element, final DocumentBuilder builder) {
         final String mnemonic = element.getMnemonic();
-        builder.add(mnemonic);
+        builder.addKeyword(mnemonic);
         builder.padTabbed(mnemonic.length(), MAX_NAME_LENGTH);
     }
 

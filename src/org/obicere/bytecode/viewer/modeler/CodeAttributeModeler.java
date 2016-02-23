@@ -113,9 +113,9 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
         for (final LocalVariableType variableType : variableTypes) {
             builder.newLine();
-            builder.add('[');
+            builder.add("[");
             builder.add(element.getBlockName(element.getStart() + variableType.getStartPC()));
-            builder.add(',');
+            builder.add(", ");
             builder.add(element.getBlockName(element.getStart() + variableType.getStartPC() + variableType.getIntervalLength()));
             builder.add("] ");
             builder.model(variableType);
@@ -125,9 +125,9 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
         for (final LocalVariable variable : variables) {
             builder.newLine();
-            builder.add('[');
+            builder.add("[");
             builder.add(element.getBlockName(element.getStart() + variable.getStartPC()));
-            builder.add(',');
+            builder.add(", ");
             builder.add(element.getBlockName(element.getStart() + variable.getStartPC() + variable.getIntervalLength()));
             builder.add("] ");
             builder.model(variable);
