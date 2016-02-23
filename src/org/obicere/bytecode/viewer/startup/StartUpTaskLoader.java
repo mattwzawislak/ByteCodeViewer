@@ -5,6 +5,7 @@ import org.obicere.bytecode.viewer.startup.application.ProvideAttributeModelers;
 import org.obicere.bytecode.viewer.startup.application.ProvideElementValueModelers;
 import org.obicere.bytecode.viewer.startup.application.ProvideFrameModelers;
 import org.obicere.bytecode.viewer.startup.application.ProvideGroups;
+import org.obicere.bytecode.viewer.startup.application.ProvideInstructionModelers;
 import org.obicere.bytecode.viewer.startup.application.ProvideTypeModelers;
 
 /**
@@ -25,7 +26,7 @@ public class StartUpTaskLoader {
         queue.provide(new ProvideAttributeModelers());
         queue.provide(new ProvideElementValueModelers());
         queue.provide(new ProvideFrameModelers());
+        queue.provide(new ProvideInstructionModelers());
         queue.provide(new ProvideTypeModelers());
-
     }
 }

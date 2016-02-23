@@ -1,17 +1,19 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
 import org.obicere.bytecode.core.objects.CodeAttribute;
-import org.obicere.bytecode.core.objects.instruction.goto_w;
+import org.obicere.bytecode.core.objects.instruction.jsr;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
+ * @author Obicere
  */
-public class goto_wModeler extends InstructionModeler<goto_w> {
+public class jsrModeler extends InstructionModeler<jsr> {
     @Override
-    protected void modelValue(final goto_w element, final DocumentBuilder builder) {
+    protected void modelValue(final jsr element, final DocumentBuilder builder) {
         final int start = element.getStart();
 
-        final int offset = element.getBranchOffset();
+        // ensure to cast to signed 16-bit §6.5.jsr
+        final short offset = (short) element.getBranchOffset();
 
         final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
         final String line = code.getBlockName(start, offset);

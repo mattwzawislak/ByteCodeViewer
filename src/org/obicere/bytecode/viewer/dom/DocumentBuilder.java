@@ -51,7 +51,7 @@ public class DocumentBuilder implements DomainAccess {
 
     public <T extends ByteCodeElement> void model(final T element) {
         final ModelerSet modelers = domain.getModelers();
-        final Modeler<T> modeler = modelers.get(element.getIdentifier());
+        final Modeler<? super T> modeler = modelers.get(element.getIdentifier());
         if (modeler != null) {
             modeler.model(element, this);
         }
@@ -125,6 +125,8 @@ public class DocumentBuilder implements DomainAccess {
         if (text == null) {
             return "null";
         }
+        // TODO: full unicode replacement for unsupported characters?
+        // nah, cba
         text = text.replace("\\", "\\\\");
         text = text.replace("\"", "\\\"");
         text = text.replace("\b", "\\b");

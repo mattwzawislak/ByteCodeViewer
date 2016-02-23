@@ -1,14 +1,15 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
 import org.obicere.bytecode.core.objects.CodeAttribute;
-import org.obicere.bytecode.core.objects.instruction.goto_w;
+import org.obicere.bytecode.core.objects.instruction.jsr_w;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
+ * @author Obicere
  */
-public class goto_wModeler extends InstructionModeler<goto_w> {
+public class jsr_wModeler extends InstructionModeler<jsr_w> {
     @Override
-    protected void modelValue(final goto_w element, final DocumentBuilder builder) {
+    protected void modelValue(final jsr_w element, final DocumentBuilder builder) {
         final int start = element.getStart();
 
         final int offset = element.getBranchOffset();

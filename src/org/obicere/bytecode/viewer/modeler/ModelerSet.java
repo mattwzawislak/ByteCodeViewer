@@ -38,7 +38,7 @@ public class ModelerSet {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ByteCodeElement> Modeler<T> get(final String identifier) {
+    public <T extends ByteCodeElement> Modeler<? super T> get(final String identifier) {
         try {
             final Modeler<?> modeler = modelers.get(identifier);
             if (modeler == null) {
@@ -47,7 +47,7 @@ public class ModelerSet {
             }
 
             // unchecked, but should be covered by the ClassCastException
-            return (Modeler<T>) modeler;
+            return (Modeler<? super T>) modeler;
         } catch (final ClassCastException e) {
             // the modeler for the identifier of T cannot actually model
             // a value of T. Basically, whomever added that modeler had no
