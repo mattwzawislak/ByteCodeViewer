@@ -78,7 +78,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
     }
 
     private void modelLines(final CodeAttribute element, final DocumentBuilder builder) {
-        builder.setProperty("code", this);
+        builder.setProperty("code", element);
 
         final Iterable<CodeBlock> blocks = element.getBlocks();
         boolean first = true;
