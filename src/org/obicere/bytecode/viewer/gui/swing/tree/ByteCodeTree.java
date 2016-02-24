@@ -137,7 +137,7 @@ public class ByteCodeTree extends JTree {
             if (root == null) {
                 return null;
             }
-            if (name == null) {
+            if (name == null || name.isEmpty()) {
                 return root;
             }
             final String[] split = name.split("\\.");
