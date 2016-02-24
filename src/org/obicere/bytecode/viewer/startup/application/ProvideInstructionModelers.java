@@ -218,6 +218,7 @@ import org.obicere.bytecode.viewer.modeler.instruction.floadModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.fstoreModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.getfieldModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.getstaticModeler;
+import org.obicere.bytecode.viewer.modeler.instruction.gotoModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.goto_wModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.if_acmpeqModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.if_acmpneModeler;
@@ -237,6 +238,7 @@ import org.obicere.bytecode.viewer.modeler.instruction.ifnonnullModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.ifnullModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.iincModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.iloadModeler;
+import org.obicere.bytecode.viewer.modeler.instruction.instanceofModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.invokedynamicModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.invokeinterfaceModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.invokespecialModeler;
@@ -252,6 +254,7 @@ import org.obicere.bytecode.viewer.modeler.instruction.lloadModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.lookupswitchModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.lstoreModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.multianewarrayModeler;
+import org.obicere.bytecode.viewer.modeler.instruction.newModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.newarrayModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.putfieldModeler;
 import org.obicere.bytecode.viewer.modeler.instruction.putstaticModeler;
@@ -351,7 +354,7 @@ public class ProvideInstructionModelers implements StartUpTask {
         modelerSet.add(fsub.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(getfield.IDENTIFIER, new getfieldModeler());
         modelerSet.add(getstatic.IDENTIFIER, new getstaticModeler());
-        modelerSet.add(goto_.IDENTIFIER, EmptyInstructionModeler.getInstance());
+        modelerSet.add(goto_.IDENTIFIER, new gotoModeler());
         modelerSet.add(goto_w.IDENTIFIER, new goto_wModeler());
         modelerSet.add(i2b.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(i2c.IDENTIFIER, EmptyInstructionModeler.getInstance());
@@ -395,7 +398,7 @@ public class ProvideInstructionModelers implements StartUpTask {
         modelerSet.add(iload_3.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(imul.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(ineg.IDENTIFIER, EmptyInstructionModeler.getInstance());
-        modelerSet.add(instanceof_.IDENTIFIER, EmptyInstructionModeler.getInstance());
+        modelerSet.add(instanceof_.IDENTIFIER, new instanceofModeler());
         modelerSet.add(invokedynamic.IDENTIFIER, new invokedynamicModeler());
         modelerSet.add(invokeinterface.IDENTIFIER, new invokeinterfaceModeler());
         modelerSet.add(invokespecial.IDENTIFIER, new invokespecialModeler());
@@ -455,7 +458,7 @@ public class ProvideInstructionModelers implements StartUpTask {
         modelerSet.add(monitorexit.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(multianewarray.IDENTIFIER, new multianewarrayModeler());
         modelerSet.add(newarray.IDENTIFIER, new newarrayModeler());
-        modelerSet.add(new_.IDENTIFIER, EmptyInstructionModeler.getInstance());
+        modelerSet.add(new_.IDENTIFIER, new newModeler());
         modelerSet.add(nop.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(pop.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(pop2.IDENTIFIER, EmptyInstructionModeler.getInstance());
@@ -468,7 +471,8 @@ public class ProvideInstructionModelers implements StartUpTask {
         modelerSet.add(sipush.IDENTIFIER, new sipushModeler());
         modelerSet.add(swap.IDENTIFIER, EmptyInstructionModeler.getInstance());
         modelerSet.add(tableswitch.IDENTIFIER, new tableswitchModeler());
-        modelerSet.add(UnknownInstruction.IDENTIFIER, new UnknownInstructionModeler());
         modelerSet.add(wide.IDENTIFIER, new wideModeler());
+
+        modelerSet.add(UnknownInstruction.IDENTIFIER, new UnknownInstructionModeler());
     }
 }
