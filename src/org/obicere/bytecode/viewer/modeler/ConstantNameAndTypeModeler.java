@@ -5,6 +5,8 @@ import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.core.objects.signature.MethodSignature;
+import org.obicere.bytecode.core.objects.signature.Parameters;
+import org.obicere.bytecode.core.objects.signature.Result;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
@@ -21,16 +23,18 @@ public class ConstantNameAndTypeModeler implements Modeler<ConstantNameAndType> 
         final String signature = constantPool.getAsString(descriptorIndex);
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
         if (methodSignature != null) {
-            // TODO work out signature details
-            //methodSignature.modelReturnType(builder);
+            final Result result = methodSignature.getResult();
+            final Parameters parameters = methodSignature.getParameters();
+
+            builder.model(result);
             builder.add(" ");
             builder.add(name);
-            // TODO work out signature details
-            //methodSignature.modelParameters(builder);
+            builder.model(parameters);
         } else {
             final FieldSignature fieldSignature = SignatureAttribute.parseField(signature);
             if (fieldSignature != null) {
                 builder.model(fieldSignature);
+                builder.add(" ");
                 builder.add(name);
             }
         }

@@ -36,9 +36,6 @@ public class MethodRefModeler implements Modeler<MethodRef> {
 
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(descriptor);
 
-        builder.indent();
-        builder.newLine();
-
         if (!isConstructor && !isStatic) {
             builder.model(methodSignature);
             builder.pad(1);
@@ -58,43 +55,5 @@ public class MethodRefModeler implements Modeler<MethodRef> {
 
         final Parameters parameters = methodSignature.getParameters();
         builder.model(parameters);
-        /*
-        final JavaTypeSignature[] types = methodSignature.getParameters();
-        // if there are less than 4 types, we can just inline and it
-        // puts it all on one line and looks a bit better I think
-        // TODO: toggleable
-        final boolean inline = types.length < 4;
-
-        builder.add("(");
-        if (!inline) {
-            builder.indent();
-        }
-
-        boolean first = true;
-        for (final JavaTypeSignature type : types) {
-            if (!first) {
-                builder.comma();
-            }
-            if (!inline) {
-                builder.newLine();
-            }
-            builder.model(type);
-            first = false;
-        }
-
-        // close the parameters
-        if (!inline) {
-            builder.unindent();
-        }
-
-        // only break the () if there was a parameter
-        if (!inline && types.length > 0) {
-            builder.newLine();
-        }
-        builder.add(") ");
-        */
-
-        // close the method
-        builder.unindent();
     }
 }
