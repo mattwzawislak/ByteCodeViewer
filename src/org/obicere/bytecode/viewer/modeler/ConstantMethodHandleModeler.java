@@ -33,7 +33,7 @@ public class ConstantMethodHandleModeler implements Modeler<ConstantMethodHandle
         final Constant methodRef = constantPool.get(referenceIndex);
 
         builder.newLine();
-        if (referenceKind <= 0 || referenceKind >= HANDLES.length) {
+        if (referenceKind <= 0 || referenceKind > HANDLES.length) {
             final Logger logger = builder.getDomain().getLogger();
             logger.log(Level.WARNING, "Invalid reference kind for method handle: " + referenceKind);
             builder.add(referenceKind);
