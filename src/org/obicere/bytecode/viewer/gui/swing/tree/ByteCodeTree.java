@@ -39,7 +39,7 @@ public class ByteCodeTree extends JTree {
             for (int i = 1; i < userPath.length; i++) {
                 final Object userObject = userPath[i];
                 if (!first) {
-                    className.append('.');
+                    className.append('/');
                 }
                 className.append(userObject);
                 first = false;

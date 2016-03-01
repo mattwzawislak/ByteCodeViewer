@@ -1,5 +1,7 @@
 package org.obicere.bytecode.viewer.gui;
 
+import org.obicere.bytecode.viewer.context.ClassInformation;
+
 /**
  * @author Obicere
  */
@@ -13,7 +15,7 @@ public interface EditorPanelManager {
 
     public EditorPanel displayEditorPanel(final String className);
 
-    public EditorPanel addEditorPanel(final EditorPanel panel, final String className);
+    public void addClass(final ClassInformation panel);
 
     public EditorPanel createEditorPanel();
 

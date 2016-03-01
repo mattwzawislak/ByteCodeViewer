@@ -1,6 +1,10 @@
 package org.obicere.bytecode.viewer.gui.swing;
 
+import org.obicere.bytecode.core.objects.ClassFile;
+import org.obicere.bytecode.viewer.concurrent.ClassCallback;
+import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.configuration.Icons;
+import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.gui.EditorPanel;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
@@ -123,22 +127,33 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         final SwingEditorPanel cached = editorPanels.get(className);
         if (cached != null) {
             display(cached, className);
+            return cached;
+        }
+
+        final ClassInformation classInformation = domain.getClassStorage().retrieve(className);
+
+        if (classInformation != null) {
+            final ClassModelerService service = domain.getClassModelerService();
+
+            final SwingEditorPanel editorPanel = new SwingEditorPanel(domain);
+            service.postRequest(new ClassCallback(editorPanel), editorPanel.getBuilder(), classInformation);
+
+            editorPanels.put(className, editorPanel);
+
+            return editorPanel;
         }
         return null;
     }
 
     @Override
-    public EditorPanel addEditorPanel(final EditorPanel panel, final String className) {
-        final String qualifiedName = ByteCodeUtils.getQualifiedName(className);
-
-        editorPanels.put(qualifiedName, (SwingEditorPanel) panel);
-        tree.addClass(panel.getClassFile());
+    public void addClass(final ClassInformation classInformation) {
+        final ClassFile rootClass = classInformation.getRootClass();
+        final int accessFlags = rootClass.getAccessFlags();
+        tree.addClass(rootClass, accessFlags);
 
         if (tabbedPane.getTabCount() == 0) {
             contentLayout.show(editorArea, tabbedPaneName);
         }
-
-        return panel;
     }
 
     private void display(final SwingEditorPanel panel, final String className) {
