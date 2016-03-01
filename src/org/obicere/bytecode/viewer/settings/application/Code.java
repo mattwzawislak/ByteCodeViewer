@@ -7,7 +7,7 @@ import org.obicere.bytecode.viewer.settings.target.Setting;
 
 /**
  */
-public class CodeGroup implements Group {
+public class Code implements Group {
 
     private static final String NAME = "Code";
 

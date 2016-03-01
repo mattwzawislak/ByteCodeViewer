@@ -5,12 +5,14 @@ import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.dom.Block;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
+import org.obicere.bytecode.viewer.settings.Settings;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  */
@@ -18,23 +20,48 @@ public class ClassModelerService implements DomainAccess {
 
     private static final int THREAD_POOL_COUNT = 8;
 
-    private final ExecutorService classModelerExecutorService = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
-
     private final Domain domain;
+
+    private volatile ExecutorService service;
+
+    private final ReentrantLock serviceLock = new ReentrantLock();
 
     public ClassModelerService(final Domain domain) {
         this.domain = domain;
+
+        final Settings settings = domain.getSettingsController().getSettings();
+        final int size = settings.getInteger("thread.classModeler", THREAD_POOL_COUNT);
+        setSize(size);
+
     }
 
     public Future<List<Block>> postRequest(final ClassCallback callback, final DocumentBuilder builder, final ClassInformation information) {
-        final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
+        try {
+            final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
 
-        return classModelerExecutorService.submit(request);
+            serviceLock.lock();
+            return service.submit(request);
+        } finally {
+            serviceLock.unlock();
+        }
     }
 
     @Override
     public Domain getDomain() {
         return domain;
+    }
+
+    public void setSize(final int size) {
+        try {
+            if (size <= 0) {
+                throw new IllegalArgumentException("class loader pool size must positive");
+            }
+            serviceLock.lock();
+
+            service = Executors.newFixedThreadPool(size);
+        } finally {
+            serviceLock.unlock();
+        }
     }
 
     private class ClassModelRequest implements Callable<List<Block>> {

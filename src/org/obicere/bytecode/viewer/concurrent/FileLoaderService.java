@@ -6,6 +6,7 @@ import org.obicere.bytecode.viewer.gui.EditorPanel;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
+import org.obicere.bytecode.viewer.settings.Settings;
 import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -27,25 +29,50 @@ public class FileLoaderService implements DomainAccess {
 
     private static final int THREAD_POOL_COUNT = 2;
 
-    private final ExecutorService fileLoaderExecutorService = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
-
     private final Domain domain;
+
+    private volatile ExecutorService service;
+
+    private final ReentrantLock serviceLock = new ReentrantLock();
 
     public FileLoaderService(final Domain domain) {
         this.domain = domain;
+
+        final Settings settings = domain.getSettingsController().getSettings();
+        final int size = settings.getInteger("thread.fileLoader", THREAD_POOL_COUNT);
+        setSize(size);
     }
 
     public void postRequest(final Path... files) {
-        if (files == null) {
-            return;
+        try {
+            if (files == null || files.length == 0) {
+                return;
+            }
+            final FileLoadRequest newRequest = new FileLoadRequest(files);
+
+            serviceLock.lock();
+            service.submit(newRequest);
+        } finally {
+            serviceLock.unlock();
         }
-        final FileLoadRequest newRequest = new FileLoadRequest(files);
-        fileLoaderExecutorService.submit(newRequest);
     }
 
     @Override
     public Domain getDomain() {
         return domain;
+    }
+
+    public void setSize(final int size) {
+        try {
+            if (size <= 0) {
+                throw new IllegalArgumentException("class loader pool size must positive");
+            }
+            serviceLock.lock();
+
+            service = Executors.newFixedThreadPool(size);
+        } finally {
+            serviceLock.unlock();
+        }
     }
 
     private class FileLoadRequest implements Callable<Void> {
@@ -68,12 +95,12 @@ public class FileLoaderService implements DomainAccess {
                 }
                 if (file.isDirectory()) {
                     final File[] files = file.listFiles();
-                    if(files == null){
+                    if (files == null) {
                         continue;
                     }
                     final Path[] paths = new Path[files.length];
 
-                    for(int i =0; i < files.length; i++){
+                    for (int i = 0; i < files.length; i++) {
                         paths[i] = files[i].toPath();
                     }
                     postRequest(paths);

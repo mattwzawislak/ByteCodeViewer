@@ -2,8 +2,9 @@ package org.obicere.bytecode.viewer.startup.application;
 
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.settings.SettingsController;
-import org.obicere.bytecode.viewer.settings.application.CodeGroup;
-import org.obicere.bytecode.viewer.settings.application.EditorGroup;
+import org.obicere.bytecode.viewer.settings.application.Code;
+import org.obicere.bytecode.viewer.settings.application.Editor;
+import org.obicere.bytecode.viewer.settings.application.ThreadPoolSize;
 import org.obicere.bytecode.viewer.startup.StartUpTask;
 
 import java.io.BufferedReader;
@@ -24,8 +25,9 @@ public class ProvideGroups implements StartUpTask {
 
         final List<String> groupClassNames = new LinkedList<>();
 
-        groupClassNames.add(EditorGroup.class.getName());
-        groupClassNames.add(CodeGroup.class.getName());
+        groupClassNames.add(Editor.class.getName());
+        groupClassNames.add(Code.class.getName());
+        groupClassNames.add(ThreadPoolSize.class.getName());
 
         final String groupsFile = domain.getPaths().getSettingsGroupsFile();
         final File file = new File(groupsFile);

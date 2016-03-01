@@ -18,7 +18,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  */
-public class EditorGroup implements Group {
+public class Editor implements Group {
 
     private static final String NAME = "Editor";
 
@@ -56,7 +56,7 @@ public class EditorGroup implements Group {
             COLOR_ANTI_ALIASING
     };
 
-    public EditorGroup(final Domain domain) {
+    public Editor(final Domain domain) {
         setColorPropertyListener(PLAIN_COLOR_SETTING, StyleConstants.PLAIN);
         setColorPropertyListener(ANNOTATION_COLOR_SETTING, StyleConstants.ANNOTATION);
         setColorPropertyListener(COMMENT_COLOR_SETTING, StyleConstants.COMMENT);
