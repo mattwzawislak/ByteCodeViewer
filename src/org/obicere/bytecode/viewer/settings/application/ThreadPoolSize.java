@@ -1,6 +1,8 @@
 package org.obicere.bytecode.viewer.settings.application;
 
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
+import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
+import org.obicere.bytecode.viewer.concurrent.FileLoaderService;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.settings.Group;
 import org.obicere.bytecode.viewer.settings.target.IntegerSetting;
@@ -27,7 +29,17 @@ public class ThreadPoolSize implements Group {
     public ThreadPoolSize(final Domain domain) {
         CLASS_LOADER_SIZE.addPropertyChangeListener(e -> {
             final ClassLoaderService service = domain.getClassLoaderService();
-            service.setSize(CLASS_LOADER_SIZE.getValue());
+            service.setSize((int) e.getNewValue());
+        });
+
+        CLASS_MODELER_SIZE.addPropertyChangeListener(e -> {
+            final ClassModelerService service = domain.getClassModelerService();
+            service.setSize((int) e.getNewValue());
+        });
+
+        FILE_LOADER_SIZE.addPropertyChangeListener(e -> {
+            final FileLoaderService service = domain.getFileLoaderService();
+            service.setSize((int) e.getNewValue());
         });
     }
 

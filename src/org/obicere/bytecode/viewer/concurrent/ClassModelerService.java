@@ -8,10 +8,9 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  */
@@ -19,27 +18,21 @@ public class ClassModelerService implements DomainAccess {
 
     private static final int THREAD_POOL_COUNT = 8;
 
+    private static final String NAME = "classModeler";
+
     private final Domain domain;
 
-    private volatile ExecutorService service;
-
-    private final ReentrantLock serviceLock = new ReentrantLock();
+    private final ThreadPoolExecutor service;
 
     public ClassModelerService(final Domain domain) {
         this.domain = domain;
-        this.service = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
-
+        this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
     public Future<List<Block>> postRequest(final ClassCallback callback, final DocumentBuilder builder, final ClassInformation information) {
-        try {
-            final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
+        final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
 
-            serviceLock.lock();
-            return service.submit(request);
-        } finally {
-            serviceLock.unlock();
-        }
+        return service.submit(request);
     }
 
     @Override
@@ -48,16 +41,11 @@ public class ClassModelerService implements DomainAccess {
     }
 
     public void setSize(final int size) {
-        try {
-            if (size <= 0) {
-                throw new IllegalArgumentException("class loader pool size must positive");
-            }
-            serviceLock.lock();
-
-            service = Executors.newFixedThreadPool(size);
-        } finally {
-            serviceLock.unlock();
+        if (size <= 0) {
+            throw new IllegalArgumentException("class loader pool size must positive");
         }
+        service.setCorePoolSize(size);
+        service.setMaximumPoolSize(size);
     }
 
     private class ClassModelRequest implements Callable<List<Block>> {

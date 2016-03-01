@@ -15,9 +15,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -28,29 +27,24 @@ public class FileLoaderService implements DomainAccess {
 
     private static final int THREAD_POOL_COUNT = 2;
 
+    private static final String NAME = "fileLoader";
+
     private final Domain domain;
 
-    private volatile ExecutorService service;
-
-    private final ReentrantLock serviceLock = new ReentrantLock();
+    private final ThreadPoolExecutor service;
 
     public FileLoaderService(final Domain domain) {
         this.domain = domain;
-        this.service = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
+        this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
     public void postRequest(final Path... files) {
-        try {
-            if (files == null || files.length == 0) {
-                return;
-            }
-            final FileLoadRequest newRequest = new FileLoadRequest(files);
-
-            serviceLock.lock();
-            service.submit(newRequest);
-        } finally {
-            serviceLock.unlock();
+        if (files == null || files.length == 0) {
+            return;
         }
+        final FileLoadRequest newRequest = new FileLoadRequest(files);
+
+        service.submit(newRequest);
     }
 
     @Override
@@ -59,16 +53,11 @@ public class FileLoaderService implements DomainAccess {
     }
 
     public void setSize(final int size) {
-        try {
-            if (size <= 0) {
-                throw new IllegalArgumentException("class loader pool size must positive");
-            }
-            serviceLock.lock();
-
-            service = Executors.newFixedThreadPool(size);
-        } finally {
-            serviceLock.unlock();
+        if (size <= 0) {
+            throw new IllegalArgumentException("file loader pool size must positive");
         }
+        service.setCorePoolSize(size);
+        service.setMaximumPoolSize(size);
     }
 
     private class FileLoadRequest implements Callable<Void> {

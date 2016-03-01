@@ -7,10 +7,9 @@ import org.obicere.bytecode.viewer.context.DomainAccess;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  */
@@ -18,26 +17,21 @@ public class ClassLoaderService implements DomainAccess {
 
     private static final int THREAD_POOL_COUNT = 4;
 
+    private static final String NAME = "classLoader";
+
     private final Domain domain;
 
-    private volatile ExecutorService service;
-
-    private final ReentrantLock serviceLock = new ReentrantLock();
+    private final ThreadPoolExecutor service;
 
     public ClassLoaderService(final Domain domain) {
         this.domain = domain;
-        this.service = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
+        this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
     public Future<ClassInformation> postRequest(final ClassCallback callback, final Path file) {
-        try {
-            final FileLoadRequest request = new FileLoadRequest(callback, file);
+        final FileLoadRequest request = new FileLoadRequest(callback, file);
 
-            serviceLock.lock();
-            return service.submit(request);
-        } finally {
-            serviceLock.unlock();
-        }
+        return service.submit(request);
     }
 
     @Override
@@ -46,16 +40,11 @@ public class ClassLoaderService implements DomainAccess {
     }
 
     public void setSize(final int size) {
-        try {
-            if (size <= 0) {
-                throw new IllegalArgumentException("class loader pool size must positive");
-            }
-            serviceLock.lock();
-
-            service = Executors.newFixedThreadPool(size);
-        } finally {
-            serviceLock.unlock();
+        if (size <= 0) {
+            throw new IllegalArgumentException("class loader pool size must positive");
         }
+        service.setCorePoolSize(size);
+        service.setMaximumPoolSize(size);
     }
 
     private class FileLoadRequest implements Callable<ClassInformation> {
