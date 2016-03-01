@@ -231,12 +231,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
             ritaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));
         }
 
-        if (ByteCodeUtils.isInterface(accessFlags)) {
-            // TODO resolve this conflict
-            //signature.modelInterface(builder);
-        } else {
-            //signature.modelClass(builder);
-        }
+        builder.model(signature);
 
         builder.add(" {");
     }
@@ -247,7 +242,6 @@ public class ClassFileModeler implements Modeler<ClassFile> {
             return;
         }
         for (final Field field : fields) {
-            builder.newLine();
             builder.newLine();
 
             builder.model(field);
@@ -260,7 +254,6 @@ public class ClassFileModeler implements Modeler<ClassFile> {
             return;
         }
         for (final Method method : methods) {
-            builder.newLine();
             builder.newLine();
 
             builder.model(method);
