@@ -4,7 +4,6 @@ import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
-import org.obicere.bytecode.viewer.settings.Settings;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
@@ -27,10 +26,7 @@ public class ClassLoaderService implements DomainAccess {
 
     public ClassLoaderService(final Domain domain) {
         this.domain = domain;
-
-        final Settings settings = domain.getSettingsController().getSettings();
-        final int size = settings.getInteger("thread.classLoader", THREAD_POOL_COUNT);
-        setSize(size);
+        this.service = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
     }
 
     public Future<ClassInformation> postRequest(final ClassCallback callback, final Path file) {

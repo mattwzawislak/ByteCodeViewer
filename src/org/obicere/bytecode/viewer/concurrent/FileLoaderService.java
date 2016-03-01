@@ -6,7 +6,6 @@ import org.obicere.bytecode.viewer.gui.EditorPanel;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
-import org.obicere.bytecode.viewer.settings.Settings;
 import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.File;
@@ -37,10 +36,7 @@ public class FileLoaderService implements DomainAccess {
 
     public FileLoaderService(final Domain domain) {
         this.domain = domain;
-
-        final Settings settings = domain.getSettingsController().getSettings();
-        final int size = settings.getInteger("thread.fileLoader", THREAD_POOL_COUNT);
-        setSize(size);
+        this.service = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
     }
 
     public void postRequest(final Path... files) {

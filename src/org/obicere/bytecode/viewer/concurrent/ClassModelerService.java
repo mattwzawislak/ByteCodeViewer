@@ -5,7 +5,6 @@ import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.dom.Block;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
-import org.obicere.bytecode.viewer.settings.Settings;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -28,10 +27,7 @@ public class ClassModelerService implements DomainAccess {
 
     public ClassModelerService(final Domain domain) {
         this.domain = domain;
-
-        final Settings settings = domain.getSettingsController().getSettings();
-        final int size = settings.getInteger("thread.classModeler", THREAD_POOL_COUNT);
-        setSize(size);
+        this.service = Executors.newFixedThreadPool(THREAD_POOL_COUNT);
 
     }
 
