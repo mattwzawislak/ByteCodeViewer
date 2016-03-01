@@ -67,7 +67,6 @@ public class ClassModelerService implements DomainAccess {
 
                 callback.notifyCompletion(blocks);
 
-                System.out.println("Lazily modeled");
                 domain.getGUIManager().getFrameManager().getEditorManager().displayEditorPanel(information.getRootClass().getName());
                 return blocks;
             } catch (final Throwable throwable) {
