@@ -35,7 +35,9 @@ public class IntegerSettingPanel extends SettingPanel<Integer> {
         }
 
         final JLabel descriptor = new JLabel(setting.getDescriptor());
-        this.spinner = new JSpinner(new SpinnerNumberModel((int) controller.getSettings().getInteger(setting.getName()), minValue, maxValue, 1));
+        final int defaultValue = Math.max(controller.getSettings().getInteger(setting.getName(), 0), minValue);
+
+        this.spinner = new JSpinner(new SpinnerNumberModel(defaultValue, minValue, maxValue, 1));
 
         spinner.addChangeListener(e -> controller.getSettings().set(setting.getName(), spinner.getValue()));
 
