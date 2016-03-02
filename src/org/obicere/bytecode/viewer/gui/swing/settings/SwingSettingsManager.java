@@ -70,6 +70,7 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         frame.add(content);
         frame.pack();
+        frame.setLocationByPlatform(true);
     }
 
     private JPanel buildSettings() {
