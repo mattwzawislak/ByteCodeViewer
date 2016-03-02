@@ -11,8 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +22,7 @@ public class ProvideGroups implements StartUpTask {
     public void call(final Domain domain) {
         final Logger logger = domain.getLogger();
 
-        final List<String> groupClassNames = new LinkedList<>();
+        final TreeSet<String> groupClassNames = new TreeSet<>();
 
         groupClassNames.add(Editor.class.getName());
         groupClassNames.add(Code.class.getName());
@@ -38,12 +37,13 @@ public class ProvideGroups implements StartUpTask {
                 if (!file.createNewFile()) {
                     logger.log(Level.WARNING, "Failed to create group file: " + file.getAbsolutePath());
                 }
-            }
-            final BufferedReader reader = new BufferedReader(new FileReader(file));
+            } else {
+                final BufferedReader reader = new BufferedReader(new FileReader(file));
 
-            String next;
-            while ((next = reader.readLine()) != null) {
-                groupClassNames.add(next);
+                String next;
+                while ((next = reader.readLine()) != null) {
+                    groupClassNames.add(next);
+                }
             }
 
         } catch (final IOException e) {
