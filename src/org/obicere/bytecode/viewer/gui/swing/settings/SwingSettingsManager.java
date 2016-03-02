@@ -21,6 +21,7 @@ import org.obicere.bytecode.viewer.settings.target.StringSetting;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
@@ -82,6 +83,8 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
 
         final Set<Group> groups = controller.getGroups();
 
+        boolean addedAny = false;
+
         for (final Group group : groups) {
             final String name = group.getGroupName();
 
@@ -89,6 +92,10 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
             final JPanel settingPanel = new JPanel(verticalLayout);
             verticalLayout.setMaximizeOtherDimension(true);
 
+            final Setting<?>[] settings = group.getSettings();
+            if (settings.length == 0) {
+                continue;
+            }
             for (final Setting<?> setting : group.getSettings()) {
                 final JComponent settingModel = factory.model(setting);
                 if (settingModel != null) {
@@ -97,10 +104,16 @@ public class SwingSettingsManager implements DomainAccess, SettingsManager<JComp
             }
 
             tabbedPane.add(name, settingPanel);
+
+            addedAny = true;
         }
 
         content.setBorder(new EmptyBorder(5, 5, 5, 5));
-        content.add(tabbedPane, BorderLayout.CENTER);
+        if (!addedAny) {
+            content.add(new JLabel("No Settings Installed", JLabel.CENTER));
+        } else {
+            content.add(tabbedPane, BorderLayout.CENTER);
+        }
 
         return content;
     }
