@@ -27,7 +27,7 @@ public class PreviousRegexSearcher implements QuerySearcher {
         final QueryResult current = query.current();
 
         final int maxCount = document.getLineCount();
-        final int start = (current != null ? current.getStartLine() : maxCount);
+        final int start = (current != null ? current.getStartLine() : maxCount - 1);
         final int minimumIndex = (current != null ? current.getStart() : -1);
 
         final boolean ignoreCase = query.isIgnoreCase();
