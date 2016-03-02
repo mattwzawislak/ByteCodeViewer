@@ -14,15 +14,15 @@ public class PreviousQuerySearcher implements QuerySearcher {
         final QueryResult current = query.current();
         final String search = query.getInput();
 
-        final int start = (current != null ? current.getStartLine() : 0);
-        final int minimumIndex = (current != null ? current.getStart() : 0);
         final int maxCount = document.getLineCount();
+        final int start = (current != null ? current.getStartLine() : maxCount);
+        final int minimumIndex = (current != null ? current.getStart() : -1);
 
         final boolean ignoreCase = query.isIgnoreCase();
 
         // first check the line of the previous result for more results
         final Line thisLine = document.getLine(start);
-        final int searchIndex = findInLine(thisLine, search, ignoreCase, minimumIndex - 1);
+        final int searchIndex = findInLine(thisLine, search, ignoreCase, minimumIndex);
         if (searchIndex >= 0) {
             return new QueryResult(start, start, searchIndex, searchIndex + search.length());
         }
@@ -35,16 +35,16 @@ public class PreviousQuerySearcher implements QuerySearcher {
         }
 
         // loop back and start from the bottom of the document
-        final List<Line> loopBackLines = document.getLines(start, maxCount);
-        return scan(loopBackLines, search, ignoreCase, start);
+        final List<Line> loopBackLines = document.getLines(start + 1, maxCount);
+        return scan(loopBackLines, search, ignoreCase, start + 1);
     }
 
-    private QueryResult scan(final List<Line> lines, final String search, final boolean ignoreCase, final int startLine) {
+    private QueryResult scan(final List<Line> lines, final String search, final boolean ignoreCase, final int lineStart) {
         for (int i = lines.size() - 1; i >= 0; i--) {
             final Line line = lines.get(i);
             final int index = findInLine(line, search, ignoreCase, -1);
             if (index >= 0) {
-                final int lineIndex = i + startLine;
+                final int lineIndex = lineStart + i;
                 return new QueryResult(lineIndex, lineIndex, index, index + search.length());
             }
         }
@@ -60,6 +60,6 @@ public class PreviousQuerySearcher implements QuerySearcher {
         if (end == -1) {
             return nextText.lastIndexOf(search);
         }
-        return nextText.lastIndexOf(search, end);
+        return nextText.lastIndexOf(search, end -1);
     }
 }

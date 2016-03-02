@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  */
@@ -15,7 +16,13 @@ public class NextRegexSearcher implements QuerySearcher {
     @Override
     public QueryResult search(final Document document, final Query query) {
         final String search = query.getInput();
-        final Pattern pattern = Pattern.compile(search);
+        final Pattern pattern;
+
+        try {
+            pattern = Pattern.compile(search);
+        } catch (final PatternSyntaxException e) {
+            return null;
+        }
 
         final QueryResult current = query.current();
 
