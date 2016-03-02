@@ -16,9 +16,9 @@ public class ThreadPoolSize implements Group {
 
     private static final String SUFFIX = "thread.";
 
-    private static final IntegerSetting CLASS_LOADER_SIZE  = new IntegerSetting(SUFFIX + "classLoader", "Class Loading", 4, 1, 16);
-    private static final IntegerSetting CLASS_MODELER_SIZE = new IntegerSetting(SUFFIX + "classModeler", "Class Modeling", 8, 1, 32);
-    private static final IntegerSetting FILE_LOADER_SIZE   = new IntegerSetting(SUFFIX + "fileLoader", "File Loading", 2, 1, 32);
+    private static final IntegerSetting CLASS_LOADER_SIZE  = new IntegerSetting(SUFFIX + "classLoader", "Class Loading", 4, 1, 32);
+    private static final IntegerSetting CLASS_MODELER_SIZE = new IntegerSetting(SUFFIX + "classModeler", "Class Modeling", 4, 1, 32);
+    private static final IntegerSetting FILE_LOADER_SIZE   = new IntegerSetting(SUFFIX + "fileLoader", "File Loading", 4, 1, 32);
 
     private static final Setting<?>[] SETTINGS = new Setting[]{
             CLASS_LOADER_SIZE,
