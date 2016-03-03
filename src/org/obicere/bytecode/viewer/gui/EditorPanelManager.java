@@ -17,7 +17,7 @@ public interface EditorPanelManager {
 
     public void addClass(final ClassInformation panel);
 
-    public EditorPanel createEditorPanel();
+    public EditorPanel removeEditorPanel(final String className);
 
     public EditorPanel closeEditorPanel(final String className);
 

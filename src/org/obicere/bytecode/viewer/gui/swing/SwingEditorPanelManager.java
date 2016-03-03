@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.gui.swing;
 
 import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.viewer.concurrent.ClassCallback;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
+import org.obicere.bytecode.viewer.concurrent.RequestCallback;
 import org.obicere.bytecode.viewer.configuration.Icons;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
@@ -22,9 +22,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,24 +90,12 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     @Override
     public EditorPanel getEditorPanel(final String className) {
-        for (final Component component : tabbedPane.getComponents()) {
-            if (component instanceof EditorPanel) {
-                if (component.getName().equals(className)) {
-                    return (EditorPanel) component;
-                }
-            }
-        }
-        return null;
+        return editorPanels.get(className);
     }
 
     @Override
     public EditorPanel[] getEditorPanels() {
-        final ArrayList<EditorPanel> panels = new ArrayList<>(tabbedPane.getComponentCount());
-        for (final Component component : tabbedPane.getComponents()) {
-            if (component instanceof EditorPanel) {
-                panels.add((EditorPanel) component);
-            }
-        }
+        final Collection<? extends EditorPanel> panels = editorPanels.values();
         return panels.toArray(new EditorPanel[panels.size()]);
     }
 
@@ -121,24 +108,23 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     public EditorPanel displayEditorPanel(final String className) {
         final SwingEditorPanel panel = (SwingEditorPanel) getEditorPanel(className);
         if (panel != null) {
-            tabbedPane.setSelectedComponent(panel);
+            if (tabbedPane.indexOfComponent(panel) >= 0) {
+                tabbedPane.setSelectedComponent(panel);
+            } else {
+                display(panel, className);
+            }
             return panel;
-        }
-        final SwingEditorPanel cached = editorPanels.get(className);
-        if (cached != null) {
-            display(cached, className);
-            return cached;
         }
 
         final ClassInformation classInformation = domain.getClassStorage().retrieve(className);
 
         if (classInformation != null) {
-            final ClassModelerService service = domain.getClassModelerService();
 
             final SwingEditorPanel editorPanel = new SwingEditorPanel(domain);
-            service.postRequest(new ClassCallback(editorPanel), editorPanel.getBuilder(), classInformation);
-
             editorPanels.put(className, editorPanel);
+
+            final ClassModelerService service = domain.getClassModelerService();
+            service.postRequest(new RequestCallback(), editorPanel.getBuilder(), classInformation);
 
             return editorPanel;
         }
@@ -185,9 +171,18 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         });
     }
 
+
     @Override
-    public EditorPanel createEditorPanel() {
-        return new SwingEditorPanel(domain);
+    public EditorPanel removeEditorPanel(final String className) {
+        closeEditorPanel(className);
+        tree.removeClass(className);
+        final EditorPanel panel=  editorPanels.remove(className);
+
+        if(editorPanels.size() == 0){
+            contentLayout.show(editorArea, dropPaneName);
+        }
+
+        return panel;
     }
 
     @Override
