@@ -27,7 +27,7 @@ import java.util.logging.Level;
 /**
  * @author Obicere
  */
-public class SwingManager implements FrameManager {
+public class SwingFrameManager implements FrameManager {
 
     private final JFrame frame;
 
@@ -37,7 +37,7 @@ public class SwingManager implements FrameManager {
 
     private final Domain domain;
 
-    public SwingManager(final Domain domain) {
+    public SwingFrameManager(final Domain domain) {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
