@@ -5,9 +5,9 @@ import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.InnerClass;
 import org.obicere.bytecode.core.objects.InnerClassesAttribute;
-import org.obicere.bytecode.viewer.concurrent.ClassCallback;
-import org.obicere.bytecode.viewer.util.FileUtils;
 import org.obicere.bytecode.core.util.IndexedDataInputStream;
+import org.obicere.bytecode.viewer.concurrent.Callback;
+import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -58,7 +58,7 @@ public class ClassInformation implements DomainAccess {
         classes.clear();
     }
 
-    public ClassFile load(final ClassCallback callback, final Path fileSource) {
+    public ClassFile load(final Callback callback, final Path fileSource) {
         try {
             this.fileSource = fileSource;
             this.classBytes = Files.readAllBytes(fileSource);
@@ -66,12 +66,9 @@ public class ClassInformation implements DomainAccess {
             classes.put(rootClass.getName(), rootClass);
 
             loadInnerClasses(rootClass);
-            try {
-                return rootClass;
-            } finally {
-                callback.notifyInformationComplete(this);
-            }
+            return rootClass;
         } catch (final Throwable e) {
+
             callback.notifyThrowable(e);
             return null;
         }

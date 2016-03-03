@@ -1,5 +1,6 @@
 package org.obicere.bytecode.viewer.configuration;
 
+import org.obicere.bytecode.viewer.concurrent.RequestCallback;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.gui.FrameManager;
@@ -46,7 +47,7 @@ public class ClassFileLoader implements DomainAccess {
         for(int i = 0; i < files.length; i++){
             paths[i] = files[i].toPath();
         }
-        domain.getFileLoaderService().postRequest(paths);
+        domain.getFileLoaderService().postRequest(new RequestCallback(), paths);
     }
 
 
