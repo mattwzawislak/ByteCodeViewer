@@ -10,8 +10,6 @@ import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 public class ConstantClassModeler implements Modeler<ConstantClass> {
     @Override
     public void model(final ConstantClass element, final DocumentBuilder builder) {
-        builder.indent();
-        builder.newLine();
 
         final ConstantPool constantPool = builder.getConstantPool();
         final int nameIndex = element.getNameIndex();
@@ -26,6 +24,5 @@ public class ConstantClassModeler implements Modeler<ConstantClass> {
 
         builder.add(".");
         builder.addKeyword("class");
-        builder.unindent();
     }
 }

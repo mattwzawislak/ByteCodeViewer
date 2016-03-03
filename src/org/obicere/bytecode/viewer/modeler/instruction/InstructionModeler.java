@@ -9,13 +9,10 @@ import org.obicere.bytecode.viewer.modeler.Modeler;
  */
 public abstract class InstructionModeler<T extends Instruction> implements Modeler<T> {
 
-    private static final int MAX_NAME_LENGTH = 8;
-
     @Override
     public void model(final T element, final DocumentBuilder builder) {
         final String mnemonic = element.getMnemonic();
         builder.addKeyword(mnemonic);
-        builder.padTabbed(mnemonic.length(), MAX_NAME_LENGTH);
 
         modelValue(element, builder);
     }

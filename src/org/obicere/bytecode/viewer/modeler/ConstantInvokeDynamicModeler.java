@@ -13,9 +13,7 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 public class ConstantInvokeDynamicModeler implements Modeler<ConstantInvokeDynamic> {
     @Override
     public void model(final ConstantInvokeDynamic element, final DocumentBuilder builder) {
-
         final ConstantPool constantPool = builder.getConstantPool();
-        builder.indent();
 
         final int bootstrapMethodAttrIndex = element.getBootstrapMethodAttrIndex();
 
@@ -31,12 +29,9 @@ public class ConstantInvokeDynamicModeler implements Modeler<ConstantInvokeDynam
         } else {
             builder.add(bootstrapMethodAttrIndex);
         }
-        builder.newLine();
 
         final int nameAndTypeIndex = element.getNameAndTypeIndex();
         final Constant nameAndType = constantPool.get(nameAndTypeIndex);
         builder.model(nameAndType);
-
-        builder.unindent();
     }
 }

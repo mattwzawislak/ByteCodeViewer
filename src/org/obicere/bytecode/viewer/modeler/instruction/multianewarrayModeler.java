@@ -12,7 +12,6 @@ public class multianewarrayModeler extends InstructionModeler<multianewarray> {
         final int index = element.getIndex();
         final int dimensions = element.getDimensions();
 
-        builder.newLine();
         builder.tab();
         builder.add(index);
         builder.tab();

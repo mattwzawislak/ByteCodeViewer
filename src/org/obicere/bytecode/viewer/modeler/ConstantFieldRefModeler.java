@@ -15,8 +15,6 @@ public class ConstantFieldRefModeler implements Modeler<ConstantFieldRef> {
     public void model(final ConstantFieldRef element, final DocumentBuilder builder) {
 
         final ConstantPool constantPool = builder.getConstantPool();
-        builder.newLine();
-        builder.tab();
 
         final int nameAndTypeIndex = element.getNameAndTypeIndex();
         final int classIndex = element.getClassIndex();

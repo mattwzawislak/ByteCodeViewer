@@ -16,6 +16,7 @@ public class newModeler extends InstructionModeler<new_> {
         final ConstantPool constantPool = builder.getConstantPool();
         final Constant constant = constantPool.get(index);
 
+        builder.tab();
         builder.model(constant);
     }
 }

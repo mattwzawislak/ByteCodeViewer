@@ -7,6 +7,7 @@ import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.core.objects.signature.MethodSignature;
 import org.obicere.bytecode.core.objects.signature.Parameters;
+import org.obicere.bytecode.core.objects.signature.Result;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
@@ -37,7 +38,9 @@ public class MethodRefModeler implements Modeler<MethodRef> {
         final MethodSignature methodSignature = SignatureAttribute.parseMethod(descriptor);
 
         if (!isConstructor && !isStatic) {
-            builder.model(methodSignature);
+            final Result result = methodSignature.getResult();
+            builder.model(result);
+            //builder.model(methodSignature);
             builder.pad(1);
         }
 
