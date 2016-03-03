@@ -1,9 +1,10 @@
 package org.obicere.bytecode.viewer.gui.swing.editor;
 
 import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.viewer.concurrent.ClassCallback;
+import org.obicere.bytecode.viewer.concurrent.Callback;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
+import org.obicere.bytecode.viewer.concurrent.RequestCallback;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
@@ -13,15 +14,20 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.dom.awt.QuickWidthFont;
 import org.obicere.bytecode.viewer.dom.gui.swing.JDocumentArea;
 import org.obicere.bytecode.viewer.gui.EditorPanel;
+import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
+import org.obicere.bytecode.viewer.gui.GUIManager;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Obicere
@@ -91,9 +97,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     @Override
     public void setBlocks(final List<Block> blocks) {
         if (blocks == null) {
-            final String className = classInformation.getRootClass().getName();
-            domain.getLogger().log(Level.WARNING, "Failed to load class: " + className);
-            return;
+            throw new NullPointerException("blocks must be non-null");
         }
         documentArea.setDocument(new Document(blocks));
         repaint();
@@ -113,20 +117,42 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     public void reload() {
         final ClassModelerService service = domain.getClassModelerService();
 
-        final ClassCallback callback = new ClassCallback(this);
+        final RequestCallback callback = new RequestCallback();
 
         service.postRequest(callback, builder, classInformation);
     }
 
     @Override
     public void hardReload() {
-        classInformation.clear();
+        final GUIManager guiManager = domain.getGUIManager();
+        final FrameManager frameManager = guiManager.getFrameManager();
+        final EditorPanelManager editorManager = frameManager.getEditorManager();
+
+        final String className = classInformation.getRootClass().getName();
 
         final ClassLoaderService service = domain.getClassLoaderService();
 
-        final ClassCallback callback = new ClassCallback(this);
         final Path fileSource = classInformation.getFileSource();
+        final Callback callback = new Callback() {
+            @Override
+            public void notifyCompletion() {
+                Logger.getGlobal().log(Level.INFO, "Done hard reload " + className);
+                editorManager.displayEditorPanel(className);
+            }
 
+            @Override
+            public void notifyThrowable(final Throwable throwable) {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(null, "Failed to reload class: " + className, "Error loading class", JOptionPane.ERROR_MESSAGE);
+                });
+            }
+        };
+        Logger.getGlobal().log(Level.INFO, "Submitted hard reload request" + className);
+
+        // just to clear up a bit of memory before we submit the request
+        classInformation.clear();
+
+        editorManager.removeEditorPanel(className);
         service.postRequest(callback, fileSource);
     }
 
@@ -140,7 +166,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         this.searchVisible = searchVisible;
         searchPanel.setVisible(searchVisible);
 
-        if(searchVisible){
+        if (searchVisible) {
             searchPanel.requestFocus();
         }
 
