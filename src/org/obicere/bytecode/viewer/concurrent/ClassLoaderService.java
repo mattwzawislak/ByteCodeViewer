@@ -10,6 +10,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  */
@@ -28,7 +30,7 @@ public class ClassLoaderService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public Future<ClassInformation> postRequest(final ClassCallback callback, final Path file) {
+    public Future<ClassInformation> postRequest(final Callback callback, final Path file) {
         final FileLoadRequest request = new FileLoadRequest(callback, file);
 
         return service.submit(request);
@@ -49,26 +51,33 @@ public class ClassLoaderService implements DomainAccess {
 
     private class FileLoadRequest implements Callable<ClassInformation> {
 
-        private final ClassCallback callback;
-        private final Path          file;
+        private final Callback callback;
+        private final Path            file;
 
-        public FileLoadRequest(final ClassCallback callback, final Path file) {
+        public FileLoadRequest(final Callback callback, final Path file) {
             this.callback = callback;
             this.file = file;
         }
 
         @Override
-        public ClassInformation call() throws Exception {
-            final ClassInformation classInformation = new ClassInformation(domain);
+        public ClassInformation call() {
+            try {
+                final ClassInformation classInformation = new ClassInformation(domain);
 
-            classInformation.load(callback, file);
+                final ClassFile root = classInformation.load(callback, file);
 
-            final ClassFile root = classInformation.getRootClass();
-            domain.getClassStorage().publish(root.getName(), classInformation);
+                domain.getClassStorage().publish(root.getName(), classInformation);
+                domain.getGUIManager().getFrameManager().getEditorManager().addClass(classInformation);
 
-            domain.getGUIManager().getFrameManager().getEditorManager().addClass(classInformation);
 
-            return classInformation;
+                return classInformation;
+            } catch (final Throwable throwable) {
+                Logger.getGlobal().log(Level.SEVERE, "Error while loading class from file: " + file);
+                callback.notifyThrowable(throwable);
+                return null;
+            } finally {
+                callback.notifyCompletion();
+            }
         }
     }
 

@@ -5,12 +5,18 @@ import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.dom.Block;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
+import org.obicere.bytecode.viewer.gui.EditorPanel;
+import org.obicere.bytecode.viewer.gui.EditorPanelManager;
+import org.obicere.bytecode.viewer.gui.FrameManager;
+import org.obicere.bytecode.viewer.gui.GUIManager;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  */
@@ -29,7 +35,7 @@ public class ClassModelerService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public Future<List<Block>> postRequest(final ClassCallback callback, final DocumentBuilder builder, final ClassInformation information) {
+    public Future<List<Block>> postRequest(final Callback callback, final DocumentBuilder builder, final ClassInformation information) {
         final ClassModelRequest request = new ClassModelRequest(callback, builder, information);
 
         return service.submit(request);
@@ -50,11 +56,11 @@ public class ClassModelerService implements DomainAccess {
 
     private class ClassModelRequest implements Callable<List<Block>> {
 
-        private final ClassCallback    callback;
+        private final Callback  callback;
         private final DocumentBuilder  builder;
         private final ClassInformation information;
 
-        public ClassModelRequest(final ClassCallback callback, final DocumentBuilder builder, final ClassInformation information) {
+        public ClassModelRequest(final Callback callback, final DocumentBuilder builder, final ClassInformation information) {
             this.callback = callback;
             this.builder = builder;
             this.information = information;
@@ -62,16 +68,28 @@ public class ClassModelerService implements DomainAccess {
 
         @Override
         public List<Block> call() throws Exception {
+            final String className = information.getRootClass().getName();
+
             try {
                 final List<Block> blocks = builder.build(information);
 
-                callback.notifyCompletion(blocks);
+                final GUIManager guiManager = domain.getGUIManager();
+                final FrameManager frameManager = guiManager.getFrameManager();
+                final EditorPanelManager editorManager = frameManager.getEditorManager();
 
-                domain.getGUIManager().getFrameManager().getEditorManager().displayEditorPanel(information.getRootClass().getName());
+                final EditorPanel panel = editorManager.getEditorPanel(className);
+
+                panel.setBlocks(blocks);
+                panel.setClassInformation(information);
+
+                editorManager.displayEditorPanel(className);
                 return blocks;
             } catch (final Throwable throwable) {
+                Logger.getGlobal().log(Level.SEVERE, "Error while modeling class: " + className);
                 callback.notifyThrowable(throwable);
                 return null;
+            } finally {
+                callback.notifyCompletion();
             }
         }
     }

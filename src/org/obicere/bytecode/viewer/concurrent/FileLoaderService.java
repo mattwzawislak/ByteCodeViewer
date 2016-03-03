@@ -2,7 +2,6 @@ package org.obicere.bytecode.viewer.concurrent;
 
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
-import org.obicere.bytecode.viewer.gui.EditorPanel;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
@@ -18,6 +17,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -38,11 +38,11 @@ public class FileLoaderService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public void postRequest(final Path... files) {
+    public void postRequest(final Callback callback, final Path... files) {
         if (files == null || files.length == 0) {
             return;
         }
-        final FileLoadRequest newRequest = new FileLoadRequest(files);
+        final FileLoadRequest newRequest = new FileLoadRequest(callback, files);
 
         service.submit(newRequest);
     }
@@ -62,50 +62,57 @@ public class FileLoaderService implements DomainAccess {
 
     private class FileLoadRequest implements Callable<Void> {
 
-        private final Path[] paths;
+        private final Callback callback;
+        private final Path[]   paths;
 
-        public FileLoadRequest(final Path[] paths) {
+        public FileLoadRequest(final Callback callback, final Path[] paths) {
+            this.callback = callback;
             this.paths = paths;
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
             final GUIManager guiManager = domain.getGUIManager();
             final FrameManager frameManager = guiManager.getFrameManager();
             final EditorPanelManager editorPanels = frameManager.getEditorManager();
             for (final Path path : paths) {
-                final File file = path.toFile();
-                if (!file.exists() || !file.canRead()) {
-                    continue;
-                }
-                if (file.isDirectory()) {
-                    final File[] files = file.listFiles();
-                    if (files == null) {
+                try {
+                    final File file = path.toFile();
+                    if (!file.exists() || !file.canRead()) {
                         continue;
                     }
-                    final Path[] paths = new Path[files.length];
+                    if (file.isDirectory()) {
+                        final File[] files = file.listFiles();
+                        if (files == null) {
+                            continue;
+                        }
+                        final Path[] paths = new Path[files.length];
 
-                    for (int i = 0; i < files.length; i++) {
-                        paths[i] = files[i].toPath();
+                        for (int i = 0; i < files.length; i++) {
+                            paths[i] = files[i].toPath();
+                        }
+                        postRequest(callback, paths);
+                        continue;
                     }
-                    postRequest(paths);
-                    continue;
-                }
-                final String extension = FileUtils.getFileExtension(path.toString());
-                if (extension == null) {
-                    continue;
-                }
+                    final String extension = FileUtils.getFileExtension(path.toString());
+                    if (extension == null) {
+                        continue;
+                    }
 
-                switch (extension) {
-                    case ".class":
-                        loadClass(editorPanels, path);
-                        break;
-                    case ".zip":
-                    case ".jar":
-                        loadArchive(editorPanels, path);
+                    switch (extension) {
+                        case ".class":
+                            loadClass(editorPanels, path);
+                            break;
+                        case ".zip":
+                        case ".jar":
+                            loadArchive(editorPanels, path);
+                    }
+                } catch (final Throwable throwable) {
+                    callback.notifyThrowable(throwable);
+                    Logger.getGlobal().log(Level.SEVERE, "Error performing file I/O on: " + path);
                 }
             }
-
+            callback.notifyCompletion();
             return null;
         }
     }
@@ -120,8 +127,7 @@ public class FileLoaderService implements DomainAccess {
             editorPanels.displayEditorPanel(className);
             return;
         }
-        final EditorPanel panel = editorPanels.createEditorPanel();
-        service.postRequest(new ClassCallback(panel), path);
+        service.postRequest(new RequestCallback(), path);
     }
 
     private void loadArchive(final EditorPanelManager editorPanels, final Path path) {
