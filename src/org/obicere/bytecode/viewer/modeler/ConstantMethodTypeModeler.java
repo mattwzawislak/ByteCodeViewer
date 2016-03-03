@@ -14,7 +14,7 @@ public class ConstantMethodTypeModeler implements Modeler<ConstantMethodType> {
 
         final int descriptorIndex = element.getDescriptorIndex();
         final Constant constant = constantPool.get(descriptorIndex);
+
         builder.model(constant);
-        //builder.add(constant.toString(constantPool));
     }
 }
