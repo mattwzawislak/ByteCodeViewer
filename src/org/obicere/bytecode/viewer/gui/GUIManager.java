@@ -2,7 +2,7 @@ package org.obicere.bytecode.viewer.gui;
 
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
-import org.obicere.bytecode.viewer.gui.swing.SwingManager;
+import org.obicere.bytecode.viewer.gui.swing.SwingFrameManager;
 
 /**
  * @author Obicere
@@ -15,7 +15,7 @@ public class GUIManager implements DomainAccess {
 
     public GUIManager(final Domain domain) {
         this.domain = domain;
-        this.manager = new SwingManager(domain);
+        this.manager = new SwingFrameManager(domain);
     }
 
     public FrameManager getFrameManager() {
