@@ -23,7 +23,7 @@ public class ConstantFieldRefModeler implements Modeler<ConstantFieldRef> {
         final FieldSignature signature = SignatureAttribute.parseField(constantPool.getAsString(nameAndType.getDescriptorIndex()));
 
         builder.model(signature);
-        builder.add(" ");
+        builder.pad(1);
 
         final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
         if (importMode) {
