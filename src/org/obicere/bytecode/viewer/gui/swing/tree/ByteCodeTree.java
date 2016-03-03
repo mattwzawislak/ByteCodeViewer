@@ -85,6 +85,31 @@ public class ByteCodeTree extends JTree {
         }
     }
 
+    public void removeClass(final String name) {
+        final String packageName = ByteCodeUtils.getPackage(name);
+        final String className = ByteCodeUtils.getQualifiedName(name);
+
+        final ByteCodeTreeNode node = getPackage(packageName);
+        if (hasChildByName(node, name)) {
+            final Enumeration enumeration = node.children();
+            while (enumeration.hasMoreElements()) {
+                final ByteCodeTreeNode next = (ByteCodeTreeNode) enumeration.nextElement();
+                if (next.getUserObject().equals(className)) {
+                    node.remove(next);
+                }
+            }
+            collapseIfEmpty(node);
+        }
+    }
+
+    private void collapseIfEmpty(final ByteCodeTreeNode node) {
+        if (node.isLeaf()) {
+            final ByteCodeTreeNode parent = (ByteCodeTreeNode) node.getParent();
+            parent.remove(node);
+            collapseIfEmpty(node);
+        }
+    }
+
     private ByteCodeTreeNode addPackage(final String name) {
         final String[] split = name.split("\\.");
         ByteCodeTreeNode root = this.root;
