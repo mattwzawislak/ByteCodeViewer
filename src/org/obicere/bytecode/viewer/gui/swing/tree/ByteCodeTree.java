@@ -5,9 +5,12 @@ import org.obicere.bytecode.viewer.configuration.Icons;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
+import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,24 +31,47 @@ public class ByteCodeTree extends JTree {
         this.model = (DefaultTreeModel) getModel();
 
         setCellRenderer(new ByteCodeTreeCellRenderer());
-        addTreeSelectionListener(e -> {
+        JPopupMenu menu = new JPopupMenu();
 
-            final TreePath path = e.getPath();
-            final Object[] userPath = path.getPath();
-            final StringBuilder className = new StringBuilder();
-
-            boolean first = true;
-            // we start at 1 to avoid the empty root node
-            for (int i = 1; i < userPath.length; i++) {
-                final Object userObject = userPath[i];
-                if (!first) {
-                    className.append('/');
+        menu.add("Foo");
+        menu.add("Bar");
+        setComponentPopupMenu(menu);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    if(getSelectionPath() == null) {
+                        final TreePath path = getPathForLocation(e.getX(), e.getY());
+                        setSelectionPath(path);
+                    }
                 }
-                className.append(userObject);
-                first = false;
             }
 
-            domain.getGUIManager().getFrameManager().getEditorManager().displayEditorPanel(className.toString());
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                // to simulate double-click open for a file explorer
+                if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
+
+                    final TreePath path = getSelectionPath();
+                    final Object[] userPath = path.getPath();
+                    final StringBuilder className = new StringBuilder();
+
+                    boolean first = true;
+                    // we start at 1 to avoid the empty root node
+                    for (int i = 1; i < userPath.length; i++) {
+                        final Object userObject = userPath[i];
+                        if (!first) {
+                            className.append('/');
+                        }
+                        className.append(userObject);
+                        first = false;
+                    }
+
+                    domain.getGUIManager().getFrameManager().getEditorManager().displayEditorPanel(className.toString());
+                }
+            }
+        });
+        addTreeSelectionListener(e -> {
         });
     }
 
