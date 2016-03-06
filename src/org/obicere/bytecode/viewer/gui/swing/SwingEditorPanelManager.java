@@ -176,9 +176,10 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     public EditorPanel removeEditorPanel(final String className) {
         closeEditorPanel(className);
         tree.removeClass(className);
-        final EditorPanel panel=  editorPanels.remove(className);
+        final EditorPanel panel = editorPanels.remove(className);
 
-        if(editorPanels.size() == 0){
+        // TODO: change this to reflect if there are no loaded classes instead
+        if (editorPanels.size() == 0) {
             contentLayout.show(editorArea, dropPaneName);
         }
 

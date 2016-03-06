@@ -130,26 +130,20 @@ public class FileLoaderService implements DomainAccess {
         service.postRequest(new RequestCallback(), path);
     }
 
-    private void loadArchive(final EditorPanelManager editorPanels, final Path path) {
-        try {
-            final FileSystem system = FileSystems.newFileSystem(path, null);
+    private void loadArchive(final EditorPanelManager editorPanels, final Path path) throws IOException {
 
-            final ZipFile zip = new ZipFile(path.toFile());
-            final Enumeration<? extends ZipEntry> entries = zip.entries();
-            while (entries.hasMoreElements()) {
-                final ZipEntry entry = entries.nextElement();
-                final String name = entry.getName();
-                final String extension = FileUtils.getFileExtension(name);
-                if (extension != null && extension.equals(".class")) {
+        final ZipFile zip = new ZipFile(path.toFile());
+        final Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry entry = entries.nextElement();
+            final String name = entry.getName();
+            final String extension = FileUtils.getFileExtension(name);
+            if (extension != null && extension.equals(".class")) {
 
-                    final Path newPath = system.getPath(name);
-                    loadClass(editorPanels, newPath);
-                }
+                final FileSystem system = FileSystems.newFileSystem(path, null);
+                final Path newPath = system.getPath(name);
+                loadClass(editorPanels, newPath);
             }
-
-            system.close();
-        } catch (final IOException e) {
-            domain.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
     }
 }

@@ -145,6 +145,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
                 SwingUtilities.invokeLater(() -> {
                     JOptionPane.showMessageDialog(null, "Failed to reload class: " + className, "Error loading class", JOptionPane.ERROR_MESSAGE);
                 });
+                Logger.getGlobal().log(Level.SEVERE, throwable.getMessage(), throwable);
             }
         };
         Logger.getGlobal().log(Level.INFO, "Submitted hard reload request" + className);

@@ -40,7 +40,7 @@ public class ByteCodeTree extends JTree {
             @Override
             public void mousePressed(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    if(getSelectionPath() == null) {
+                    if (getSelectionPath() == null) {
                         final TreePath path = getPathForLocation(e.getX(), e.getY());
                         setSelectionPath(path);
                     }
@@ -53,6 +53,9 @@ public class ByteCodeTree extends JTree {
                 if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
 
                     final TreePath path = getSelectionPath();
+                    if (path == null) {
+                        return;
+                    }
                     final Object[] userPath = path.getPath();
                     final StringBuilder className = new StringBuilder();
 
@@ -70,8 +73,6 @@ public class ByteCodeTree extends JTree {
                     domain.getGUIManager().getFrameManager().getEditorManager().displayEditorPanel(className.toString());
                 }
             }
-        });
-        addTreeSelectionListener(e -> {
         });
     }
 

@@ -64,7 +64,7 @@ public class ClassLoaderService implements DomainAccess {
             try {
                 final ClassInformation classInformation = new ClassInformation(domain);
 
-                final ClassFile root = classInformation.load(callback, file);
+                final ClassFile root = classInformation.load(file);
 
                 domain.getClassStorage().publish(root.getName(), classInformation);
                 domain.getGUIManager().getFrameManager().getEditorManager().addClass(classInformation);
