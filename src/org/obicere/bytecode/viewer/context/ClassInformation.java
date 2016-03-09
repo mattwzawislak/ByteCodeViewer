@@ -28,16 +28,10 @@ public class ClassInformation implements DomainAccess {
 
     private ClassFile rootClass;
 
-    private byte[] classBytes;
-
     private final Domain domain;
 
     public ClassInformation(final Domain domain) {
         this.domain = domain;
-    }
-
-    public byte[] getClassBytes() {
-        return classBytes;
     }
 
     public Collection<ClassFile> getLoadedClasses() {
@@ -54,14 +48,13 @@ public class ClassInformation implements DomainAccess {
 
     public void clear() {
         rootClass = null;
-        classBytes = null;
 
         classes.clear();
     }
 
     public ClassFile load(final Path fileSource) throws IOException {
         this.fileSource = fileSource;
-        this.classBytes = Files.readAllBytes(fileSource);
+        final byte[] classBytes = Files.readAllBytes(fileSource);
         this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
         classes.put(rootClass.getName(), rootClass);
 
