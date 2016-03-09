@@ -1,5 +1,7 @@
 package org.obicere.bytecode.viewer.io;
 
+import org.obicere.bytecode.viewer.util.FileUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,5 +60,26 @@ public class ZipFileSource implements Source {
     @Override
     public String getPath() {
         return file + "!" + name;
+    }
+
+    @Override
+    public Source getSibling(final String fileName) {
+        try {
+            final ZipFile zipFile = new ZipFile(file);
+            final String parent = FileUtils.getParentName(fileName);
+            if (parent == null || parent.equals("")) {
+                return null;
+            }
+            final String sibling = parent + fileName;
+            final ZipEntry entry = zipFile.getEntry(sibling);
+
+            if (entry != null) {
+                return new ZipFileSource(file, sibling);
+            } else {
+                return null;
+            }
+        } catch (final IOException e) {
+            return null;
+        }
     }
 }

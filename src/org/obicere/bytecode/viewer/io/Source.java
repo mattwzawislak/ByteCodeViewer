@@ -12,4 +12,5 @@ public interface Source {
 
     public String getPath();
 
+    public Source getSibling(final String fileName);
 }

@@ -45,6 +45,13 @@ public class FileSource implements Source {
         return file;
     }
 
+    @Override
+    public Source getSibling(final String fileName) {
+        final File thisFile = open();
+        final File parent = thisFile.getParentFile();
+        return new FileSource(new File(parent, fileName).getAbsolutePath());
+    }
+
     private File open() {
         return new File(file);
     }
