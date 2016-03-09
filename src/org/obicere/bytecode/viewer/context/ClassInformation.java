@@ -6,11 +6,10 @@ import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.InnerClass;
 import org.obicere.bytecode.core.objects.InnerClassesAttribute;
 import org.obicere.bytecode.core.util.IndexedDataInputStream;
+import org.obicere.bytecode.viewer.io.Source;
 import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class ClassInformation implements DomainAccess {
 
     private final Map<String, ClassFile> classes = new HashMap<>();
 
-    private Path fileSource;
+    private Source fileSource;
 
     private ClassFile rootClass;
 
@@ -42,7 +41,7 @@ public class ClassInformation implements DomainAccess {
         return rootClass;
     }
 
-    public Path getFileSource() {
+    public Source getFileSource() {
         return fileSource;
     }
 
@@ -52,9 +51,9 @@ public class ClassInformation implements DomainAccess {
         classes.clear();
     }
 
-    public ClassFile load(final Path fileSource) throws IOException {
+    public ClassFile load(final Source fileSource) throws IOException {
         this.fileSource = fileSource;
-        final byte[] classBytes = Files.readAllBytes(fileSource);
+        final byte[] classBytes = fileSource.read();
         this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
         classes.put(rootClass.getName(), rootClass);
 
@@ -87,25 +86,29 @@ public class ClassInformation implements DomainAccess {
 
                     final String simpleName = FileUtils.getFileName(name);
 
-                    final Path innerFile = fileSource.resolveSibling(simpleName + ".class");
-                    final ClassFile innerClassFile = loadFrom(innerFile);
-                    if (innerClassFile == null) {
-                        Logger.getGlobal().log(Level.WARNING, "Could not load inner class: " + simpleName);
+                    final Source innerFile = fileSource.getSibling(simpleName + ".class");
+                    if (innerFile == null) {
+                        Logger.getGlobal().log(Level.WARNING, "Could not find inner class file: " + simpleName + " for class: " + file.getName());
                     } else {
-                        classes.put(name, innerClassFile);
+                        final ClassFile innerClassFile = loadFrom(innerFile);
+                        if (innerClassFile == null) {
+                            Logger.getGlobal().log(Level.WARNING, "Could not load inner class: " + simpleName + " for class: " + file.getName());
+                        } else {
+                            classes.put(name, innerClassFile);
 
-                        loadInnerClasses(innerClassFile);
+                            loadInnerClasses(innerClassFile);
+                        }
                     }
                 }
             }
         }
     }
 
-    private ClassFile loadFrom(final Path file) throws IOException {
-        if (!Files.exists(file)) {
+    private ClassFile loadFrom(final Source file) throws IOException {
+        if (!file.exists()) {
             return null;
         }
-        final byte[] bytes = Files.readAllBytes(file);
+        final byte[] bytes = file.read();
         return domain.getClassReader().read(new IndexedDataInputStream(bytes));
     }
 

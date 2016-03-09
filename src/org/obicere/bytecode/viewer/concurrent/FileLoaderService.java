@@ -5,13 +5,13 @@ import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
+import org.obicere.bytecode.viewer.io.FileSource;
+import org.obicere.bytecode.viewer.io.Source;
+import org.obicere.bytecode.viewer.io.ZipFileSource;
 import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -38,7 +38,7 @@ public class FileLoaderService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public void postRequest(final Callback callback, final Path... files) {
+    public void postRequest(final Callback callback, final File... files) {
         if (files == null || files.length == 0) {
             return;
         }
@@ -63,21 +63,17 @@ public class FileLoaderService implements DomainAccess {
     private class FileLoadRequest implements Callable<Void> {
 
         private final Callback callback;
-        private final Path[]   paths;
+        private final File[]   paths;
 
-        public FileLoadRequest(final Callback callback, final Path[] paths) {
+        public FileLoadRequest(final Callback callback, final File[] paths) {
             this.callback = callback;
             this.paths = paths;
         }
 
         @Override
         public Void call() {
-            final GUIManager guiManager = domain.getGUIManager();
-            final FrameManager frameManager = guiManager.getFrameManager();
-            final EditorPanelManager editorPanels = frameManager.getEditorManager();
-            for (final Path path : paths) {
+            for (final File file : paths) {
                 try {
-                    final File file = path.toFile();
                     if (!file.exists() || !file.canRead()) {
                         continue;
                     }
@@ -86,30 +82,26 @@ public class FileLoaderService implements DomainAccess {
                         if (files == null) {
                             continue;
                         }
-                        final Path[] paths = new Path[files.length];
-
-                        for (int i = 0; i < files.length; i++) {
-                            paths[i] = files[i].toPath();
-                        }
-                        postRequest(callback, paths);
+                        postRequest(callback, files);
                         continue;
                     }
-                    final String extension = FileUtils.getFileExtension(path.toString());
+                    final String name = file.getAbsolutePath();
+                    final String extension = FileUtils.getFileExtension(name);
                     if (extension == null) {
                         continue;
                     }
 
                     switch (extension) {
                         case ".class":
-                            loadClass(editorPanels, path);
+                            loadClass(file);
                             break;
                         case ".zip":
                         case ".jar":
-                            loadArchive(editorPanels, path);
+                            loadArchive(file);
                     }
                 } catch (final Throwable throwable) {
                     callback.notifyThrowable(throwable);
-                    Logger.getGlobal().log(Level.SEVERE, "Error performing file I/O on: " + path);
+                    Logger.getGlobal().log(Level.SEVERE, "Error performing file I/O on: " + file);
                 }
             }
             callback.notifyCompletion();
@@ -117,22 +109,17 @@ public class FileLoaderService implements DomainAccess {
         }
     }
 
-    private void loadClass(final EditorPanelManager editorPanels, final Path path) {
-        final ClassLoaderService service = domain.getClassLoaderService();
+    private void loadClass(final File path) {
 
         final String name = path.toString();
         final String className = FileUtils.getFileName(name);
-
-        if (editorPanels.hasEditorPanel(className)) {
-            editorPanels.displayEditorPanel(className);
-            return;
-        }
-        service.postRequest(new RequestCallback(), path);
+        requestLoad(new FileSource(path), className);
     }
 
-    private void loadArchive(final EditorPanelManager editorPanels, final Path path) throws IOException {
+    private void loadArchive(final File path) throws IOException {
+        final String zipFile = path.getAbsolutePath();
 
-        final ZipFile zip = new ZipFile(path.toFile());
+        final ZipFile zip = new ZipFile(path);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
             final ZipEntry entry = entries.nextElement();
@@ -140,10 +127,22 @@ public class FileLoaderService implements DomainAccess {
             final String extension = FileUtils.getFileExtension(name);
             if (extension != null && extension.equals(".class")) {
 
-                final FileSystem system = FileSystems.newFileSystem(path, null);
-                final Path newPath = system.getPath(name);
-                loadClass(editorPanels, newPath);
+                requestLoad(new ZipFileSource(zipFile, name), name);
             }
+        }
+    }
+
+    private void requestLoad(final Source source, final String className){
+        final GUIManager guiManager = domain.getGUIManager();
+        final FrameManager frameManager = guiManager.getFrameManager();
+        final EditorPanelManager editorPanels = frameManager.getEditorManager();
+
+        final ClassLoaderService service = domain.getClassLoaderService();
+
+        if (editorPanels.hasEditorPanel(className)) {
+            editorPanels.displayEditorPanel(className);
+        }     else {
+            service.postRequest(new RequestCallback(), source);
         }
     }
 }

@@ -172,6 +172,7 @@ public class Boot {
 
         // Console support
         final ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.ALL);
         consoleHandler.setFormatter(formatter);
 
         Logger.getGlobal().addHandler(consoleHandler);

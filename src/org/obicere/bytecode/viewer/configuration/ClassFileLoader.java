@@ -7,7 +7,6 @@ import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
 
 import java.io.File;
-import java.nio.file.Path;
 
 /**
  */
@@ -43,11 +42,7 @@ public class ClassFileLoader implements DomainAccess {
         if (files == null) {
             return;
         }
-        final Path[] paths = new Path[files.length];
-        for(int i = 0; i < files.length; i++){
-            paths[i] = files[i].toPath();
-        }
-        domain.getFileLoaderService().postRequest(new RequestCallback(), paths);
+        domain.getFileLoaderService().postRequest(new RequestCallback(), files);
     }
 
 

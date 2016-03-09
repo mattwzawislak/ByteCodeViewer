@@ -17,6 +17,7 @@ import org.obicere.bytecode.viewer.gui.EditorPanel;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
+import org.obicere.bytecode.viewer.io.Source;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,7 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,7 +132,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
         final ClassLoaderService service = domain.getClassLoaderService();
 
-        final Path fileSource = classInformation.getFileSource();
+        final Source fileSource = classInformation.getFileSource();
         final Callback callback = new Callback() {
             @Override
             public void notifyCompletion() {

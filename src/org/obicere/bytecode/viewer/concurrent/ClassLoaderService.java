@@ -4,8 +4,8 @@ import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
+import org.obicere.bytecode.viewer.io.Source;
 
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -30,7 +30,7 @@ public class ClassLoaderService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public Future<ClassInformation> postRequest(final Callback callback, final Path file) {
+    public Future<ClassInformation> postRequest(final Callback callback, final Source file) {
         final FileLoadRequest request = new FileLoadRequest(callback, file);
 
         return service.submit(request);
@@ -52,9 +52,9 @@ public class ClassLoaderService implements DomainAccess {
     private class FileLoadRequest implements Callable<ClassInformation> {
 
         private final Callback callback;
-        private final Path            file;
+        private final Source            file;
 
-        public FileLoadRequest(final Callback callback, final Path file) {
+        public FileLoadRequest(final Callback callback, final Source file) {
             this.callback = callback;
             this.file = file;
         }
