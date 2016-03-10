@@ -1,5 +1,6 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
+import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.instruction.tableswitch;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
@@ -9,6 +10,8 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 public class tableswitchModeler extends InstructionModeler<tableswitch> {
     @Override
     protected void modelValue(final tableswitch element, final DocumentBuilder builder) {
+        final CodeAttribute attribute = (CodeAttribute) builder.getProperty("code");
+
         final int defaultValue = element.getDefault();
         final int high = element.getHigh();
         final int low = element.getLow();
@@ -16,23 +19,37 @@ public class tableswitchModeler extends InstructionModeler<tableswitch> {
 
         final long bits = ((long) high << 32) | low;
 
-        builder.tab();
-        builder.add(defaultValue);
-        builder.tab();
-        builder.add(bits);
-        builder.tab();
+        builder.add(" {");
+        builder.indent();
 
-        builder.add("[");
-        boolean first = true;
+        for (int i = 0; i < jumpOffsets.length; i++) {
+            final long key = bits + i;
+            final int offset = jumpOffsets[i];
+            final String name = attribute.getBlockName(element.getStart(), offset);
 
-        for(final int jump : jumpOffsets){
-            if(!first){
-                builder.comma();
+            builder.newLine();
+            builder.add(key);
+            builder.add(":");
+            builder.tab();
+            if (name == null) {
+                builder.add(offset);
+            } else {
+                builder.add(name);
             }
-            builder.add(jump);
-            first = false;
         }
+        final String name = attribute.getBlockName(element.getStart(), defaultValue);
 
-        builder.add("]");
+        builder.newLine();
+        builder.addKeyword("default");
+        builder.add(":");
+        builder.tab();
+        if (name == null) {
+            builder.add(defaultValue);
+        } else {
+            builder.add(name);
+        }
+        builder.unindent();
+        builder.newLine();
+        builder.add("}");
     }
 }
