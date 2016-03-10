@@ -13,17 +13,14 @@ public class tableswitchModeler extends InstructionModeler<tableswitch> {
         final CodeAttribute attribute = (CodeAttribute) builder.getProperty("code");
 
         final int defaultValue = element.getDefault();
-        final int high = element.getHigh();
         final int low = element.getLow();
         final int[] jumpOffsets = element.getJumpOffsets();
-
-        final long bits = ((long) high << 32) | low;
 
         builder.add(" {");
         builder.indent();
 
         for (int i = 0; i < jumpOffsets.length; i++) {
-            final long key = bits + i;
+            final long key = low + i;
             final int offset = jumpOffsets[i];
             final String name = attribute.getBlockName(element.getStart(), offset);
 
