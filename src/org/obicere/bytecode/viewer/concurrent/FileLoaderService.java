@@ -2,9 +2,6 @@ package org.obicere.bytecode.viewer.concurrent;
 
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
-import org.obicere.bytecode.viewer.gui.EditorPanelManager;
-import org.obicere.bytecode.viewer.gui.FrameManager;
-import org.obicere.bytecode.viewer.gui.GUIManager;
 import org.obicere.bytecode.viewer.io.FileSource;
 import org.obicere.bytecode.viewer.io.Source;
 import org.obicere.bytecode.viewer.io.ZipFileSource;
@@ -110,10 +107,7 @@ public class FileLoaderService implements DomainAccess {
     }
 
     private void loadClass(final File path) {
-
-        final String name = path.toString();
-        final String className = FileUtils.getFileName(name);
-        requestLoad(new FileSource(path), className);
+        requestLoad(new FileSource(path));
     }
 
     private void loadArchive(final File path) throws IOException {
@@ -126,23 +120,14 @@ public class FileLoaderService implements DomainAccess {
             final String name = entry.getName();
             final String extension = FileUtils.getFileExtension(name);
             if (extension != null && extension.equals(".class")) {
-
-                requestLoad(new ZipFileSource(zipFile, name), name);
+                requestLoad(new ZipFileSource(zipFile, name));
             }
         }
     }
 
-    private void requestLoad(final Source source, final String className){
-        final GUIManager guiManager = domain.getGUIManager();
-        final FrameManager frameManager = guiManager.getFrameManager();
-        final EditorPanelManager editorPanels = frameManager.getEditorManager();
-
+    private void requestLoad(final Source source) {
         final ClassLoaderService service = domain.getClassLoaderService();
 
-        if (editorPanels.hasEditorPanel(className)) {
-            editorPanels.displayEditorPanel(className);
-        }     else {
-            service.postRequest(new RequestCallback(), source);
-        }
+        service.postRequest(new RequestCallback(), source);
     }
 }

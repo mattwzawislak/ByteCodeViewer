@@ -1,6 +1,7 @@
 package org.obicere.bytecode.viewer.concurrent;
 
 import org.obicere.bytecode.core.objects.ClassFile;
+import org.obicere.bytecode.viewer.configuration.FileHashStorage;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
@@ -30,8 +31,8 @@ public class ClassLoaderService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public Future<ClassInformation> postRequest(final Callback callback, final Source file) {
-        final FileLoadRequest request = new FileLoadRequest(callback, file);
+    public Future<ClassInformation> postRequest(final Callback callback, final Source source) {
+        final FileLoadRequest request = new FileLoadRequest(callback, source);
 
         return service.submit(request);
     }
@@ -52,27 +53,35 @@ public class ClassLoaderService implements DomainAccess {
     private class FileLoadRequest implements Callable<ClassInformation> {
 
         private final Callback callback;
-        private final Source            file;
+        private final Source   source;
 
-        public FileLoadRequest(final Callback callback, final Source file) {
+        public FileLoadRequest(final Callback callback, final Source source) {
             this.callback = callback;
-            this.file = file;
+            this.source = source;
         }
 
         @Override
         public ClassInformation call() {
             try {
-                final ClassInformation classInformation = new ClassInformation(domain);
+                final String sourceName = source.getPath();
+                final byte[] bytes = source.read();
 
-                final ClassFile root = classInformation.load(file);
+                final FileHashStorage storage = domain.getFileHashStorage();
+                final boolean present = storage.registerIfAbsent(sourceName, bytes);
+
+                if (present) {
+                    return null;
+                }
+
+                final ClassInformation classInformation = new ClassInformation(domain);
+                final ClassFile root = classInformation.load(source, bytes);
 
                 domain.getClassStorage().publish(root.getName(), classInformation);
                 domain.getGUIManager().getFrameManager().getEditorManager().addClass(classInformation);
 
-
                 return classInformation;
             } catch (final Throwable throwable) {
-                Logger.getGlobal().log(Level.SEVERE, "Error while loading class from file: " + file);
+                Logger.getGlobal().log(Level.SEVERE, "Error while loading class from file: " + source);
                 callback.notifyThrowable(throwable);
                 return null;
             } finally {

@@ -133,6 +133,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         final ClassLoaderService service = domain.getClassLoaderService();
 
         final Source fileSource = classInformation.getFileSource();
+
         final Callback callback = new Callback() {
             @Override
             public void notifyCompletion() {

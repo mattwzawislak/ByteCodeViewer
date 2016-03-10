@@ -51,10 +51,11 @@ public class ClassInformation implements DomainAccess {
         classes.clear();
     }
 
-    public ClassFile load(final Source fileSource) throws IOException {
+    public ClassFile load(final Source fileSource, final byte[] classBytes) throws IOException {
+        final IndexedDataInputStream stream = new IndexedDataInputStream(classBytes);
+
         this.fileSource = fileSource;
-        final byte[] classBytes = fileSource.read();
-        this.rootClass = domain.getClassReader().read(new IndexedDataInputStream(classBytes));
+        this.rootClass = domain.getClassReader().read(stream);
         classes.put(rootClass.getName(), rootClass);
 
         loadInnerClasses(rootClass);
