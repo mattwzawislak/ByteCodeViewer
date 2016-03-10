@@ -25,7 +25,7 @@ public abstract class Setting<T> {
         this.defaultValue = defaultValue;
     }
 
-    public abstract String getID();
+    public abstract String getIdentifier();
 
     public String getName() {
         return name;
