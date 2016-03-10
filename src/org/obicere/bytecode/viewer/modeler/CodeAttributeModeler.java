@@ -38,14 +38,14 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
     private void modelExceptions(final CodeAttribute element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode", false);
 
         final CodeException[] exceptions = element.getExceptions();
 
         for (final CodeException exception : exceptions) {
 
-            final String start = element.getBlockName(element.getStart() + exception.getStartPC());
-            final String end = element.getBlockName(element.getStart() + exception.getEndPC());
+            final String start = element.getBlockName(exception.getStartPC());
+            final String end = element.getBlockName(exception.getEndPC());
 
             builder.addKeyword("try");
             builder.add(" [" + start + "-" + end + "] ");
@@ -71,7 +71,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
             }
 
             final int handlerPC = exception.getHandlerPC();
-            final String handler = element.getBlockName(element.getStart() + handlerPC);
+            final String handler = element.getBlockName(handlerPC);
             builder.add(" " + handler);
             builder.newLine();
         }
@@ -112,11 +112,13 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         final Collection<LocalVariableType> variableTypes = getLocalVariableTypes(element);
 
         for (final LocalVariableType variableType : variableTypes) {
+            final int start = variableType.getStart();
+            final int length = variableType.getIntervalLength();
             builder.newLine();
             builder.add("[");
-            builder.add(element.getBlockName(element.getStart() + variableType.getStartPC()));
+            builder.add(element.getBlockName(start));
             builder.add(", ");
-            builder.add(element.getBlockName(element.getStart() + variableType.getStartPC() + variableType.getIntervalLength()));
+            builder.add(element.getBlockName(start, length));
             builder.add("] ");
             builder.model(variableType);
         }
@@ -126,9 +128,9 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         for (final LocalVariable variable : variables) {
             builder.newLine();
             builder.add("[");
-            builder.add(element.getBlockName(element.getStart() + variable.getStartPC()));
+            builder.add(element.getBlockName(variable.getStartPC()));
             builder.add(", ");
-            builder.add(element.getBlockName(element.getStart() + variable.getStartPC() + variable.getIntervalLength()));
+            builder.add(element.getBlockName(variable.getStartPC() + variable.getIntervalLength()));
             builder.add("] ");
             builder.model(variable);
         }
