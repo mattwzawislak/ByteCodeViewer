@@ -106,7 +106,7 @@ public class Boot {
     /**
      * Return the domain for the application. This is not the preferred
      * way
-     * to retrieve the domain. The only reason this should be used is if
+     * to getClass the domain. The only reason this should be used is if
      * the domain is otherwise inaccessible from an object that provides
      * access.
      * <p>

@@ -116,7 +116,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
             return panel;
         }
 
-        final ClassInformation classInformation = domain.getClassStorage().retrieve(className);
+        final ClassInformation classInformation = domain.getClassStorage().getClass(className);
 
         if (classInformation != null) {
 

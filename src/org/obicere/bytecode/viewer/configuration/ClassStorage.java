@@ -16,7 +16,7 @@ public class ClassStorage {
         cache.put(name, classInformation);
     }
 
-    public ClassInformation retrieve(final String name) {
+    public ClassInformation getClass(final String name) {
         return cache.get(name);
     }
 

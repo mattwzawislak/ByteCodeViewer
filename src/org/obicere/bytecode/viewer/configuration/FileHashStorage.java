@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Obicere
@@ -23,6 +24,8 @@ public class FileHashStorage {
 
     private HashingAlgorithm algorithm;
 
+    private final ReentrantLock lock = new ReentrantLock();
+
     public FileHashStorage() {
         addAlgorithm(MDHashingAlgorithm.create("MD5"));
         addAlgorithm(MDHashingAlgorithm.create("SHA-1"));
@@ -33,11 +36,11 @@ public class FileHashStorage {
         setAlgorithm(DEFAULT);
     }
 
-    public void remove(final String sourceName){
+    public void remove(final String sourceName) {
         cache.remove(sourceName);
     }
 
-    public boolean registerIfAbsent(final String sourceName, final byte[] bytes){
+    public boolean registerIfAbsent(final String sourceName, final byte[] bytes) {
         if (sourceName == null) {
             throw new NullPointerException("source name must be non-null");
         }
@@ -48,7 +51,7 @@ public class FileHashStorage {
         if (cached != null) {
             return true;
         }
-        final byte[] hash = algorithm.hash(bytes);
+        final byte[] hash = hash(bytes);
         cache.put(sourceName, hash);
         return false;
     }
@@ -60,7 +63,7 @@ public class FileHashStorage {
         if (bytes == null) {
             throw new NullPointerException("bytes must be non-null");
         }
-        final byte[] hash = algorithm.hash(bytes);
+        final byte[] hash = hash(bytes);
 
         cache.put(sourceName, hash);
     }
@@ -76,8 +79,17 @@ public class FileHashStorage {
         if (cached == null) {
             return false;
         }
-        final byte[] hash = algorithm.hash(bytes);
+        final byte[] hash = hash(bytes);
         return Arrays.equals(cached, hash);
+    }
+
+    private byte[] hash(final byte[] bytes) {
+        try {
+            lock.lock();
+            return algorithm.hash(bytes);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public String getAlgorithm() {
