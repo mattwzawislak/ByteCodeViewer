@@ -19,7 +19,7 @@ import java.util.List;
  * {@link ByteCodeUtils#getQualifiedName(String)}
  * as well as
  * {@link ByteCodeUtils#getClassName(String)},
- * including usages and pitfalls. There is also utility to retrieve
+ * including usages and pitfalls. There is also utility to getClass
  * package names. This of course just being an approximation at best.
  * <p>
  * These tools should be useful in providing Java source-like code. So
@@ -796,7 +796,7 @@ public class ByteCodeUtils {
     }
 
     /**
-     * Attempts to retrieve the full class name which includes outer
+     * Attempts to getClass the full class name which includes outer
      * classes. So for example, with the <code>"java/util/Map.Entry"</code>
      * class, this would return <code>"Map.Entry"</code> as the full class
      * name.

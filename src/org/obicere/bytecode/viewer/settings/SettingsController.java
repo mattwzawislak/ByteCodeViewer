@@ -128,7 +128,7 @@ public class SettingsController implements DomainAccess {
                     continue;
                 }
 
-                final Handle<?> handler = handleMap.get(setting.getID());
+                final Handle<?> handler = handleMap.get(setting.getIdentifier());
                 final String print = handler.encode(setValue);
                 if (print != null) {
                     output.put(key, print);
@@ -215,16 +215,18 @@ public class SettingsController implements DomainAccess {
     }
 
     private HashMap<String, Setting<?>> loadSettingsFrom(final Set<Group> groups) {
+        final Logger logger = domain.getLogger();
         final HashMap<String, Setting<?>> defaultsMap = new HashMap<>();
         for (final Group group : groups) {
+            logger.log(Level.FINE, "Loaded group: " + group.getGroupName());
 
             final Setting<?>[] settings = group.getSettings();
-
             for (final Setting<?> setting : settings) {
 
                 final String name = setting.getName();
 
                 defaultsMap.put(name, setting);
+                logger.log(Level.FINE, "Added setting: \"" + name + "\" as " + setting.getIdentifier());
             }
         }
         return defaultsMap;
@@ -256,7 +258,7 @@ public class SettingsController implements DomainAccess {
             if (setting == null) {
                 continue;
             }
-            final Handle<?> handle = handleMap.get(setting.getID());
+            final Handle<?> handle = handleMap.get(setting.getIdentifier());
             if (handle == null) {
                 continue;
             }

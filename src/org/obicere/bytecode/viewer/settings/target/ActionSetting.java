@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
  */
 public class ActionSetting extends Setting<Object> {
 
-    public static final String IDENTIFIER = "ActionModeler";
+    public static final String IDENTIFIER = "Action";
 
     private final ActionListener listener;
 
@@ -17,7 +17,7 @@ public class ActionSetting extends Setting<Object> {
     }
 
     @Override
-    public String getID() {
+    public String getIdentifier() {
         return IDENTIFIER;
     }
 

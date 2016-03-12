@@ -4,7 +4,7 @@ package org.obicere.bytecode.viewer.settings.target;
  */
 public class FloatSetting extends NumberSetting<Float> {
 
-    public static final String IDENTIFIER = "FloatModeler";
+    public static final String IDENTIFIER = "Float";
 
     public FloatSetting(final String name, final String descriptor, final Float value) {
         this(name, descriptor, value, Float.MIN_VALUE, Float.MAX_VALUE);
@@ -15,7 +15,7 @@ public class FloatSetting extends NumberSetting<Float> {
     }
 
     @Override
-    public String getID() {
+    public String getIdentifier() {
         return IDENTIFIER;
     }
 }

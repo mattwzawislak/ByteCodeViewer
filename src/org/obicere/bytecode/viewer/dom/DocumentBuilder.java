@@ -50,6 +50,9 @@ public class DocumentBuilder implements DomainAccess {
     }
 
     public <T extends ByteCodeElement> void model(final T element) {
+        if (element == null) {
+            throw new NullPointerException("element must be non-null");
+        }
         final ModelerSet modelers = domain.getModelers();
         final Modeler<? super T> modeler = modelers.get(element.getIdentifier());
         if (modeler != null) {

@@ -4,7 +4,7 @@ package org.obicere.bytecode.viewer.settings.target;
  */
 public class LongSetting extends NumberSetting<Long> {
 
-    public static final String IDENTIFIER = "LongModeler";
+    public static final String IDENTIFIER = "Long";
 
     public LongSetting(final String name, final String descriptor, final Long value) {
         this(name, descriptor, value, Long.MIN_VALUE, Long.MAX_VALUE);
@@ -15,7 +15,7 @@ public class LongSetting extends NumberSetting<Long> {
     }
 
     @Override
-    public String getID() {
+    public String getIdentifier() {
         return IDENTIFIER;
     }
 }
