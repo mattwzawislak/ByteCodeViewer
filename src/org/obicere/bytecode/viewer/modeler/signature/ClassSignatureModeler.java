@@ -59,8 +59,11 @@ public class ClassSignatureModeler implements Modeler<ClassSignature> {
     }
 
     private void modelSuperclass(final DocumentBuilder builder, final SuperclassSignature signature) {
-        builder.addKeyword(" extends ");
-        builder.model(signature);
+        final boolean extendsObject = builder.getDomain().getSettingsController().getSettings().getBoolean("code.extendsObject", true);
+        if (extendsObject || !signature.toString().equals("java.lang.Object")) {
+            builder.addKeyword(" extends ");
+            builder.model(signature);
+        }
     }
 
     private void modelSuperinterfaces(final DocumentBuilder builder, final SuperinterfaceSignature[] signatures, final boolean isInterface) {

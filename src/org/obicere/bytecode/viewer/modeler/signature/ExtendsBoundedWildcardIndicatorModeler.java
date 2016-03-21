@@ -13,6 +13,8 @@ import java.util.Set;
 public class ExtendsBoundedWildcardIndicatorModeler implements Modeler<ExtendsBoundedWildcardIndicator> {
     @Override
     public void model(final ExtendsBoundedWildcardIndicator element, final DocumentBuilder builder) {
+        final boolean extendsObject = builder.getDomain().getSettingsController().getSettings().getBoolean("code.extendsObject", true);
+
         final Set<Annotation> annotations = element.getAnnotations();
         final boolean wildcardPresent = element.isWildcardPresent();
         final ReferenceTypeSignature signature = element.getReferenceTypeSignature();
@@ -22,8 +24,15 @@ public class ExtendsBoundedWildcardIndicatorModeler implements Modeler<ExtendsBo
         }
         if (wildcardPresent) {
             builder.add("?");
-            builder.addKeyword(" extends ");
         }
-        builder.model(signature);
+        // if we model java.lang.Object anyway
+        // or we don't model java.lang.Object and this is not that class
+        // or this is java.lang.Object, but we need to include something
+        if (extendsObject || !signature.toString().equals("java.lang.Object") || !wildcardPresent) {
+            if (wildcardPresent) {
+                builder.addKeyword(" extends ");
+            }
+            builder.model(signature);
+        }
     }
 }
