@@ -112,7 +112,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         final Collection<LocalVariableType> variableTypes = getLocalVariableTypes(element);
 
         for (final LocalVariableType variableType : variableTypes) {
-            final int start = variableType.getStart();
+            final int start = variableType.getStartPC();
             final int length = variableType.getIntervalLength();
             builder.newLine();
             builder.add("[");
