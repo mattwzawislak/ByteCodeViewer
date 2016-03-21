@@ -17,16 +17,7 @@ public class ClassTypeSignatureModeler implements Modeler<ClassTypeSignature> {
     @Override
     public void model(final ClassTypeSignature element, final DocumentBuilder builder) {
         final Settings settings = builder.getDomain().getSettingsController().getSettings();
-        final boolean modelObject = settings.getBoolean("code.extendsObject", true);
-
-        if (!modelObject) {
-            // we need to check to see if the signature is equal to
-            // java.lang.Object, and if so we can skip it
-
-            // TODO, not sure if a toString implementation would be able
-            // to handle this by checking:
-            // packageSpecifier.toString().equals("java.lang.");
-        }
+        final boolean importMode = settings.getBoolean("code.importMode", false);
 
         final Set<Annotation> annotations = element.getAnnotations();
         final PackageSpecifier packageSpecifier = element.getPackageSpecifier();
@@ -37,9 +28,11 @@ public class ClassTypeSignatureModeler implements Modeler<ClassTypeSignature> {
             builder.model(annotation);
         }
 
-        // otherwise we are importing the class and skip it
-        builder.model(packageSpecifier);
+        if (!importMode) {
+            builder.model(packageSpecifier);
+        }
         builder.model(simpleClassTypeSignature);
+
         for (final ClassTypeSignatureSuffix suffix : classTypeSignatureSuffix) {
             builder.model(suffix);
         }
