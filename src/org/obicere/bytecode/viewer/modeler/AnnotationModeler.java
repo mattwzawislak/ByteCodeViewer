@@ -12,9 +12,19 @@ public class AnnotationModeler implements Modeler<Annotation> {
 
     @Override
     public void model(final Annotation element, final DocumentBuilder builder) {
+        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode", false);
+
         final int typeIndex = element.getTypeIndex();
 
-        final String identifier = ByteCodeUtils.getQualifiedName(builder.getConstantPool().getAsString(typeIndex));
+        final String annotationType = builder.getConstantPool().getAsString(typeIndex);
+
+        final String identifier;
+        if (importMode) {
+            identifier = ByteCodeUtils.getClassName(annotationType);
+        } else {
+            identifier = ByteCodeUtils.getQualifiedName(annotationType);
+        }
+
         builder.addAnnotation(identifier);
 
         final ElementValuePair[] pairs = element.getElementValuePairs();
