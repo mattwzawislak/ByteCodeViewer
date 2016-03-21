@@ -12,19 +12,11 @@ public abstract class StackMapFrameModeler<F extends StackMapFrame> implements M
     public void model(final F frame, final DocumentBuilder builder) {
         final String name = frame.getName();
         builder.add(name);
-        builder.add(" {");
 
-        builder.indent();
-        builder.newLine();
-
-        builder.add("Offset: ");
-        builder.add(frame.getOffsetDelta());
+        //builder.add("Offset: ");
+        //builder.add(frame.getOffsetDelta());
 
         modelValue(frame, builder);
-
-        builder.unindent();
-        builder.newLine();
-        builder.add("}");
     }
 
     protected void modelInfo(final DocumentBuilder builder, final VerificationTypeInfo[] info) {

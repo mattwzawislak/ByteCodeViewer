@@ -11,8 +11,15 @@ public class SameLocals1StackItemFrameExtendedModeler extends StackMapFrameModel
     protected void modelValue(final SameLocals1StackItemFrameExtended frame, final DocumentBuilder builder) {
         final VerificationTypeInfo stack = frame.getStack();
 
+        builder.add(" {");
+        builder.indent();
         builder.newLine();
+
         builder.add("Stack:");
         modelInfo(builder, new VerificationTypeInfo[]{stack});
+
+        builder.unindent();
+        builder.newLine();
+        builder.add("}");
     }
 }

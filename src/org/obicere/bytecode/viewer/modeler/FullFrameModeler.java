@@ -12,12 +12,19 @@ public class FullFrameModeler extends StackMapFrameModeler<FullFrame> {
         final VerificationTypeInfo[] locals = frame.getLocals();
         final VerificationTypeInfo[] stack = frame.getStack();
 
+        builder.add(" {");
+        builder.indent();
         builder.newLine();
+
         builder.add("Locals:");
         modelInfo(builder, locals);
 
         builder.newLine();
         builder.add("Stack:");
         modelInfo(builder, stack);
+
+        builder.unindent();
+        builder.newLine();
+        builder.add("}");
     }
 }
