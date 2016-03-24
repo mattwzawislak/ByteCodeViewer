@@ -128,18 +128,57 @@ public class DocumentBuilder implements DomainAccess {
         if (text == null) {
             return "null";
         }
-        // TODO: full unicode replacement for unsupported characters?
-        // nah, cba
-        text = text.replace("\\", "\\\\");
-        text = text.replace("\"", "\\\"");
-        text = text.replace("\b", "\\b");
-        text = text.replace("\f", "\\f");
-        text = text.replace("\n", "\\n");
-        text = text.replace("\r", "\\r");
-        text = text.replace("\t", "\\t");
+        final StringBuilder builder = new StringBuilder();
+        final char[] chars = text.toCharArray();
+        for (final char c : chars) {
+            builder.append(charToString(c));
+        }
 
-        text = "\"" + text + "\"";
+        text = "\"" + builder + "\"";
         return text;
+    }
+
+    private String charToString(final char c) {
+
+        switch (c) {
+            case '\0':
+                return "\\0";
+            case '\\':
+                return "\\\\";
+            case '\"':
+                return "\\\"";
+            case '\b':
+                return "\\b";
+            case '\f':
+                return "\\f";
+            case '\n':
+                return "\\n";
+            case '\r':
+                return "\\r";
+            case '\t':
+                return "\\t";
+            default:
+                if (c < 32 || c >= 127) {
+                    // non-ascii-displayable characters
+                    final int value = (c & 0xFFFF);
+                    final String hex = Integer.toHexString(value);
+
+                    final StringBuilder builder = new StringBuilder(6);
+                    // display unicode
+                    builder.append('\\');
+                    builder.append('u');
+
+                    // 0-pad to 4 character length for \\u####
+                    for (int i = hex.length(); i < 4; i++) {
+                        builder.append('0');
+                    }
+                    builder.append(hex);
+                    return builder.toString();
+                } else {
+                    // ascii-displayable characters
+                    return String.valueOf(c);
+                }
+        }
     }
 
     public void addAnnotation(final String annotation) {
@@ -159,7 +198,7 @@ public class DocumentBuilder implements DomainAccess {
     }
 
     public void add(final char value) {
-        request.submit(StyleConstants.STRING, "'" + Character.toString(value) + "'");
+        request.submit(StyleConstants.STRING, "'" + charToString(value) + "'");
     }
 
     public void add(final int value) {
