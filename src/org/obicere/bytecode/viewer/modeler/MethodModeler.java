@@ -237,6 +237,8 @@ public class MethodModeler implements Modeler<Method> {
             builder.unindent();
             builder.closeCollapsibleBlock();
             builder.add("}");
+        } else {
+            builder.add(";");
         }
     }
 }
