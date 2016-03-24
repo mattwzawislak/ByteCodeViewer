@@ -135,7 +135,9 @@ public class SwingEditorPanelManager implements EditorPanelManager {
     public void addClass(final ClassInformation classInformation) {
         final ClassFile rootClass = classInformation.getRootClass();
         final int accessFlags = rootClass.getAccessFlags();
-        tree.addClass(rootClass, accessFlags);
+        SwingUtilities.invokeLater(() -> {
+            tree.addClass(rootClass, accessFlags);
+        });
 
         if (tabbedPane.getTabCount() == 0) {
             contentLayout.show(editorArea, tabbedPaneName);
@@ -178,7 +180,6 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         tree.removeClass(className);
         final EditorPanel panel = editorPanels.remove(className);
 
-        // TODO: change this to reflect if there are no loaded classes instead
         if (editorPanels.size() == 0) {
             contentLayout.show(editorArea, dropPaneName);
         }

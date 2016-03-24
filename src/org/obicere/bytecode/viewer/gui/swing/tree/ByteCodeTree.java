@@ -12,7 +12,6 @@ import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  */
@@ -21,8 +20,6 @@ public class ByteCodeTree extends JTree {
     private ByteCodeTreeNode root;
 
     private final DefaultTreeModel model;
-
-    private final ReentrantLock addRemoveLock = new ReentrantLock();
 
     private final Domain domain;
 
@@ -84,14 +81,13 @@ public class ByteCodeTree extends JTree {
         final String className = ByteCodeUtils.getClassName(file.getName());
         final String packageName = ByteCodeUtils.getPackage(file.getName());
 
-        try {
+        synchronized (getTreeLock()) {
             if (root == null) {
                 root = createPackagePart("Classes");
 
                 model.setRoot(root);
             }
 
-            addRemoveLock.lock();
             final ByteCodeTreeNode possiblePackage = getPackage(packageName);
             final ByteCodeTreeNode absolutePackage;
             if (possiblePackage == null) {
@@ -106,9 +102,7 @@ public class ByteCodeTree extends JTree {
             final ByteCodeTreeNode node = ByteCodeTreeNode.buildNode(domain, file, accessFlags);
 
             model.insertNodeInto(node, absolutePackage, absolutePackage.getIndexFor(node));
-            expandPath(new TreePath(root.getPath()));
-        } finally {
-            addRemoveLock.unlock();
+            expandPath(new TreePath(absolutePackage.getPath()));
         }
     }
 
@@ -116,8 +110,7 @@ public class ByteCodeTree extends JTree {
         final String packageName = ByteCodeUtils.getPackage(name);
         final String className = ByteCodeUtils.getQualifiedName(name);
 
-        try {
-            addRemoveLock.lock();
+        synchronized (getTreeLock()) {
             final ByteCodeTreeNode node = getPackage(packageName);
             if (hasChildByName(node, name)) {
                 final Enumeration enumeration = node.children();
@@ -129,8 +122,6 @@ public class ByteCodeTree extends JTree {
                 }
                 collapseIfEmpty(node);
             }
-        } finally {
-            addRemoveLock.unlock();
         }
     }
 
@@ -189,8 +180,7 @@ public class ByteCodeTree extends JTree {
     }
 
     public ByteCodeTreeNode getPackage(final String name) {
-        try {
-            addRemoveLock.lock();
+        synchronized (getTreeLock()) {
             if (root == null) {
                 return null;
             }
@@ -207,8 +197,6 @@ public class ByteCodeTree extends JTree {
                 root = node;
             }
             return root;
-        } finally {
-            addRemoveLock.unlock();
         }
     }
 
