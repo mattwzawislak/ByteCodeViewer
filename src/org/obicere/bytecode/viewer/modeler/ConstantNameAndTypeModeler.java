@@ -2,7 +2,6 @@ package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.ConstantNameAndType;
 import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.core.objects.signature.MethodSignature;
 import org.obicere.bytecode.core.objects.signature.Parameters;
@@ -21,7 +20,7 @@ public class ConstantNameAndTypeModeler implements Modeler<ConstantNameAndType> 
         final String name = constantPool.getAsString(nameIndex);
 
         final String signature = constantPool.getAsString(descriptorIndex);
-        final MethodSignature methodSignature = SignatureAttribute.parseMethod(signature);
+        final MethodSignature methodSignature = MethodSignature.parse(signature);
         if (methodSignature != null) {
             final Result result = methodSignature.getResult();
             final Parameters parameters = methodSignature.getParameters();
@@ -31,7 +30,7 @@ public class ConstantNameAndTypeModeler implements Modeler<ConstantNameAndType> 
             builder.add(name);
             builder.model(parameters);
         } else {
-            final FieldSignature fieldSignature = SignatureAttribute.parseField(signature);
+            final FieldSignature fieldSignature = FieldSignature.parse(signature);
             if (fieldSignature != null) {
                 builder.model(fieldSignature);
                 builder.add(" ");

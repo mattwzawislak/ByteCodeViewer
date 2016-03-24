@@ -3,7 +3,6 @@ package org.obicere.bytecode.viewer.modeler;
 import org.obicere.bytecode.core.objects.ConstantNameAndType;
 import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.MethodRef;
-import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.core.objects.signature.MethodSignature;
 import org.obicere.bytecode.core.objects.signature.Parameters;
@@ -18,29 +17,23 @@ public class MethodRefModeler implements Modeler<MethodRef> {
     public void model(final MethodRef element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
 
-        final String rawName = constantPool.getAsString(element.getClassIndex());
-        final FieldSignature parsed = SignatureAttribute.parseField(rawName);
-        final FieldSignature classSignature;
+        final int classIndex = element.getClassIndex();
+        final String className = constantPool.getAsString(classIndex);
+        final FieldSignature classSignature = FieldSignature.parse(className);
 
-        if (parsed == null) {
-            classSignature = SignatureAttribute.parseField("L" + rawName + ";");
-        } else {
-            classSignature = parsed;
-        }
-
-        final ConstantNameAndType nameAndType = (ConstantNameAndType) constantPool.get(element.getNameAndTypeIndex());
+        final int nameAndTypeIndex = element.getNameAndTypeIndex();
+        final ConstantNameAndType nameAndType = (ConstantNameAndType) constantPool.get(nameAndTypeIndex);
         final String name = constantPool.getAsString(nameAndType.getNameIndex());
         final String descriptor = constantPool.getAsString(nameAndType.getDescriptorIndex());
 
         final boolean isConstructor = name.equals("<init>");
         final boolean isStatic = name.equals("<clinit>");
 
-        final MethodSignature methodSignature = SignatureAttribute.parseMethod(descriptor);
+        final MethodSignature methodSignature = MethodSignature.parse(descriptor);
 
         if (!isConstructor && !isStatic) {
             final Result result = methodSignature.getResult();
             builder.model(result);
-            //builder.model(methodSignature);
             builder.pad(1);
         }
 
@@ -50,7 +43,6 @@ public class MethodRefModeler implements Modeler<MethodRef> {
             builder.addKeyword("new ");
             builder.model(classSignature);
         } else {
-
             builder.model(classSignature);
             builder.add("#");
             builder.add(name);

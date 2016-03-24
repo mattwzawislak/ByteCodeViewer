@@ -1,7 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.AttributeSet;
-import org.obicere.bytecode.core.objects.Constant;
 import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.ConstantValueAttribute;
 import org.obicere.bytecode.core.objects.Field;
@@ -92,11 +91,11 @@ public class FieldModeler implements Modeler<Field> {
 
         final FieldSignature signature;
         if (attribute != null) {
-            signature = attribute.parseField(constantPool);
+            signature = attribute.getAsFieldSignature(constantPool);
         } else {
             final int descriptorIndex = element.getDescriptorIndex();
             final String descriptor = constantPool.getAsString(descriptorIndex);
-            signature = SignatureAttribute.parseField(descriptor);
+            signature = FieldSignature.parse(descriptor);
         }
 
         if (signature != null) {

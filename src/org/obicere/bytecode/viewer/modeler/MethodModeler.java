@@ -87,11 +87,11 @@ public class MethodModeler implements Modeler<Method> {
         final MethodSignature signature;
         final SignatureAttribute attribute = attributeSet.getAttribute(SignatureAttribute.class);
         if (attribute != null) {
-            signature = attribute.parseMethod(constantPool);
+            signature = attribute.getAsMethodSignature(constantPool);
         } else {
             final int descriptorIndex = element.getDescriptorIndex();
             final String name = constantPool.getAsString(descriptorIndex);
-            signature = SignatureAttribute.parseMethod(name);
+            signature = MethodSignature.parse(name);
         }
 
         modelTypeParameters(signature, builder);

@@ -213,7 +213,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         final ClassSignature signature;
         if (signatures != null && !signatures.isEmpty()) {
             final SignatureAttribute attribute = signatures.iterator().next();
-            signature = attribute.parseClass(constantPool);
+            signature = attribute.getAsClassSignature(constantPool);
         } else {
             final StringBuilder newSignature = new StringBuilder();
             newSignature.append('L');
@@ -226,7 +226,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
                 newSignature.append(name);
                 newSignature.append(';');
             }
-            signature = SignatureAttribute.parseClass(newSignature.toString());
+            signature = ClassSignature.parse(newSignature.toString());
         }
 
         final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributes.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
