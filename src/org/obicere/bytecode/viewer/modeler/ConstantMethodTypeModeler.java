@@ -16,8 +16,6 @@ public class ConstantMethodTypeModeler implements Modeler<ConstantMethodType> {
         final String descriptor = constantPool.getAsString(descriptorIndex);
         final MethodSignature signature = MethodSignature.parse(descriptor);
 
-        builder.model(signature.getResult());
-        builder.pad(1);
-        builder.model(signature.getParameters());
+        builder.model(signature);
     }
 }
