@@ -23,7 +23,6 @@ import org.obicere.bytecode.core.objects.StackMapTableAttribute;
 import org.obicere.bytecode.core.objects.SyntheticAttribute;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationDefaultAttributeModeler;
-import org.obicere.bytecode.viewer.modeler.BootstrapMethodsAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.CodeAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.ConstantValueAttributeModeler;
 import org.obicere.bytecode.viewer.modeler.DeprecatedAttributeModeler;
@@ -47,7 +46,7 @@ public class ProvideAttributeModelers implements StartUpTask {
         final ModelerSet modelerSet = domain.getModelers();
 
         modelerSet.add(AnnotationDefaultAttribute.IDENTIFIER, new AnnotationDefaultAttributeModeler());
-        modelerSet.add(BootstrapMethodsAttribute.IDENTIFIER, new BootstrapMethodsAttributeModeler());
+        modelerSet.add(BootstrapMethodsAttribute.IDENTIFIER, EmptyModeler.getInstance());
         modelerSet.add(CodeAttribute.IDENTIFIER, new CodeAttributeModeler());
         modelerSet.add(ConstantValueAttribute.IDENTIFIER, new ConstantValueAttributeModeler());
         modelerSet.add(DeprecatedAttribute.IDENTIFIER, new DeprecatedAttributeModeler());

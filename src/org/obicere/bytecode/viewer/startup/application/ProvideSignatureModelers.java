@@ -27,7 +27,6 @@ import org.obicere.bytecode.core.objects.signature.TypeThrowsSignature;
 import org.obicere.bytecode.core.objects.signature.TypeVariableSignature;
 import org.obicere.bytecode.core.objects.signature.UnboundedWildcardIndicator;
 import org.obicere.bytecode.viewer.context.Domain;
-import org.obicere.bytecode.viewer.modeler.EmptyModeler;
 import org.obicere.bytecode.viewer.modeler.ModelerSet;
 import org.obicere.bytecode.viewer.modeler.signature.ArrayTypeSignatureModeler;
 import org.obicere.bytecode.viewer.modeler.signature.BaseTypeModeler;
@@ -39,6 +38,7 @@ import org.obicere.bytecode.viewer.modeler.signature.ClassTypeSignatureSuffixMod
 import org.obicere.bytecode.viewer.modeler.signature.ExtendsBoundedWildcardIndicatorModeler;
 import org.obicere.bytecode.viewer.modeler.signature.FieldSignatureModeler;
 import org.obicere.bytecode.viewer.modeler.signature.InterfaceBoundModeler;
+import org.obicere.bytecode.viewer.modeler.signature.MethodSignatureModeler;
 import org.obicere.bytecode.viewer.modeler.signature.PackageSpecifierModeler;
 import org.obicere.bytecode.viewer.modeler.signature.ParametersModeler;
 import org.obicere.bytecode.viewer.modeler.signature.ResultModeler;
@@ -73,7 +73,7 @@ public class ProvideSignatureModelers implements StartUpTask {
         modelerSet.add(ExtendsBoundedWildcardIndicator.IDENTIFIER, new ExtendsBoundedWildcardIndicatorModeler());
         modelerSet.add(FieldSignature.IDENTIFIER, new FieldSignatureModeler());
         modelerSet.add(InterfaceBound.IDENTIFIER, new InterfaceBoundModeler());
-        modelerSet.add(MethodSignature.IDENTIFIER, EmptyModeler.getInstance()); // use the getters to model the method
+        modelerSet.add(MethodSignature.IDENTIFIER, new MethodSignatureModeler());
         modelerSet.add(PackageSpecifier.IDENTIFIER, new PackageSpecifierModeler());
         modelerSet.add(Parameters.IDENTIFIER, new ParametersModeler());
         modelerSet.add(Result.IDENTIFIER, new ResultModeler());

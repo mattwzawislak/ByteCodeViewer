@@ -26,14 +26,14 @@ public class ConstantNameAndTypeModeler implements Modeler<ConstantNameAndType> 
             final Parameters parameters = methodSignature.getParameters();
 
             builder.model(result);
-            builder.add(" ");
+            builder.add("#");
             builder.add(name);
             builder.model(parameters);
         } else {
             final FieldSignature fieldSignature = FieldSignature.parse(signature);
             if (fieldSignature != null) {
                 builder.model(fieldSignature);
-                builder.add(" ");
+                builder.add("#");
                 builder.add(name);
             }
         }
