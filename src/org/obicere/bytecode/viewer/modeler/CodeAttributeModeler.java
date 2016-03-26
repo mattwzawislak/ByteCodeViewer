@@ -9,7 +9,6 @@ import org.obicere.bytecode.core.objects.LocalVariable;
 import org.obicere.bytecode.core.objects.LocalVariableTableAttribute;
 import org.obicere.bytecode.core.objects.LocalVariableType;
 import org.obicere.bytecode.core.objects.LocalVariableTypeTableAttribute;
-import org.obicere.bytecode.core.objects.instruction.Instruction;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
@@ -87,20 +86,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
                 builder.newLine();
             }
 
-            builder.add(block.getName());
-            builder.add(" {");
-            builder.indent();
-
             builder.model(block);
-
-            for (final Instruction instruction : block.getInstructions()) {
-                builder.newLine();
-                builder.model(instruction);
-            }
-
-            builder.unindent();
-            builder.newLine();
-            builder.add("}");
 
             first = false;
         }
