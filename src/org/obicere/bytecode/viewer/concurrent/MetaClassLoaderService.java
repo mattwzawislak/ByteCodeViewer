@@ -66,11 +66,12 @@ public class MetaClassLoaderService implements DomainAccess {
         @Override
         public ClassInformation call() {
             try {
-                final byte[] bytes = source.read();
-
-                final IndexedDataInputStream input = new IndexedDataInputStream(bytes);
+                final IndexedDataInputStream input = new IndexedDataInputStream(source.open());
 
                 final MetaClassFile classFile = reader.read(input);
+
+                input.close();
+
                 final ClassInformation classInformation = new ClassInformation(domain, classFile, source);
 
                 domain.getGUIManager().getFrameManager().getEditorManager().addClass(classInformation);
