@@ -89,7 +89,8 @@ public class FileSource implements Source {
 
         @Override
         public void close() throws IOException {
-            FileSource.this.close();
+            super.close();
+            open = null;
         }
     }
 }
