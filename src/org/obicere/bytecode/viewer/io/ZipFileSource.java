@@ -18,7 +18,6 @@ public class ZipFileSource implements Source {
     private final String name;
 
     private volatile ZipFile zip;
-    //private WeakReference<ZipFile> zip;
 
     public ZipFileSource(final String file, final String name) {
         this.file = file;
@@ -35,7 +34,6 @@ public class ZipFileSource implements Source {
         final InputStream stream = new ZipFileSourceZipInputStream(zipFile.getInputStream(entry));
 
         this.zip = zipFile;
-        //this.zip = new WeakReference<>(zipFile);
 
         return stream;
     }
@@ -101,11 +99,16 @@ public class ZipFileSource implements Source {
         }
     }
 
+    static int counter = 0;
     @Override
     public void close() throws IOException {
         if (zip != null) {
             zip.close();
             zip = null;
+            counter++;
+            if(counter % 1000 == 0){
+                System.gc();
+            }
         }
     }
 
