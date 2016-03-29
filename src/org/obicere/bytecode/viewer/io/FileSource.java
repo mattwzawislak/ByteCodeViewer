@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  */
-public class FileSource extends Source {
+public class FileSource implements Source {
 
     private static final int BUFFER_SIZE = 1024; // 1 KiB
 
@@ -17,7 +17,7 @@ public class FileSource extends Source {
         this.file = file;
     }
 
-    public FileSource(final File file) {
+    public FileSource(final File file){
         this.file = file.getAbsolutePath();
     }
 

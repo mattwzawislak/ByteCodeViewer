@@ -5,16 +5,14 @@ import org.obicere.bytecode.viewer.util.FileUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
  */
-public class ZipFileSource extends Source {
+public class ZipFileSource implements Source {
 
-    private static final int BUFFER_SIZE = 1024; // 8 KiB
+    private static final int BUFFER_SIZE = 1024; // 1 KiB
 
     private final String file;
     private final String name;
@@ -43,7 +41,6 @@ public class ZipFileSource extends Source {
             file.write(buffer, 0, read);
         }
 
-        zipFile.close();
         stream.close();
         return file.toByteArray();
     }
@@ -56,8 +53,6 @@ public class ZipFileSource extends Source {
             zipFile.close();
             return entry != null;
         } catch (final IOException e) {
-            Logger.getGlobal().log(Level.FINE, "File existence check failed:");
-            Logger.getGlobal().log(Level.FINE, e.getMessage(), e);
             return false;
         }
     }
@@ -71,9 +66,8 @@ public class ZipFileSource extends Source {
     public Source getSibling(final String fileName) {
         try {
             final ZipFile zipFile = new ZipFile(file);
-            final String parent = FileUtils.getParentName(name);
+            final String parent = FileUtils.getParentName(fileName);
             if (parent == null || parent.equals("")) {
-                Logger.getGlobal().log(Level.FINE, "Parent could not be resolved");
                 return null;
             }
             final String sibling = parent + fileName;
@@ -82,12 +76,9 @@ public class ZipFileSource extends Source {
             if (entry != null) {
                 return new ZipFileSource(file, sibling);
             } else {
-                Logger.getGlobal().log(Level.FINE, "Could not resolve file: " + sibling);
                 return null;
             }
         } catch (final IOException e) {
-            Logger.getGlobal().log(Level.FINE, "Could not resolve sibling from ZipFileSource:");
-            Logger.getGlobal().log(Level.FINE, e.getMessage(), e);
             return null;
         }
     }

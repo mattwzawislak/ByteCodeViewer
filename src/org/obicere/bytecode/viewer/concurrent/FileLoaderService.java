@@ -126,7 +126,7 @@ public class FileLoaderService implements DomainAccess {
     }
 
     private void requestLoad(final Source source) {
-        final ClassLoaderService service = domain.getClassLoaderService();
+        final MetaClassLoaderService service = domain.getMetaClassLoaderService();
 
         service.postRequest(new RequestCallback(), source);
     }

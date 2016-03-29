@@ -1,7 +1,6 @@
 package org.obicere.bytecode.viewer.gui.swing.tree;
 
 import com.sun.istack.internal.NotNull;
-import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.viewer.configuration.Icons;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
@@ -86,11 +85,7 @@ public class ByteCodeTreeNode extends DefaultMutableTreeNode implements Comparab
         return index;
     }
 
-    public static ByteCodeTreeNode buildNode(final Domain domain, final ClassFile classFile) {
-        return buildNode(domain, classFile, classFile.getAccessFlags());
-    }
-
-    public static ByteCodeTreeNode buildNode(final Domain domain, final ClassFile classFile, final int accessFlags) {
+    public static ByteCodeTreeNode buildNode(final Domain domain, final String name, final int accessFlags) {
         final String[] group = getIconsGroup(accessFlags);
         final int index = getVisibilityIndex(accessFlags);
         final String other = getDisabledIcon(accessFlags);
@@ -99,7 +94,7 @@ public class ByteCodeTreeNode extends DefaultMutableTreeNode implements Comparab
         final Icon icon = icons.getIcon(group[index]);
         final Icon disabledIcon = icons.getIcon(other);
 
-        return new ByteCodeTreeNode(icon, disabledIcon, ByteCodeUtils.getClassName(classFile.getName()));
+        return new ByteCodeTreeNode(icon, disabledIcon, ByteCodeUtils.getClassName(name));
     }
 
     private static int getVisibilityIndex(final int accessFlags) {

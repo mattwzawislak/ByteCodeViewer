@@ -68,7 +68,7 @@ public class ClassModelerService implements DomainAccess {
 
         @Override
         public List<Block> call() throws Exception {
-            final String className = information.getRootClass().getName();
+            final String className = information.getClassFile().getName();
 
             try {
                 final List<Block> blocks = builder.build(information);

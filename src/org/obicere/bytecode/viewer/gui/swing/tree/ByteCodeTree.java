@@ -5,7 +5,6 @@ import org.obicere.bytecode.viewer.configuration.Icons;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
-import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -28,11 +27,7 @@ public class ByteCodeTree extends JTree {
         this.model = (DefaultTreeModel) getModel();
 
         setCellRenderer(new ByteCodeTreeCellRenderer());
-        JPopupMenu menu = new JPopupMenu();
 
-        menu.add("Foo");
-        menu.add("Bar");
-        setComponentPopupMenu(menu);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
@@ -74,12 +69,16 @@ public class ByteCodeTree extends JTree {
     }
 
     public void addClass(final ClassFile file) {
-        addClass(file, file.getAccessFlags());
+        addClassToTree(file.getName(), file.getAccessFlags());
     }
 
     public void addClass(final ClassFile file, final int accessFlags) {
-        final String className = ByteCodeUtils.getClassName(file.getName());
-        final String packageName = ByteCodeUtils.getPackage(file.getName());
+        addClassToTree(file.getName(), accessFlags);
+    }
+
+    private void addClassToTree(final String name, final int accessFlags) {
+        final String className = ByteCodeUtils.getClassName(name);
+        final String packageName = ByteCodeUtils.getPackage(name);
 
         synchronized (getTreeLock()) {
             if (root == null) {
@@ -99,7 +98,7 @@ public class ByteCodeTree extends JTree {
             if (hasChildByName(absolutePackage, className)) {
                 return;
             }
-            final ByteCodeTreeNode node = ByteCodeTreeNode.buildNode(domain, file, accessFlags);
+            final ByteCodeTreeNode node = ByteCodeTreeNode.buildNode(domain, name, accessFlags);
 
             model.insertNodeInto(node, absolutePackage, absolutePackage.getIndexFor(node));
             expandPath(new TreePath(absolutePackage.getPath()));

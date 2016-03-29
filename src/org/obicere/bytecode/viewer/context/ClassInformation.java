@@ -1,45 +1,31 @@
 package org.obicere.bytecode.viewer.context;
 
 import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.core.util.IndexedDataInputStream;
 import org.obicere.bytecode.viewer.io.Source;
-
-import java.io.IOException;
 
 /**
  * @author Obicere
  */
 public class ClassInformation implements DomainAccess {
 
-    private Source fileSource;
+    private final Source source;
 
-    private ClassFile rootClass;
+    private final ClassFile classFile;
 
     private final Domain domain;
 
-    public ClassInformation(final Domain domain) {
+    public ClassInformation(final Domain domain, final ClassFile classFile, final Source source) {
         this.domain = domain;
+        this.source = source;
+        this.classFile = classFile;
     }
 
-    public ClassFile getRootClass() {
-        return rootClass;
+    public ClassFile getClassFile() {
+        return classFile;
     }
 
-    public Source getFileSource() {
-        return fileSource;
-    }
-
-    public void clear() {
-        rootClass = null;
-    }
-
-    public ClassFile load(final Source fileSource, final byte[] classBytes) throws IOException {
-        final IndexedDataInputStream stream = new IndexedDataInputStream(classBytes);
-
-        this.fileSource = fileSource;
-        this.rootClass = domain.getClassReader().read(stream);
-
-        return rootClass;
+    public Source getSource() {
+        return source;
     }
 
     @Override

@@ -36,7 +36,7 @@ public class InnerClassModeler implements Modeler<InnerClass> {
             return;
         }
 
-        final ClassFile file = classInformation.getRootClass();
+        final ClassFile file = classInformation.getClassFile();
 
         if (file == null) {
             builder.addComment("Could not find inner class: " + name);

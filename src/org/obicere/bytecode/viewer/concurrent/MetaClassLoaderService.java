@@ -1,9 +1,8 @@
 package org.obicere.bytecode.viewer.concurrent;
 
-import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.core.reader.ClassFileReader;
+import org.obicere.bytecode.core.objects.meta.MetaClassFile;
+import org.obicere.bytecode.core.reader.meta.MetaClassFileReader;
 import org.obicere.bytecode.core.util.IndexedDataInputStream;
-import org.obicere.bytecode.viewer.configuration.FileHashStorage;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
@@ -18,17 +17,19 @@ import java.util.logging.Logger;
 
 /**
  */
-public class ClassLoaderService implements DomainAccess {
+public class MetaClassLoaderService implements DomainAccess {
 
     private static final int THREAD_POOL_COUNT = 4;
 
-    private static final String NAME = "classLoader";
+    private static final String NAME = "metaClassLoader";
 
     private final Domain domain;
 
     private final ThreadPoolExecutor service;
 
-    public ClassLoaderService(final Domain domain) {
+    private final MetaClassFileReader reader = new MetaClassFileReader();
+
+    public MetaClassLoaderService(final Domain domain) {
         this.domain = domain;
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
@@ -65,24 +66,15 @@ public class ClassLoaderService implements DomainAccess {
         @Override
         public ClassInformation call() {
             try {
-                final String sourceName = source.getPath();
                 final byte[] bytes = source.read();
 
-                final FileHashStorage storage = domain.getFileHashStorage();
-                final boolean present = storage.registerIfAbsent(sourceName, bytes);
-
-                if (present) {
-                    return null;
-                }
-
                 final IndexedDataInputStream input = new IndexedDataInputStream(bytes);
-                final ClassFileReader reader = domain.getClassReader();
 
-                final ClassFile file = reader.read(input);
-                final ClassInformation classInformation = new ClassInformation(domain, file, source);
+                final MetaClassFile classFile = reader.read(input);
+                final ClassInformation classInformation = new ClassInformation(domain, classFile, source);
 
-                domain.getClassStorage().publish(file.getName(), classInformation);
                 domain.getGUIManager().getFrameManager().getEditorManager().addClass(classInformation);
+                domain.getClassStorage().publish(classFile.getName(), classInformation);
 
                 return classInformation;
             } catch (final Throwable throwable) {
@@ -94,5 +86,4 @@ public class ClassLoaderService implements DomainAccess {
             }
         }
     }
-
 }

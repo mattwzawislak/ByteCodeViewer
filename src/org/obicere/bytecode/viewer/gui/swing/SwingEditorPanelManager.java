@@ -1,6 +1,8 @@
 package org.obicere.bytecode.viewer.gui.swing;
 
 import org.obicere.bytecode.core.objects.ClassFile;
+import org.obicere.bytecode.core.objects.meta.MetaClassFile;
+import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.RequestCallback;
 import org.obicere.bytecode.viewer.configuration.Icons;
@@ -119,13 +121,27 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         final ClassInformation classInformation = domain.getClassStorage().getClass(className);
 
         if (classInformation != null) {
-
+            final ClassFile file = classInformation.getClassFile();
             final SwingEditorPanel editorPanel = new SwingEditorPanel(domain);
+
             editorPanels.put(className, editorPanel);
 
-            final ClassModelerService service = domain.getClassModelerService();
-            service.postRequest(new RequestCallback(), editorPanel.getBuilder(), classInformation);
+            final ClassModelerService modeler = domain.getClassModelerService();
+            if (file.isMeta()) {
+                final ClassLoaderService loader = domain.getClassLoaderService();
 
+                loader.postRequest(new RequestCallback() {
+                    @Override
+                    public void notifyCompletion() {
+                        // this classInformation will reference the non-meta
+                        // and newly loaded information
+                        final ClassInformation classInformation = domain.getClassStorage().getClass(className);
+                        modeler.postRequest(new RequestCallback(), editorPanel.getBuilder(), classInformation);
+                    }
+                }, classInformation.getSource());
+            } else {
+                modeler.postRequest(new RequestCallback(), editorPanel.getBuilder(), classInformation);
+            }
             return editorPanel;
         }
         return null;
@@ -133,13 +149,12 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     @Override
     public void addClass(final ClassInformation classInformation) {
-        final ClassFile rootClass = classInformation.getRootClass();
-        final int accessFlags = rootClass.getAccessFlags();
+        final ClassFile rootClass = classInformation.getClassFile();
         SwingUtilities.invokeLater(() -> {
-            tree.addClass(rootClass, accessFlags);
+            tree.addClass(rootClass);
         });
 
-        if (tabbedPane.getTabCount() == 0) {
+        if(tabbedPane.getTabCount() == 0){
             contentLayout.show(editorArea, tabbedPaneName);
         }
     }

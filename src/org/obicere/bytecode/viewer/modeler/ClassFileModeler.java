@@ -107,7 +107,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
                 if (information == null) {
                     continue;
                 }
-                final ClassFile file = information.getRootClass();
+                final ClassFile file = information.getClassFile();
                 if (file == null) {
                     continue;
                 }

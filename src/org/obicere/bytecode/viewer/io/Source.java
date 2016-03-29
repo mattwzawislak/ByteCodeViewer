@@ -4,18 +4,13 @@ import java.io.IOException;
 
 /**
  */
-public abstract class Source {
+public interface Source {
 
-    public abstract byte[] read() throws IOException;
+    public byte[] read() throws IOException;
 
-    public abstract boolean exists();
+    public boolean exists();
 
-    public abstract String getPath();
+    public String getPath();
 
-    public abstract Source getSibling(final String fileName);
-
-    @Override
-    public String toString() {
-        return getPath();
-    }
+    public Source getSibling(final String fileName);
 }

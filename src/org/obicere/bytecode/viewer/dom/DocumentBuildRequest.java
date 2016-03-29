@@ -41,7 +41,7 @@ public class DocumentBuildRequest {
         this.builder = builder;
         this.classInformation = classInformation;
 
-        this.classFile = classInformation.getRootClass();
+        this.classFile = classInformation.getClassFile();
         this.blocks = new LinkedList<>();
     }
 

@@ -4,6 +4,7 @@ import org.obicere.bytecode.core.reader.ClassFileReader;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.FileLoaderService;
+import org.obicere.bytecode.viewer.concurrent.MetaClassLoaderService;
 import org.obicere.bytecode.viewer.configuration.ClassFileLoader;
 import org.obicere.bytecode.viewer.configuration.ClassStorage;
 import org.obicere.bytecode.viewer.configuration.FileHashStorage;
@@ -26,9 +27,10 @@ public final class Domain {
 
     private final Logger logger = Logger.getGlobal();
 
-    private final ClassLoaderService  classLoaderService;
-    private final ClassModelerService classModelerService;
-    private final FileLoaderService   fileLoaderService;
+    private final ClassLoaderService     classLoaderService;
+    private final ClassModelerService    classModelerService;
+    private final FileLoaderService      fileLoaderService;
+    private final MetaClassLoaderService metaClassLoaderService;
 
     private final ClassStorage classStorage;
 
@@ -47,6 +49,7 @@ public final class Domain {
         this.classLoaderService = new ClassLoaderService(this);
         this.classModelerService = new ClassModelerService(this);
         this.fileLoaderService = new FileLoaderService(this);
+        this.metaClassLoaderService = new MetaClassLoaderService(this);
 
         this.classStorage = new ClassStorage();
         this.fileHashStorage = new FileHashStorage();
@@ -71,6 +74,10 @@ public final class Domain {
 
     public FileLoaderService getFileLoaderService() {
         return fileLoaderService;
+    }
+
+    public MetaClassLoaderService getMetaClassLoaderService() {
+        return metaClassLoaderService;
     }
 
     public ClassStorage getClassStorage() {

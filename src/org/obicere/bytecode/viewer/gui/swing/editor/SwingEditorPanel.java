@@ -79,7 +79,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     @Override
     public void setClassInformation(final ClassInformation classInformation) {
         this.classInformation = classInformation;
-        setClassFile(classInformation.getRootClass());
+        setClassFile(classInformation.getClassFile());
     }
 
     @Override
@@ -128,11 +128,11 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         final FrameManager frameManager = guiManager.getFrameManager();
         final EditorPanelManager editorManager = frameManager.getEditorManager();
 
-        final String className = classInformation.getRootClass().getName();
+        final String className = classInformation.getClassFile().getName();
 
         final ClassLoaderService service = domain.getClassLoaderService();
 
-        final Source fileSource = classInformation.getFileSource();
+        final Source fileSource = classInformation.getSource();
 
         final Callback callback = new Callback() {
             @Override
@@ -150,9 +150,6 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
             }
         };
         Logger.getGlobal().log(Level.INFO, "Submitted hard reload request" + className);
-
-        // just to clear up a bit of memory before we submit the request
-        classInformation.clear();
 
         editorManager.removeEditorPanel(className);
         service.postRequest(callback, fileSource);
