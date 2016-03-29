@@ -21,6 +21,6 @@ public class LocalVariableModeler implements Modeler<LocalVariable> {
 
         builder.model(signature);
         builder.add(" ");
-        builder.add(nameIndex);
+        builder.add(name);
     }
 }

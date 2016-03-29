@@ -112,11 +112,13 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         final Collection<LocalVariable> variables = getLocalVariables(element);
 
         for (final LocalVariable variable : variables) {
+            final int start = variable.getStartPC();
+            final int length = variable.getIntervalLength();
             builder.newLine();
             builder.add("[");
-            builder.add(element.getBlockName(variable.getStartPC()));
+            builder.add(element.getBlockName(start));
             builder.add(", ");
-            builder.add(element.getBlockName(variable.getStartPC() + variable.getIntervalLength()));
+            builder.add(element.getBlockName(start, length));
             builder.add("] ");
             builder.model(variable);
         }
