@@ -73,6 +73,10 @@ public class ClassModelerService implements DomainAccess {
             try {
                 final List<Block> blocks = builder.build(information);
 
+                if(blocks == null){
+                    return null;
+                }
+
                 final GUIManager guiManager = domain.getGUIManager();
                 final FrameManager frameManager = guiManager.getFrameManager();
                 final EditorPanelManager editorManager = frameManager.getEditorManager();
