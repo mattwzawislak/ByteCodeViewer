@@ -3,6 +3,7 @@ package org.obicere.bytecode.viewer.settings.application;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.FileLoaderService;
+import org.obicere.bytecode.viewer.concurrent.MetaClassLoaderService;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.settings.Group;
 import org.obicere.bytecode.viewer.settings.target.IntegerSetting;
@@ -16,14 +17,16 @@ public class ThreadPoolSize implements Group {
 
     private static final String SUFFIX = "thread.";
 
-    private static final IntegerSetting CLASS_LOADER_SIZE  = new IntegerSetting(SUFFIX + "classLoader", "Class Loading", 4, 1, 32);
-    private static final IntegerSetting CLASS_MODELER_SIZE = new IntegerSetting(SUFFIX + "classModeler", "Class Modeling", 4, 1, 32);
-    private static final IntegerSetting FILE_LOADER_SIZE   = new IntegerSetting(SUFFIX + "fileLoader", "File Loading", 4, 1, 32);
+    private static final IntegerSetting CLASS_LOADER_SIZE      = new IntegerSetting(SUFFIX + "classLoader", "Class Loading", 4, 1, 32);
+    private static final IntegerSetting CLASS_MODELER_SIZE     = new IntegerSetting(SUFFIX + "classModeler", "Class Modeling", 4, 1, 32);
+    private static final IntegerSetting FILE_LOADER_SIZE       = new IntegerSetting(SUFFIX + "fileLoader", "File Loading", 4, 1, 32);
+    private static final IntegerSetting META_CLASS_LOADER_SIZE = new IntegerSetting(SUFFIX + "metaClassLoader", "Meta Class Loading", 4, 1, 32);
 
     private static final Setting<?>[] SETTINGS = new Setting[]{
             CLASS_LOADER_SIZE,
             CLASS_MODELER_SIZE,
-            FILE_LOADER_SIZE
+            FILE_LOADER_SIZE,
+            META_CLASS_LOADER_SIZE
     };
 
     public ThreadPoolSize(final Domain domain) {
@@ -39,6 +42,10 @@ public class ThreadPoolSize implements Group {
 
         FILE_LOADER_SIZE.addPropertyChangeListener(e -> {
             final FileLoaderService service = domain.getFileLoaderService();
+            service.setSize((int) e.getNewValue());
+        });
+        META_CLASS_LOADER_SIZE.addPropertyChangeListener(e ->{
+            final MetaClassLoaderService service = domain.getMetaClassLoaderService();
             service.setSize((int) e.getNewValue());
         });
     }
