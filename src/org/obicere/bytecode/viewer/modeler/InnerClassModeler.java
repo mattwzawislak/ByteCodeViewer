@@ -3,9 +3,14 @@ package org.obicere.bytecode.viewer.modeler;
 import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.InnerClass;
+import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
+import org.obicere.bytecode.viewer.concurrent.RequestCallback;
 import org.obicere.bytecode.viewer.context.ClassInformation;
+import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,9 +47,26 @@ public class InnerClassModeler implements Modeler<InnerClass> {
             builder.addComment("Could not find inner class: " + name);
             return;
         }
+
+        final ClassFile loadedFile;
+        if (file.isMeta()) {
+            final Domain domain = builder.getDomain();
+            final ClassLoaderService service = domain.getClassLoaderService();
+            final Future<ClassInformation> request = service.postRequest(new RequestCallback(), classInformation.getSource());
+
+            try {
+                loadedFile = request.get().getClassFile();
+            } catch(final InterruptedException | ExecutionException e){
+                builder.addComment("Failed to load class: " + name);
+                return;
+            }
+        }  else {
+            loadedFile = file;
+        }
+
         builder.setProperty(modelledProperty, "true");
-        builder.setWorkingClass(file);
-        builder.model(file);
+        builder.setWorkingClass(loadedFile);
+        builder.model(loadedFile);
         builder.clearWorkingClass();
     }
 }
