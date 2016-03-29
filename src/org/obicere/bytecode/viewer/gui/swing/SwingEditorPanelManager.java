@@ -1,7 +1,6 @@
 package org.obicere.bytecode.viewer.gui.swing;
 
 import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.core.objects.meta.MetaClassFile;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.RequestCallback;
