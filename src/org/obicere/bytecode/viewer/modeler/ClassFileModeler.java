@@ -17,8 +17,6 @@ import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.SyntheticAttribute;
 import org.obicere.bytecode.core.objects.signature.ClassSignature;
-import org.obicere.bytecode.viewer.configuration.ClassStorage;
-import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
@@ -89,31 +87,13 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         if (!display) {
             return;
         }
-        final ClassStorage storage = builder.getDomain().getClassStorage();
         final ConstantPool constantPool = element.getConstantPool();
-        final AttributeSet attributes = element.getAttributeSet();
 
         final String name = element.getName();
         final String thisPackage = ByteCodeUtils.getPackage(name);
 
         final Set<String> imports = new TreeSet<>();
         getImports(constantPool, imports, thisPackage);
-
-        final InnerClassesAttribute innerClassesAttribute = attributes.getAttribute(InnerClassesAttribute.class);
-        if (innerClassesAttribute != null) {
-            for (final InnerClass innerClass : innerClassesAttribute.getInnerClasses()) {
-                final String classname = constantPool.getAsString(innerClass.getInnerClassInfoIndex());
-                final ClassInformation information = storage.getClass(classname);
-                if (information == null) {
-                    continue;
-                }
-                final ClassFile file = information.getClassFile();
-                if (file == null) {
-                    continue;
-                }
-                getImports(file.getConstantPool(), imports, thisPackage);
-            }
-        }
 
         if (!thisPackage.equals("")) {
             builder.addKeyword("package ");
