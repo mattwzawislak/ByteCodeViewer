@@ -17,9 +17,27 @@ public class ZipFileSource implements Source {
     private final String file;
     private final String name;
 
+    private volatile ZipFile zip;
+    //private WeakReference<ZipFile> zip;
+
     public ZipFileSource(final String file, final String name) {
         this.file = file;
         this.name = name;
+    }
+
+    @Override
+    public InputStream open() throws IOException {
+        close();
+
+        final ZipFile zipFile = new ZipFile(file);
+        final ZipEntry entry = zipFile.getEntry(name);
+
+        final InputStream stream = new ZipFileSourceZipInputStream(zipFile.getInputStream(entry));
+
+        this.zip = zipFile;
+        //this.zip = new WeakReference<>(zipFile);
+
+        return stream;
     }
 
     @Override
@@ -80,6 +98,34 @@ public class ZipFileSource implements Source {
             }
         } catch (final IOException e) {
             return null;
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (zip != null) {
+            zip.close();
+            zip = null;
+        }
+    }
+
+    private class ZipFileSourceZipInputStream extends InputStream {
+
+        private final InputStream stream;
+
+        ZipFileSourceZipInputStream(final InputStream stream) {
+            this.stream = stream;
+        }
+
+        @Override
+        public int read() throws IOException {
+            return stream.read();
+        }
+
+        @Override
+        public void close() throws IOException {
+            ZipFileSource.this.close();
+            stream.close();
         }
     }
 }
