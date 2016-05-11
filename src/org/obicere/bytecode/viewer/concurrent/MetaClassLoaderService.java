@@ -8,6 +8,7 @@ import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.io.Source;
 
+import java.io.InputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -66,7 +67,8 @@ public class MetaClassLoaderService implements DomainAccess {
         @Override
         public ClassInformation call() {
             try {
-                final IndexedDataInputStream input = new IndexedDataInputStream(source.open());
+                final InputStream stream = source.open();
+                final IndexedDataInputStream input = new IndexedDataInputStream(stream);
 
                 final MetaClassFile classFile = reader.read(input);
 

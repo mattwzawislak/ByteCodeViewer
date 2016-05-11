@@ -4,7 +4,9 @@ import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.io.FileSource;
 import org.obicere.bytecode.viewer.io.Source;
+import org.obicere.bytecode.viewer.io.TaskedZipFile;
 import org.obicere.bytecode.viewer.io.ZipFileSource;
+import org.obicere.bytecode.viewer.io.ZipSystem;
 import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.File;
@@ -16,7 +18,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  */
@@ -29,6 +30,8 @@ public class FileLoaderService implements DomainAccess {
     private final Domain domain;
 
     private final ThreadPoolExecutor service;
+
+    private final ZipSystem system = new ZipSystem();
 
     public FileLoaderService(final Domain domain) {
         this.domain = domain;
@@ -111,16 +114,20 @@ public class FileLoaderService implements DomainAccess {
     }
 
     private void loadArchive(final File path) throws IOException {
+        system.clean();
+
         final String zipFile = path.getAbsolutePath();
 
-        final ZipFile zip = new ZipFile(path);
+        final TaskedZipFile zip = system.getZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
             final ZipEntry entry = entries.nextElement();
             final String name = entry.getName();
             final String extension = FileUtils.getFileExtension(name);
             if (extension != null && extension.equals(".class")) {
-                requestLoad(new ZipFileSource(zipFile, name));
+
+                zip.addTask(entry.getCrc());
+                requestLoad(new ZipFileSource(system, zipFile, name));
             }
         }
     }

@@ -9,6 +9,9 @@ public interface Source extends AutoCloseable {
 
     public InputStream open() throws IOException;
 
+    @Override
+    public void close() throws IOException;
+
     public byte[] read() throws IOException;
 
     public boolean exists();

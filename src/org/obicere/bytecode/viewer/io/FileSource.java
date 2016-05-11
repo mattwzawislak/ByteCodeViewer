@@ -27,11 +27,16 @@ public class FileSource implements Source {
 
     @Override
     public InputStream open() throws IOException {
-        close();
+        return new FileSourceFileInputStream(asFile());
+    }
 
-        final InputStream open = new FileSourceFileInputStream(asFile());
-        this.open = open;
-        return open;
+    @Override
+    public void close() throws IOException {
+        if (open != null) {
+            open.close();
+
+            open = null;
+        }
     }
 
     @Override
@@ -71,14 +76,6 @@ public class FileSource implements Source {
 
     private File asFile() {
         return new File(file);
-    }
-
-    @Override
-    public void close() throws IOException {
-        if (open != null) {
-            open.close();
-            open = null;
-        }
     }
 
     private class FileSourceFileInputStream extends FileInputStream {
