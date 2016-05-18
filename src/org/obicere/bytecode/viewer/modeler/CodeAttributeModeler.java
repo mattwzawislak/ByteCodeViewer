@@ -5,13 +5,11 @@ import org.obicere.bytecode.core.objects.ByteCodeElement;
 import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.CodeBlock;
 import org.obicere.bytecode.core.objects.CodeException;
-import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.LocalVariable;
 import org.obicere.bytecode.core.objects.LocalVariableTableAttribute;
 import org.obicere.bytecode.core.objects.LocalVariableType;
 import org.obicere.bytecode.core.objects.LocalVariableTypeTableAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
-import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -42,8 +40,6 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
     }
 
     private void modelExceptions(final CodeAttribute element, final DocumentBuilder builder) {
-        final ConstantPool constantPool = builder.getConstantPool();
-        final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode", false);
 
         final CodeException[] exceptions = element.getExceptions();
 
@@ -57,40 +53,8 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         builder.addComment("start, end, handler, type");
 
         for (final CodeException exception : exceptions) {
-
-            final String start = element.getBlockName(exception.getStartPC());
-            final String end = element.getBlockName(exception.getEndPC());
-            final String handler = element.getBlockName(exception.getHandlerPC());
-
             builder.newLine();
-            builder.add(start);
-            builder.comma();
-            builder.tab();
-            builder.add(end);
-            builder.comma();
-            builder.tab();
-            builder.add(handler);
-            builder.comma();
-            builder.tab();
-
-            final String catchType;
-            final int catchTypeValue = exception.getCatchType();
-            if (catchTypeValue == 0) {
-                // 0 catches all exceptions
-                if (importMode) {
-                    catchType = "Throwable";
-                } else {
-                    catchType = "java.lang.Throwable";
-                }
-            } else {
-                catchType = constantPool.getAsString(exception.getCatchType());
-            }
-
-            if (importMode) {
-                builder.add(ByteCodeUtils.getClassName(catchType));
-            } else {
-                builder.add(ByteCodeUtils.getQualifiedName(catchType));
-            }
+            builder.model(exception);
         }
 
         builder.unindent();
