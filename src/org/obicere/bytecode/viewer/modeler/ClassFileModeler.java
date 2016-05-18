@@ -17,6 +17,7 @@ import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.SignatureAttribute;
 import org.obicere.bytecode.core.objects.SyntheticAttribute;
 import org.obicere.bytecode.core.objects.signature.ClassSignature;
+import org.obicere.bytecode.core.reader.ConstantReader;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
@@ -115,7 +116,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
     private void getImports(final ConstantPool constantPool, final Set<String> imports, final String thisPackage) {
 
         for (final Constant constant : constantPool.getConstants()) {
-            if (constant instanceof ConstantClass) {
+            if (constant.getTag() == ConstantReader.CONSTANT_CLASS) {
                 final ConstantClass constantClass = (ConstantClass) constant;
                 final String name = constantClass.toString(constantPool);
 
@@ -162,11 +163,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
     }
 
     private void modelVersion(final ClassFile element, final DocumentBuilder builder) {
-        builder.add("Major: ");
-        builder.add(element.getMajorVersion());
-        builder.add(" Minor: ");
-        builder.add(element.getMinorVersion());
-        builder.newLine();
+        builder.addComment("Version: " + element.getMajorVersion() + "." + element.getMinorVersion());
         builder.newLine();
     }
 
