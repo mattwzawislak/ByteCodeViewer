@@ -1,6 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.AttributeSet;
+import org.obicere.bytecode.core.objects.ByteCodeElement;
 import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.CodeBlock;
 import org.obicere.bytecode.core.objects.CodeException;
@@ -12,7 +13,6 @@ import org.obicere.bytecode.core.objects.LocalVariableTypeTableAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -30,9 +30,15 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
     @Override
     public void model(final CodeAttribute element, final DocumentBuilder builder) {
+        // todo remove
+        builder.setProperty("code", element);
+
         modelExceptions(element, builder);
-        modelLines(element, builder);
         modelLocalVariables(element, builder);
+        modelLines(element, builder);
+
+        // todo remove
+        builder.setProperty("code", null);
     }
 
     private void modelExceptions(final CodeAttribute element, final DocumentBuilder builder) {
@@ -41,14 +47,31 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
         final CodeException[] exceptions = element.getExceptions();
 
+        if (exceptions.length == 0) {
+            return;
+        }
+
+        builder.add("exceptions {");
+        builder.indent();
+        builder.newLine();
+        builder.addComment("start, end, handler, type");
+
         for (final CodeException exception : exceptions) {
 
             final String start = element.getBlockName(exception.getStartPC());
             final String end = element.getBlockName(exception.getEndPC());
+            final String handler = element.getBlockName(exception.getHandlerPC());
 
-            builder.addKeyword("try");
-            builder.add(" [" + start + "-" + end + "] ");
-            builder.addKeyword("catch ");
+            builder.newLine();
+            builder.add(start);
+            builder.comma();
+            builder.tab();
+            builder.add(end);
+            builder.comma();
+            builder.tab();
+            builder.add(handler);
+            builder.comma();
+            builder.tab();
 
             final String catchType;
             final int catchTypeValue = exception.getCatchType();
@@ -68,17 +91,15 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
             } else {
                 builder.add(ByteCodeUtils.getQualifiedName(catchType));
             }
-
-            final int handlerPC = exception.getHandlerPC();
-            final String handler = element.getBlockName(handlerPC);
-            builder.add(" " + handler);
-            builder.newLine();
         }
+
+        builder.unindent();
+        builder.newLine();
+        builder.add("}");
+        builder.newLine();
     }
 
     private void modelLines(final CodeAttribute element, final DocumentBuilder builder) {
-        builder.setProperty("code", element);
-
         final Iterable<CodeBlock> blocks = element.getBlocks();
         boolean first = true;
         for (final CodeBlock block : blocks) {
@@ -90,76 +111,66 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
             first = false;
         }
-
-        builder.setProperty("code", null);
     }
 
     private void modelLocalVariables(final CodeAttribute element, final DocumentBuilder builder) {
-        final Collection<LocalVariableType> variableTypes = getLocalVariableTypes(element);
+        final Map<Integer, ByteCodeElement> locals = new TreeMap<>();
+        getLocalVariableTypes(element, locals);
+        getLocalVariables(element, locals);
 
-        for (final LocalVariableType variableType : variableTypes) {
-            final int start = variableType.getStartPC();
-            final int length = variableType.getIntervalLength();
-            builder.newLine();
-            builder.add("[");
-            builder.add(element.getBlockName(start));
-            builder.add(", ");
-            builder.add(element.getBlockName(start, length));
-            builder.add("] ");
-            builder.model(variableType);
+        if (locals.size() == 0) {
+            return;
         }
 
-        final Collection<LocalVariable> variables = getLocalVariables(element);
+        builder.add("locals {");
+        builder.indent();
+        builder.newLine();
+        builder.addComment("start, end, index, type");
 
-        for (final LocalVariable variable : variables) {
-            final int start = variable.getStartPC();
-            final int length = variable.getIntervalLength();
+        for (final ByteCodeElement local : locals.values()) {
             builder.newLine();
-            builder.add("[");
-            builder.add(element.getBlockName(start));
-            builder.add(", ");
-            builder.add(element.getBlockName(start, length));
-            builder.add("] ");
-            builder.model(variable);
+            builder.model(local);
         }
+
+        builder.unindent();
+        builder.newLine();
+        builder.add("}");
+        builder.newLine();
     }
 
-    private Collection<LocalVariable> getLocalVariables(final CodeAttribute element) {
+    private void getLocalVariables(final CodeAttribute element, final Map<Integer, ByteCodeElement> map) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
 
-        final Map<Integer, LocalVariable> variables = new TreeMap<>();
         if (lvtAttributes != null) {
             for (final LocalVariableTableAttribute lvt : lvtAttributes) {
                 final LocalVariable[] table = lvt.getLocalVariableTable();
                 for (final LocalVariable type : table) {
                     final int name = type.getNameIndex();
                     // check to see if we already processed the startPC value
-                    if (variables.get(name) != null) {
+                    map.putIfAbsent(name, type);
+                    if (map.get(name) != null) {
                         continue;
                     }
-                    variables.put(name, type);
+                    map.put(name, type);
                 }
             }
         }
-        return variables.values();
     }
 
-    private Collection<LocalVariableType> getLocalVariableTypes(final CodeAttribute element) {
+    private void getLocalVariableTypes(final CodeAttribute element, final Map<Integer, ByteCodeElement> map) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
 
-        final Map<Integer, LocalVariableType> variables = new TreeMap<>();
         if (lvttAttributes != null) {
             for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
                 final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
                 for (final LocalVariableType type : table) {
                     final int name = type.getNameIndex();
 
-                    variables.put(name, type);
+                    map.put(name, type);
                 }
             }
         }
-        return variables.values();
     }
 }
