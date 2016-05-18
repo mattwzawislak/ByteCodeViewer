@@ -27,13 +27,13 @@ public class LocalVariableModeler implements Modeler<LocalVariable> {
         final FieldSignature signature = FieldSignature.parse(descriptor);
 
         builder.add(codeAttribute.getBlockName(start));
-        builder.comma();
+        builder.add(",");
         builder.tab();
         builder.add(codeAttribute.getBlockName(start, length));
-        builder.comma();
+        builder.add(",");
         builder.tab();
         builder.add(index);
-        builder.comma();
+        builder.add(",");
         builder.tab();
         builder.model(signature);
         builder.add(" ");
