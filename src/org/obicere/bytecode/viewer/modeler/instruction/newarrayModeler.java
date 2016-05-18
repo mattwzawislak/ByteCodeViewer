@@ -12,8 +12,8 @@ public class newarrayModeler extends InstructionModeler<newarray> {
         final String type = element.getType();
 
         builder.tab();
-        builder.add(type);
-        builder.add("[]");
-        // include square brackets to show its an array-type
+        builder.addKeyword(type);
+        builder.add(".");
+        builder.addKeyword("class");
     }
 }

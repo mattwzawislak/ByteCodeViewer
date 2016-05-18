@@ -116,7 +116,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
     private void getImports(final ConstantPool constantPool, final Set<String> imports, final String thisPackage) {
 
         for (final Constant constant : constantPool.getConstants()) {
-            if (constant.getTag() == ConstantReader.CONSTANT_CLASS) {
+            if (constant != null && constant.getTag() == ConstantReader.CONSTANT_CLASS) {
                 final ConstantClass constantClass = (ConstantClass) constant;
                 final String name = constantClass.toString(constantPool);
 
