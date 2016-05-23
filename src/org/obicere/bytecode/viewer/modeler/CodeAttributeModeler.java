@@ -72,7 +72,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
     }
 
     private void modelLocalVariables(final CodeAttribute element, final DocumentBuilder builder) {
-        final Map<Integer, Identifiable> locals = new TreeMap<>();
+        final Map<Long, Identifiable> locals = new TreeMap<>();
         getLocalVariableTypes(element, locals);
         getLocalVariables(element, locals);
 
@@ -96,7 +96,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         builder.newLine();
     }
 
-    private void getLocalVariables(final CodeAttribute element, final Map<Integer, Identifiable> map) {
+    private void getLocalVariables(final CodeAttribute element, final Map<Long, Identifiable> map) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
 
@@ -104,19 +104,19 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
             for (final LocalVariableTableAttribute lvt : lvtAttributes) {
                 final LocalVariable[] table = lvt.getLocalVariableTable();
                 for (final LocalVariable type : table) {
-                    final int name = ((0xFFFF & type.getNameIndex()) << 8) | (0xFF & type.getIndex());
+                    final long index = (0xFF & type.getIndex());
+                    final long start = (0xFFFF & type.getStart().computeOffset(element));
+                    final long name = (0xFFFF & type.getNameIndex());
+                    final long id = (index << 32) | (start << 16) | (name);
+
                     // check to see if we already processed the startPC value
-                    map.putIfAbsent(name, type);
-                    if (map.get(name) != null) {
-                        continue;
-                    }
-                    map.put(name, type);
+                    map.putIfAbsent(id, type);
                 }
             }
         }
     }
 
-    private void getLocalVariableTypes(final CodeAttribute element, final Map<Integer, Identifiable> map) {
+    private void getLocalVariableTypes(final CodeAttribute element, final Map<Long, Identifiable> map) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
 
@@ -124,9 +124,12 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
             for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
                 final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
                 for (final LocalVariableType type : table) {
-                    final int name = ((0xFFFF & type.getNameIndex()) << 8) | (0xFF & type.getIndex());
+                    final long index = (0xFF & type.getIndex());
+                    final long start = (0xFFFF & type.getStart().computeOffset(element));
+                    final long name = (0xFFFF & type.getNameIndex());
+                    final long id = (index << 32) | (start << 16) | (name);
 
-                    map.put(name, type);
+                    map.put(id, type);
                 }
             }
         }
