@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.ConstantPool;
 import org.obicere.bytecode.core.objects.LocalVariableType;
+import org.obicere.bytecode.core.objects.label.Label;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
@@ -14,11 +14,9 @@ public class LocalVariableTypeModeler implements Modeler<LocalVariableType> {
     public void model(final LocalVariableType element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
 
-        // todo switch to label form
-        final CodeAttribute codeAttribute = (CodeAttribute) builder.getProperty("code");
+        final Label start = element.getStart();
+        final Label end = element.getEnd();
 
-        final int start = element.getStartPC();
-        final int length = element.getIntervalLength();
         final int index = element.getIndex();
         final int descriptorIndex = element.getSignatureIndex();
         final int nameIndex = element.getNameIndex();
@@ -27,10 +25,10 @@ public class LocalVariableTypeModeler implements Modeler<LocalVariableType> {
 
         final FieldSignature signature = FieldSignature.parse(descriptor);
 
-        builder.add(codeAttribute.getBlockName(start));
+        builder.model(start);
         builder.add(",");
         builder.tab();
-        builder.add(codeAttribute.getBlockName(start, length));
+        builder.model(end);
         builder.add(",");
         builder.tab();
         builder.add(index);

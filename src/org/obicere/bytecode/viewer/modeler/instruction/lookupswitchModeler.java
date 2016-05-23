@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.instruction.lookupswitch;
+import org.obicere.bytecode.core.objects.label.Label;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
@@ -10,45 +10,31 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 public class lookupswitchModeler extends InstructionModeler<lookupswitch> {
     @Override
     protected void modelValue(final lookupswitch element, final DocumentBuilder builder) {
-        final CodeAttribute attribute = (CodeAttribute) builder.getProperty("code");
+        final Label defaultOffset = element.getDefaultOffset();
 
-        final int defaultValue = element.getDefault();
-
-        final int[][] matchOffsetPairs = element.getMatchOffsetPairs();
-
-        final String defaultName = attribute.getBlockName(element.getStart(), defaultValue);
+        final int[] matches = element.getMatches();
+        final Label[] offsets = element.getOffsets();
 
         // we can skip the number of pairs
         // builder.tab();
         // builder.add(nPairs);
         builder.add(" {");
         builder.indent();
-        for (final int[] pair : matchOffsetPairs) {
+        for(int i = 0; i < matches.length; i++) {
             builder.newLine();
 
-            // TODO: this would be so sexy if we could reverse the key for hashcode and whatnot
-            builder.add(pair[0]);
+            builder.add(matches[i]);
             builder.add(":");
             builder.tab();
-
-            final String name = attribute.getBlockName(element.getStart(), pair[1]);
-
-            if (name == null) {
-                builder.add(pair[1]);
-            } else {
-                builder.add(name);
-            }
+            builder.model(offsets[i]);
         }
 
         builder.newLine();
         builder.addKeyword("default");
         builder.add(":");
         builder.tab();
-        if (defaultName == null) {
-            builder.add(defaultValue);
-        } else {
-            builder.add(defaultName);
-        }
+        builder.model(defaultOffset);
+
         builder.unindent();
         builder.newLine();
         builder.add("}");

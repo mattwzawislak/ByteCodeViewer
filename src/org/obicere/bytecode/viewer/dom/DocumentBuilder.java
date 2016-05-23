@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.dom;
 
-import org.obicere.bytecode.core.objects.ByteCodeElement;
 import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.core.objects.ConstantPool;
+import org.obicere.bytecode.core.objects.Identifiable;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
@@ -49,7 +49,7 @@ public class DocumentBuilder implements DomainAccess {
         }
     }
 
-    public <T extends ByteCodeElement> void model(final T element) {
+    public <T extends Identifiable> void model(final T element) {
         if (element == null) {
             throw new NullPointerException("element must be non-null");
         }

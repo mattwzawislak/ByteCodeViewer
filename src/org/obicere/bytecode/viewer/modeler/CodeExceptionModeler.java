@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.CodeException;
 import org.obicere.bytecode.core.objects.ConstantPool;
+import org.obicere.bytecode.core.objects.label.Label;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
@@ -14,19 +14,17 @@ public class CodeExceptionModeler implements Modeler<CodeException> {
         final ConstantPool constantPool = builder.getConstantPool();
         final boolean importMode = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode", false);
 
-        final CodeAttribute code = (CodeAttribute) builder.getProperty("code");
+        final Label start = element.getStart();
+        final Label end = element.getEnd();
+        final Label handler = element.getHandler();
 
-        final String start = code.getBlockName(element.getStartPC());
-        final String end = code.getBlockName(element.getEndPC());
-        final String handler = code.getBlockName(element.getHandlerPC());
-
-        builder.add(start);
+        builder.model(start);
         builder.add(",");
         builder.tab();
-        builder.add(end);
+        builder.model(end);
         builder.add(",");
         builder.tab();
-        builder.add(handler);
+        builder.model(handler);
         builder.add(",");
         builder.tab();
 

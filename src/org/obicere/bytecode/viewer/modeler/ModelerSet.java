@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ByteCodeElement;
+import org.obicere.bytecode.core.objects.Identifiable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class ModelerSet {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ByteCodeElement> Modeler<? super T> get(final String identifier) {
+    public <T extends Identifiable> Modeler<? super T> get(final String identifier) {
         try {
             final Modeler<?> modeler = modelers.get(identifier);
             if (modeler == null) {

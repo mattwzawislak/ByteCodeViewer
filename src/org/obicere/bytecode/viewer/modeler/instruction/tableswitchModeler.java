@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.CodeAttribute;
 import org.obicere.bytecode.core.objects.instruction.tableswitch;
+import org.obicere.bytecode.core.objects.label.Label;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
@@ -10,41 +10,29 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 public class tableswitchModeler extends InstructionModeler<tableswitch> {
     @Override
     protected void modelValue(final tableswitch element, final DocumentBuilder builder) {
-        final CodeAttribute attribute = (CodeAttribute) builder.getProperty("code");
-
-        final int defaultValue = element.getDefault();
+        final Label defaultValue = element.getDefaultOffset();
         final int low = element.getLow();
-        final int[] jumpOffsets = element.getJumpOffsets();
+        final Label[] jumpOffsets = element.getOffsets();
 
         builder.add(" {");
         builder.indent();
 
         for (int i = 0; i < jumpOffsets.length; i++) {
             final long key = low + i;
-            final int offset = jumpOffsets[i];
-            final String name = attribute.getBlockName(element.getStart(), offset);
+            final Label label = jumpOffsets[i];
 
             builder.newLine();
             builder.add(key);
             builder.add(":");
             builder.tab();
-            if (name == null) {
-                builder.add(offset);
-            } else {
-                builder.add(name);
-            }
+            builder.model(label);
         }
-        final String name = attribute.getBlockName(element.getStart(), defaultValue);
 
         builder.newLine();
         builder.addKeyword("default");
         builder.add(":");
         builder.tab();
-        if (name == null) {
-            builder.add(defaultValue);
-        } else {
-            builder.add(name);
-        }
+        builder.model(defaultValue);
         builder.unindent();
         builder.newLine();
         builder.add("}");
