@@ -1,12 +1,9 @@
 package org.obicere.bytecode.viewer.concurrent;
 
+import org.obicere.bytecode.core.io.FileSource;
+import org.obicere.bytecode.core.io.LeafSource;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
-import org.obicere.bytecode.viewer.io.FileSource;
-import org.obicere.bytecode.viewer.io.Source;
-import org.obicere.bytecode.viewer.io.TaskedZipFile;
-import org.obicere.bytecode.viewer.io.ZipFileSource;
-import org.obicere.bytecode.viewer.io.ZipSystem;
 import org.obicere.bytecode.viewer.util.FileUtils;
 
 import java.io.File;
@@ -18,6 +15,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  */
@@ -30,8 +28,6 @@ public class FileLoaderService implements DomainAccess {
     private final Domain domain;
 
     private final ThreadPoolExecutor service;
-
-    private final ZipSystem system = new ZipSystem();
 
     public FileLoaderService(final Domain domain) {
         this.domain = domain;
@@ -114,11 +110,9 @@ public class FileLoaderService implements DomainAccess {
     }
 
     private void loadArchive(final File path) throws IOException {
-        system.clean();
-
         final String zipFile = path.getAbsolutePath();
 
-        final TaskedZipFile zip = system.getZipFile(zipFile);
+        final ZipFile zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
             final ZipEntry entry = entries.nextElement();
@@ -126,13 +120,13 @@ public class FileLoaderService implements DomainAccess {
             final String extension = FileUtils.getFileExtension(name);
             if (extension != null && extension.equals(".class")) {
 
-                zip.addTask(entry.getCrc());
-                requestLoad(new ZipFileSource(system, zipFile, name));
+                //requestLoad(new ZipFileSource(system, zipFile, name));
             }
         }
+        zip.close();
     }
 
-    private void requestLoad(final Source source) {
+    private void requestLoad(final LeafSource source) {
         final MetaClassLoaderService service = domain.getMetaClassLoaderService();
 
         service.postRequest(new RequestCallback(), source);

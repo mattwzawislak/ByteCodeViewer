@@ -1,20 +1,20 @@
 package org.obicere.bytecode.viewer.context;
 
+import org.obicere.bytecode.core.io.LeafSource;
 import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.viewer.io.Source;
 
 /**
  * @author Obicere
  */
 public class ClassInformation implements DomainAccess {
 
-    private final Source source;
+    private final LeafSource source;
 
     private final ClassFile classFile;
 
     private final Domain domain;
 
-    public ClassInformation(final Domain domain, final ClassFile classFile, final Source source) {
+    public ClassInformation(final Domain domain, final ClassFile classFile, final LeafSource source) {
         this.domain = domain;
         this.source = source;
         this.classFile = classFile;
@@ -24,7 +24,7 @@ public class ClassInformation implements DomainAccess {
         return classFile;
     }
 
-    public Source getSource() {
+    public LeafSource getSource() {
         return source;
     }
 

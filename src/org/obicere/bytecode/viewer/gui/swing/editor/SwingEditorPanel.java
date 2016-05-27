@@ -1,5 +1,6 @@
 package org.obicere.bytecode.viewer.gui.swing.editor;
 
+import org.obicere.bytecode.core.io.LeafSource;
 import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.viewer.concurrent.Callback;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
@@ -17,7 +18,6 @@ import org.obicere.bytecode.viewer.gui.EditorPanel;
 import org.obicere.bytecode.viewer.gui.EditorPanelManager;
 import org.obicere.bytecode.viewer.gui.FrameManager;
 import org.obicere.bytecode.viewer.gui.GUIManager;
-import org.obicere.bytecode.viewer.io.Source;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -132,7 +132,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
         final ClassLoaderService service = domain.getClassLoaderService();
 
-        final Source fileSource = classInformation.getSource();
+        final LeafSource fileSource = classInformation.getSource();
 
         final Callback callback = new Callback() {
             @Override

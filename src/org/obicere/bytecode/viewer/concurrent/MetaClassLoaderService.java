@@ -1,12 +1,12 @@
 package org.obicere.bytecode.viewer.concurrent;
 
+import org.obicere.bytecode.core.io.LeafSource;
 import org.obicere.bytecode.core.objects.meta.MetaClassFile;
 import org.obicere.bytecode.core.reader.meta.MetaClassFileReader;
 import org.obicere.bytecode.core.util.IndexedDataInputStream;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
-import org.obicere.bytecode.viewer.io.Source;
 
 import java.io.InputStream;
 import java.util.concurrent.Callable;
@@ -35,7 +35,7 @@ public class MetaClassLoaderService implements DomainAccess {
         this.service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_POOL_COUNT, new NamedThreadFactory(NAME));
     }
 
-    public Future<ClassInformation> postRequest(final Callback callback, final Source source) {
+    public Future<ClassInformation> postRequest(final Callback callback, final LeafSource source) {
         final FileLoadRequest request = new FileLoadRequest(callback, source);
 
         return service.submit(request);
@@ -56,10 +56,10 @@ public class MetaClassLoaderService implements DomainAccess {
 
     private class FileLoadRequest implements Callable<ClassInformation> {
 
-        private final Callback callback;
-        private final Source   source;
+        private final Callback   callback;
+        private final LeafSource source;
 
-        public FileLoadRequest(final Callback callback, final Source source) {
+        public FileLoadRequest(final Callback callback, final LeafSource source) {
             this.callback = callback;
             this.source = source;
         }
@@ -67,7 +67,7 @@ public class MetaClassLoaderService implements DomainAccess {
         @Override
         public ClassInformation call() {
             try {
-                final InputStream stream = source.open();
+                final InputStream stream = source.getInputStream();
                 final IndexedDataInputStream input = new IndexedDataInputStream(stream);
 
                 final MetaClassFile classFile = reader.read(input);

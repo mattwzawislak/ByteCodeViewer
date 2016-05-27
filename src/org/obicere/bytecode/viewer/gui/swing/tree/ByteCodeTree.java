@@ -41,7 +41,7 @@ public class ByteCodeTree extends JTree {
 
             @Override
             public void mouseClicked(final MouseEvent e) {
-                // to simulate double-click open for a file explorer
+                // to simulate double-click getInputStream for a file explorer
                 if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
 
                     final TreePath path = getSelectionPath();
