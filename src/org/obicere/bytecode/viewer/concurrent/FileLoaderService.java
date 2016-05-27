@@ -2,6 +2,7 @@ package org.obicere.bytecode.viewer.concurrent;
 
 import org.obicere.bytecode.core.io.FileSource;
 import org.obicere.bytecode.core.io.LeafSource;
+import org.obicere.bytecode.core.io.ZipEntrySource;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
 import org.obicere.bytecode.viewer.util.FileUtils;
@@ -120,7 +121,7 @@ public class FileLoaderService implements DomainAccess {
             final String extension = FileUtils.getFileExtension(name);
             if (extension != null && extension.equals(".class")) {
 
-                //requestLoad(new ZipFileSource(system, zipFile, name));
+                requestLoad(new ZipEntrySource(zipFile, name));
             }
         }
         zip.close();
