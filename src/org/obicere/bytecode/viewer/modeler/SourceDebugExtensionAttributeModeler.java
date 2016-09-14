@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.SourceDebugExtensionAttribute;
+import org.obicere.bytecode.core.objects.attribute.SourceDebugExtensionAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

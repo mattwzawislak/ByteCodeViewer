@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.instruction.lookupswitch;
-import org.obicere.bytecode.core.objects.label.Label;
+import org.obicere.bytecode.core.objects.code.instruction.lookupswitch;
+import org.obicere.bytecode.core.objects.code.block.label.Label;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

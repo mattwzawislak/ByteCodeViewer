@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler.signature;
 
-import org.obicere.bytecode.core.objects.Annotation;
+import org.obicere.bytecode.core.objects.annotation.Annotation;
 import org.obicere.bytecode.core.objects.signature.ClassBound;
 import org.obicere.bytecode.core.objects.signature.InterfaceBound;
 import org.obicere.bytecode.core.objects.signature.ReferenceTypeSignature;

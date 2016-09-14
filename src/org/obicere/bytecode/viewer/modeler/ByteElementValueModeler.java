@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ByteElementValue;
-import org.obicere.bytecode.core.objects.ConstantInteger;
+import org.obicere.bytecode.core.objects.annotation.ByteElementValue;
+import org.obicere.bytecode.core.objects.constant.ConstantInteger;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

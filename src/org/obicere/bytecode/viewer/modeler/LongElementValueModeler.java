@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ConstantLong;
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.LongElementValue;
+import org.obicere.bytecode.core.objects.constant.ConstantLong;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.annotation.LongElementValue;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

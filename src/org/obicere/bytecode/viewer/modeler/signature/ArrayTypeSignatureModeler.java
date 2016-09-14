@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler.signature;
 
-import org.obicere.bytecode.core.objects.Annotation;
+import org.obicere.bytecode.core.objects.annotation.Annotation;
 import org.obicere.bytecode.core.objects.signature.ArrayTypeSignature;
 import org.obicere.bytecode.core.objects.signature.JavaTypeSignature;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;

@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.UninitializedVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.UninitializedVariableInfo;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

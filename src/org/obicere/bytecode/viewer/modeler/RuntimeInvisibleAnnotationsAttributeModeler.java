@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.Annotation;
-import org.obicere.bytecode.core.objects.RuntimeInvisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.annotation.Annotation;
+import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

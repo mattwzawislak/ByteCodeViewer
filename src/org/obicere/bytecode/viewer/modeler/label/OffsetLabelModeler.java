@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler.label;
 
-import org.obicere.bytecode.core.objects.label.OffsetLabel;
+import org.obicere.bytecode.core.objects.code.block.label.OffsetLabel;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.modeler.Modeler;
 

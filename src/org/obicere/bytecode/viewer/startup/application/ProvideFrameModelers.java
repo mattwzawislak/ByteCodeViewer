@@ -1,12 +1,12 @@
 package org.obicere.bytecode.viewer.startup.application;
 
-import org.obicere.bytecode.core.objects.AppendFrame;
-import org.obicere.bytecode.core.objects.ChopFrame;
-import org.obicere.bytecode.core.objects.FullFrame;
-import org.obicere.bytecode.core.objects.SameFrame;
-import org.obicere.bytecode.core.objects.SameFrameExtended;
-import org.obicere.bytecode.core.objects.SameLocals1StackItemFrame;
-import org.obicere.bytecode.core.objects.SameLocals1StackItemFrameExtended;
+import org.obicere.bytecode.core.objects.code.frame.AppendFrame;
+import org.obicere.bytecode.core.objects.code.frame.ChopFrame;
+import org.obicere.bytecode.core.objects.code.frame.FullFrame;
+import org.obicere.bytecode.core.objects.code.frame.SameFrame;
+import org.obicere.bytecode.core.objects.code.frame.SameFrameExtended;
+import org.obicere.bytecode.core.objects.code.frame.SameLocals1StackItemFrame;
+import org.obicere.bytecode.core.objects.code.frame.SameLocals1StackItemFrameExtended;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AppendFrameModeler;
 import org.obicere.bytecode.viewer.modeler.ChopFrameModeler;

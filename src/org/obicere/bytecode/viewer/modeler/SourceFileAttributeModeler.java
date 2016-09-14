@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.SourceFileAttribute;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.attribute.SourceFileAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

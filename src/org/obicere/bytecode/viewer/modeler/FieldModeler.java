@@ -1,15 +1,15 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.AttributeSet;
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.ConstantValueAttribute;
+import org.obicere.bytecode.core.objects.attribute.AttributeSet;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.attribute.ConstantValueAttribute;
 import org.obicere.bytecode.core.objects.Field;
-import org.obicere.bytecode.core.objects.RuntimeInvisibleAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.RuntimeInvisibleTypeAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.RuntimeVisibleAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.SignatureAttribute;
-import org.obicere.bytecode.core.objects.SyntheticAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleTypeAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeVisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeVisibleTypeAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.SignatureAttribute;
+import org.obicere.bytecode.core.objects.attribute.SyntheticAttribute;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;

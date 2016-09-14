@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.SameFrame;
+import org.obicere.bytecode.core.objects.code.frame.SameFrame;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.DeprecatedAttribute;
+import org.obicere.bytecode.core.objects.attribute.DeprecatedAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

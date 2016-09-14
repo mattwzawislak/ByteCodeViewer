@@ -1,62 +1,48 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.AttributeSet;
-import org.obicere.bytecode.core.objects.BootstrapMethodsAttribute;
-import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.core.objects.Constant;
-import org.obicere.bytecode.core.objects.ConstantClass;
-import org.obicere.bytecode.core.objects.ConstantPool;
+import org.obicere.bytecode.core.objects.attribute.AttributeSet;
+import org.obicere.bytecode.core.objects.attribute.BootstrapMethodsAttribute;
+import org.obicere.bytecode.core.objects.Class;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.Field;
-import org.obicere.bytecode.core.objects.InnerClass;
-import org.obicere.bytecode.core.objects.InnerClassesAttribute;
+import org.obicere.bytecode.core.objects.common.InnerClass;
+import org.obicere.bytecode.core.objects.attribute.InnerClassesAttribute;
 import org.obicere.bytecode.core.objects.Method;
-import org.obicere.bytecode.core.objects.RuntimeInvisibleAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.RuntimeInvisibleTypeAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.RuntimeVisibleAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.RuntimeVisibleTypeAnnotationsAttribute;
-import org.obicere.bytecode.core.objects.SignatureAttribute;
-import org.obicere.bytecode.core.objects.SyntheticAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleTypeAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeVisibleAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.RuntimeVisibleTypeAnnotationsAttribute;
+import org.obicere.bytecode.core.objects.attribute.SignatureAttribute;
+import org.obicere.bytecode.core.objects.attribute.SyntheticAttribute;
 import org.obicere.bytecode.core.objects.signature.ClassSignature;
-import org.obicere.bytecode.core.reader.ConstantReader;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
 
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  */
-public class ClassFileModeler implements Modeler<ClassFile> {
+public class ClassModeler implements Modeler<Class> {
 
     @Override
-    public void model(final ClassFile element, final DocumentBuilder builder) {
+    public void model(final Class element, final DocumentBuilder builder) {
 
         // we use this override for InnerClass attributes to set the proper access flags
         final int accessFlags;
-        final boolean innerClass;
         final Object newAccessFlags = builder.getProperty("accessFlags");
         if (newAccessFlags != null) {
             accessFlags = (int) newAccessFlags;
-            innerClass = true;
         } else {
             accessFlags = element.getAccessFlags();
-            innerClass = false;
         }
         builder.openBlock();
-
-        modelConstantPool(element, builder);
-
-        // only model version and imports for outer classes
-        if (!innerClass) {
-            modelImports(element, builder);
-            modelVersion(element, builder);
-        }
 
         final AttributeSet attributes = element.getAttributeSet();
         if (ByteCodeUtils.isSynthetic(accessFlags) || attributes.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
         }
 
+        modelVersion(element, builder);
         modelAnnotations(element, builder);
         modelClassDeclaration(element, builder, accessFlags);
 
@@ -74,75 +60,12 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         builder.closeBlock();
     }
 
-    private void modelConstantPool(final ClassFile element, final DocumentBuilder builder) {
-        final ConstantPool constantPool = element.getConstantPool();
-        final boolean display = builder.getDomain().getSettingsController().getSettings().getBoolean("code.includeConstantPool");
-        if (!display) {
-            return;
-        }
-        builder.model(constantPool);
-    }
-
-    private void modelImports(final ClassFile element, final DocumentBuilder builder) {
-        final boolean display = builder.getDomain().getSettingsController().getSettings().getBoolean("code.importMode");
-        if (!display) {
-            return;
-        }
-        final ConstantPool constantPool = element.getConstantPool();
-
-        final String name = element.getName();
-        final String thisPackage = ByteCodeUtils.getPackage(name);
-
-        final Set<String> imports = new TreeSet<>();
-        getImports(constantPool, imports, thisPackage);
-
-        if (!thisPackage.equals("")) {
-            builder.addKeyword("package ");
-            builder.add(thisPackage);
-            builder.add(";");
-            builder.newLine();
-            builder.newLine();
-        }
-
-        for (final String next : imports) {
-            builder.addKeyword("import ");
-            builder.add(next);
-            builder.add(";");
-            builder.newLine();
-        }
-        builder.newLine();
-    }
-
-    private void getImports(final ConstantPool constantPool, final Set<String> imports, final String thisPackage) {
-
-        for (final Constant constant : constantPool.getConstants()) {
-            if (constant != null && constant.getTag() == ConstantReader.CONSTANT_CLASS) {
-                final ConstantClass constantClass = (ConstantClass) constant;
-                final String name = constantClass.toString(constantPool);
-
-                // arrays are not imported
-                if (name.startsWith("[")) {
-                    continue;
-                }
-
-                final String nextPackage = ByteCodeUtils.getPackage(name);
-                // check to see if they are both null or both equal
-                // and also exclude java.lang packages
-                if (nextPackage.equals(thisPackage) || nextPackage.equals("java.lang")) {
-                    continue;
-                }
-
-                imports.add(ByteCodeUtils.getQualifiedName(name));
-            }
-        }
-    }
-
     private void addSynthetic(final DocumentBuilder builder) {
         builder.addComment("Synthetic Class");
         builder.newLine();
     }
 
-    private void modelAnnotations(final ClassFile element, final DocumentBuilder builder) {
+    private void modelAnnotations(final Class element, final DocumentBuilder builder) {
         final AttributeSet attributes = element.getAttributeSet();
 
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributes.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
@@ -162,12 +85,12 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         }
     }
 
-    private void modelVersion(final ClassFile element, final DocumentBuilder builder) {
+    private void modelVersion(final Class element, final DocumentBuilder builder) {
         builder.addComment("Version: " + element.getMajorVersion() + "." + element.getMinorVersion());
         builder.newLine();
     }
 
-    private void modelClassDeclaration(final ClassFile element, final DocumentBuilder builder, final int accessFlags) {
+    private void modelClassDeclaration(final Class element, final DocumentBuilder builder, final int accessFlags) {
 
         final String className = element.getName();
         final String[] names = ByteCodeUtils.getClassAccessNames(accessFlags);
@@ -186,11 +109,10 @@ public class ClassFileModeler implements Modeler<ClassFile> {
             builder.add(ByteCodeUtils.getQualifiedName(className));
         }
 
-        final Set<SignatureAttribute> signatures = attributes.getAttributes(SignatureAttribute.class);
+        final SignatureAttribute signatureAttribute = attributes.getAttribute(SignatureAttribute.class);
         final ClassSignature signature;
-        if (signatures != null && !signatures.isEmpty()) {
-            final SignatureAttribute attribute = signatures.iterator().next();
-            signature = attribute.getAsClassSignature(constantPool);
+        if (signatureAttribute != null) {
+            signature = signatureAttribute.getAsClassSignature(constantPool);
         } else {
             final StringBuilder newSignature = new StringBuilder();
             newSignature.append('L');
@@ -221,7 +143,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         builder.add(" {");
     }
 
-    private void modelFields(final ClassFile element, final DocumentBuilder builder) {
+    private void modelFields(final Class element, final DocumentBuilder builder) {
         final Field[] fields = element.getFields();
         if (fields.length == 0) {
             return;
@@ -233,7 +155,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         }
     }
 
-    private void modelMethods(final ClassFile element, final DocumentBuilder builder) {
+    private void modelMethods(final Class element, final DocumentBuilder builder) {
         final Method[] methods = element.getMethods();
         if (methods.length == 0) {
             return;
@@ -245,7 +167,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         }
     }
 
-    private void modelInnerClasses(final ClassFile element, final DocumentBuilder builder) {
+    private void modelInnerClasses(final Class element, final DocumentBuilder builder) {
 
         final ConstantPool constantPool = element.getConstantPool();
         final AttributeSet attributeSet = element.getAttributeSet();
@@ -277,7 +199,7 @@ public class ClassFileModeler implements Modeler<ClassFile> {
         }
     }
 
-    private void modelBootstrapMethods(final ClassFile element, final DocumentBuilder builder) {
+    private void modelBootstrapMethods(final org.obicere.bytecode.core.objects.Class element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final BootstrapMethodsAttribute attribute = attributeSet.getAttribute(BootstrapMethodsAttribute.class);

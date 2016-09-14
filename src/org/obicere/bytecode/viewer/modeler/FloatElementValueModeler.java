@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ConstantFloat;
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.FloatElementValue;
+import org.obicere.bytecode.core.objects.constant.ConstantFloat;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.annotation.FloatElementValue;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

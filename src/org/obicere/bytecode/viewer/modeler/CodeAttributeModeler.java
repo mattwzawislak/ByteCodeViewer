@@ -1,14 +1,14 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.AttributeSet;
-import org.obicere.bytecode.core.objects.CodeAttribute;
-import org.obicere.bytecode.core.objects.CodeBlock;
-import org.obicere.bytecode.core.objects.CodeException;
-import org.obicere.bytecode.core.objects.Identifiable;
-import org.obicere.bytecode.core.objects.LocalVariable;
-import org.obicere.bytecode.core.objects.LocalVariableTableAttribute;
-import org.obicere.bytecode.core.objects.LocalVariableType;
-import org.obicere.bytecode.core.objects.LocalVariableTypeTableAttribute;
+import org.obicere.bytecode.core.objects.attribute.AttributeSet;
+import org.obicere.bytecode.core.objects.attribute.CodeAttribute;
+import org.obicere.bytecode.core.objects.code.block.CodeBlock;
+import org.obicere.bytecode.core.objects.code.table.CodeException;
+import org.obicere.bytecode.core.Identifiable;
+import org.obicere.bytecode.core.objects.code.table.LocalVariable;
+import org.obicere.bytecode.core.objects.attribute.LocalVariableTableAttribute;
+import org.obicere.bytecode.core.objects.code.table.LocalVariableType;
+import org.obicere.bytecode.core.objects.attribute.LocalVariableTypeTableAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 import java.util.Map;
@@ -122,7 +122,7 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
 
         if (lvttAttributes != null) {
             for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
-                final LocalVariableType[] table = lvtt.getLocalVariableTypeTable();
+                final LocalVariableType[] table = lvtt.getLocalVariableTable();
                 for (final LocalVariableType type : table) {
                     final long index = (0xFF & type.getIndex());
                     final long start = (0xFFFF & type.getStart().computeOffset(element));

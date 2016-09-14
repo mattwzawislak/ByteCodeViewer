@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.gui.swing.editor;
 
 import org.obicere.bytecode.core.io.LeafSource;
-import org.obicere.bytecode.core.objects.ClassFile;
+import org.obicere.bytecode.core.objects.Class;
 import org.obicere.bytecode.viewer.concurrent.Callback;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
@@ -44,7 +44,7 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
 
     private volatile ClassInformation classInformation;
 
-    private volatile ClassFile loadedClassFile;
+    private volatile Class loadedClass;
 
     private boolean searchVisible;
 
@@ -72,8 +72,8 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
     }
 
     @Override
-    public ClassFile getClassFile() {
-        return loadedClassFile;
+    public Class getClassFile() {
+        return loadedClass;
     }
 
     @Override
@@ -87,11 +87,11 @@ public class SwingEditorPanel extends JPanel implements EditorPanel, DomainAcces
         return classInformation;
     }
 
-    private void setClassFile(final ClassFile classFile) {
+    private void setClassFile(final org.obicere.bytecode.core.objects.Class classFile) {
         if (classFile == null) {
             return;
         }
-        this.loadedClassFile = classFile;
+        this.loadedClass = classFile;
     }
 
     @Override

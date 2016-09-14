@@ -1,6 +1,5 @@
 package org.obicere.bytecode.viewer.gui;
 
-import org.obicere.bytecode.core.objects.ClassFile;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.dom.Block;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
@@ -14,7 +13,7 @@ public interface EditorPanel {
 
     public ClassInformation getClassInformation();
 
-    public ClassFile getClassFile();
+    public org.obicere.bytecode.core.objects.Class getClassFile();
 
     public void setClassInformation(final ClassInformation information);
 

@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler.signature;
 
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.Parameter;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.common.Parameter;
 import org.obicere.bytecode.core.objects.signature.JavaTypeSignature;
 import org.obicere.bytecode.core.objects.signature.Parameters;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;

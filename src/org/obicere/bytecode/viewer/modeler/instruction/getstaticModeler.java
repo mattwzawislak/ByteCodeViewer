@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.Constant;
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.instruction.getstatic;
+import org.obicere.bytecode.core.objects.constant.Constant;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.code.instruction.getstatic;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

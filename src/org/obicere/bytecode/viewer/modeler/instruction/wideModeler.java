@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.instruction.wide;
-import org.obicere.bytecode.core.reader.instruction.InstructionReader;
+import org.obicere.bytecode.core.objects.code.instruction.wide;
+import org.obicere.bytecode.core.reader.code.instruction.InstructionReader;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

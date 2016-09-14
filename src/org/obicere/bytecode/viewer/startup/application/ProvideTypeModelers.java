@@ -1,13 +1,11 @@
 package org.obicere.bytecode.viewer.startup.application;
 
-import org.obicere.bytecode.core.objects.Annotation;
-import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.core.objects.Field;
-import org.obicere.bytecode.core.objects.InnerClass;
-import org.obicere.bytecode.core.objects.Method;
+import org.obicere.bytecode.core.objects.*;
+import org.obicere.bytecode.core.objects.annotation.Annotation;
+import org.obicere.bytecode.core.objects.common.InnerClass;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.AnnotationModeler;
-import org.obicere.bytecode.viewer.modeler.ClassFileModeler;
+import org.obicere.bytecode.viewer.modeler.ClassModeler;
 import org.obicere.bytecode.viewer.modeler.FieldModeler;
 import org.obicere.bytecode.viewer.modeler.InnerClassModeler;
 import org.obicere.bytecode.viewer.modeler.MethodModeler;
@@ -23,7 +21,7 @@ public class ProvideTypeModelers implements StartUpTask {
         final ModelerSet modelerSet = domain.getModelers();
 
         modelerSet.add(Annotation.IDENTIFIER, new AnnotationModeler());
-        modelerSet.add(ClassFile.IDENTIFIER, new ClassFileModeler());
+        modelerSet.add(org.obicere.bytecode.core.objects.Class.IDENTIFIER, new ClassModeler());
         modelerSet.add(Field.IDENTIFIER, new FieldModeler());
         modelerSet.add(InnerClass.IDENTIFIER, new InnerClassModeler());
         modelerSet.add(Method.IDENTIFIER, new MethodModeler());

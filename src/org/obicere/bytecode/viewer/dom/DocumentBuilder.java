@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.dom;
 
-import org.obicere.bytecode.core.objects.ClassFile;
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.Identifiable;
+import org.obicere.bytecode.core.Identifiable;
+import org.obicere.bytecode.core.objects.Class;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
@@ -64,7 +64,7 @@ public class DocumentBuilder implements DomainAccess {
         properties.put(key, value);
     }
 
-    public void setWorkingClass(final ClassFile file) {
+    public void setWorkingClass(final Class file) {
         request.setTemporaryClass(file);
     }
 
@@ -80,7 +80,7 @@ public class DocumentBuilder implements DomainAccess {
         return request.getClassInformation();
     }
 
-    public ClassFile getClassFile() {
+    public org.obicere.bytecode.core.objects.Class getClassFile() {
         return request.getClassFile();
     }
 

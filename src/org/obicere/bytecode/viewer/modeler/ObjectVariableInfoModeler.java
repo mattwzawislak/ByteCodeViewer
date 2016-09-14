@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.ObjectVariableInfo;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.code.frame.verification.ObjectVariableInfo;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 

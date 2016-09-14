@@ -12,13 +12,12 @@ public class ClassTypeSignatureSuffixModeler implements Modeler<ClassTypeSignatu
     @Override
     public void model(final ClassTypeSignatureSuffix element, final DocumentBuilder builder) {
         final SimpleClassTypeSignature signature = element.getSimpleClassTypeSignature();
-        builder.model(signature);
 
         // TODO add to simple class type signature
         final TypeArguments arguments = signature.getTypeArguments();
 
         builder.add(".");
-        builder.add(signature.getIdentifier());
+        builder.model(signature);
         builder.model(arguments);
     }
 }

@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.gui.swing;
 
-import org.obicere.bytecode.core.objects.ClassFile;
+import org.obicere.bytecode.core.objects.Class;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.RequestCallback;
@@ -120,7 +120,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
         final ClassInformation classInformation = domain.getClassStorage().getClass(className);
 
         if (classInformation != null) {
-            final ClassFile file = classInformation.getClassFile();
+            final Class file = classInformation.getClassFile();
             final SwingEditorPanel editorPanel = new SwingEditorPanel(domain);
 
             editorPanels.put(className, editorPanel);
@@ -148,7 +148,7 @@ public class SwingEditorPanelManager implements EditorPanelManager {
 
     @Override
     public void addClass(final ClassInformation classInformation) {
-        final ClassFile rootClass = classInformation.getClassFile();
+        final org.obicere.bytecode.core.objects.Class rootClass = classInformation.getClassFile();
         SwingUtilities.invokeLater(() -> {
             tree.addClass(rootClass);
         });

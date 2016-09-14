@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.FullFrame;
-import org.obicere.bytecode.core.objects.VerificationTypeInfo;
+import org.obicere.bytecode.core.objects.code.frame.FullFrame;
+import org.obicere.bytecode.core.objects.code.frame.verification.VerificationTypeInfo;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

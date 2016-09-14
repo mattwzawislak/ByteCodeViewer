@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.LongVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.LongVariableInfo;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

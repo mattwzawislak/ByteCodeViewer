@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.NullVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.NullVariableInfo;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

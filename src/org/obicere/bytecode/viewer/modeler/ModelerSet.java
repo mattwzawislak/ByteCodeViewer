@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.Identifiable;
+import org.obicere.bytecode.core.Identifiable;
 
 import java.util.Collection;
 import java.util.HashMap;

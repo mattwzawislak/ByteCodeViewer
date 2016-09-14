@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ArrayElementValue;
-import org.obicere.bytecode.core.objects.ElementValue;
+import org.obicere.bytecode.core.objects.annotation.ArrayElementValue;
+import org.obicere.bytecode.core.objects.annotation.ElementValue;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

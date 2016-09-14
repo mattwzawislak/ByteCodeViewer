@@ -204,7 +204,7 @@ public class ByteCodeUtils {
     /**
      * The access flag mask to signify the class, field or method is
      * synthetic. This may used in conjuncture or in place of the
-     * {@link org.obicere.bytecode.core.objects.SyntheticAttribute}. This will
+     * {@link org.obicere.bytecode.core.objects.attribute.SyntheticAttribute}. This will
      * not be present in the access flag names and therefore should have
      * no <code>String</code> representation.
      *
@@ -238,9 +238,9 @@ public class ByteCodeUtils {
      * The access flag mask to indicate the given parameter is a formal
      * parameter explicitly declared in the source code. This will only
      * be present in a
-     * {@link org.obicere.bytecode.core.objects.MethodParametersAttribute}.
+     * {@link org.obicere.bytecode.core.objects.attribute.MethodParametersAttribute}.
      * More specifically, in the
-     * {@link org.obicere.bytecode.core.objects.Parameter} structure. This
+     * {@link org.obicere.bytecode.core.objects.common.Parameter} structure. This
      * will not be present in the access flag names and therefore should
      * have no <code>String</code> representation.
      *
@@ -421,12 +421,8 @@ public class ByteCodeUtils {
      */
 
     private static final int[] CLASS_ORDERED_ACCESS_FLAGS = new int[]{
-            ACCESS_PUBLIC,
-            ACCESS_PROTECTED,
-            ACCESS_PRIVATE,
-            ACCESS_ABSTRACT,
-            ACCESS_STATIC,
-            ACCESS_FINAL,
+            ACCESS_PUBLIC, ACCESS_PROTECTED, ACCESS_PRIVATE,
+            ACCESS_ABSTRACT, ACCESS_STATIC, ACCESS_FINAL,
             // ACCESS_STRICT - not possible, as it is compiled out
     };
 
@@ -448,12 +444,8 @@ public class ByteCodeUtils {
      */
 
     private static final String[] CLASS_ORDERED_ACCESS_NAMES = new String[]{
-            NAME_PUBLIC,
-            NAME_PROTECTED,
-            NAME_PRIVATE,
-            NAME_ABSTRACT,
-            NAME_STATIC,
-            NAME_FINAL,
+            NAME_PUBLIC, NAME_PROTECTED, NAME_PRIVATE, NAME_ABSTRACT,
+            NAME_STATIC, NAME_FINAL,
             // ACCESS_STRICT - not possible, as it is compiled out
     };
 
@@ -478,15 +470,9 @@ public class ByteCodeUtils {
      */
 
     private static final int[] METHOD_ORDERED_ACCESS_FLAGS = new int[]{
-            ACCESS_PUBLIC,
-            ACCESS_PROTECTED,
-            ACCESS_PRIVATE,
-            ACCESS_ABSTRACT,
-            ACCESS_STATIC,
-            ACCESS_FINAL,
-            ACCESS_SYNCHRONIZED,
-            ACCESS_NATIVE,
-            ACCESS_STRICT
+            ACCESS_PUBLIC, ACCESS_PROTECTED, ACCESS_PRIVATE,
+            ACCESS_ABSTRACT, ACCESS_STATIC, ACCESS_FINAL,
+            ACCESS_SYNCHRONIZED, ACCESS_NATIVE, ACCESS_STRICT
     };
 
     /**
@@ -510,14 +496,8 @@ public class ByteCodeUtils {
      */
 
     private static final String[] METHOD_ORDERED_ACCESS_NAMES = new String[]{
-            NAME_PUBLIC,
-            NAME_PROTECTED,
-            NAME_PRIVATE,
-            NAME_ABSTRACT,
-            NAME_STATIC,
-            NAME_FINAL,
-            NAME_SYNCHRONIZED,
-            NAME_NATIVE,
+            NAME_PUBLIC, NAME_PROTECTED, NAME_PRIVATE, NAME_ABSTRACT,
+            NAME_STATIC, NAME_FINAL, NAME_SYNCHRONIZED, NAME_NATIVE,
             NAME_STRICT
     };
 
@@ -540,13 +520,8 @@ public class ByteCodeUtils {
      */
 
     private static final int[] FIELD_ORDERED_ACCESS_FLAGS = new int[]{
-            ACCESS_PUBLIC,
-            ACCESS_PROTECTED,
-            ACCESS_PRIVATE,
-            ACCESS_STATIC,
-            ACCESS_FINAL,
-            ACCESS_TRANSIENT,
-            ACCESS_VOLATILE
+            ACCESS_PUBLIC, ACCESS_PROTECTED, ACCESS_PRIVATE, ACCESS_STATIC,
+            ACCESS_FINAL, ACCESS_TRANSIENT, ACCESS_VOLATILE
     };
 
     /**
@@ -568,13 +543,8 @@ public class ByteCodeUtils {
      */
 
     private static final String[] FIELD_ORDERED_ACCESS_NAMES = new String[]{
-            NAME_PUBLIC,
-            NAME_PROTECTED,
-            NAME_PRIVATE,
-            NAME_STATIC,
-            NAME_FINAL,
-            NAME_TRANSIENT,
-            NAME_VOLATILE
+            NAME_PUBLIC, NAME_PROTECTED, NAME_PRIVATE, NAME_STATIC,
+            NAME_FINAL, NAME_TRANSIENT, NAME_VOLATILE
     };
 
     /**
@@ -625,7 +595,7 @@ public class ByteCodeUtils {
      * <code>protected</code> as <code>public</code> visibility.
      * <code>static</code> will not be included. The true nature of the
      * flags is held in
-     * {@link org.obicere.bytecode.core.objects.InnerClassesAttribute}, which
+     * {@link org.obicere.bytecode.core.objects.attribute.InnerClassesAttribute}, which
      * is currently inaccessible at this time.
      *
      * @param access The access flags for the class.
@@ -1156,7 +1126,7 @@ public class ByteCodeUtils {
      * Indicates whether or not the given method is <code>native</code>.
      * <p>
      * Methods listed as <code>native</code> should have no body and no
-     * {@link org.obicere.bytecode.core.objects.CodeAttribute} available.
+     * {@link org.obicere.bytecode.core.objects.attribute.CodeAttribute} available.
      *
      * @param access The access flags for the method.
      * @return <code>true</code> if and only if the access flags indicate
@@ -1237,7 +1207,7 @@ public class ByteCodeUtils {
      * synthetically created.
      * <p>
      * This is often used in place of or along side the
-     * {@link org.obicere.bytecode.core.objects.SyntheticAttribute}.
+     * {@link org.obicere.bytecode.core.objects.attribute.SyntheticAttribute}.
      *
      * @param access The access flags for the class, method or field.
      * @return <code>true</code> if and only if the access flags indicate
@@ -1302,7 +1272,7 @@ public class ByteCodeUtils {
      * and therefore mandated parameter.
      * <p>
      * This is used only with the
-     * {@link org.obicere.bytecode.core.objects.MethodParametersAttribute} to
+     * {@link org.obicere.bytecode.core.objects.attribute.MethodParametersAttribute} to
      * signify the existence of an explicitly stated formal parameter in
      * the source code.
      *

@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.instruction.newarray;
+import org.obicere.bytecode.core.objects.code.instruction.newarray;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

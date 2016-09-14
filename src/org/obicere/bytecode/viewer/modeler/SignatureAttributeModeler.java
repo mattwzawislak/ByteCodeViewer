@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.SignatureAttribute;
+import org.obicere.bytecode.core.objects.attribute.SignatureAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**

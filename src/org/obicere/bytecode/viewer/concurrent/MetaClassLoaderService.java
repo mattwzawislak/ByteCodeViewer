@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.concurrent;
 
 import org.obicere.bytecode.core.io.LeafSource;
-import org.obicere.bytecode.core.objects.meta.MetaClassFile;
+import org.obicere.bytecode.core.objects.meta.MetaClass;
 import org.obicere.bytecode.core.reader.meta.MetaClassFileReader;
 import org.obicere.bytecode.core.util.IndexedDataInputStream;
 import org.obicere.bytecode.viewer.context.ClassInformation;
@@ -70,7 +70,7 @@ public class MetaClassLoaderService implements DomainAccess {
                 final InputStream stream = source.getInputStream();
                 final IndexedDataInputStream input = new IndexedDataInputStream(stream);
 
-                final MetaClassFile classFile = reader.read(input);
+                final MetaClass classFile = reader.read(input);
 
                 input.close();
 

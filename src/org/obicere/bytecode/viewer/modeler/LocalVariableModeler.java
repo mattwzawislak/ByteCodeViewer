@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.ConstantPool;
-import org.obicere.bytecode.core.objects.LocalVariable;
-import org.obicere.bytecode.core.objects.label.Label;
+import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.obicere.bytecode.core.objects.code.table.LocalVariable;
+import org.obicere.bytecode.core.objects.code.block.label.Label;
 import org.obicere.bytecode.core.objects.signature.FieldSignature;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 

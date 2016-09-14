@@ -1,14 +1,14 @@
 package org.obicere.bytecode.viewer.startup.application;
 
-import org.obicere.bytecode.core.objects.DoubleVariableInfo;
-import org.obicere.bytecode.core.objects.FloatVariableInfo;
-import org.obicere.bytecode.core.objects.IntegerVariableInfo;
-import org.obicere.bytecode.core.objects.LongVariableInfo;
-import org.obicere.bytecode.core.objects.NullVariableInfo;
-import org.obicere.bytecode.core.objects.ObjectVariableInfo;
-import org.obicere.bytecode.core.objects.TopVariableInfo;
-import org.obicere.bytecode.core.objects.UninitializedThisVariableInfo;
-import org.obicere.bytecode.core.objects.UninitializedVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.DoubleVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.FloatVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.IntegerVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.LongVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.NullVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.ObjectVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.TopVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.UninitializedThisVariableInfo;
+import org.obicere.bytecode.core.objects.code.frame.verification.UninitializedVariableInfo;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.DoubleVariableInfoModeler;
 import org.obicere.bytecode.viewer.modeler.FloatVariableInfoModeler;
