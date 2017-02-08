@@ -1,5 +1,6 @@
 package org.obicere.bytecode.viewer.modeler.signature;
 
+import org.obicere.bytecode.core.objects.DefaultJCClass;
 import org.obicere.bytecode.core.objects.signature.ClassSignature;
 import org.obicere.bytecode.core.objects.signature.SuperclassSignature;
 import org.obicere.bytecode.core.objects.signature.SuperinterfaceSignature;
@@ -23,7 +24,7 @@ public class ClassSignatureModeler implements Modeler<ClassSignature> {
         // extends/implements and possible exclusion of the superclass
         // (if the working class is an interface)
 
-        final org.obicere.bytecode.core.objects.Class workingClass = builder.getClassFile();
+        final DefaultJCClass workingClass = builder.getClassFile();
         final int flags = workingClass.getAccessFlags();
 
         final boolean isInterface = ByteCodeUtils.isInterface(flags);

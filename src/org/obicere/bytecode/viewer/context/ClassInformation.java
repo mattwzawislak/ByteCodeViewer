@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.context;
 
 import org.obicere.bytecode.core.io.LeafSource;
-import org.obicere.bytecode.core.objects.Class;
+import org.obicere.bytecode.core.objects.DefaultJCClass;
 
 /**
  * @author Obicere
@@ -10,17 +10,17 @@ public class ClassInformation implements DomainAccess {
 
     private final LeafSource source;
 
-    private final Class classFile;
+    private final DefaultJCClass classFile;
 
     private final Domain domain;
 
-    public ClassInformation(final Domain domain, final Class classFile, final LeafSource source) {
+    public ClassInformation(final Domain domain, final DefaultJCClass classFile, final LeafSource source) {
         this.domain = domain;
         this.source = source;
         this.classFile = classFile;
     }
 
-    public org.obicere.bytecode.core.objects.Class getClassFile() {
+    public DefaultJCClass getClassFile() {
         return classFile;
     }
 

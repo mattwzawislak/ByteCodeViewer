@@ -1,6 +1,7 @@
 package org.obicere.bytecode.viewer.concurrent;
 
 import org.obicere.bytecode.core.io.LeafSource;
+import org.obicere.bytecode.core.objects.DefaultJCClass;
 import org.obicere.bytecode.core.reader.ClassReader;
 import org.obicere.bytecode.core.util.IndexedDataInputStream;
 import org.obicere.bytecode.viewer.configuration.FileHashStorage;
@@ -77,7 +78,7 @@ public class ClassLoaderService implements DomainAccess {
                 final IndexedDataInputStream input = new IndexedDataInputStream(bytes);
                 final ClassReader reader = domain.getClassReader();
 
-                final org.obicere.bytecode.core.objects.Class file = reader.read(input);
+                final DefaultJCClass file = reader.read(input);
                 final ClassInformation classInformation = new ClassInformation(domain, file, source);
 
                 domain.getClassStorage().publish(file.getName(), classInformation);

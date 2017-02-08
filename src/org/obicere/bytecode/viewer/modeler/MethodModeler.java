@@ -1,11 +1,11 @@
 package org.obicere.bytecode.viewer.modeler;
 
+import org.obicere.bytecode.core.objects.DefaultJCMethod;
 import org.obicere.bytecode.core.objects.attribute.AnnotationDefaultAttribute;
 import org.obicere.bytecode.core.objects.attribute.AttributeSet;
 import org.obicere.bytecode.core.objects.attribute.CodeAttribute;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.attribute.ExceptionsAttribute;
-import org.obicere.bytecode.core.objects.Method;
 import org.obicere.bytecode.core.objects.attribute.MethodParametersAttribute;
 import org.obicere.bytecode.core.objects.common.Parameter;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
@@ -28,10 +28,10 @@ import java.util.Set;
 
 /**
  */
-public class MethodModeler implements Modeler<Method> {
+public class MethodModeler implements Modeler<DefaultJCMethod> {
 
     @Override
-    public void model(final Method element, final DocumentBuilder builder) {
+    public void model(final DefaultJCMethod element, final DocumentBuilder builder) {
         modelSynthetic(element, builder);
         modelAnnotations(element, builder);
         modelAccessFlags(element, builder);
@@ -40,7 +40,7 @@ public class MethodModeler implements Modeler<Method> {
         modelCodeBody(element, builder);
     }
 
-    private void modelSynthetic(final Method element, final DocumentBuilder builder) {
+    private void modelSynthetic(final DefaultJCMethod element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final SyntheticAttribute synthetic = attributeSet.getAttribute(SyntheticAttribute.class);
         if (synthetic != null) {
@@ -51,7 +51,7 @@ public class MethodModeler implements Modeler<Method> {
         builder.newLine();
     }
 
-    private void modelAccessFlags(final Method element, final DocumentBuilder builder) {
+    private void modelAccessFlags(final DefaultJCMethod element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final int accessFlags = element.getAccessFlags();
@@ -72,7 +72,7 @@ public class MethodModeler implements Modeler<Method> {
         }
     }
 
-    private void modelSignature(final Method element, final DocumentBuilder builder) {
+    private void modelSignature(final DefaultJCMethod element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final AttributeSet attributeSet = element.getAttributeSet();
 
@@ -125,7 +125,7 @@ public class MethodModeler implements Modeler<Method> {
         }
     }
 
-    private void modelParameters(final Method element, final MethodSignature signature, final DocumentBuilder builder) {
+    private void modelParameters(final DefaultJCMethod element, final MethodSignature signature, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         addAnnotationsSignature(element, signature);
@@ -139,7 +139,7 @@ public class MethodModeler implements Modeler<Method> {
         builder.model(parameters);
     }
 
-    private void modelExceptions(final Method element, final MethodSignature signature, final DocumentBuilder builder) {
+    private void modelExceptions(final DefaultJCMethod element, final MethodSignature signature, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final ConstantPool constantPool = builder.getConstantPool();
 
@@ -170,7 +170,7 @@ public class MethodModeler implements Modeler<Method> {
         }
     }
 
-    private void addAnnotationsSignature(final Method element, final MethodSignature signature) {
+    private void addAnnotationsSignature(final DefaultJCMethod element, final MethodSignature signature) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final RuntimeVisibleParameterAnnotationsAttribute rvpa = attributeSet.getAttribute(RuntimeVisibleParameterAnnotationsAttribute.class);
@@ -192,7 +192,7 @@ public class MethodModeler implements Modeler<Method> {
         }
     }
 
-    private void modelAnnotations(final Method element, final DocumentBuilder builder) {
+    private void modelAnnotations(final DefaultJCMethod element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
@@ -211,7 +211,7 @@ public class MethodModeler implements Modeler<Method> {
         }
     }
 
-    private void modelAbstractClose(final Method element, final DocumentBuilder builder) {
+    private void modelAbstractClose(final DefaultJCMethod element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
@@ -221,7 +221,7 @@ public class MethodModeler implements Modeler<Method> {
         }
     }
 
-    private void modelCodeBody(final Method element, final DocumentBuilder builder) {
+    private void modelCodeBody(final DefaultJCMethod element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final CodeAttribute code = attributeSet.getAttribute(CodeAttribute.class);

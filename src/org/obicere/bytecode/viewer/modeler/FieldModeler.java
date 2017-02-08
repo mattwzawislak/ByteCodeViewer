@@ -1,9 +1,9 @@
 package org.obicere.bytecode.viewer.modeler;
 
+import org.obicere.bytecode.core.objects.DefaultJCField;
 import org.obicere.bytecode.core.objects.attribute.AttributeSet;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.attribute.ConstantValueAttribute;
-import org.obicere.bytecode.core.objects.Field;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleTypeAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.attribute.RuntimeVisibleAnnotationsAttribute;
@@ -18,17 +18,17 @@ import java.util.Set;
 
 /**
  */
-public class FieldModeler implements Modeler<Field> {
+public class FieldModeler implements Modeler<DefaultJCField> {
 
     @Override
-    public void model(final Field element, final DocumentBuilder builder) {
+    public void model(final DefaultJCField element, final DocumentBuilder builder) {
 
         modelSynthetic(element, builder);
         modelAnnotations(element, builder);
         modelDeclaration(element, builder);
     }
 
-    private void modelSynthetic(final Field element, final DocumentBuilder builder) {
+    private void modelSynthetic(final DefaultJCField element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final SyntheticAttribute syntheticAttribute = attributeSet.getAttribute(SyntheticAttribute.class);
 
@@ -40,7 +40,7 @@ public class FieldModeler implements Modeler<Field> {
         builder.newLine();
     }
 
-    private void modelAnnotations(final Field element, final DocumentBuilder builder) {
+    private void modelAnnotations(final DefaultJCField element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
@@ -59,7 +59,7 @@ public class FieldModeler implements Modeler<Field> {
         }
     }
 
-    private void modelDeclaration(final Field element, final DocumentBuilder builder) {
+    private void modelDeclaration(final DefaultJCField element, final DocumentBuilder builder) {
         final int accessFlags = element.getAccessFlags();
         final int nameIndex = element.getNameIndex();
 
@@ -84,7 +84,7 @@ public class FieldModeler implements Modeler<Field> {
         builder.add(";");
     }
 
-    private void modelType(final Field element, final DocumentBuilder builder) {
+    private void modelType(final DefaultJCField element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
         final AttributeSet attributeSet = element.getAttributeSet();
         final SignatureAttribute attribute = attributeSet.getAttribute(SignatureAttribute.class);

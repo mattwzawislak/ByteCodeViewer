@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.code.block.CodeBlock;
-import org.obicere.bytecode.core.objects.code.instruction.Instruction;
+import org.obicere.bytecode.core.objects.code.instruction.AbstractInstruction;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
@@ -9,7 +9,7 @@ import org.obicere.bytecode.viewer.dom.DocumentBuilder;
  */
 public abstract class CodeBlockModeler<T extends CodeBlock> implements Modeler<T> {
 
-    protected void modelInstructions(final Instruction[] instructions, final DocumentBuilder builder) {
+    protected void modelInstructions(final AbstractInstruction[] instructions, final DocumentBuilder builder) {
 
         for (int i = 0; i < instructions.length; i++) {
             if(i != 0) {

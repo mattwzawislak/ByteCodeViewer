@@ -1,15 +1,15 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.code.instruction.lookupswitch;
+import org.obicere.bytecode.core.objects.code.instruction.DefaultLookupSwitch;
 import org.obicere.bytecode.core.objects.code.block.label.Label;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
  */
-public class lookupswitchModeler extends InstructionModeler<lookupswitch> {
+public class lookupswitchModeler extends InstructionModeler<DefaultLookupSwitch> {
     @Override
-    protected void modelValue(final lookupswitch element, final DocumentBuilder builder) {
+    protected void modelValue(final DefaultLookupSwitch element, final DocumentBuilder builder) {
         final Label defaultOffset = element.getDefaultOffset();
 
         final int[] matches = element.getMatches();

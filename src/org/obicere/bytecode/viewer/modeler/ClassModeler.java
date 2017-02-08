@@ -1,13 +1,13 @@
 package org.obicere.bytecode.viewer.modeler;
 
+import org.obicere.bytecode.core.objects.DefaultJCClass;
+import org.obicere.bytecode.core.objects.DefaultJCField;
+import org.obicere.bytecode.core.objects.DefaultJCMethod;
 import org.obicere.bytecode.core.objects.attribute.AttributeSet;
 import org.obicere.bytecode.core.objects.attribute.BootstrapMethodsAttribute;
-import org.obicere.bytecode.core.objects.Class;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
-import org.obicere.bytecode.core.objects.Field;
 import org.obicere.bytecode.core.objects.common.InnerClass;
 import org.obicere.bytecode.core.objects.attribute.InnerClassesAttribute;
-import org.obicere.bytecode.core.objects.Method;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleTypeAnnotationsAttribute;
 import org.obicere.bytecode.core.objects.attribute.RuntimeVisibleAnnotationsAttribute;
@@ -22,10 +22,10 @@ import java.util.Set;
 
 /**
  */
-public class ClassModeler implements Modeler<Class> {
+public class ClassModeler implements Modeler<DefaultJCClass> {
 
     @Override
-    public void model(final Class element, final DocumentBuilder builder) {
+    public void model(final DefaultJCClass element, final DocumentBuilder builder) {
 
         // we use this override for InnerClass attributes to set the proper access flags
         final int accessFlags;
@@ -65,7 +65,7 @@ public class ClassModeler implements Modeler<Class> {
         builder.newLine();
     }
 
-    private void modelAnnotations(final Class element, final DocumentBuilder builder) {
+    private void modelAnnotations(final DefaultJCClass element, final DocumentBuilder builder) {
         final AttributeSet attributes = element.getAttributeSet();
 
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributes.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
@@ -85,12 +85,12 @@ public class ClassModeler implements Modeler<Class> {
         }
     }
 
-    private void modelVersion(final Class element, final DocumentBuilder builder) {
+    private void modelVersion(final DefaultJCClass element, final DocumentBuilder builder) {
         builder.addComment("Version: " + element.getMajorVersion() + "." + element.getMinorVersion());
         builder.newLine();
     }
 
-    private void modelClassDeclaration(final Class element, final DocumentBuilder builder, final int accessFlags) {
+    private void modelClassDeclaration(final DefaultJCClass element, final DocumentBuilder builder, final int accessFlags) {
 
         final String className = element.getName();
         final String[] names = ByteCodeUtils.getClassAccessNames(accessFlags);
@@ -143,31 +143,31 @@ public class ClassModeler implements Modeler<Class> {
         builder.add(" {");
     }
 
-    private void modelFields(final Class element, final DocumentBuilder builder) {
-        final Field[] fields = element.getFields();
+    private void modelFields(final DefaultJCClass element, final DocumentBuilder builder) {
+        final DefaultJCField[] fields = element.getFields();
         if (fields.length == 0) {
             return;
         }
-        for (final Field field : fields) {
+        for (final DefaultJCField field : fields) {
             builder.newLine();
 
             builder.model(field);
         }
     }
 
-    private void modelMethods(final Class element, final DocumentBuilder builder) {
-        final Method[] methods = element.getMethods();
+    private void modelMethods(final DefaultJCClass element, final DocumentBuilder builder) {
+        final DefaultJCMethod[] methods = element.getMethods();
         if (methods.length == 0) {
             return;
         }
-        for (final Method method : methods) {
+        for (final DefaultJCMethod method : methods) {
             builder.newLine();
 
             builder.model(method);
         }
     }
 
-    private void modelInnerClasses(final Class element, final DocumentBuilder builder) {
+    private void modelInnerClasses(final DefaultJCClass element, final DocumentBuilder builder) {
 
         final ConstantPool constantPool = element.getConstantPool();
         final AttributeSet attributeSet = element.getAttributeSet();
@@ -199,7 +199,7 @@ public class ClassModeler implements Modeler<Class> {
         }
     }
 
-    private void modelBootstrapMethods(final org.obicere.bytecode.core.objects.Class element, final DocumentBuilder builder) {
+    private void modelBootstrapMethods(final DefaultJCClass element, final DocumentBuilder builder) {
         final AttributeSet attributeSet = element.getAttributeSet();
 
         final BootstrapMethodsAttribute attribute = attributeSet.getAttribute(BootstrapMethodsAttribute.class);

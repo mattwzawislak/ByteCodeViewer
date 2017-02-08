@@ -21,9 +21,9 @@ public class ProvideTypeModelers implements StartUpTask {
         final ModelerSet modelerSet = domain.getModelers();
 
         modelerSet.add(Annotation.IDENTIFIER, new AnnotationModeler());
-        modelerSet.add(org.obicere.bytecode.core.objects.Class.IDENTIFIER, new ClassModeler());
-        modelerSet.add(Field.IDENTIFIER, new FieldModeler());
+        modelerSet.add(DefaultJCClass.IDENTIFIER, new ClassModeler());
+        modelerSet.add(DefaultJCField.IDENTIFIER, new FieldModeler());
         modelerSet.add(InnerClass.IDENTIFIER, new InnerClassModeler());
-        modelerSet.add(Method.IDENTIFIER, new MethodModeler());
+        modelerSet.add(DefaultJCMethod.IDENTIFIER, new MethodModeler());
     }
 }

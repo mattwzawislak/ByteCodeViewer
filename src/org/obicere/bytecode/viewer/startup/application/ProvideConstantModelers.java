@@ -1,8 +1,8 @@
 package org.obicere.bytecode.viewer.startup.application;
 
-import org.obicere.bytecode.core.objects.constant.ConstantClass;
-import org.obicere.bytecode.core.objects.constant.ConstantDouble;
-import org.obicere.bytecode.core.objects.constant.ConstantFieldRef;
+import org.obicere.bytecode.core.objects.constant.DefaultConstantClass;
+import org.obicere.bytecode.core.objects.constant.DefaultConstantDouble;
+import org.obicere.bytecode.core.objects.constant.DefaultConstantFieldRef;
 import org.obicere.bytecode.core.objects.constant.ConstantFloat;
 import org.obicere.bytecode.core.objects.constant.ConstantInteger;
 import org.obicere.bytecode.core.objects.constant.ConstantInvokeDynamic;
@@ -41,9 +41,9 @@ public class ProvideConstantModelers implements StartUpTask {
 
         modelerSet.add(ConstantPool.IDENTIFIER, new ConstantPoolModeler());
 
-        modelerSet.add(ConstantClass.IDENTIFIER, new ConstantClassModeler());
-        modelerSet.add(ConstantDouble.IDENTIFIER, new ConstantDoubleModeler());
-        modelerSet.add(ConstantFieldRef.IDENTIFIER, new ConstantFieldRefModeler());
+        modelerSet.add(DefaultConstantClass.IDENTIFIER, new ConstantClassModeler());
+        modelerSet.add(DefaultConstantDouble.IDENTIFIER, new ConstantDoubleModeler());
+        modelerSet.add(DefaultConstantFieldRef.IDENTIFIER, new ConstantFieldRefModeler());
         modelerSet.add(ConstantFloat.IDENTIFIER, new ConstantFloatModeler());
         modelerSet.add(ConstantInteger.IDENTIFIER, new ConstantIntegerModeler());
         modelerSet.add(ConstantInvokeDynamic.IDENTIFIER, new ConstantInvokeDynamicModeler());

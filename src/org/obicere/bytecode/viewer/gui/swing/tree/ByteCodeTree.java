@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.gui.swing.tree;
 
-import org.obicere.bytecode.core.objects.Class;
+import org.obicere.bytecode.core.objects.DefaultJCClass;
 import org.obicere.bytecode.viewer.configuration.Icons;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.util.ByteCodeUtils;
@@ -68,11 +68,11 @@ public class ByteCodeTree extends JTree {
         });
     }
 
-    public void addClass(final Class file) {
+    public void addClass(final DefaultJCClass file) {
         addClassToTree(file.getName(), file.getAccessFlags());
     }
 
-    public void addClass(final org.obicere.bytecode.core.objects.Class file, final int accessFlags) {
+    public void addClass(final DefaultJCClass file, final int accessFlags) {
         addClassToTree(file.getName(), accessFlags);
     }
 

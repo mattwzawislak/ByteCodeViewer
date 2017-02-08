@@ -1,18 +1,13 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.attribute.AttributeSet;
 import org.obicere.bytecode.core.objects.attribute.CodeAttribute;
-import org.obicere.bytecode.core.objects.code.block.CodeBlock;
-import org.obicere.bytecode.core.objects.code.table.CodeException;
+import org.obicere.bytecode.core.objects.code.CodeException;
 import org.obicere.bytecode.core.Identifiable;
+import org.obicere.bytecode.core.objects.code.block.CodeBlock;
 import org.obicere.bytecode.core.objects.code.table.LocalVariable;
-import org.obicere.bytecode.core.objects.attribute.LocalVariableTableAttribute;
-import org.obicere.bytecode.core.objects.code.table.LocalVariableType;
-import org.obicere.bytecode.core.objects.attribute.LocalVariableTypeTableAttribute;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -94,44 +89,5 @@ public class CodeAttributeModeler implements Modeler<CodeAttribute> {
         builder.newLine();
         builder.add("}");
         builder.newLine();
-    }
-
-    private void getLocalVariables(final CodeAttribute element, final Map<Long, Identifiable> map) {
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final Set<LocalVariableTableAttribute> lvtAttributes = attributeSet.getAttributes(LocalVariableTableAttribute.class);
-
-        if (lvtAttributes != null) {
-            for (final LocalVariableTableAttribute lvt : lvtAttributes) {
-                final LocalVariable[] table = lvt.getLocalVariableTable();
-                for (final LocalVariable type : table) {
-                    final long index = (0xFF & type.getIndex());
-                    final long start = (0xFFFF & type.getStart().computeOffset(element));
-                    final long name = (0xFFFF & type.getNameIndex());
-                    final long id = (index << 32) | (start << 16) | (name);
-
-                    // check to see if we already processed the startPC value
-                    map.putIfAbsent(id, type);
-                }
-            }
-        }
-    }
-
-    private void getLocalVariableTypes(final CodeAttribute element, final Map<Long, Identifiable> map) {
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final Set<LocalVariableTypeTableAttribute> lvttAttributes = attributeSet.getAttributes(LocalVariableTypeTableAttribute.class);
-
-        if (lvttAttributes != null) {
-            for (final LocalVariableTypeTableAttribute lvtt : lvttAttributes) {
-                final LocalVariableType[] table = lvtt.getLocalVariableTable();
-                for (final LocalVariableType type : table) {
-                    final long index = (0xFF & type.getIndex());
-                    final long start = (0xFFFF & type.getStart().computeOffset(element));
-                    final long name = (0xFFFF & type.getNameIndex());
-                    final long id = (index << 32) | (start << 16) | (name);
-
-                    map.put(id, type);
-                }
-            }
-        }
     }
 }

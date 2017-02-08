@@ -1,15 +1,15 @@
 package org.obicere.bytecode.viewer.modeler.instruction;
 
-import org.obicere.bytecode.core.objects.code.instruction.wide;
+import org.obicere.bytecode.core.objects.code.instruction.DefaultWide;
 import org.obicere.bytecode.core.reader.code.instruction.InstructionReader;
 import org.obicere.bytecode.viewer.dom.DocumentBuilder;
 
 /**
  * @author Obicere
  */
-public class wideModeler extends InstructionModeler<wide> {
+public class wideModeler extends InstructionModeler<DefaultWide> {
     @Override
-    protected void modelValue(final wide element, final DocumentBuilder builder) {
+    protected void modelValue(final DefaultWide element, final DocumentBuilder builder) {
         final int instruction = element.getInstruction();
         final String name = element.getInstructionName();
         final int index = element.getIndex();

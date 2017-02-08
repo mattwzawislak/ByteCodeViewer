@@ -1,16 +1,12 @@
 package org.obicere.bytecode.viewer.startup.application;
 
-import org.obicere.bytecode.core.objects.code.table.CodeException;
+import org.obicere.bytecode.core.objects.code.CodeException;
 import org.obicere.bytecode.core.objects.code.block.FrameCodeBlock;
 import org.obicere.bytecode.core.objects.code.block.ImplicitCodeBlock;
 import org.obicere.bytecode.core.objects.code.block.LineCodeBlock;
-import org.obicere.bytecode.core.objects.code.table.LocalVariable;
+import org.obicere.bytecode.core.objects.code.LocalVariable;
 import org.obicere.bytecode.core.objects.code.table.LocalVariableType;
-import org.obicere.bytecode.core.objects.code.block.label.CodeBlockLabel;
-import org.obicere.bytecode.core.objects.code.block.label.EndLabel;
 import org.obicere.bytecode.core.objects.code.block.label.LazyLabel;
-import org.obicere.bytecode.core.objects.code.block.label.OffsetLabel;
-import org.obicere.bytecode.core.objects.code.block.label.StartLabel;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.modeler.CodeExceptionModeler;
 import org.obicere.bytecode.viewer.modeler.FrameCodeBlockModeler;

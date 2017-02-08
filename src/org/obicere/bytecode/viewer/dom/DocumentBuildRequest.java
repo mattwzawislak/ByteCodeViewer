@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.dom;
 
-import org.obicere.bytecode.core.objects.Class;
+import org.obicere.bytecode.core.objects.DefaultJCClass;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.dom.style.Style;
 import org.obicere.bytecode.viewer.dom.style.StyleConstraints;
@@ -16,7 +16,7 @@ public class DocumentBuildRequest {
 
     private final DocumentBuilder builder;
 
-    private final Class classFile;
+    private final DefaultJCClass classFile;
 
     private final List<Block> blocks;
 
@@ -24,7 +24,7 @@ public class DocumentBuildRequest {
 
     private final int tabSize;
 
-    private volatile Class temporaryClass;
+    private volatile DefaultJCClass temporaryClass;
 
     private volatile int indentLevel;
 
@@ -51,7 +51,7 @@ public class DocumentBuildRequest {
         return blocks;
     }
 
-    public Class getClassFile() {
+    public DefaultJCClass getClassFile() {
         if (temporaryClass != null) {
             return temporaryClass;
         }
@@ -62,7 +62,7 @@ public class DocumentBuildRequest {
         return classInformation;
     }
 
-    public void setTemporaryClass(final org.obicere.bytecode.core.objects.Class file) {
+    public void setTemporaryClass(final DefaultJCClass file) {
         this.temporaryClass = file;
     }
 

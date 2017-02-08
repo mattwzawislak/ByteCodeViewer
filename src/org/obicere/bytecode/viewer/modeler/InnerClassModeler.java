@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.objects.Class;
+import org.obicere.bytecode.core.objects.DefaultJCClass;
 import org.obicere.bytecode.core.objects.common.InnerClass;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
@@ -41,14 +41,14 @@ public class InnerClassModeler implements Modeler<InnerClass> {
             return;
         }
 
-        final Class file = classInformation.getClassFile();
+        final DefaultJCClass file = classInformation.getClassFile();
 
         if (file == null) {
             builder.addComment("Could not find inner class: " + name);
             return;
         }
 
-        final org.obicere.bytecode.core.objects.Class loadedFile;
+        final DefaultJCClass loadedFile;
         if (file.isMeta()) {
             final Domain domain = builder.getDomain();
             final ClassLoaderService service = domain.getClassLoaderService();
