@@ -1,6 +1,6 @@
 package org.obicere.bytecode.viewer.context;
 
-import org.obicere.bytecode.core.reader.ClassReader;
+import org.obicere.bytecode.core.reader.JCClassReader;
 import org.obicere.bytecode.viewer.concurrent.ClassLoaderService;
 import org.obicere.bytecode.viewer.concurrent.ClassModelerService;
 import org.obicere.bytecode.viewer.concurrent.FileLoaderService;
@@ -37,7 +37,7 @@ public final class Domain {
     private final FileHashStorage fileHashStorage;
 
     private final ClassFileLoader classLoader;
-    private final ClassReader     classReader;
+    private final JCClassReader   classReader;
     private final ModelerSet      modelers;
 
     private final GUIManager         guiManager;
@@ -55,7 +55,7 @@ public final class Domain {
         this.fileHashStorage = new FileHashStorage();
 
         this.classLoader = new ClassFileLoader(this);
-        this.classReader = new ClassReader();
+        this.classReader = new JCClassReader();
         this.modelers = new ModelerSet();
 
         this.guiManager = new GUIManager(this);
@@ -92,7 +92,7 @@ public final class Domain {
         return classLoader;
     }
 
-    public ClassReader getClassReader() {
+    public JCClassReader getClassReader() {
         return classReader;
     }
 

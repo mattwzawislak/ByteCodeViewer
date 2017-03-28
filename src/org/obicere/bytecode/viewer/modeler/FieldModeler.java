@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.DefaultJCField;
-import org.obicere.bytecode.core.objects.attribute.AttributeSet;
+import org.obicere.bytecode.core.objects.attribute.Attributes;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.attribute.ConstantValueAttribute;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
@@ -29,8 +29,8 @@ public class FieldModeler implements Modeler<DefaultJCField> {
     }
 
     private void modelSynthetic(final DefaultJCField element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final SyntheticAttribute syntheticAttribute = attributeSet.getAttribute(SyntheticAttribute.class);
+        final Attributes attributes = element.getAttributeSet();
+        final SyntheticAttribute syntheticAttribute = attributes.getAttribute(SyntheticAttribute.class);
 
         if (syntheticAttribute != null) {
             builder.model(syntheticAttribute);
@@ -41,9 +41,9 @@ public class FieldModeler implements Modeler<DefaultJCField> {
     }
 
     private void modelAnnotations(final DefaultJCField element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
-        final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
+        final Attributes attributes = element.getAttributeSet();
+        final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributes.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
+        final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributes.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
@@ -76,8 +76,8 @@ public class FieldModeler implements Modeler<DefaultJCField> {
         builder.add(" ");
         builder.add(constantPool.getAsString(nameIndex));
 
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final ConstantValueAttribute constantAttribute = attributeSet.getAttribute(ConstantValueAttribute.class);
+        final Attributes attributes = element.getAttributeSet();
+        final ConstantValueAttribute constantAttribute = attributes.getAttribute(ConstantValueAttribute.class);
         if (constantAttribute != null) {
             builder.model(constantAttribute);
         }
@@ -86,8 +86,8 @@ public class FieldModeler implements Modeler<DefaultJCField> {
 
     private void modelType(final DefaultJCField element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final SignatureAttribute attribute = attributeSet.getAttribute(SignatureAttribute.class);
+        final Attributes attributes = element.getAttributeSet();
+        final SignatureAttribute attribute = attributes.getAttribute(SignatureAttribute.class);
 
         final FieldSignature signature;
         if (attribute != null) {
@@ -101,8 +101,8 @@ public class FieldModeler implements Modeler<DefaultJCField> {
         if (signature != null) {
             // add type annotations to the signature
 
-            final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributeSet.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
-            final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributeSet.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
+            final Set<RuntimeVisibleTypeAnnotationsAttribute> rvtaAttributes = attributes.getAttributes(RuntimeVisibleTypeAnnotationsAttribute.class);
+            final Set<RuntimeInvisibleTypeAnnotationsAttribute> ritaAttributes = attributes.getAttributes(RuntimeInvisibleTypeAnnotationsAttribute.class);
 
             if (rvtaAttributes != null) {
                 rvtaAttributes.forEach(e -> signature.addAnnotations(e.getAnnotations()));

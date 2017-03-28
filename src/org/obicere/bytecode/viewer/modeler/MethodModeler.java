@@ -2,7 +2,7 @@ package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.DefaultJCMethod;
 import org.obicere.bytecode.core.objects.attribute.AnnotationDefaultAttribute;
-import org.obicere.bytecode.core.objects.attribute.AttributeSet;
+import org.obicere.bytecode.core.objects.attribute.Attributes;
 import org.obicere.bytecode.core.objects.attribute.CodeAttribute;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.attribute.ExceptionsAttribute;
@@ -41,8 +41,8 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelSynthetic(final DefaultJCMethod element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
-        final SyntheticAttribute synthetic = attributeSet.getAttribute(SyntheticAttribute.class);
+        final Attributes attributes = element.getAttributeSet();
+        final SyntheticAttribute synthetic = attributes.getAttribute(SyntheticAttribute.class);
         if (synthetic != null) {
             builder.model(synthetic);
         } else if (ByteCodeUtils.isSynthetic(element.getAccessFlags())) {
@@ -52,14 +52,14 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelAccessFlags(final DefaultJCMethod element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
         final int accessFlags = element.getAccessFlags();
         final String[] accessNames = ByteCodeUtils.getMethodAccessNames(accessFlags);
 
         // make sure to add the default flag if the method has a body
         // and its containing class is an interface
-        final CodeAttribute codeAttribute = attributeSet.getAttribute(CodeAttribute.class);
+        final CodeAttribute codeAttribute = attributes.getAttribute(CodeAttribute.class);
 
         // if this method has a body, yet it the containing class is an interface
         if (codeAttribute != null && ByteCodeUtils.isInterface(builder.getClassFile().getAccessFlags())) {
@@ -74,7 +74,7 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
 
     private void modelSignature(final DefaultJCMethod element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
         final int nameIndex = element.getNameIndex();
         final String methodName = constantPool.getAsString(nameIndex);
@@ -85,7 +85,7 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
         }
 
         final MethodSignature signature;
-        final SignatureAttribute attribute = attributeSet.getAttribute(SignatureAttribute.class);
+        final SignatureAttribute attribute = attributes.getAttribute(SignatureAttribute.class);
         if (attribute != null) {
             signature = attribute.getAsMethodSignature(constantPool);
         } else {
@@ -126,12 +126,12 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelParameters(final DefaultJCMethod element, final MethodSignature signature, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
         addAnnotationsSignature(element, signature);
         final Parameters parameters = signature.getParameters();
 
-        final MethodParametersAttribute parameterAttribute = attributeSet.getAttribute(MethodParametersAttribute.class);
+        final MethodParametersAttribute parameterAttribute = attributes.getAttribute(MethodParametersAttribute.class);
         if (parameterAttribute != null) {
             final Parameter[] names = parameterAttribute.getParameters();
             parameters.setParameters(names);
@@ -140,11 +140,11 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelExceptions(final DefaultJCMethod element, final MethodSignature signature, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
         final ConstantPool constantPool = builder.getConstantPool();
 
         final ThrowsSignatures signatures = signature.getThrowsSignatures();
-        final ExceptionsAttribute exceptionsAttribute = attributeSet.getAttribute(ExceptionsAttribute.class);
+        final ExceptionsAttribute exceptionsAttribute = attributes.getAttribute(ExceptionsAttribute.class);
 
         boolean first = true;
         if (exceptionsAttribute != null) {
@@ -171,12 +171,12 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void addAnnotationsSignature(final DefaultJCMethod element, final MethodSignature signature) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
-        final RuntimeVisibleParameterAnnotationsAttribute rvpa = attributeSet.getAttribute(RuntimeVisibleParameterAnnotationsAttribute.class);
-        final RuntimeInvisibleParameterAnnotationsAttribute ripa = attributeSet.getAttribute(RuntimeInvisibleParameterAnnotationsAttribute.class);
-        final RuntimeVisibleTypeAnnotationsAttribute rvta = attributeSet.getAttribute(RuntimeVisibleTypeAnnotationsAttribute.class);
-        final RuntimeInvisibleTypeAnnotationsAttribute rita = attributeSet.getAttribute(RuntimeInvisibleTypeAnnotationsAttribute.class);
+        final RuntimeVisibleParameterAnnotationsAttribute rvpa = attributes.getAttribute(RuntimeVisibleParameterAnnotationsAttribute.class);
+        final RuntimeInvisibleParameterAnnotationsAttribute ripa = attributes.getAttribute(RuntimeInvisibleParameterAnnotationsAttribute.class);
+        final RuntimeVisibleTypeAnnotationsAttribute rvta = attributes.getAttribute(RuntimeVisibleTypeAnnotationsAttribute.class);
+        final RuntimeInvisibleTypeAnnotationsAttribute rita = attributes.getAttribute(RuntimeInvisibleTypeAnnotationsAttribute.class);
 
         if (rvpa != null) {
             signature.addAnnotations(rvpa.getParameterAnnotations());
@@ -193,10 +193,10 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelAnnotations(final DefaultJCMethod element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
-        final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributeSet.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
-        final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributeSet.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
+        final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributes.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
+        final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributes.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
         if (rvaAttributes != null) {
             rvaAttributes.forEach(e -> {
@@ -212,9 +212,9 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelAbstractClose(final DefaultJCMethod element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
-        final AnnotationDefaultAttribute hasDefault = attributeSet.getAttribute(AnnotationDefaultAttribute.class);
+        final AnnotationDefaultAttribute hasDefault = attributes.getAttribute(AnnotationDefaultAttribute.class);
         if (hasDefault != null) {
             builder.model(hasDefault);
             builder.add(";");
@@ -222,9 +222,9 @@ public class MethodModeler implements Modeler<DefaultJCMethod> {
     }
 
     private void modelCodeBody(final DefaultJCMethod element, final DocumentBuilder builder) {
-        final AttributeSet attributeSet = element.getAttributeSet();
+        final Attributes attributes = element.getAttributeSet();
 
-        final CodeAttribute code = attributeSet.getAttribute(CodeAttribute.class);
+        final CodeAttribute code = attributes.getAttribute(CodeAttribute.class);
 
         if (code != null) {
 
