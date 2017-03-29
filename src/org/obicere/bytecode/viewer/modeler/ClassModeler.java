@@ -3,7 +3,7 @@ package org.obicere.bytecode.viewer.modeler;
 import org.obicere.bytecode.core.objects.DefaultJCClass;
 import org.obicere.bytecode.core.objects.DefaultJCField;
 import org.obicere.bytecode.core.objects.DefaultJCMethod;
-import org.obicere.bytecode.core.objects.attribute.Attributes;
+import org.obicere.bytecode.core.objects.attribute.DefaultAttributeSet;
 import org.obicere.bytecode.core.objects.attribute.BootstrapMethodsAttribute;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.common.InnerClass;
@@ -37,7 +37,7 @@ public class ClassModeler implements Modeler<DefaultJCClass> {
         }
         builder.openBlock();
 
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
         if (ByteCodeUtils.isSynthetic(accessFlags) || attributes.getAttribute(SyntheticAttribute.class) != null) {
             addSynthetic(builder);
         }
@@ -66,7 +66,7 @@ public class ClassModeler implements Modeler<DefaultJCClass> {
     }
 
     private void modelAnnotations(final DefaultJCClass element, final DocumentBuilder builder) {
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
 
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributes.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributes.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
@@ -95,7 +95,7 @@ public class ClassModeler implements Modeler<DefaultJCClass> {
         final String className = element.getName();
         final String[] names = ByteCodeUtils.getClassAccessNames(accessFlags);
         final ConstantPool constantPool = element.getConstantPool();
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
 
         for (final String name : names) {
             builder.addKeyword(name);
@@ -170,7 +170,7 @@ public class ClassModeler implements Modeler<DefaultJCClass> {
     private void modelInnerClasses(final DefaultJCClass element, final DocumentBuilder builder) {
 
         final ConstantPool constantPool = element.getConstantPool();
-        final Attributes attributeSet = element.getAttributeSet();
+        final DefaultAttributeSet attributeSet = element.getAttributeSet();
         final String className = element.getName();
 
         final Set<InnerClassesAttribute> attributes = attributeSet.getAttributes(InnerClassesAttribute.class);
@@ -200,7 +200,7 @@ public class ClassModeler implements Modeler<DefaultJCClass> {
     }
 
     private void modelBootstrapMethods(final DefaultJCClass element, final DocumentBuilder builder) {
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
 
         final BootstrapMethodsAttribute attribute = attributes.getAttribute(BootstrapMethodsAttribute.class);
 

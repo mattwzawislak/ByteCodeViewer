@@ -1,7 +1,7 @@
 package org.obicere.bytecode.viewer.modeler;
 
 import org.obicere.bytecode.core.objects.DefaultJCField;
-import org.obicere.bytecode.core.objects.attribute.Attributes;
+import org.obicere.bytecode.core.objects.attribute.DefaultAttributeSet;
 import org.obicere.bytecode.core.objects.constant.ConstantPool;
 import org.obicere.bytecode.core.objects.attribute.ConstantValueAttribute;
 import org.obicere.bytecode.core.objects.attribute.RuntimeInvisibleAnnotationsAttribute;
@@ -29,7 +29,7 @@ public class FieldModeler implements Modeler<DefaultJCField> {
     }
 
     private void modelSynthetic(final DefaultJCField element, final DocumentBuilder builder) {
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
         final SyntheticAttribute syntheticAttribute = attributes.getAttribute(SyntheticAttribute.class);
 
         if (syntheticAttribute != null) {
@@ -41,7 +41,7 @@ public class FieldModeler implements Modeler<DefaultJCField> {
     }
 
     private void modelAnnotations(final DefaultJCField element, final DocumentBuilder builder) {
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
         final Set<RuntimeVisibleAnnotationsAttribute> rvaAttributes = attributes.getAttributes(RuntimeVisibleAnnotationsAttribute.class);
         final Set<RuntimeInvisibleAnnotationsAttribute> riaAttributes = attributes.getAttributes(RuntimeInvisibleAnnotationsAttribute.class);
 
@@ -76,7 +76,7 @@ public class FieldModeler implements Modeler<DefaultJCField> {
         builder.add(" ");
         builder.add(constantPool.getAsString(nameIndex));
 
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
         final ConstantValueAttribute constantAttribute = attributes.getAttribute(ConstantValueAttribute.class);
         if (constantAttribute != null) {
             builder.model(constantAttribute);
@@ -86,7 +86,7 @@ public class FieldModeler implements Modeler<DefaultJCField> {
 
     private void modelType(final DefaultJCField element, final DocumentBuilder builder) {
         final ConstantPool constantPool = builder.getConstantPool();
-        final Attributes attributes = element.getAttributeSet();
+        final DefaultAttributeSet attributes = element.getAttributeSet();
         final SignatureAttribute attribute = attributes.getAttribute(SignatureAttribute.class);
 
         final FieldSignature signature;

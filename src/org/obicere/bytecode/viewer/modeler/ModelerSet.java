@@ -1,10 +1,10 @@
 package org.obicere.bytecode.viewer.modeler;
 
-import org.obicere.bytecode.core.Identifiable;
+import org.javacore.Identifiable;
+import org.javacore.Identifier;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -12,9 +12,9 @@ import java.util.logging.Logger;
  */
 public class ModelerSet {
 
-    private final HashMap<String, Modeler<?>> modelers = new HashMap<>();
+    private final HashMap<Identifier, Modeler<?>> modelers = new HashMap<>();
 
-    public void add(final String identifier, final Modeler<?> modeler) {
+    public void add(final Identifier identifier, final Modeler<?> modeler) {
         if (identifier == null) {
             throw new NullPointerException("identifier must be non-null");
         }
@@ -25,12 +25,8 @@ public class ModelerSet {
         modelers.put(identifier, modeler);
     }
 
-    public boolean contains(final String identifier) {
+    public boolean contains(final Identifier identifier) {
         return modelers.containsKey(identifier);
-    }
-
-    public Set<String> getIdentifiers() {
-        return modelers.keySet();
     }
 
     public Collection<Modeler<?>> getModelers() {
@@ -38,7 +34,7 @@ public class ModelerSet {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Identifiable> Modeler<? super T> get(final String identifier) {
+    public <T extends Identifiable> Modeler<? super T> get(final Identifier identifier) {
         try {
             final Modeler<?> modeler = modelers.get(identifier);
             if (modeler == null) {

@@ -1,8 +1,7 @@
 package org.obicere.bytecode.viewer.dom;
 
-import org.obicere.bytecode.core.Identifiable;
-import org.obicere.bytecode.core.objects.DefaultJCClass;
-import org.obicere.bytecode.core.objects.constant.ConstantPool;
+import org.javacore.Identifiable;
+import org.javacore.JCClass;
 import org.obicere.bytecode.viewer.context.ClassInformation;
 import org.obicere.bytecode.viewer.context.Domain;
 import org.obicere.bytecode.viewer.context.DomainAccess;
@@ -62,26 +61,6 @@ public class DocumentBuilder implements DomainAccess {
 
     public void setProperty(final String key, final Object value) {
         properties.put(key, value);
-    }
-
-    public void setWorkingClass(final DefaultJCClass file) {
-        request.setTemporaryClass(file);
-    }
-
-    public void clearWorkingClass() {
-        request.setTemporaryClass(null);
-    }
-
-    public ConstantPool getConstantPool() {
-        return request.getClassFile().getConstantPool();
-    }
-
-    public ClassInformation getClassInformation() {
-        return request.getClassInformation();
-    }
-
-    public DefaultJCClass getClassFile() {
-        return request.getClassFile();
     }
 
     public Object getProperty(final String key) {
